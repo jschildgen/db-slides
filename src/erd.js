@@ -196,7 +196,8 @@ class ISA extends erd.ISA {
     position: { x: 160, y: 260 },
     attrs: {
         text: {
-            text: '',
+            text: '\n\nis-a',
+            fontSize: '14px',
             fill: '#ffffff',
             letterSpacing: 0,
             style: { 'text-shadow': '1px 0 1px #333333' }
@@ -316,8 +317,8 @@ class Derived extends erd.Derived {
         },
         '.outer': {
             fill: '#ffcb63',
-            stroke: '#ffcb63',
-            'stroke-dasharray': '3,1',
+            stroke: '#000000',
+            'stroke-dasharray': '5,5',
             filter: { name: 'dropShadow',  args: { dx: 0, dy: 2, blur: 2, color: '#222138' }}
         }
     }
@@ -396,14 +397,20 @@ er = [[
    options:["weak"]
  },
  { _e: "Salesman", pos:[100, 400],
-   isa: {_e:"Employee", pos:[160,260]} 
+   attributes: [
+   {_a:"Phone", pos: [49, 329] }
+   ],
+   isa: {_e:"Employee"} 
  }
 ],
 [
- { _r: "Gets paid", pos: [350, 190],
-   _e: ["Employee", "Wage", "Salesman"],
-   card: [1, "N", "[1..N]"],
-   options: ["weak"]
+ { _r: "Gets paid", 
+   _e: ["Employee", "Wage"],
+   card: [1, "N"],
+   options: ["weak"],
+   attributes: [
+    { _a:"Currency", pos:[317, 116] }
+   ]
  }
 ]];
 
@@ -412,9 +419,9 @@ function createERD(er, div_id, width, height) {
     var relationships = er[1];
     var entity_index = {}; /* entity_name => cid */
     
-    var graph = new joint.dia.Graph();
+    graph = new joint.dia.Graph();
 
-    var paper = new Paper({
+    paper = new Paper({
         el: document.getElementById(div_id),
         width: width,
         height: height,
@@ -449,8 +456,14 @@ function createERD(er, div_id, width, height) {
        
         var ent_obj = ent.options.indexOf("weak")>-1 ? new WeakEntity : new Entity();
         
-        ent_obj.attr('text/text', ent._e).position(ent.pos[0],ent.pos[1]);
-        graph.addCell(ent_obj)
+        ent_obj.attr('text/text', ent._e)
+        if(ent.pos != undefined) {
+            ent_obj.position(ent.pos[0],ent.pos[1]);
+        } else {
+            ent_obj.position(Math.floor(Math.random()*paper.getArea().width),
+                             Math.floor(Math.random()*paper.getArea().height));
+        }
+        graph.addCell(ent_obj);
         
         entity_index[ent._e] = graph.getCells()[graph.getCells().length-1].cid;
         
@@ -463,7 +476,14 @@ function createERD(er, div_id, width, height) {
                     : att.options.indexOf("multi")>-1 ? new Multivalued()
                     : att.options.indexOf("derived")>-1 ? new Derived() : new Attribute();
             
-            att_obj.attr('text/text', att._a).position(att.pos[0],att.pos[1]);
+            att_obj.attr('text/text', att._a);
+            
+            if(att.pos != undefined) {
+                att_obj.position(att.pos[0],att.pos[1]);
+            } else {
+                att_obj.position(ent_obj.position().x-200+Math.floor(Math.random()*400),
+                                 ent_obj.position().y-200+Math.floor(Math.random()*400));
+            }
             graph.addCell(att_obj)
             createLink(ent_obj, att_obj, graph);            
         }
@@ -471,10 +491,15 @@ function createERD(er, div_id, width, height) {
         /* does the entity extend another entity? */
         if(ent.isa != undefined && ent.isa != null && ent.isa != {}) {
             var isa_obj = new ISA();
-            isa_obj.position(ent.isa.pos[0],ent.isa.pos[1]);
+            super_obj = graph.getCell(entity_index[ent.isa._e]);
+            if(ent.isa.pos != undefined) {
+                isa_obj.position(ent.isa.pos[0],ent.isa.pos[1]);
+            } else {
+                isa_obj.position(super_obj.position().x+60,super_obj.position().y+60);
+            }
             graph.addCell(isa_obj)
             createLink(isa_obj, ent_obj, graph);
-            createLink(isa_obj, graph.getCell(entity_index[ent.isa._e]), graph);
+            createLink(isa_obj, super_obj, graph);
         }
             
     }
@@ -482,17 +507,65 @@ function createERD(er, div_id, width, height) {
         /* create relationship */
         var rel = relationships[r]
         if(rel.options==undefined || rel.options==null) { rel.options=[] }
+        if(rel.attributes==undefined || rel.attributes==null) { rel.attributes=[] }
         
         var rel_obj = ent.options.indexOf("weak")>-1 ? new IdentifyingRelationship : new Relationship();
-        rel_obj.attr('text/text', rel._r).position(rel.pos[0],rel.pos[1]);
+        rel_obj.attr('text/text', rel._r);
         graph.addCell(rel_obj);
+        default_pos = [0,0]
         for(e in rel._e) {
             var ent = rel._e[e];
             var card = rel.card[e];
-            createLink(graph.getCell(entity_index[ent]), rel_obj, graph).set(createLabel(card));
+            var ent_obj = graph.getCell(entity_index[ent]);
+            createLink(ent_obj, rel_obj, graph).set(createLabel(card));
+            default_pos[0] += ent_obj.position().x
+            default_pos[1] += ent_obj.position().y
+        }
+        default_pos = [default_pos[0]/rel._e.length+35, default_pos[1]/rel._e.length-10 ]
+        if(rel.pos != undefined) {
+            rel_obj.position(rel.pos[0],rel.pos[1]);
+        } else {
+            rel_obj.position(default_pos[0],default_pos[1]);
+        }
+        
+        /* create relationship attributes */
+        for(a in rel.attributes) {
+            var att = rel.attributes[a];
+            if(att.options==undefined || att.options==null) { att.options=[] }
+            
+            var att_obj = att.options.indexOf("multi")>-1 ? new Multivalued()
+                        : att.options.indexOf("derived")>-1 ? new Derived() : new Attribute();
+            
+            att_obj.attr('text/text', att._a).position(att.pos[0],att.pos[1]);
+            graph.addCell(att_obj)
+            createLink(rel_obj, att_obj, graph);            
         }
     }
 }
 
 createERD(er, 'paper', 695, 600);
 
+document.addEventListener("keyup", function(evt) {
+    if(evt.key!='e') { return }
+    for(c in graph.getCells()) {
+        var cell = graph.getCells()[c];
+        if(cell.attributes.position == undefined) { continue }
+        if(cell.attr('text/text_original') == undefined || cell.attr('text/text_original') == null) {
+         //continue
+         cell.attr('text/text_original', ''+cell.attr('text/text'))
+         cell.attr('text/text', ''+cell.attributes.position.x+', '+cell.attributes.position.y)
+        } else {
+         cell.attr('text/text', cell.attr('text/text_original'))
+         cell.attr('text/text_original', null)
+        }
+    }
+});
+
+graph.on('change:position', function(cell) {
+    if(cell.attributes.position == undefined) { return }
+    /*if(cell.attr('text/text_original') == undefined || cell.attr('text/text_original') == null) {
+        cell.attr('text/text_original', ''+cell.attr('text/text'))
+    }
+    cell.attr('text/text', ''+cell.attributes.position.x+', '+cell.attributes.position.y)*/
+    console.log("pos: ["+cell.attributes.position.x+', '+cell.attributes.position.y+"]")
+});

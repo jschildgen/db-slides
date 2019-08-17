@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reset.css">
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="src/sql.css">
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                <section>
+                    <h6><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                    <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h6>
+                    <h1>Datenbanken 1</h1>
+                    <h3>Kapitel 1: Grundlagen</h3>
+                    <h4>2019-10-14</h4>
+                    <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                    <span style="position: absolute; bottom:-170px; box-shadow:none;"><a href="1.html?print-pdf&showNotes=true"><img src="img/qr.png" height="60px" style="border:0;"></a></span>
+                    <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                </section>
+				<section><h1>ACID</h1>
+                <ul>
+                <li>Atomarität</li>
+                <li>Konsistenz</li>
+                <li>Isolation</li>
+                <li>Dauerhaftigkeit</li>
+                </ul>
+                <img class="stretch" src="img/img.jpg">
+                <aside class="notes">
+		Das hier dargestellte ACID-Paradima beschreibt die Eigenschaften von Transaktionen in Datenbanken. Transaktionen sind eine Sammlung von Aktionen, die stets als Gesamtheit - atomar - ausgeführt werden. Des Weiteren überführen Transaktionen die Datenbank von einem Konsistenten Zustand in einen konsistenten Zustand. Parallel laufende Transaktionen beeinflussen sich nicht. Und Änderungen an der Datenbank, die mit einem Commit bestätigt werden, bleiben dauerhaft in ihr gespeichert.
+	</aside>
+                </section>
+                <section><h2>ER</h2>
+                <div id="paper" class="stretch erd"></div>
+
+                
+                
+                </section>
+                
+                
+				<section><h1>BASE</h1>
+                <ul>
+                <li class="fragment">Basically Available</li>
+                <li class="fragment"><a href="#">Soft State</a></li>
+                <li class="fragment">Eventual Consistent</li>
+                </ul>
+                <pre data-badge="Alles löschen"><code class="hlsql" data-trim contenteditable data-line-numbers="2">
+SELECT count(*) FROM produkte WHERE preis > 1 
+AND bezeichnung LIKE 'M%'
+					</code></pre>
+					<span class="sqlresult"></span>
+                <aside class="notes">
+		In verteilten Datenbanken kommt es zu Problemen, wenn alle ACID-Eigenschaften erfüllt werden sollen und gleichzeitig eine hohe Verfügbarkeit erreicht werden soll. Diese Probleme wurden in dem CAP-Theorem von Brewer formuliert. Im Umfeld der NoSQL-Datenbanken wird daher häufig das BASE-Prinzip (Basically Available, Soft state, Eventual consistency) verfolgt.
+	</aside>
+                </section>
+                <section><h2>Relationale Algebra</h2>
+                  <div data-badge="Selektion" data-badge-position="tl">  \[\sigma_{preis>20}(Produkte) \] </div>
+                </section>
+                <section>
+                 <div class="columns stretch">
+                <div>
+                    <h2>A First Step</h2>
+                    <ul>
+                        <li>Only post list</li>
+                        <li>Anonymous users</li>
+                        <li>Mobile phones</li>
+                    </ul>
+                </div>
+                <div style="width: 375px">
+                    Wat $\pi$
+                </div>
+
+            </div>
+                </section>
+                <section>Oha</section>
+                <section>Ohaa</section>
+                <section>Ohaaa</section>
+                <section>Ohaaaa</section>
+                <section>Ohaaaaa</section>
+                <section>Ohaaaaaa</section>
+                <section>Ohaaaaaaa</section>
+                <section>Ohaaaaaaaa</section>
+                <section>Ohaaaaaaaaa</section>
+                <section>Ohaaaaaaaaaa</section>
+                <section>Ohaaaaaaaaaaa</section>
+                <section>Ohaaaaaaaaaaaa</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+                <section>Oha</section>
+			</div>
+		</div>
+
+		<script src="reveal.js/js/reveal.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+        
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+        
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+        <script src="src/erd.js"></script>
+	</body>
+</html>

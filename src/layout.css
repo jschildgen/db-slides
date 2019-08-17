@@ -1,0 +1,28 @@
+.infobox {
+    position: absolute;
+    width: 40%; 
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); 
+    background-color:  rgba(66, 169, 170, 0.99); 
+    color: #fff; 
+    padding: 20px; 
+    font-size: 20px; 
+    text-align: left;
+}
+.infobox.small {
+    width:20%;
+}
+.infobox > h1, .infobox > h2, .infobox > h3, .infobox > h4, .infobox > h5, .infobox > h6 {
+    color: #fff;
+}
+.infobox.right {
+     right: 0;
+}
+.infobox.left {
+     left: 0;
+}
+
+.columns {
+    display: flex; 
+    justify-content: space-around;
+}
+

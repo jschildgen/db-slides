@@ -413,6 +413,33 @@ var createLabel = function(txt) {
     };
 };
 
+var create_attributes = function(ent_or_att_obj, attributes, graph) {
+    for(var a in attributes) {
+        var att = attributes[a];
+        if(att.options==undefined || att.options==null) { att.options=[] }
+        
+        var att_obj = att.options.indexOf("primary")>-1 ? new Key()
+                : att.options.indexOf("multi")>-1 ? new Multivalued()
+                : att.options.indexOf("derived")>-1 ? new Derived() : new Attribute();
+        
+        att_obj.attr('text/text', att._a);
+        
+        if(att.pos != undefined) {
+            att_obj.position(att.pos[0],att.pos[1]);
+        } else {
+            att_obj.position(ent_or_att_obj.position().x-200+Math.floor(Math.random()*400),
+                             ent_or_att_obj.position().y-200+Math.floor(Math.random()*400));
+        }
+        graph.addCell(att_obj)
+        createLink(ent_or_att_obj, att_obj, graph);
+
+        /* does the attribute have sub-attributes? */
+        if(att.attributes != undefined && att.attributes != null) {
+            create_attributes(att_obj, att.attributes, graph)
+        }
+    }
+}
+
 function createERD(er, erdDiv, width, height) {
     var entities = er[0];
     var relationships = er[1];
@@ -467,25 +494,7 @@ function createERD(er, erdDiv, width, height) {
         entity_index[ent._e] = graph.getCells()[graph.getCells().length-1].cid;
         
         /* create entity's attributes */
-        for(a in ent.attributes) {
-            var att = ent.attributes[a];
-            if(att.options==undefined || att.options==null) { att.options=[] }
-            
-            var att_obj = att.options.indexOf("primary")>-1 ? new Key()
-                    : att.options.indexOf("multi")>-1 ? new Multivalued()
-                    : att.options.indexOf("derived")>-1 ? new Derived() : new Attribute();
-            
-            att_obj.attr('text/text', att._a);
-            
-            if(att.pos != undefined) {
-                att_obj.position(att.pos[0],att.pos[1]);
-            } else {
-                att_obj.position(ent_obj.position().x-200+Math.floor(Math.random()*400),
-                                 ent_obj.position().y-200+Math.floor(Math.random()*400));
-            }
-            graph.addCell(att_obj)
-            createLink(ent_obj, att_obj, graph);            
-        }
+        create_attributes(ent_obj, ent.attributes, graph)
         
         /* does the entity extend another entity? */
         if(ent.isa != undefined && ent.isa != null && ent.isa != {}) {

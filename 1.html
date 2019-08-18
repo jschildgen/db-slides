@@ -58,7 +58,11 @@
  { _e: "Employee", pos:[100, 200],
   attributes: [
    { _a:"Number", pos:[10, 90], options:["primary"] },
-   { _a:"Name", pos:[75, 30] },
+   { _a:"Name", pos:[75, 30], attributes: [
+        {_a:"Firstname", pos: [10, -30] }, 
+        {_a:"Lastname", pos: [175, -30] }
+    ]
+   },
    { _a:"Skills", pos:[150, 90], options:["multi"] },
   ]
  },

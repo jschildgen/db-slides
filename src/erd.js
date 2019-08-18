@@ -1,4 +1,36 @@
-var erd = joint.shapes.erd;
+/*
+ * 
+ * By Johannes Schildgen, 2019
+ */
+ 
+
+
+//createERD(er, document.getElementById('paper'), 695, 600);
+
+/*
+document.addEventListener("keyup", function(evt) {
+    if(evt.key!='e') { return }
+    for(c in graph.getCells()) {
+        var cell = graph.getCells()[c];
+        if(cell.attributes.position == undefined) { continue }
+        if(cell.attr('text/text_original') == undefined || cell.attr('text/text_original') == null) {
+         //continue
+         cell.attr('text/text_original', ''+cell.attr('text/text'))
+         cell.attr('text/text', ''+cell.attributes.position.x+', '+cell.attributes.position.y)
+        } else {
+         cell.attr('text/text', cell.attr('text/text_original'))
+         cell.attr('text/text_original', null)
+        }
+    }
+});*/
+
+
+var ERDPlugin = (function(){  
+    
+    return {
+		init: function() {  
+        
+        var erd = joint.shapes.erd;
 
 // Custom highlighter - display an outline around each element that fits its shape.
 
@@ -111,7 +143,7 @@ class Entity extends erd.Entity {
     attrs: {
         text: {
             fill: '#000000',
-            text: 'Employee',
+            text: '',
             letterSpacing: 0,
             fontWeight: 'bold' /*,
             style: { textShadow: '1px 0 1px #333333' }*/
@@ -140,7 +172,7 @@ class WeakEntity extends erd.WeakEntity {
     attrs: {
         text: {
             fill: '#000000',
-            text: 'Wage',
+            text: '',
             letterSpacing: 0,
             fontWeight: 'bold'/*,
             style: { textShadow: '1px 0 1px #333333' }*/
@@ -170,7 +202,7 @@ class IdentifyingRelationship extends erd.IdentifyingRelationship {
     attrs: {
         text: {
             fill: '#ffffff',
-            text: 'gets\npayed',
+            text: '',
             letterSpacing: 0,
             style: { textShadow: '1px 0 1px #333333' }
         },
@@ -223,7 +255,7 @@ class Key extends erd.Key {
     attrs: {
         text: {
             fill: '#000000',
-            text: 'Number',
+            text: '',
             letterSpacing: 0,
             fontWeight: 'bold'/*,
             style: { textShadow: '1px 0 1px #333333' }*/
@@ -251,7 +283,7 @@ class Attribute extends erd.Normal {
     attrs: {
         text: {
             fill: '#000000',
-            text: 'Name',
+            text: '',
             letterSpacing: 0,
             fontWeight: 'bold'/*,
             style: { textShadow: '1px 0 1px #333333' }*/
@@ -275,7 +307,7 @@ class Multivalued extends erd.Multivalued {
     attrs: {
         text: {
             fill: '#000000',
-            text: 'Skills',
+            text: '',
             letterSpacing: 0,
             fontWeight: 'bold'
             /*style: { 'text-shadow': '1px 0px 1px #333333' }*/
@@ -305,7 +337,7 @@ class Derived extends erd.Derived {
     attrs: {
         text: {
             fill: '#000000',
-            text: 'Amount',
+            text: '',
             letterSpacing: 0,
             fontWeight: 'bold' /*,
             style: { textShadow: '1px 0 1px #333333' }*/
@@ -334,7 +366,7 @@ class Relationship extends erd.Relationship {
     attrs: {
         text: {
             fill: '#ffffff',
-            text: 'Uses',
+            text: '',
             letterSpacing: 0,
             style: { textShadow: '1px 0 1px #333333' }
         },
@@ -381,40 +413,7 @@ var createLabel = function(txt) {
     };
 };
 
-er = [[
- { _e: "Employee", pos:[100, 200],
-  attributes: [
-   { _a:"Number", pos:[10, 90], options:["primary"] },
-   { _a:"Name", pos:[75, 30] },
-   { _a:"Skills", pos:[150, 90], options:["multi"] },
-  ]
- },
- { _e: "Wage", pos:[530, 200],
-   attributes: [
-    { _a:"Amount", pos:[440, 80], options:["derived"] }, 
-    { _a:"Date", pos:[585, 80] }
-   ],
-   options:["weak"]
- },
- { _e: "Salesman", pos:[100, 400],
-   attributes: [
-   {_a:"Phone", pos: [49, 329] }
-   ],
-   isa: {_e:"Employee"} 
- }
-],
-[
- { _r: "Gets paid", 
-   _e: ["Employee", "Wage"],
-   card: [1, "N"],
-   options: ["weak"],
-   attributes: [
-    { _a:"Currency", pos:[317, 116] }
-   ]
- }
-]];
-
-function createERD(er, div_id, width, height) {
+function createERD(er, erdDiv, width, height) {
     var entities = er[0];
     var relationships = er[1];
     var entity_index = {}; /* entity_name => cid */
@@ -422,7 +421,7 @@ function createERD(er, div_id, width, height) {
     graph = new joint.dia.Graph();
 
     paper = new Paper({
-        el: document.getElementById(div_id),
+        el: erdDiv,
         width: width,
         height: height,
         model: graph
@@ -509,7 +508,7 @@ function createERD(er, div_id, width, height) {
         if(rel.options==undefined || rel.options==null) { rel.options=[] }
         if(rel.attributes==undefined || rel.attributes==null) { rel.attributes=[] }
         
-        var rel_obj = ent.options.indexOf("weak")>-1 ? new IdentifyingRelationship : new Relationship();
+        var rel_obj = rel.options.indexOf("weak")>-1 ? new IdentifyingRelationship : new Relationship();
         rel_obj.attr('text/text', rel._r);
         graph.addCell(rel_obj);
         default_pos = [0,0]
@@ -541,31 +540,32 @@ function createERD(er, div_id, width, height) {
             createLink(rel_obj, att_obj, graph);            
         }
     }
+    graph.on('change:position', function(cell) {
+        if(cell.attributes.position == undefined) { return }
+        /*if(cell.attr('text/text_original') == undefined || cell.attr('text/text_original') == null) {
+            cell.attr('text/text_original', ''+cell.attr('text/text'))
+        }
+        cell.attr('text/text', ''+cell.attributes.position.x+', '+cell.attributes.position.y)*/
+        console.log(", pos: ["+cell.attributes.position.x+', '+cell.attributes.position.y+"]")
+    });
 }
-
-createERD(er, 'paper', 695, 600);
-
-document.addEventListener("keyup", function(evt) {
-    if(evt.key!='e') { return }
-    for(c in graph.getCells()) {
-        var cell = graph.getCells()[c];
-        if(cell.attributes.position == undefined) { continue }
-        if(cell.attr('text/text_original') == undefined || cell.attr('text/text_original') == null) {
-         //continue
-         cell.attr('text/text_original', ''+cell.attr('text/text'))
-         cell.attr('text/text', ''+cell.attributes.position.x+', '+cell.attributes.position.y)
-        } else {
-         cell.attr('text/text', cell.attr('text/text_original'))
-         cell.attr('text/text_original', null)
+        
+        var generate_erds = function(slide_or_document) {
+            var erdDivs = slide_or_document.querySelectorAll('.erd');
+            for (i = 0; i < erdDivs.length; i++) {  
+                if(erdDivs[i].getAttribute('data-erd')) {
+                    var er = eval(erdDivs[i].getAttribute('data-erd'))
+                } else {
+                    var er = eval(erdDivs[i].innerHTML)
+                    erdDivs[i].setAttribute('data-erd', erdDivs[i].innerHTML)
+                }
+                erdDivs[i].style.display = "block"
+                createERD(er, erdDivs[i], erdDivs[i].style.width, erdDivs[0].style.height);
+            }
+        }
+        Reveal.addEventListener( 'ready', function(event) { generate_erds(document) } )
+        Reveal.addEventListener( 'slidechanged', function(event) { generate_erds(event.currentSlide) })
         }
     }
-});
-
-graph.on('change:position', function(cell) {
-    if(cell.attributes.position == undefined) { return }
-    /*if(cell.attr('text/text_original') == undefined || cell.attr('text/text_original') == null) {
-        cell.attr('text/text_original', ''+cell.attr('text/text'))
-    }
-    cell.attr('text/text', ''+cell.attributes.position.x+', '+cell.attributes.position.y)*/
-    console.log("pos: ["+cell.attributes.position.x+', '+cell.attributes.position.y+"]")
-});
+})();
+Reveal.registerPlugin( 'erd', ERDPlugin );

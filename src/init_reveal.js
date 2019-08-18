@@ -22,6 +22,7 @@ Reveal.initialize({
     { src: 'reveal.js/plugin/math/math.js', async: true },
     { src: 'reveal.js/plugin/search/search.js', async: true },
     { src: 'src/sql.js', async: true },
+    { src: 'src/erd.js' },
     { src: 'plugins/jump.js', async: true },
     { src: 'plugins/badges.js' }
 ]

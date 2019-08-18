@@ -53,10 +53,66 @@
 	</aside>
                 </section>
                 <section><h2>ER</h2>
-                <div id="paper" class="stretch erd"></div>
-
-                
-                
+                <div id="paper" class="stretch erd">
+                [[
+ { _e: "Employee", pos:[100, 200],
+  attributes: [
+   { _a:"Number", pos:[10, 90], options:["primary"] },
+   { _a:"Name", pos:[75, 30] },
+   { _a:"Skills", pos:[150, 90], options:["multi"] },
+  ]
+ },
+ { _e: "Wage", pos:[530, 200],
+   attributes: [
+    { _a:"Amount", pos:[440, 80], options:["derived"] }, 
+    { _a:"Date", pos:[585, 80] }
+   ],
+   options:["weak"]
+ },
+ { _e: "Salesman", pos:[100, 400],
+   attributes: [
+   {_a:"Phone", pos: [49, 329] }
+   ],
+   isa: {_e:"Employee"} 
+ }
+],
+[
+ { _r: "Gets paid", 
+   _e: ["Employee", "Wage"],
+   card: [1, "N"],
+   options: ["weak"],
+   attributes: [
+    { _a:"Currency", pos:[317, 116] }
+   ]
+ }
+]]</div>
+                </section>
+                <section><h2>Mini-ER</h2>
+                <div class="stretch erd">
+                [[
+                 { _e: "CDs", pos: [150, 100],
+                  attributes: [
+                   { _a:"ID", options:["primary"], pos: [16, 138] },
+                   { _a:"Titel", pos: [189, 196] }
+                  ]
+                 },
+                 { _e: "Musikstücke", pos: [530, 100],
+                   attributes: [
+                    { _a:"Nr", pos: [455, 25] }, 
+                    { _a:"Titel", pos: [634, 18] }, 
+                    { _a:"Künstler", pos: [650, 189] }
+                   ],
+                   options:["weak"]
+                 }
+                ],
+                [
+                 { _r: "beinhalten",
+                   _e: ["CDs", "Musikstücke"],
+                   card: [1, "N"],
+                   options: ["weak"]
+                 }
+                ]]
+                </div>
                 </section>
                 
                 
@@ -126,6 +182,10 @@ AND bezeichnung LIKE 'M%'
 		</div>
 
 		<script src="reveal.js/js/reveal.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
 
 		<script src="src/init_reveal.js"></script>
         
@@ -136,10 +196,6 @@ AND bezeichnung LIKE 'M%'
         }
         </script>
         
-        <script src="lib/jquery.js"></script>
-        <script src="lib/lodash.js"></script>
-        <script src="lib/backbone.js"></script>
-        <script src="lib/joint.min.js"></script>
-        <script src="src/erd.js"></script>
+
 	</body>
 </html>

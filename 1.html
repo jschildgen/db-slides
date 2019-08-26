@@ -69,7 +69,7 @@
  { _e: "Wage", pos:[530, 200],
    attributes: [
     { _a:"Amount", pos:[440, 80], options:["derived"] }, 
-    { _a:"Date", pos:[585, 80] }
+    { _a:"Date", pos:[585, 80], options:["extending_primary"] }
    ],
    options:["weak"]
  },
@@ -96,15 +96,15 @@
                 [[
                  { _e: "CDs", pos: [150, 100],
                   attributes: [
-                   { _a:"ID", options:["primary"], pos: [16, 138] },
+                   { _a:"ID", options:["primary"], pos: [89, 13] },
                    { _a:"Titel", pos: [189, 196] }
                   ]
                  },
                  { _e: "Musikstücke", pos: [530, 100],
                    attributes: [
-                    { _a:"Nr", pos: [455, 25] }, 
+                    { _a:"Nr", pos: [455, 25], options:["extending_primary"] }, 
                     { _a:"Titel", pos: [634, 18] }, 
-                    { _a:"Künstler", pos: [650, 189] }
+                    { _a:"Künstler", pos: [650, 189], options:["extending_primary"] }
                    ],
                    options:["weak"]
                  }

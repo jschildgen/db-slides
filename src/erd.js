@@ -419,10 +419,21 @@ var create_attributes = function(ent_or_att_obj, attributes, graph) {
         if(att.options==undefined || att.options==null) { att.options=[] }
         
         var att_obj = att.options.indexOf("primary")>-1 ? new Key()
+                : att.options.indexOf("extending_primary")>-1 ? new Key()
                 : att.options.indexOf("multi")>-1 ? new Multivalued()
-                : att.options.indexOf("derived")>-1 ? new Derived() : new Attribute();
+                : att.options.indexOf("derived")>-1 ? new Derived() : new Attribute();       
         
         att_obj.attr('text/text', att._a);
+        
+        if(att.options.indexOf("extending_primary")>-1) {
+            att_obj.attr('text/text-decoration', 'none')
+            var underlined_text = "";
+            for(var i = 0; i < att._a.length; i++) {
+                if(i%2==1) { underlined_text += "&#863;" }
+                underlined_text += att._a.charAt(i)
+            }
+            att_obj.attr('text/text', $('<textarea />').html(underlined_text).text());
+        }
         
         if(att.pos != undefined) {
             att_obj.position(att.pos[0],att.pos[1]);

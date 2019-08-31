@@ -1,4 +1,5 @@
 Reveal.initialize({
+ width:960, height:700,
  controls: false, 
  navigationMode: 'linear',
  slideNumber: 'c', 

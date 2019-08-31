@@ -25,3 +25,10 @@
     display: flex; 
     justify-content: space-around;
 }
+
+.green { color:rgba(66, 169, 170, 0.99) }
+.yellow { color:#ffcb63 }
+.orange { color:#ffaa63 }
+.gray { color: #797d9a }
+.red { color: #ff0000 }
+.blue { color: #0055ee }

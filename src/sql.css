@@ -89,7 +89,10 @@ mark {
   font-size: 1.55em; }
 
 .reveal h4 {
-  font-size: 1em; }
+  font-size: 1em; 
+  text-align:left;
+  font-weight: bold;
+ }
 
 .reveal h1 {
   text-shadow: none; }
@@ -118,9 +121,9 @@ mark {
 .reveal ol,
 .reveal dl,
 .reveal ul {
-  display: inline-block;
+  display: /*inline-block;*/ block;
   text-align: left;
-  margin: 0 0 0 1em; }
+  margin: 0 0 0 2em; }
 
 .reveal ol {
   list-style-type: decimal; }

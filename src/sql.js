@@ -20,7 +20,7 @@ var SQLPlugin = (function(){
             db = create_db();
             document.querySelectorAll('.hlsql').forEach(function(item) {
                 if(get_result_element(item) == null
-                   || item.classList.contains('dont_execute_sql')) { continue; }
+                   || item.classList.contains('dont_execute_sql')) { return; }
                 execute_query(item.innerText, get_result_element(item));
                 item.addEventListener('keydown', function (e) {
                     if (e.ctrlKey && e.keyCode==13) { // 13 is enter

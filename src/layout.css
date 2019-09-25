@@ -1,11 +1,11 @@
 .infobox {
     position: absolute;
-    width: 40%; 
-    box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); 
-    background-color:  rgba(66, 169, 170, 0.99); 
-    color: #fff; 
-    padding: 20px; 
-    font-size: 20px; 
+    width: 40%;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2);
+    background-color:  rgba(66, 169, 170, 0.99);
+    color: #fff;
+    padding: 20px;
+    font-size: 20px;
     text-align: left;
 }
 .infobox.small {
@@ -21,12 +21,30 @@
      left: 0;
 }
 
+.trackinfo {
+  position: absolute;
+  display: block;
+  right:0px;
+  top: 0px;
+  z-index: 31;
+  font-family: Helvetica, sans-serif;
+  font-size: 20px;
+  line-height: 1;
+  color: rgba(66, 169, 170, 0.99);
+  padding: 5px;
+}
+
+.nohighlight {
+  background:#474949;
+  color:#d1d9e1;
+}
+
 .columns {
-    display: flex; 
+    display: flex;
     justify-content: space-around;
 }
 
-/* colors: http://paletton.com/#uid=73i0u0kjAAl9uSqf1JJn-uIsLrg */ 
+/* colors: http://paletton.com/#uid=73i0u0kjAAl9uSqf1JJn-uIsLrg */
 i.green { color:rgba(66, 169, 170, 0.99) }
 i.yellow { color:#ffcb63 }
 i.orange { color:#ffaa63 }

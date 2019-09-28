@@ -457,11 +457,10 @@ function createERD(er, erdDiv, width, height) {
     var entity_index = {}; /* entity_name => cid */
     
     graph = new joint.dia.Graph();
-
     paper = new Paper({
         el: erdDiv,
         width: width,
-        height: height,
+        //height: height,
         model: graph
     });
     
@@ -580,7 +579,7 @@ function createERD(er, erdDiv, width, height) {
                     erdDivs[i].setAttribute('data-erd', erdDivs[i].innerHTML)
                 }
                 erdDivs[i].style.display = "block"
-                createERD(er, erdDivs[i], erdDivs[i].style.width, erdDivs[0].style.height);
+                createERD(er, erdDivs[i], erdDivs[i].style.width, erdDivs[i].style.height);
             }
         }
         Reveal.addEventListener( 'ready', function(event) { generate_erds(document) } )

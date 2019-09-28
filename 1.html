@@ -57,7 +57,7 @@
                     <li>Di, 10:15 Uhr (D14/111)</li>
                 </ul>
                 <br/>
-                <h4>Prakikum (ab 2019-10-21)</h4>
+                <h4>Praktikum (ab 2019-10-21)</h4>
                 <ul>
                     <li>Jede Woche ein Übungsblatt; insgesamt 12 Stück</li>
                     <li>Aufgabe 1 (gibt i.d.R. 1 Punkt):<br>Abgabe online bis Montag 12:00 Uhr</li>
@@ -334,7 +334,7 @@ commit;</code></pre></div>
 <div style="position: absolute; top: 80px; right:50px; font-size:220px"><i class="fas fa-random green"></i><div>
 
                 <aside class="notes">
-		Das hier dargestellte ACID-Paradima beschreibt die Eigenschaften von Transaktionen in Datenbanken. Transaktionen sind eine Sammlung von Aktionen, die stets als Gesamtheit - atomar - ausgeführt werden. Des Weiteren überführen Transaktionen die Datenbank von einem Konsistenten Zustand in einen konsistenten Zustand. Parallel laufende Transaktionen beeinflussen sich nicht. Und Änderungen an der Datenbank, die mit einem Commit bestätigt werden, bleiben dauerhaft in ihr gespeichert.
+		Das hier dargestellte ACID-Paradigma beschreibt die Eigenschaften von Transaktionen in Datenbanken. Transaktionen sind eine Sammlung von Aktionen, die stets als Gesamtheit - atomar - ausgeführt werden. Des Weiteren überführen Transaktionen die Datenbank von einem Konsistenten Zustand in einen konsistenten Zustand. Parallel laufende Transaktionen beeinflussen sich nicht. Und Änderungen an der Datenbank, die mit einem Commit bestätigt werden, bleiben dauerhaft in ihr gespeichert.
 	</aside>
                 </section>
 
@@ -345,14 +345,14 @@ commit;</code></pre></div>
 									<ul style="list-style-type:none;">
 										<li>Speicherung von Daten in Dateien</li>
 										<li>(-) Komplexe Anwendungsentwicklung</li>
-										<li>(-) Ineffizent (langsam)</li>
+										<li>(-) Ineffizient (langsam)</li>
 										<li>(-) Keine Anfragesprache</li>
 										<li>(-) Kein ACID</li>
 										<li>(-) Redundanz</li>
 									</ul>
 									<div style="position: absolute; top: 230px; right:50px; font-size:220px"><i class="fas fa-file-csv green"></i><div>
 										<aside class="notes">
-										Verwenden Anfwendungen statt einer DB simple Dateien, ist die Entwicklung von Einfüge-, Änderungs- und Suchfunktionen sehr aufwändig. Da sich nicht um ACID gekümmert wird, können Inkonsistenzen entstehen, Änderungen verlorengehen und vieles mehr. In Datenbanken gilt das Prinzip der Redundanzfreiheit. Jede Info wird nur einmal gespeichert. In Dateien ist oft der Fall, dass ein und der selbe Fakt an vielen Stellen zu finden ist.
+										Verwenden Anwendungen statt einer DB simple Dateien, ist die Entwicklung von Einfüge-, Änderungs- und Suchfunktionen sehr aufwändig. Da sich nicht um ACID gekümmert wird, können Inkonsistenzen entstehen, Änderungen verlorengehen und vieles mehr. In Datenbanken gilt das Prinzip der Redundanzfreiheit. Jede Info wird nur einmal gespeichert. In Dateien ist oft der Fall, dass ein und der selbe Fakt an vielen Stellen zu finden ist.
 										</aside>
 								</section>
 
@@ -476,7 +476,7 @@ commit;</code></pre></div>
 									<p>Metadaten (Datenbankschema):</p>
 									<ul>
 										<li>Festlegung der Struktur der zu speicherenden Daten</li>
-										<li>weitgehend zeitinvariant; gepeichert im DB-Katalog</li>
+										<li>weitgehend zeitinvariant; gespeichert im DB-Katalog</li>
 									</ul>
 									<p>Daten (Ausprägungen):</p>
 									<ul>
@@ -541,7 +541,195 @@ commit;</code></pre></div>
 
 								<section>
 									<h3>Evolution der Datenmodelle</h3>
-									<img class="stretch" src="img/1/datamodels.png" style="border:0; box-shadow:none">
+									<div class="sl-block" data-block-type="line" data-block-id="a3e50c00975c9f6e5dde5f672a687a04" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 80px; top: 560px;">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="720" data-line-y2="200" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="720" height="1" viewBox="0 200 720 1">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="716" y2="200"></line>
+												<line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="716" y2="200"></line>
+												<polygon fill="#000000" transform="translate(716,200) rotate(90)" points="0,-4 4,4 -4,4"></polygon>
+											</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="text" data-block-id="4a88991a110fc83e2bb8db0a31664d24" style="height: auto; min-width: 30px; min-height: 30px; width: 692px; left: 80px; top: 539px;">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+											<p><span style="font-size:0.46em">1960&nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; &nbsp; 1970&nbsp; &nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; 1980&nbsp; &nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; 1990&nbsp; &nbsp;</span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em"> &nbsp; &nbsp; 2000&nbsp; &nbsp;</span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em"> &nbsp; &nbsp; 2010&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2019</span></p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" data-block-id="8395c9e11c4a7e68086aec3d8a72d78f" style="height: auto; min-width: 30px; min-height: 30px; width: 153px; left: 133px; top: 420px;">
+										<div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">Hierarchical</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 133px; left: 199px; top: 460px;" data-block-id="845889d91fb01886ba0dbedc18fcf02a">
+										<div class="sl-block-content orange" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">Network</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 601px; left: 199px; top: 380px;" data-block-id="33570c396d9c494a03af12cbdbed502b">
+										<div class="sl-block-content green" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">Relational</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="line" data-block-id="18d204517a07e2612afcb4cc3d4ef87e" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 273px; top: 197px;">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="0" data-line-y2="-163" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 12;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="363" viewBox="0 -163 1 363">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="0" y2="-163"></line>
+												<line stroke="#000000" stroke-width="2" stroke-dasharray="5.95 5.95" x1="0" y1="200" x2="0" y2="-163"></line>
+											</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="text" data-block-id="74c9330a4663c7c4b74451618232090c" style="height: auto; min-width: 30px; min-height: 30px; width: 99px; left: 254px; top: 162px;">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18; font-size: 60%;">
+											<p>SQL</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 239px; top: 129px;" data-block-id="87a2ba430d3ff0a0fa36bf92ebe5dfbc">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="0" data-line-y2="-233" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 11;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="433" viewBox="0 -233 1 433">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="0" y2="-233"></line>
+												<line stroke="#000000" stroke-width="2" stroke-dasharray="5.930555555555556 5.930555555555556" x1="0" y1="200" x2="0" y2="-233"></line>
+											</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 164px; left: 195px; top: 100px;" data-block-id="08c307526521e2e03d3bb3f3ad3e7623">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19; font-size: 60%;">
+											<p>CODASYL</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 319px; top: 257px;" data-block-id="82d2ebbb39c649406e6d4307100392a9">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="1" data-line-y2="-105" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 10;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="305" viewBox="0 -105 1 305">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="1" y2="-105"></line>
+												<line stroke="#000000" stroke-width="2" stroke-dasharray="5.980032786797133 5.980032786797133" x1="0" y1="200" x2="1" y2="-105"></line>
+											</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 151px; left: 281px; top: 225px;" data-block-id="e04d2d4a822c6c90e05ffd89f504aaab">
+										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20; font-size: 60%;">
+											<p>ER Model</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 202px; left: 411px; top: 490px;" data-block-id="27d3de1366471fab80dcdc8ed5e7fe79">
+										<div class="sl-block-content blue" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 21; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">Object-Oriented</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 360px; left: 440px; top: 335px;" data-block-id="d371797a7da717d6eeeb7b60375f77e9">
+										<div class="sl-block-content green" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">Object-Relational</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 288px; left: 512px; top: 289px;" data-block-id="afb33d670a9488c637fcc38f2789b542">
+										<div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 23; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">Semi-Structured</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 560px; top: 242px;" data-block-id="ef7f4bf50c7e32e143bb0bfadb11bbfb">
+										<div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 24; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">XML</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 147px; left: 653px; top: 195px;" data-block-id="558b3194b57f795f113873ffd06fc5cd">
+										<div class="sl-block-content red" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 25; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">NoSQL</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 123px; left: 677px; top: 149px;" data-block-id="ea54672547a03f5437213ef129aa0c90">
+										<div class="sl-block-content red" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27; border-style: solid; border-width: 1px; font-size: 60%;" dir="ui">
+											<p style="text-align:center">Multi-Model</p>
+										</div>
+									</div>
+								</section>
+
+
+								<section>
+									<h2>Datenabstraktion</h2>
+									<h4>Externe Ebene (Sichten / Views)</h4>
+									<p style="margin-left: 50px">Sicht auf eine Teilmenge des<br>logischen Schemas für eine<br>bestimmte Benutzergruppe</p>
+									<h4>Logische Ebene</h4>
+									<p style="margin-left: 50px">DB-Gesamt-Schema</p>
+									<h4>Phyische Ebene</h4>
+									<p style="margin-left: 50px">Internes Schema / Speicherung der Daten</p>
+
+									<div class="sl-block" data-block-type="text" data-block-id="f950b0fdfdb807f255affb1a7b9083e0" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 720px; top: 171px;">
+										<div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 1px;">
+											<p style="text-align: center">Sicht</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 847px; top: 171px;" data-block-id="0784202251b42d7e07e357b78f9b8366">
+										<div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-style: solid; border-width: 1px;">
+											<p style="text-align: center">Sicht</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 593px; top: 171px;" data-block-id="e9cc541a3e41d442b19ca7c018ea9df7">
+										<div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 1px;">
+											<p style="text-align: center">Sicht</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 657px; top: 321px;" data-block-id="dd81c5662240a66c3473d3fcda17e1ea">
+										<div class="sl-block-content green" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; border-style: solid; border-width: 1px;">
+											<p style="text-align: center">log. Schema</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 657px; top: 449px;" data-block-id="fd7cb8aab0729402c95ce463dbdde65a">
+										<div class="sl-block-content orange" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; border-style: solid; border-width: 1px;">
+											<p style="text-align: center">int. Schema</p>
+										</div>
+									</div>
+									<div class="sl-block" data-block-type="line" data-block-id="97ebbb519a4283ff5083d5f69defcf07" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 777px; top: 372px;">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="0" data-line-y2="113" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="87" viewBox="0 113 1 87">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="190" x2="0" y2="117"></line>
+												<line stroke="#000000" stroke-width="2" x1="0" y1="190" x2="0" y2="117"></line>
+												<polygon fill="#000000" transform="translate(0,117) rotate(0)" points="0,-4 4,4 -4,4"></polygon>
+											</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 657px; top: 222px;" data-block-id="f476360cc7585a7a646a5bfb96f8ebb6">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="-119" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="119" height="99" viewBox="-119 101 119 99">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="-116" y2="104"></line>
+												<line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="-116" y2="104"></line>
+												<polygon fill="#000000" transform="translate(-116,104) rotate(-50.242)" points="0,-4 4,4 -4,4"></polygon>
+											</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 776px; top: 222px;" data-block-id="f7a3327b02cacd25d26952306df608a9">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="1" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="99" viewBox="0 101 1 99">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="1" y2="105"></line>
+												<line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="1" y2="105"></line>
+												<polygon fill="#000000" transform="translate(1,105) rotate(0.579)" points="0,-4 4,4 -4,4"></polygon>
+											</svg></div>
+									</div>
+									<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 777px; top: 222px;" data-block-id="0770aeffdb19bbad6e1b058c7b08b2aa">
+										<div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="124" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 19;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="124" height="99" viewBox="0 101 124 99">
+												<line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="121" y2="103"></line>
+												<line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="121" y2="103"></line>
+												<polygon fill="#000000" transform="translate(121,103) rotate(51.397)" points="0,-4 4,4 -4,4"></polygon>
+											</svg></div>
+									</div>
+								</section>
+
+								<section>
+									<h2>Datenabstraktion (Bsp.)</h2>
+									<h4>Externe Ebene (für Webshop-Anwendung)</h4>
+										<table style="font-size:0.7em" data-fragment-index="0">
+											<thead>
+												<tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th><th>Bewertung</th></tr>
+												<tr><td>17</td><td>Schokoriegel</td><td>0.89</td><td>4.5</td></tr>
+												<tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td><td>2.0</td></tr>
+										</table>
+									<h4>Logische Ebene</h4>
+										<div class="columns stretch">
+											<div style="margin-top:0px;">
+										<table style="font-size:0.7em" data-fragment-index="0">
+											<thead>
+												<tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th></tr>
+												<tr><td>17</td><td>Schokoriegel</td><td>0.89</td></tr>
+												<tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td></tr>
+										</table>
+									</div>
+									<div style="margin-top:0px;">
+											<table style="font-size:0.7em" data-fragment-index="0">
+											<thead>
+												<tr><th><u>Kundennr</u></th><th><u>Prodnr</u></th><th>Bew</th></tr>
+												<tr><td>5</td><td>17</td><td>4</td></tr>
+												<tr><td>8</td><td>17</td><td>5</td></tr>
+												<tr><td>5</td><td>29</td><td>2</td></tr>
+										</table>
+
+										
+									</div>
+									</div>
+									<p><b>Physische Ebene: </b>0010110000000100101111010101...</p>
 								</section>
 			</div>
 		</div>

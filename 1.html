@@ -319,6 +319,20 @@ generierten;</code></pre>
 										<aside class="notes">Ziel des Data-Minings ist es, aus vorhandenen Datenbeständen Wissen zu gewinnen. Eine Spezialisierung ist beispielsweise Text Mining, welches aus Verfahren zur Analyse meist unstrukturierter Texte besteht.</aside>
 								</section>
 
+				<section>
+					<h2>Transkationskonzept</h2>
+					<ul>
+						<li>DBMS unterstüzt Mehrbenutzerbetrieb</li>
+						<li>TA = Folge mehrerer DB-Operationen als eine Einheit</li>
+						<li>TAs laufen parallel</li>
+						<li>Fehlerhafte TAs werden vollständig zurückgesetzt</li>
+					</ul>
+					<div data-badge="Transaktion" data-badge-position="tr"><pre><code class="java">konto1.kontostand -= 100;
+konto2.kontostand += 100;
+commit;</code></pre></div>
+					<aside class="notes">Die hier dargestellte Transaktion (TA) besteht aus zwei Schreiboperationen auf zwei Konten. Die Commit-Operation schließt die Transaktion ab. Tritt beispielsweise bei der Ausführung des zweiten Befehls ein Fehler auf (Konto existiert nicht, Limit erreicht, Hardwarefehler,...), wird auch der Rest der TA, also der erste Befehl, nicht ausgeführt. Mittels eines Rollbacks statt dem Commit kann die Transaktion manuell abgebrochen und zurückgesetzt werden.</aside>
+				</section>
+
 				<section><h2>ACID-Transaktionen</h2>
                 <ul>
                 <li>Atomarität</li>
@@ -440,7 +454,16 @@ commit;</code></pre></div>
 
 
 
-                </section>
+				</section>
+				
+				<section>
+					<h2>Anfragesprachen</h2>
+					<p>Benutzer und Anwendungen sprechen mit dem DBMS in einer Anfragesprache (Query Language).</p>
+					<h4>Data Definition Language (DDL)</h4>
+					<p>zur Definition des DB-Schemas</p>
+					<h4>Data Manipulation Language (DML)</h4>
+					<p>für den lesenden und schreibenden Zugriff auf die Daten</p>
+				</section>
 
 								<section><h2>Anfrageausführung</h2>
 									<div class="trackinfo"><i class="fas fa-headphones"></i> 6</div>
@@ -642,7 +665,8 @@ commit;</code></pre></div>
 									<p style="margin-left: 50px">DB-Gesamt-Schema</p>
 									<h4>Phyische Ebene</h4>
 									<p style="margin-left: 50px">Internes Schema / Speicherung der Daten</p>
-
+									
+									<div id="svg_data_abstraction">
 									<div class="sl-block" data-block-type="text" data-block-id="f950b0fdfdb807f255affb1a7b9083e0" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 720px; top: 171px;">
 										<div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 1px;">
 											<p style="text-align: center">Sicht</p>
@@ -696,6 +720,7 @@ commit;</code></pre></div>
 												<polygon fill="#000000" transform="translate(121,103) rotate(51.397)" points="0,-4 4,4 -4,4"></polygon>
 											</svg></div>
 									</div>
+								</div>
 								</section>
 
 								<section>
@@ -731,6 +756,135 @@ commit;</code></pre></div>
 									</div>
 									<p><b>Physische Ebene: </b>0010110000000100101111010101...</p>
 								</section>
+								<section>
+									<h2>Datenunabhängigkeit</h2>
+									<h4>Logische Datenunabhängigkeit</h4>
+									<p style="font-size: 75%">Änderungen am logischen Schema<br>(z. B. Spaltenumbenennung) erfordern<br>lediglich eine Anpassung der externen<br>Sichten. Anwendungen bleiben unberührt.</p>
+									<h4>Physiche Datenunabhängigkeit</h4>
+									<p style="font-size: 75%">Änderungen an internen Speicher- oder<br>Zugriffsstrukturen haben keine Auswirkungen<br>auf das logische oder externe Schema.</p>
+									
+									<div data-clone="svg_data_abstraction"></div>
+
+									<aside class="notes">Wird in dem Beispiel auf der vorherigen Folie auf logischer Ebene die Spalte Bezeichnung in Produktbezeichnung umbenannt, kann die entsprechende Sicht auf externer Ebene einfach angepasst werden und alle bisherigen Anwendungen, die über die Sicht auf die Daten zugreifen, funktionieren auch weiterhin noch.</aside>
+								</section>
+								<section>
+									<h2>Architektur von DBMS</h2>
+									<p>Vereinfachtes Modell: 3-Schichten-Modell</p>
+
+									<h4>Datensystem</h4>
+									<p style="font-size: 75%; margin-left: 25px">Übersetzung und Optimierung von Anfragen</p>
+									<h4>Zugriffssystem</h4>
+									<p style="font-size: 75%; margin-left: 25px">Verwaltung von Datensätzen und Indexen</p>
+									<h4>Speichersystem</h4>
+									<p style="font-size: 75%; margin-left: 25px">Blockverwaltung und Caching</p>
+<div id="3-layer-dbms-model">
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 59px; left: 702px; top: 563px;" data-block-id="a9f123bce86af85081d17d7f45f0a07d">
+    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="#5473b9" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 59">
+            <rect width="245" height="59" rx="0" ry="0" class="shape-element" fill="#5473b9"></rect>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 702px; top: 540px;" data-block-id="23b66a914065e12b6df1b365d3e4f086">
+    <div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="#5473b9" data-shape-stretch="true" style="z-index: 12;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+            <defs>
+                <clipPath id="shape-mask-1-1569671435240">
+                    <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5"></ellipse>
+                </clipPath>
+            </defs>
+            <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" clip-path="url(#shape-mask-1-1569671435240)" class="shape-element" fill="#5473b9" stroke="#000000" stroke-width="10"></ellipse>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 245px; height: 45px; left: 702px; top: 600px;" data-block-id="38782545b5f15b91031575f2b092941c">
+    <div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="#5473b9" data-shape-stretch="true" style="z-index: 10;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+            <defs>
+                <clipPath id="shape-mask-2-1569671435244">
+                    <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5"></ellipse>
+                </clipPath>
+            </defs>
+            <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" clip-path="url(#shape-mask-2-1569671435244)" class="shape-element" fill="#5473b9" stroke="#000000" stroke-width="10"></ellipse>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 702px; top: 563px;" data-block-id="34ce3546a9010cb5ded5b45cd8c73cd5">
+    <div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 13;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+            <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+            <line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 946px; top: 563px;" data-block-id="96fe4673d2ecfe1864921590fd3bcd0d">
+    <div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+            <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+            <line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 244px; left: 702px; top: 583px;" data-block-id="cf12a0fd874d93cfb4680bffaedc1a19">
+    <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15;">
+        <p style="text-align: center">DB</p>
+    </div>
+</div>
+<div class="sl-block" data-block-type="text" data-block-id="6806b8c0d7c7444efa2b45a82c2baa79" style="height: auto; min-width: 30px; min-height: 30px; width: 275px; left: 685px; top: 400px;">
+    <div class="sl-block-content red" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; border-style: solid; border-width: 1px;">
+        <p style="text-align: center">Speichersystem</p>
+    </div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 275px; left: 685px; top: 310px;" data-block-id="26da37b520305112b581fd305e3ced49">
+    <div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; border-style: solid; border-width: 1px;">
+        <p style="text-align: center">Zugriffssystem</p>
+    </div>
+</div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 275px; left: 685px; top: 219px;" data-block-id="0fe57be31b31308d443ad0ead846733c">
+    <div class="sl-block-content green" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18; border-style: solid; border-width: 1px;">
+        <p style="text-align: center">Datensystem</p>
+    </div>
+</div>
+<div class="sl-block" data-block-type="text" data-block-id="8531c69bebfd04f9648edb8f2b278a2f" style="height: auto; min-width: 30px; min-height: 30px; width: 123px; left: 780px; top: 125px;">
+    <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19; text-align: left;">
+        <p><span style="font-size:0.7em">Anfrage</span></p>
+    </div>
+</div>
+<div class="sl-block" data-block-type="line" data-block-id="94a9aed748caac1e9d30e25b32dbbb09" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 823px; top: 452px;">
+    <div class="sl-block-content" data-line-x1="443" data-line-y1="191" data-line-x2="443" data-line-y2="290" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 20;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="99" viewBox="443 191 1 99">
+            <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="443.5" y1="191.5" x2="443.5" y2="273.5"></line>
+            <line stroke="#000000" stroke-width="5" x1="443.5" y1="191.5" x2="443.5" y2="273.5"></line>
+            <polygon fill="#000000" transform="translate(443,273) rotate(180)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 822px; top: 362px;" data-block-id="d97b87edf90dbb965649039a58d9ab0a">
+    <div class="sl-block-content" data-line-x1="443" data-line-y1="240" data-line-x2="443" data-line-y2="290" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 21;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="50" viewBox="443 240 1 50">
+            <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="443.5" y1="240.5" x2="443.5" y2="273.5"></line>
+            <line stroke="#000000" stroke-width="5" x1="443.5" y1="240.5" x2="443.5" y2="273.5"></line>
+            <polygon fill="#000000" transform="translate(443,273) rotate(180)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 821px; top: 272px;" data-block-id="b87cf3cb30c39fe2eae4bfff06fc22e4">
+    <div class="sl-block-content" data-line-x1="443" data-line-y1="240" data-line-x2="443" data-line-y2="290" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 22;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="50" viewBox="443 240 1 50">
+            <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="443.5" y1="240.5" x2="443.5" y2="273.5"></line>
+            <line stroke="#000000" stroke-width="5" x1="443.5" y1="240.5" x2="443.5" y2="273.5"></line>
+            <polygon fill="#000000" transform="translate(443,273) rotate(180)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+        </svg></div>
+</div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 820px; top: 169px;" data-block-id="7c38f09faa285c7f807fe404b8f8d485">
+    <div class="sl-block-content" data-line-x1="443" data-line-y1="240" data-line-x2="443" data-line-y2="290" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 24;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="50" viewBox="443 240 1 50">
+            <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="443.5" y1="240.5" x2="443.5" y2="283.5"></line>
+            <line stroke="#000000" stroke-width="5" x1="443.5" y1="240.5" x2="443.5" y2="283.5"></line>
+            <polygon fill="#000000" transform="translate(443,283) rotate(180)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+        </svg></div>
+</div>
+</div>
+									
+								</section>
+
+			<section>
+							<h2>Zusammenfassung</h2>
+							<ul>
+								<li>OLTP / OLAP</li>
+								<li>ACID-Transkationen</li>
+								<li>DB + DBMS = DBS</li>
+								<li>DDL / DML</li>
+								<li>Metadaten / Daten</li>
+								<li>Konzept. / Log. / Phys. Datenmodell</li>
+								<li>Ext. / Log. / Phy. Datenebene</li>
+								<li>Datensystem / Speichersystem / Zugriffssystem</li>
+							</ul>
+			</section>
 			</div>
 		</div>
 

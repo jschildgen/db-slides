@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Übungsblatt 1</title>
+    <link rel="stylesheet" href="exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Datenbanken 1 - WS 2019/20</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@h-da.de<br>
+            <b>Übungsblatt 1 vom 21.10.2019</b>
+        </div>
+        <div><img src="../img/hda.png" style="border:0; height:80px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Aufgabe 1: Datenbanken-Grundbegriffe (1P)</h1>
+    <p>Abgabe-Deadline: 21.10.2019 12:00 im Moodle</p>
+    <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 0.1 Punkte, falsche Antworten geben keine Punktabzüge, maximal ist 1 Punkt möglich.</p>
+    <table border="0" style="width: 100%">
+    <tr>
+        <td style="width:10mm">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td style="text-align: center; width:15mm">Richtig</td>
+        <td style="text-align: center; width:15mm">Falsch</td>
+    </tr>
+    <tr>
+        <td>1.</td><td>In OLTP-Systemen sind Transaktionen oft komplex und langdauernd.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>2.</td><td>Ein Data-Warehouse ist eine separate DB, die parallel zur operationalen DB zum Einsatz kommt.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>3.</td><td>Das I in ACID steht für Integrität.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>4.</td><td>MySQL ist ein Datenbankmanagementsystem.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>5.</td><td>Ein Befehl einer Anfragesprache, mit dem man eine neue Spalte in eine existierende Tabelle hinzufügen kann, fällt in die Kategorie DDL.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>6.</td><td>In den DB-Metadaten wird beschreiben, dass Peter die Telefonnummer 0151-12345 hat.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>7.</td><td>Daten belegen in der Regel mehr Platz als Metadaten.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>8.</td><td>Das logische Datenmodell legt fest, wie Datensätze intern auf die Festplatte gespeichert werden.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>9.</td><td>Eine View ist eine Sicht auf die in der Datenbank gespeicherten Daten und kann zum externen Zugriff für Anwendungen dienen.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>10.</td><td>Wenn ich bei meinem DBS die Storage-Engine umstelle, muss ich mein Tabellenschema komplett neu anpassen.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>11.</td><td>Das Datensystem nimmt eine Anfrage entgegen und das Speichersystem greift auf die entsprechenden Blöcke im RAM und auf der Festplatte zu.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    </table>
+</section>
+
+    <section style="page-break-inside:avoid; padding-top: 2.5cm">
+    <h1>Aufgabe 2: Datenbankanwendungen</h1>
+    <p>Datenbanken kommen bei einer Vielzahl von Anwendungen zum Einsatz, zum Beispiel bei:</p>
+<p><em>Facebook, eBay, BlaBlaCar, PayPal, Flixbus, Payback, Yelp, Voi, Netflix, Audible, Twitter</em></p>
+<p>Suchen Sie sich (gerne zusammen im 2er- oder 3er-Team) eine Anwendung heraus und beantworten Sie die unten genannten Fragen. Es gibt nicht eine richtige Antwort, sondern viele Lösungen. Wenn Sie bei einer Frage keine Idee haben, überspringen Sie sie einfach und kommen Sie am Schluss nochmal darauf zurück.</p>
+
+<ol>
+<li>Schreiben Sie eine simple Tabelle auf ein Blatt Papier, die in Ihrer Anwendung vorkommen könnte und dort eine zentrale Rolle spielt. Die Tabelle soll mindestens 2 Beispieldatenzeilen besitzen.</li>
+<li>Was aus Ihrer Tabelle sind Metadaten (das Schema) und was sind die Daten?</li>
+<li>Ein Informationssystem (a) erfasst, (b) speichert dauerhaft, (c) verarbeitet, (d) verändert, (e) analysiert Daten, (f) stellt Daten bereit und (g) zeigt sie an. Geben Sie zu jedem Punkt je ein Beispiel aus Ihrer Anwendung.</li>
+<li>Nennen Sie jeweils zwei typische OLTP- und OLAP-Anfragen, die in Ihrer Anwendung an die Datenbank oder ein Data-Warehouse gestellt wird.</li>
+<li>Überlegen Sie sich ein Beispiel für Data Mining in Ihrer Anwendung.</li>
+<li>Definieren Sie eine typische Transaktion in Ihrer Anwendung, die aus mehreren Operationen besteht, welche als atomare Einheit entweder ganz oder gar nicht ausgeführt werden müssen.</li>
+<li>Überlegen Sie sich zwei verschiedene Sichten für verschiedene Anwendergruppen auf Ihre Beispieltabelle.</li>
+</ol>
+</section>
+</body>
+</html>

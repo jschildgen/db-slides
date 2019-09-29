@@ -1,0 +1,309 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken 1 - Kapitel 2 - ER-Modelle</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reset.css">
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                            <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h4>
+                            <h1>Datenbanken 1</h1>
+                            <h3>Kapitel 2: ER-Modelle</h3>
+                            <h4 style="text-align:center">2019-10-21</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                        </section>
+                        <section>
+                            <h2>Datenmodellierung</h2>
+                            <h4>Konzeptionelles Datenmodell</h4>
+                            <ul>
+                                <li>Unabhängig vom eingesetzten DBMS</li>
+                                <li><b>ER-Diagramme</b>, UML, ...</li>
+                            </ul>
+                            <div>
+									<div class="stretch erd">
+	                [[
+	                 { _e: "Personen", pos: [150, 100],
+	                  attributes: [
+	                   { _a:"PersNr", options:["primary"], pos: [89, 13] },
+	                   { _a:"Name", pos: [245, 13] }
+	                  ]
+	                 },
+	                 { _e: "Termine", pos: [530, 100],
+	                   attributes: [
+	                    { _a:"Datum", pos: [475, 25], options:["primary"] },
+	                    { _a:"Uhrzeit", pos: [634, 25], options:["primary"] },
+	                    { _a:"Raum", pos: [722, 106], options:["primary"] },
+	                    { _a:"Dauer", pos: [650, 189]},
+	                    { _a:"Bezeichnung", pos: [475, 189]}
+	                   ]
+	                 }
+	                ],
+	                [
+	                 { _r: "nehmen teil",
+	                   _e: ["Personen", "Termine"],
+	                   card: ["N", "M"]
+	                 }
+	                ]]
+								</div></div>
+                            </section>
+                            <section>
+                                <h2>DB-Entwurf</h2>
+                                <ol>
+                                    <li class="fragment">Wir stellen uns etwas aus der<br>realen Welt vor</li>
+                                    <li class="fragment">Modellierung einer <em>Miniwelt</em><br>als konzeptionelles Schema</li>
+                                    <li class="fragment">Transformation in ein DB-Schema<br>(Relational, XML, ...)</li>
+                                </ol>
+                                <div style="position: absolute; top: 120px; right:50px; font-size:250px"><i class="fas fa-lightbulb green"></i><div></div>
+                                <aside class="notes">Die Miniwelt ist ein Ausschnitt der realen Welt. Beispiel: Personen haben eine Personalnummer und einen Namen. Dadurch reduzieren wir Personen auf lediglich diese beiden Eigenschaften, die in unserer Miniwelt relevant sind. Das konzeptionelle Schema kann manuell oder semi-automatisch in ein Datenbankschema transformiert werden, z. B. in <code>CREATE TABLE</code>-Befehle oder ein XML-Schema.</aside>
+                            </section>
+                            <section>
+                                <h2>Ziele des DB-Entwurfs</h2>
+                                
+                                <ul>
+                                    <li>Genaue Abbildung</li>
+                                    <li>Aktuell</li>
+                                    <li>Verständlich</li>
+                                    <li>Simpel</li>
+                                    <li>Redundanzfrei</li>
+                                </ul>
+                                <div style="position:absolute; left: 400px; top: 150px; height: 250px; overflow:hidden;">
+                                <div class="erd" style="width: 400px;">
+                                        [[
+                                         { _e: "Personen", pos: [150, 100],
+                                          attributes: [
+                                           { _a:"Vorname", options:["primary"], pos: [89, 13] },
+                                           { _a:"MySpace-URL", pos: [245, 13] },
+                                           { _a:"ZKX-Nr.", pos: [175, 183]}
+                                          ]
+                                         }
+                                        ],
+                                        [
+                                        ]]
+                                </div></div>
+                                <p style="font-size: 75%">Viele Fehler und Probleme fallen bereits in der Modellierungsphase auf. So können sie frühzeitig behandelt werden.</p>
+                                <aside class="notes">Im schlechten Beispiel-Diagramm auf dieser Folie fehlen wichtige Attribute, z. B. der Nachname. Außerdem ist ein Vorname kein sinnvoller Primärschlüssel. Die MySpace-URL ist vermutlich veraltet und was die KNX-Nr. ist, ist unklar. Wird frühzeitig gemäß Kundenanforderungen ein solches konzeptionelles Modell angefertigt, kann Kundenfeedback erfragt und eingearbeitet werden und somit das Modell schrittweise den Anforderungen des Kunden gerecht werden.</aside>
+                            </section>
+                            <section>
+                                <h2>Entity-Relationship-Modell</h2>
+                                <p>Das ERM modelliert Dinge (Entities) und<br>Beziehungen (Relationships) zwischen diesen.</p>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 7</div>
+
+                                    <div class="stretch erd">
+                                            [[
+                                             { _e: "Entitätstyp 1", pos: [150, 100] },
+                                             { _e: "Entitätstyp 2", pos: [530, 100] }
+                                            ],
+                                            [
+                                             { _r: "Beziehung",
+                                               _e: ["Entitätstyp 1", "Entitätstyp 2"],
+                                               card: ["", ""]
+                                             }
+                                            ]]
+                                                        </div>
+                                    <aside class="notes">Im ER-Diagramm werden Entitätstypen als Rechtecke dargestellt. Ein Entitätstyp ist so etwas wie eine Klasse. Instanzen eines Entitätstypen werden Entities genannt. Das ER-Modell beschreibt also, wie mögliche Entities aussehen können und wie sie in Beziehung zueinander stehen können.</aside>
+                            </section>
+                            <section>
+                                <h2>Entitätstypen und Entities</h2>
+                                <div style="position:absolute; left: 600px; top: 150px; height: 200px; overflow:hidden;">
+                                <div class="erd" style="width: 200px;">
+                                        [[
+                                         { _e: "Personen", pos: [20, 50] }
+                                        ],
+                                        [
+                                        ]]
+                                </div></div>
+                                <h4>Entitätstyp</h4>
+                                <ul>
+                                    <li>Rechteck im ER-Diagramm</li>
+                                    <li>z. B. &quot;Personen&quot;</li>
+                                </ul>
+                                <h4 style="margin-top: 20px">Entität</h4>
+                                <ul>
+                                    <li>Unterscheidbare Objekte der Miniwelt</li>
+                                    <li><em>Ausprägungen</em> von Entitätstypen</li>
+                                    <li>z. B. &quot;Peter mit der Personalnummer 5&quot;</li>
+                                    <li>Entitäten tauchen nicht im ER-Diagramm auf</li>
+                                </ul>
+                                <aside class="notes">ER-Diagramme stellen Metadaten dar. Sie beschreiben, was in einer Datenbank gespeichert werden kann. Sie beinhalten nicht die Daten selbst.</aside>
+                            </section>
+
+                            <section>
+                                <h2>Attribute</h2>
+                                    <ul>
+                                        <li>Eigenschaften von Entitäten<br>und Entitätstypen</li>
+                                        <li>Haben <em>Werte</em></li>
+                                    </ul>
+                                    <p>&quot;Peter hat die Personalnummer 5&quot;</p>
+                                    <p>&quot;Personen haben eine Personalnummer<br>und einen Namen&quot;</p>
+                                    <div style="position:absolute; left: 600px; top: 150px; height: 200px; overflow:hidden;">
+                                    <div class="erd" style="width: 400px;">
+                                            [[
+                                             { _e: "Personen", pos: [150, 100],
+                                              attributes: [
+                                                { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                                { _a:"Name", pos: [245, 13] }
+                                              ]
+                                             }
+                                            ],
+                                            [
+                                            ]]
+                                    </div></div>
+                                    <aside class="notes">Bei der Erstellung von ER-Diagrammen hilft es immer, sich konkrete Ausprägungen der Entitätstypen vorzustellen, z. B. hier Peter mit der Personalnummer 5, auch wenn Peter nichts im ER-Diagramm zu suchen hat. Wenn man sich jedoch keine Ausprägungen vorstellen kann, hat man meist einen Fehler beim Erstellen des Entitätstyp gemacht. &quot;Personalabteilung&quot; oder &quot;Datenbank&quot; sind zum Beispiel keine sinnvollen instanziierbaren Entitätstypen. Attribute haben einen Datentypen, welcher jedoch im ER-Diagramm in der Regel nicht spezifiziert wird. Auch andere Eigenschaften, z. B. ob ein Attribut Pflicht oder optional ist, tauchen meist im ER-Diagramm nicht auf.</aside>
+                            </section>
+                            <section>
+                                <h2>Primärschlüssel</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 8</div>
+                                <ul>
+                                    <li>Entitäten müssen wohlunterscheidbar sein</li>
+                                    <li>1 oder mehr Attribute bilden den Primärschlüssel</li>
+                                    <li>Beschreibt eine Entität eindeutig</li>
+                                    <li>Im ER-Diagramm: Attribut(e) unterstreichen</li>
+                                </ul>
+                                <div>
+                                        <div class="stretch erd">
+                        [[
+                         { _e: "Personen", pos: [150, 100],
+                          attributes: [
+                           { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                           { _a:"Name", pos: [245, 13] }
+                          ]
+                         },
+                         { _e: "Termine", pos: [530, 100],
+                           attributes: [
+                            { _a:"Datum", pos: [415, 15], options:["primary"] },
+                            { _a:"Uhrzeit", pos: [535, 15], options:["primary"] },
+                            { _a:"Raum", pos: [655, 15], options:["primary"] },
+                            { _a:"Dauer", pos: [765, 40]},
+                            { _a:"Bezeichnung", pos: [765, 110]}
+                           ]
+                         }
+                        ],
+                        [
+                         
+                        ]]
+                                    </div></div>
+                                    <aside class="notes">Der Personen-Entitätstyp hat als Primärschlüsselattribut die Personennummer. Dies kann zum Beispiel eine künstlich erzeugte laufende Nummer sein. Termine haben keine solche ID. Hier haben wir einen <em>zusammengesetzten Primärschlüssel</em> aus Datum, Uhrzeit und Raum. Dies bedeutet, dass es am gleichen Tag zur gleichen Zeit im gleichen Raum nur einen einzigen Termin geben darf. Manchmal gibt es mehrere Möglichkeiten, was der Primärschlüssel sein kann (sogenannte <em>Schlüsselkandidaten</em>). Dann muss man sich für einen entscheiden.</aside>
+                            </section>
+                            <section>
+                                <h2>Unterattribute</h2>
+                                <p>Attribute können aus mehreren Sub-Attributen zusammengesetzt sein.</p>
+                                <div class="stretch erd">
+                                        [[
+                                         { _e: "Personen", pos: [150, 100],
+                                          attributes: [
+                                           { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                           { _a:"Name", pos: [245, 13] },
+                                           { _a:"Adresse", pos: [409, 105], 
+                                                attributes: [
+                                                { _a: "Straße", pos: [324, 160] },
+                                                { _a: "PLZ", pos: [437, 188] }, 
+                                                { _a: "Ort", pos: [550, 170] }
+                                                ] }
+                                          ]
+                                         }
+                                        ],
+                                        [
+                                         
+                                        ]]
+                                                    </div>
+                                <aside class="notes">Personen haben eine Adresse, die aus Straße, Postleitzahl und Ort besteht. Unterattribute können natürlich auch wieder mit Unterattributen versehen werden, um sie noch weiter hierarchisch zu strukturieren.</aside>
+                            </section>
+                            <section>
+                                    <h2>Mehrwertige Attribute</h2>
+                                    <div style="height:250px; overflow:hidden;">
+                                    <div class="erd">
+                                            [[
+                                             { _e: "Personen", pos: [150, 100],
+                                              attributes: [
+                                               { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                               { _a:"Name", pos: [245, 13] },
+                                               { _a:"Telefon", pos: [409, 105], options:["multi"] }
+                                              ]
+                                             }
+                                            ],
+                                            [
+                                             
+                                            ]]
+                                    </div></div>
+                                    <div class="fragment" style="height:200px; overflow:hidden;">
+                                    <div class="erd">
+                                            [[
+                                             { _e: "Personen", pos: [150, 100],
+                                              attributes: [
+                                               { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                               { _a:"Name", pos: [245, 13] },
+                                               { _a:"Telefon", pos: [409, 105], options:["multi"],
+                                                attributes: [ 
+                                                    { _a:"Typ", pos: [527, 62] },
+                                                    { _a:"Nummer", pos: [527, 130] }
+                                                ] }
+                                              ]
+                                             }
+                                            ],
+                                            [
+                                             
+                                            ]]
+                                    </div></div>
+                                    <aside class="notes">Eine Person hat eine Personennummer, einen Namen, aber mehrere (beliebig viele) Telefonnummern. Im unteren Beispiel hat eine Person mehrere Telefonnummern, die wiederrum aus Typ (z. B. &quot;mobil&quot;) und der Telefonnummer bestehen. Es sind beliebige Schachtelungen möglich.</aside>
+                                </section>
+                                <section>
+                                    <h2>Beziehungen</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 9</div>
+                                </section>
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/js/reveal.js"></script>
+                    <script src="lib/jquery.js"></script>
+                    <script src="lib/lodash.js"></script>
+                    <script src="lib/backbone.js"></script>
+                    <script src="lib/joint.min.js"></script>
+            
+                    <script src="src/init_reveal.js"></script>
+            
+                    <script>
+                    if(window.location.search.match( /print-pdf/gi )) {
+                            document.getElementById('header').style="display:none";
+                            document.getElementById('footer').style="display:none";
+                    }
+                    </script>
+            
+            
+                </body>
+            </html>

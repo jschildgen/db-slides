@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Datenbanken 1</title>
+		<title>Datenbanken 1 - Kapitel 1 - Grundlagen</title>
 
 		<link rel="stylesheet" href="reveal.js/css/reset.css">
 		<link rel="stylesheet" href="reveal.js/css/reveal.css">
@@ -46,7 +46,7 @@
                     <h3>Kapitel 1: Grundlagen</h3>
                     <h4 style="text-align:center">2019-10-14</h4>
                     <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
-                    <span style="position: absolute; bottom:-170px; box-shadow:none;"><a href="1.html?print-pdf&showNotes=true"><img src="img/qr.png" height="60px" style="border:0;"></a></span>
+                    <!-- <span style="position: absolute; bottom:-170px; box-shadow:none;"><a href="1.html?print-pdf&showNotes=true"><img src="img/qr.png" height="60px" style="border:0;"></a></span> -->
                     <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                 </section>
                 <section>
@@ -322,7 +322,7 @@ generierten;</code></pre>
 				<section>
 					<h2>Transkationskonzept</h2>
 					<ul>
-						<li>DBMS unterstüzt Mehrbenutzerbetrieb</li>
+						<li>DBMS unterstützt Mehrbenutzerbetrieb</li>
 						<li>TA = Folge mehrerer DB-Operationen als eine Einheit</li>
 						<li>TAs laufen parallel</li>
 						<li>Fehlerhafte TAs werden vollständig zurückgesetzt</li>
@@ -663,7 +663,7 @@ commit;</code></pre></div>
 									<p style="margin-left: 50px">Sicht auf eine Teilmenge des<br>logischen Schemas für eine<br>bestimmte Benutzergruppe</p>
 									<h4>Logische Ebene</h4>
 									<p style="margin-left: 50px">DB-Gesamt-Schema</p>
-									<h4>Phyische Ebene</h4>
+									<h4>Physische Ebene</h4>
 									<p style="margin-left: 50px">Internes Schema / Speicherung der Daten</p>
 									
 									<div id="svg_data_abstraction">
@@ -725,7 +725,7 @@ commit;</code></pre></div>
 
 								<section>
 									<h2>Datenabstraktion (Bsp.)</h2>
-									<h4>Externe Ebene (für Webshop-Anwendung)</h4>
+									<h4>Externe Ebene (View für Webshop-Anwendung)</h4>
 										<table style="font-size:0.7em" data-fragment-index="0">
 											<thead>
 												<tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th><th>Bewertung</th></tr>
@@ -745,7 +745,7 @@ commit;</code></pre></div>
 									<div style="margin-top:0px;">
 											<table style="font-size:0.7em" data-fragment-index="0">
 											<thead>
-												<tr><th><u>Kundennr</u></th><th><u>Prodnr</u></th><th>Bew</th></tr>
+												<tr><th><u>Kundennr</u></th><th><u>Produktnr</u></th><th>Bew</th></tr>
 												<tr><td>5</td><td>17</td><td>4</td></tr>
 												<tr><td>8</td><td>17</td><td>5</td></tr>
 												<tr><td>5</td><td>29</td><td>2</td></tr>
@@ -760,7 +760,7 @@ commit;</code></pre></div>
 									<h2>Datenunabhängigkeit</h2>
 									<h4>Logische Datenunabhängigkeit</h4>
 									<p style="font-size: 75%">Änderungen am logischen Schema<br>(z. B. Spaltenumbenennung) erfordern<br>lediglich eine Anpassung der externen<br>Sichten. Anwendungen bleiben unberührt.</p>
-									<h4>Physiche Datenunabhängigkeit</h4>
+									<h4>Physische Datenunabhängigkeit</h4>
 									<p style="font-size: 75%">Änderungen an internen Speicher- oder<br>Zugriffsstrukturen haben keine Auswirkungen<br>auf das logische oder externe Schema.</p>
 									
 									<div data-clone="svg_data_abstraction"></div>

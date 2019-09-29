@@ -1,0 +1,52 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic);
+
+body {
+    font-family: "Source Sans Pro", Impact, sans-serif;
+    -webkit-print-color-adjust:exact;
+}
+
+@media print {
+header {
+    width: 100%;
+    position: fixed;
+}
+}
+
+@page {
+    margin-top: 1cm;
+    margin-left: 2cm;
+    margin-bottom: 1cm;
+    margin-right: 2cm;
+}
+
+header>div {
+    display: flex;
+    width: 100%;
+}
+
+hr { height: 1px; 
+    border: 0; border-top: 1px solid rgba(66, 169, 170, 0.99);
+    margin: 0.5em 0; padding: 0; }
+
+header>div>div:first-child {
+    width:50%;
+    text-align: left;
+}
+
+header>div>div:last-child {
+    width:50%;
+    text-align: right;
+    right:0px;
+}
+
+h1 {
+    margin-bottom: 0;
+}
+
+tr:nth-child(even) {
+    background-color: #ebebeb;
+  }
+  
+tr:nth-child(odd) {
+background-color: #ffffff;
+}

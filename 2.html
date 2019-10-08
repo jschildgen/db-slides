@@ -490,6 +490,211 @@
                                     <img src="img/2/er_rekursiv.jpg" style="border:0; box-shadow:none; width:300px">
                                     <aside class="notes">Hier wurden die Rollennamen &quot;Mitarbeiter&quot; und &quot;Chef&quot; an die Linien geschrieben. Eine Person hat nur einen Chef, aber sie kann mehrere Mitarbeiter unter sich haben, d.h. sie kann Chef von mehreren Personen sein.</aside>
                                 </section>
+
+                                <section>
+                                    <h2>Schwache Entitätstypen</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
+                                    <ul>
+                                        <li><em>Existenzabhängig</em> von einem anderen Entitätstypen</li>
+                                        <li>Kein eigener Primärschlüssel, stattdessen wird der Primärschlüssel vererbt und erweitert</li>
+                                        <li>Entitätstyp und Beziehung doppelt umrahmen</li>
+                                    </ul>
+                                    <div class="stretch erd" style="margin-left: 6cm">
+                                            [[
+                                                { _e: "Anbieter", pos: [20, 80],
+                                                attributes: [
+                                                { _a:"Anbieternr.", options:["primary"], pos: [5, 5] },
+                                                { _a:"Anbietername", pos: [120, 5] }
+                                                ]
+                                                },
+                                                { _e: "Handytarife", pos: [350, 80], options: ["weak"],
+                                                attributes: [
+                                                { _a:"Tarifbezeichn.", options:["extending_primary"], pos: [300, 5] },
+                                                { _a:"Datenvolumen", pos: [417, 5]},
+                                                { _a:"Preis", pos: [520, 40]}
+                                                ]
+                                                }
+                                            ],
+                                            [
+                                            { _r: "hat",
+                                                _e: ["Anbieter", "Handytarife"], options: ["weak"],
+                                                card: ["1", "N"]
+                                                }
+                                            ]]
+                                    </div>
+                                    <aside class="notes">Handytarife sind ein schwacher Entitätstyp (<em>Weak Entity Type</em>). Die Tarife sind existenzabhängig vom jeweiligen Anbieter des Tarifs. Dies ist daran zu erkennen, dass sowohl Enitätstyp als auch die Beziehung zum Anbieter doppelt umrahmt sind. Zu einem Tarif muss es einen Anbieter geben. Ein Anbieter kann nur dann gelöscht werden, wenn ebenfalls alle seine Tarife gelöscht werden. Die Tarifbezeichnung ist ein <em>erweiternder Primärschlüssel</em>. Sie ist eindeutig für einen bestimmten Anbieter. Es kann einen &quot;Data Extreme&quot;-Tarif bei mehreren Anbietern geben, aber bei jedem nur einmal. Die Kombination aus Anbieternummer und Tarifbezeichnung identifiziert einen Terif eindeutig.</aside>
+                                </section>
+
+                                <section>
+                                    <h2>Ternäre Beziehungen</h2>
+                                    <ul>
+                                        <li>Bisher: Beziehungs-Grad = 2 (binäre Beziehung)</li>
+                                        <li>Grad: Anzahl der teilnehmenden Entitätstypen</li>
+                                        <li>Ternäre Beziehung: Grad = 3</li>
+                                    </ul>
+                                    <div id="er_degree_3">
+                                            <div class="stretch erd">
+                                                    [[
+                                                     { _e: "Kunden", pos: [150, 100],
+                                                      attributes: [
+                                                       { _a:"Kundennr", options:["primary"], pos: [89, 13] },
+                                                       { _a:"Name", pos: [245, 13] }
+                                                      ]
+                                                     },
+                                                     { _e: "Tarife", pos: [530, 100],
+                                                       attributes: [
+                                                        { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
+                                                        { _a:"Mindestlaufzeit", pos: [599, 25]},
+                                                        { _a:"Preis", pos: [698, 71]}
+                                                       ]
+                                                     },
+                                                     { _e: "Fitnessstudio", pos: [334, 277],
+                                                       attributes: [
+                                                        { _a:"Strasse", pos: [205, 212], options:["primary"] },
+                                                        { _a:"Hausnummer", pos: [205, 275], options:["primary"] },
+                                                        { _a:"Ort", pos: [510, 274], options:["primary"] }
+                                                       ]
+                                                     }
+                                                    ],
+                                                    [
+                                                     { _r: "buchen",
+                                                       _e: ["Kunden", "Tarife", "Fitnessstudio"],
+                                                       card: ["N", "1", "M"],
+                                                       attributes: [{_a:"Datum", pos: [462, 195]}]
+                                                     }
+                                                    ]]
+                                                                </div>
+                                                            </div>
+                                </section>
+                                <section>
+                                    <h2>Ternäre Beziehungen</h2>
+                                    <div data-clone="er_degree_3"></div>
+                                    <ul style="position: absolute; top:500px; font-size: 80%">
+                                        <li>Ein Kunde kann in einem Fitnessstudio nur <b>einen</b> Tarif buchen</li>
+                                        <li>Ein Kunde kann einen Tarif in <b>vielen</b> Studios buchen</li>
+                                        <li>Ein Tarif kann in einem Studio von <b>vielen</b> Kunden gebucht werden</li>
+                                    </ul>
+                                    <aside class="notes">Auch hier beginnt man zum korrekten Annotieren der Kardinalitäten den Satz wieder mit &quot;Ein...ein...&quot;.</aside>
+                                </section>
+                                <section>
+                                    <h3>Ternäre vs. drei binäre Beziehungen</h3>
+                                    <div>
+                                    <div class="stretch erd">
+                                            [[
+                                             { _e: "Kunden", pos: [150, 100],
+                                              attributes: [
+                                               { _a:"Kundennr", options:["primary"], pos: [89, 13] },
+                                               { _a:"Name", pos: [245, 13] }
+                                              ]
+                                             },
+                                             { _e: "Tarife", pos: [530, 100],
+                                               attributes: [
+                                                { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
+                                                { _a:"Mindestlaufzeit", pos: [599, 25]},
+                                                { _a:"Preis", pos: [698, 71]}
+                                               ]
+                                             },
+                                             { _e: "Fitnessstudio", pos: [334, 277],
+                                               attributes: [
+                                                { _a:"Strasse", pos: [205, 250], options:["primary"] },
+                                                { _a:"Hausnummer", pos: [205, 320], options:["primary"] },
+                                                { _a:"Ort", pos: [510, 274], options:["primary"] }
+                                               ]
+                                             }
+                                            ],
+                                            [
+                                             { _r: "buchen",
+                                               _e: ["Kunden", "Tarife"],
+                                               card: ["N", "1"],
+                                               attributes: [{_a:"Datum", pos: [364, 27]}]
+                                             },
+                                             { _r: "angemeldet bei", pos: [284, 188],
+                                               _e: ["Kunden", "Fitnessstudio"],
+                                               card: ["N", "M"]                                             
+                                             },
+                                             { _r: "buchen",
+                                               _e: ["Kunden", "Tarife"],
+                                               card: ["N", "1"],
+                                               attributes: [{_a:"Datum", pos: [364, 27]}]
+                                             },
+                                             { _r: "gilt für", pos: [452, 193],
+                                               _e: ["Fitnessstudio", "Tarife"],
+                                               card: ["N", "M"]
+                                             }
+                                            ]]
+                                                        </div>
+                                                    </div>
+                                            <ul style="position: absolute; top:500px; font-size: 80%">
+                                                    <li>Ein Kunde bucht stets nur <b>einen</b> Studio-übergreifenden Tarif.</li>
+                                                    <li>Ein Kunde bei <b>vielen</b> Studios angemeldet sein</li>
+                                                    <li>Ein Tarif gilt für <b>viele</b> Fitnessstudios</li>
+                                                </ul>
+                                            <aside class="notes">Diese Lösung ist nicht weniger oder mehr richtig als die Lösung mit der ternären Beziehung auf der vorherigen Folie, aber sie modelliert eine komplett andere Miniwelt.</aside>
+                                </section>
+                                <section>
+                                    <h3>N:M- vs. zwei 1:N-Beziehungen</h3>
+                                    <div id="er_drink_bad" style="height: 173px; overflow:hidden">
+                                            <div class="stretch erd">
+                                                    [[
+                                                     { _e: "Gäste", pos: [150, 100],
+                                                      attributes: [
+                                                       { _a:"Kundennr", options:["primary"], pos: [89, 25] },
+                                                       { _a:"Tischnr", pos: [245, 25] }
+                                                      ]
+                                                     },
+                                                     { _e: "Getränke", pos: [530, 100],
+                                                       attributes: [
+                                                        { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
+                                                        { _a:"Preis", pos: [627, 25]}
+                                                       ]
+                                                     }
+                                                    ],
+                                                    [
+                                                    { _r: "trinken",
+                                                       _e: ["Gäste", "Getränke"],
+                                                       card: ["N", "M"]
+                                                     }
+                                                    ]]
+                                                                </div>
+                                                            </div>
+
+                                            <div class="fragment" id="er_drink_good" style="margin-top: -20px">
+                                                <p style="font-size:70%; z-index:9999999 !important">Besser:</p>
+                                                    <div class="stretch erd" style="margin-top: -25px;">
+                                                            [[
+                                                                { _e: "Gäste", pos: [20, 100],
+                                                                attributes: [
+                                                                { _a:"Kundennr", options:["primary"], pos: [5, 25] },
+                                                                { _a:"Tischnr", pos: [120, 25] }
+                                                                ]
+                                                                },
+                                                                { _e: "Bestellpositionen", pos: [350, 100], options: ["weak"],
+                                                                attributes: [
+                                                                { _a:"Positionnr.", options:["extending_primary"], pos: [375, 25] }
+                                                                ]
+                                                                },
+                                                                { _e: "Getränke", pos: [750, 100],
+                                                                attributes: [
+                                                                { _a:"Bezeichnung", pos: [695, 25], options:["primary"] },
+                                                                { _a:"Preis", pos: [847, 25]}
+                                                                ]
+                                                                }
+                                                            ],
+                                                            [
+                                                            { _r: "geben auf",
+                                                                _e: ["Gäste", "Bestellpositionen"], options: ["weak"],
+                                                                card: ["1", "N"]
+                                                                },
+                                                                { _r: "von",
+                                                                _e: ["Bestellpositionen", "Getränke"],
+                                                                card: ["N", "1"]
+                                                                }
+                                                            ]]
+                                                                        </div>
+                                                                    </div>
+
+                                    <aside class="notes">Gäste bestellen in einer Bar Getränke. Ein Gast kann mehrere Getränke trinken (Kunde Nr. 5 trinkt Rotwein und Mineralwasser) und ein Getränk kann von mehreren Gästen bestellt werden (Kunden 7 und 8 trinken Weißwein). Das Problem hier ist jedoch, dass niemand ein bestimmtes Getränk mehrfach trinken kann. Wir lösen das Problem, indem ein Kunde mehrere Bestellpositionen aufgibt. Jede Position erhält eine für ihn oder sie eindeutige Nummer und enthält nur ein Getränk. Bestellt ein Kunde 2x Rotwein und 1x Mineralwasser, werden dazu drei Bestellpositionen erfasst.</aside>
+                                </section>
                         </div>
                     </div>
             

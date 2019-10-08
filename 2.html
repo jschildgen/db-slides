@@ -617,7 +617,7 @@
                                                card: ["N", "1"],
                                                attributes: [{_a:"Datum", pos: [364, 27]}]
                                              },
-                                             { _r: "gilt für", pos: [452, 193],
+                                             { _r: "gilt in", pos: [452, 193],
                                                _e: ["Fitnessstudio", "Tarife"],
                                                card: ["N", "M"]
                                              }
@@ -626,8 +626,8 @@
                                                     </div>
                                             <ul style="position: absolute; top:500px; font-size: 80%">
                                                     <li>Ein Kunde bucht stets nur <b>einen</b> Studio-übergreifenden Tarif.</li>
-                                                    <li>Ein Kunde bei <b>vielen</b> Studios angemeldet sein</li>
-                                                    <li>Ein Tarif gilt für <b>viele</b> Fitnessstudios</li>
+                                                    <li>Ein Kunde kann bei <b>vielen</b> Studios angemeldet sein</li>
+                                                    <li>Ein Tarif ist in <b>vielen</b> Fitnessstudios gültig</li>
                                                 </ul>
                                             <aside class="notes">Diese Lösung ist nicht weniger oder mehr richtig als die Lösung mit der ternären Beziehung auf der vorherigen Folie, aber sie modelliert eine komplett andere Miniwelt.</aside>
                                 </section>
@@ -694,6 +694,120 @@
                                                                     </div>
 
                                     <aside class="notes">Gäste bestellen in einer Bar Getränke. Ein Gast kann mehrere Getränke trinken (Kunde Nr. 5 trinkt Rotwein und Mineralwasser) und ein Getränk kann von mehreren Gästen bestellt werden (Kunden 7 und 8 trinken Weißwein). Das Problem hier ist jedoch, dass niemand ein bestimmtes Getränk mehrfach trinken kann. Wir lösen das Problem, indem ein Kunde mehrere Bestellpositionen aufgibt. Jede Position erhält eine für ihn oder sie eindeutige Nummer und enthält nur ein Getränk. Bestellt ein Kunde 2x Rotwein und 1x Mineralwasser, werden dazu drei Bestellpositionen erfasst.</aside>
+                                </section>
+                                <section>
+                                    <h2>Notationsformen</h2>
+                                    <div class="columns">
+                                <div style="width:100%">
+                                    <p style="font-size: 62%">https://de.wikipedia.org/wiki/Entity-Relationship-Modell</p>
+                                    <p>Wir verwenden die <em>Chen-Notation</em><br>&nbsp;</p>
+                                    
+                                    <p>Nicht anpassbar in Chen:</p>
+                                    <ul>
+                                        <li>Es gibt Orte ohne Personen</li>
+                                        <li>Es gibt Personen ohne Ort</li>
+                                    </ul>
+                                </div>
+                                <div style="text-align: right; width: 550px">
+                                    <img src="img/2/ERD_Darstellungen.png" style="height:520px; width:329px; border:0; box-shadow: none;">
+                                </div>
+                                </section>
+                                <section>
+                                    <h2>Modifizierte Chen-Notation</h2>
+                                    <div style="margin-left: 220px; height: 150px; overflow: hidden;">
+                                                <div class="erd">
+                                                        [[
+                                                            { _e: "Personen", pos: [20, 25],
+                                                            attributes: [
+                                                            ]
+                                                            },
+                                                            { _e: "Orte", pos: [350, 25],
+                                                            attributes: [
+                                                            ]
+                                                            }
+                                                        ],
+                                                        [
+                                                        { _r: "geboren in",
+                                                            _e: ["Personen", "Orte"],
+                                                            card: ["mc", "1"]
+                                                            }
+                                                        ]]
+                                                                    </div>
+                                                                </div>
+                                    <ul>
+                                        <li><b>1</b>: Genau eins</li>
+                                        <li><b>c</b> (choise): Höchstens eins</li>
+                                        <li><b>m</b> (multiple): Mindestens eins</li>
+                                        <li><b>mc</b>: Mindestens keins (beliebig viele)</li>
+                                    </ul>
+                                    <aside class="notes">In der modifizierten Chen-Notation kann erzwungen werden, dass jede Entität eines Entitätstypen mindestens einmal an einer Beziehung teilnehmen muss. Das Diagramm auf dieser Folie sagt, dass jede Person in einem Ort geboren sein muss. Würde man statt der 1 ein c schreiben, kann es Personen ohne Geburtsort geben. Dies entspräche der Chen-Notation N:1 auf der vorherigen Folie oben. Das mc im Diagramm bedeutet, dass es Orte mit vielen (m) Personen, aber auch Orte ohne (c) Personen geben kann. In der normalen Chen-Notation gibt es nur 1 und N, was hier c und mc entspricht.</aside>
+                                </section>
+                                <section>
+                                    <h2>Min-Max-Notation</h2>
+                                    <div style="margin-left: 220px; height: 130px; overflow: hidden;">
+                                            <div class="erd">
+                                                    [[
+                                                        { _e: "Personen", pos: [20, 25],
+                                                        attributes: [
+                                                        ]
+                                                        },
+                                                        { _e: "Orte", pos: [350, 25],
+                                                        attributes: [
+                                                        ]
+                                                        }
+                                                    ],
+                                                    [
+                                                    { _r: "geboren in",
+                                                        _e: ["Personen", "Orte"],
+                                                        card: ["(1,1)", "(7,N)"]
+                                                        }
+                                                    ]]
+                                                                </div>
+                                                            </div>
+                                        <p><i class="fas fa-exclamation-circle red"></i> Achtung: Umgekehrte Schreibweise!</p>
+                                        <ul>
+                                            <li>(min, max) steht zw. Entitytyp E und Beziehung R</li>
+                                            <li>0 &le; min &le; max; max &ge; 1</li>
+                                            <li>Jede Entität aus E muss an mindestens min und höchstens max Ausprägungen von R enthalten sein.</li>
+                                        </ul>
+                                        <aside class="notes">(1,1) entpricht der 1 in der modifizierten Chen-Notation, (0,1) dem c, (0,N) entspricht m und (1,N) mc. Das in diesem Diagramm notierte (7,N) bedeutet: Jeder Ort muss an mindestens 7 Beziehungsinstanzen teilnehmen, maximal an beliebig vielen. Das heißt, dass in jedem Ort mind. 7 Personen geboren sein müssen (auch wenn das Blödsinn ist; nur fürs Beispiel). Jede Person hat aber nur genau einen Geburtsort.</aside>
+                                </section>
+                                <section>
+                                    <h2>Ternäre Bez. in Min-Max</h2>
+                                    <div>
+                                            <div class="stretch erd">
+                                                    [[
+                                                     { _e: "Kunden", pos: [150, 100],
+                                                      attributes: [
+                                                       { _a:"Kundennr", options:["primary"], pos: [89, 13] },
+                                                       { _a:"Name", pos: [245, 13] }
+                                                      ]
+                                                     },
+                                                     { _e: "Tarife", pos: [530, 100],
+                                                       attributes: [
+                                                        { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
+                                                        { _a:"Mindestlaufzeit", pos: [599, 25]},
+                                                        { _a:"Preis", pos: [698, 71]}
+                                                       ]
+                                                     },
+                                                     { _e: "Fitnessstudio", pos: [334, 277],
+                                                       attributes: [
+                                                        { _a:"Strasse", pos: [205, 212], options:["primary"] },
+                                                        { _a:"Hausnummer", pos: [205, 275], options:["primary"] },
+                                                        { _a:"Ort", pos: [510, 274], options:["primary"] }
+                                                       ]
+                                                     }
+                                                    ],
+                                                    [
+                                                     { _r: "buchen",
+                                                       _e: ["Kunden", "Tarife", "Fitnessstudio"],
+                                                       card: ["(0,N)", "(0,N)", "(0,N)"],
+                                                       attributes: [{_a:"Datum", pos: [462, 195]}]
+                                                     }
+                                                    ]]
+                                                                </div>
+                                                            </div>
+                                        <aside class="notes">Kunden können viele Tarife buchen, jeder Tarif kann mehrfach gebucht werden und in einem Fitnessstudio können mehrfach Tarife gebucht werden. In der Chen-Notation konnten wir modellieren, dass ein Kunde in ein und dem selben Fitnessstudio nur einen einzigen Tarif buchen kann. Dies ist in der (Min,Max)-Notation so nicht darstellbar. Hier muss sich lediglich für jeden Entitätstyp gefragt werden: Kann es vorkommen, dass eine Entität dieses Typs nie an der Beziehung teilnimmt und dass sie mehrfach teilnimmt? Gibt es Kunden, die nichts (0) buchen? Ja. Gibt es Kunden die mehrmals (N) buchen? Ja (in einem anderen Fitnessstudio). Daher (0,N).</aside>
                                 </section>
                         </div>
                     </div>

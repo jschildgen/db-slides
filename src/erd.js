@@ -28,7 +28,7 @@ document.addEventListener("keyup", function(evt) {
 var ERDPlugin = (function(){  
     
     return {
-		init: function() {  
+		init: function() {
         
         var erd = joint.shapes.erd;
 

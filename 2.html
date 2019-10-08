@@ -600,7 +600,7 @@
                                                 }
                                             ]]
                                     </div>
-                                    <aside class="notes">Handytarife sind ein schwacher Entitätstyp (<em>Weak Entity Type</em>). Die Tarife sind existenzabhängig vom jeweiligen Anbieter des Tarifs. Dies ist daran zu erkennen, dass sowohl Enitätstyp als auch die Beziehung zum Anbieter doppelt umrahmt sind. Zu einem Tarif muss es einen Anbieter geben. Ein Anbieter kann nur dann gelöscht werden, wenn ebenfalls alle seine Tarife gelöscht werden. Die Tarifbezeichnung ist ein <em>erweiternder Primärschlüssel</em>. Sie ist eindeutig für einen bestimmten Anbieter. Es kann einen &quot;Data Extreme&quot;-Tarif bei mehreren Anbietern geben, aber bei jedem nur einmal. Die Kombination aus Anbieternummer und Tarifbezeichnung identifiziert einen Terif eindeutig.</aside>
+                                    <aside class="notes">Handytarife sind ein schwacher Entitätstyp (<em>Weak Entity Type</em>). Die Tarife sind existenzabhängig vom jeweiligen Anbieter des Tarifs. Dies ist daran zu erkennen, dass sowohl Entitätstyp als auch die Beziehung zum Anbieter doppelt umrahmt sind. Zu einem Tarif muss es einen Anbieter geben. Ein Anbieter kann nur dann gelöscht werden, wenn ebenfalls alle seine Tarife gelöscht werden. Die Tarifbezeichnung ist ein <em>erweiternder Primärschlüssel</em>. Sie ist eindeutig für einen bestimmten Anbieter. Es kann einen &quot;Data Extreme&quot;-Tarif bei mehreren Anbietern geben, aber bei jedem nur einmal. Die Kombination aus Anbieternummer und Tarifbezeichnung identifiziert einen Tarif eindeutig.</aside>
                                 </section>
 
                                 <section>
@@ -748,7 +748,7 @@
                                                                 },
                                                                 { _e: "Bestellpositionen", pos: [350, 100], options: ["weak"],
                                                                 attributes: [
-                                                                { _a:"Positionnr.", options:["extending_primary"], pos: [375, 25] }
+                                                                { _a:"Positionsnr.", options:["extending_primary"], pos: [375, 25] }
                                                                 ]
                                                                 },
                                                                 { _e: "Getränke", pos: [750, 100],
@@ -814,7 +814,7 @@
                                                                 </div>
                                     <ul>
                                         <li><b>1</b>: Genau eins</li>
-                                        <li><b>c</b> (choise): Höchstens eins</li>
+                                        <li><b>c</b> (choice): Höchstens eins</li>
                                         <li><b>m</b> (multiple): Mindestens eins</li>
                                         <li><b>mc</b>: Mindestens keins (beliebig viele)</li>
                                     </ul>
@@ -844,11 +844,11 @@
                                                             </div>
                                         <p><i class="fas fa-exclamation-circle red"></i> Achtung: Umgekehrte Schreibweise!</p>
                                         <ul>
-                                            <li>(min, max) steht zw. Entitytyp E und Beziehung R</li>
+                                            <li>(min, max) steht zw. Entitätstyp E und Beziehung R</li>
                                             <li>0 &le; min &le; max; max &ge; 1</li>
                                             <li>Jede Entität aus E muss an mindestens min und höchstens max Ausprägungen von R enthalten sein.</li>
                                         </ul>
-                                        <aside class="notes">(1,1) entpricht der 1 in der modifizierten Chen-Notation, (0,1) dem c, (0,N) entspricht m und (1,N) mc. Das in diesem Diagramm notierte (7,N) bedeutet: Jeder Ort muss an mindestens 7 Beziehungsinstanzen teilnehmen, maximal an beliebig vielen. Das heißt, dass in jedem Ort mind. 7 Personen geboren sein müssen (auch wenn das Blödsinn ist; nur fürs Beispiel). Jede Person hat aber nur genau einen Geburtsort.</aside>
+                                        <aside class="notes">(1,1) entspricht der 1 in der modifizierten Chen-Notation, (0,1) dem c, (0,N) entspricht m und (1,N) mc. Das in diesem Diagramm notierte (7,N) bedeutet: Jeder Ort muss an mindestens 7 Beziehungsinstanzen teilnehmen, maximal an beliebig vielen. Das heißt, dass in jedem Ort mind. 7 Personen geboren sein müssen (auch wenn das Blödsinn ist; nur fürs Beispiel). Jede Person hat aber nur genau einen Geburtsort.</aside>
                                 </section>
                                 <section>
                                     <h2>Ternäre Bez. in Min-Max</h2>

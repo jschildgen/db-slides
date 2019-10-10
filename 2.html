@@ -480,6 +480,60 @@
                                                 </svg></div>
                                         </div>
                                 </section>
+
+                                <section>
+                                    <h2>1:1-Beziehung</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 11</div>
+                                    
+                                    <div style="height: 300px; overflow:hidden">
+                                    <div class="stretch erd">
+                                            [[
+                                             { _e: "Personen", pos: [150, 100],
+                                              attributes: [
+                                               { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                               { _a:"Name", pos: [245, 13] }
+                                              ]
+                                             },
+                                             { _e: "Kreditkarten", pos: [530, 100],
+                                               attributes: [
+                                                { _a:"Kreditkartennr", pos: [475, 25], options:["primary"] },
+                                                { _a:"Ablaufdatum", pos: [595, 25] },
+                                                { _a:"Typ", pos: [702, 63] },
+                                                { _a:"Sicherheitscode", pos: [702, 135]}
+                                               ]
+                                             }
+                                            ],
+                                            [
+                                             { _r: "haben",
+                                               _e: ["Personen", "Kreditkarten"],
+                                               card: ["1", "1"]
+                                             }
+                                            ]]
+                                                        </div></div>
+                                    <ul style="position:absolute; top:340px">
+                                            <li>Eine Person hat <b>1</b> Kreditkarte</li>
+                                            <li>Eine Kreditkarte gehört immer nur zu <b>einer</b> Person</li>
+                                        </ul>
+
+                                        <div class="fragment" style="margin-top: 5mm">
+                                        <div class="stretch erd">
+                                                [[
+                                                 { _e: "Personen", pos: [400, 100],
+                                                  attributes: [
+                                                   { _a:"PersNr", options:["primary"], pos: [235, 78] },
+                                                   { _a:"Name", pos: [310, 20] },
+                                                   { _a:"Kreditkartennr", pos: [430, 6] },
+                                                   { _a:"Ablaufdatum", pos: [550, 6] },
+                                                   { _a:"Typ", pos: [626, 48] },
+                                                   { _a:"Sicherheitscode", pos: [637, 109]}
+                                                  ]
+                                                 }
+                                                ],
+                                                []]
+                                                            </div></div>
+                                    <aside class="notes">Statt einer 1:1-Beziehung kann man sich auch oft die Beziehung sparen und alles in einem Entitätstypen modellieren.</aside>
+                                </section>
+
                                 <section>
                                     <h2>Rekursive Beziehung</h2>
                                     <ul>
@@ -570,6 +624,69 @@
                                 </section>
 
                                 <section>
+                                    <h3>N:M-Bez. vs. eigener Entitätstyp </h3>
+                                    
+                                    <div style="height:200px; overflow:hidden" id="er_rates">    
+                                                    <div class="stretch erd">
+                                                        [[
+                                                        { _e: "Kunden", pos: [50, 10],
+                                                         attributes: [
+                                                         { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
+                                                         { _a:"...", pos: [140, 85] }
+                                                         ]
+                                                        },
+                                                        { _e: "Produkte", pos: [730, 10],
+                                                          attributes: [
+                                                          { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
+                                                          { _a:"...", pos: [810, 85] }
+                                                          ]
+                                                        }
+                                                       ],
+                                                       [
+                                                        { _r: "bewerten",
+                                                          _e: ["Kunden", "Produkte"],
+                                                          card: ["N", "M"],
+                                                          attributes: [ {_a:"Sterne", pos: [340, 100] }, {_a:"Text", pos: [480, 100] } ]
+                                                        }
+                                                       ]]
+                                                    </div></div>
+                                                    <div id="er_ratings">    
+                                                        <div class="stretch erd">
+                                                            [[
+                                                            { _e: "Kunden", pos: [50, 10],
+                                                             attributes: [
+                                                             { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
+                                                             { _a:"...", pos: [140, 85] }
+                                                             ]
+                                                            },
+                                                            { _e: "Produkte", pos: [730, 10],
+                                                              attributes: [
+                                                              { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
+                                                              { _a:"...", pos: [810, 85] }
+                                                              ]
+                                                            },
+                                                            { _e: "Bewertungen", pos: [390, 10],
+                                                            attributes: [ 
+                                                                {_a:"Bewertungsnr", pos: [300, 100], options:["primary"]},
+                                                                {_a:"Sterne", pos: [430, 100] }, 
+                                                                {_a:"Text", pos: [560, 100] } ]
+                                                            }
+                                                           ],
+                                                           [
+                                                            { _r: "schreiben",
+                                                              _e: ["Kunden", "Bewertungen"],
+                                                              card: ["1", "N"]
+                                                            },
+                                                            { _r: "für",
+                                                              _e: ["Bewertungen", "Produkte"],
+                                                              card: ["N", "1"]
+                                                            }
+                                                           ]]
+                                                        </div></div>
+                                                        <aside class="notes">Die beiden hier dargestellten Lösungen ist fast äquivalent. Da Entitätstypen stets einen Primärschlüssel benötigen, muss es im unteren Beispiel, in dem Bewertungen als Entitätstyp modelliert wird, eine Bewertungsnummer oder ähnliches geben. Mit schwachen Entitätstypen (siehe nächste Folie) lässt sich dies jedoch auch ohne Primärschlüssel lösen (siehe übernächste Folie).</aside>
+                                </section>
+
+                                <section>
                                     <h2>Schwache Entitätstypen</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
                                     <ul>
@@ -604,7 +721,152 @@
                                 </section>
 
                                 <section>
+                                    <h3>N:M-Bez. vs. schwacher Entitätstyp</h3>
+                                    <div data-clone="er_rates" style="height:200px; overflow:hidden"></div>
+                                    <div id="er_ratings">    
+                                        <div class="stretch erd">
+                                            [[
+                                            { _e: "Kunden", pos: [50, 10],
+                                             attributes: [
+                                                { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
+                                                   { _a:"...", pos: [140, 85] }
+                                             ]
+                                            },
+                                            { _e: "Produkte", pos: [730, 10],
+                                              attributes: [
+                                                { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
+                                                   { _a:"...", pos: [810, 85] }
+                                              ]
+                                            },
+                                            { _e: "Bewertungen", pos: [390, 10], options: ["weak"],
+                                            attributes: [ 
+                                                {_a:"Sterne", pos: [340, 100] }, 
+                                                {_a:"Text", pos: [480, 100] } ]
+                                            }
+                                           ],
+                                           [
+                                            { _r: "schreiben",
+                                              _e: ["Kunden", "Bewertungen"], options: ["weak"],
+                                              card: ["1", "N"]
+                                            },
+                                            { _r: "für",
+                                              _e: ["Bewertungen", "Produkte"], options: ["weak"],
+                                              card: ["N", "1"]
+                                            }
+                                           ]]
+                                        </div></div>
+                                        <aside class="notes">Der unten dargestellte schwache Entitätstyp &quot;Bewertungen&quot; hat keine Primärschlüssel-erweiternden Attribute, aber sie ist existenzabhängig vom bewertenden Kunden und dem bewerteten Produkt. Eine Bewertung wird also eindeutig identifiziert durch die entsprechende Kundennummer- und Produktnummer-Kombination. Die beiden auf dieser Folie dargestellten ER-Diagramme sind in ihrer aktuellen Version absolut äquivalent und modellieren genau das gleiche. Die untere Version bietet jedoch mehr Erweiterungsmöglichkeiten (siehe nächste Folie).</aside>
+                                </section>
+
+                                <section>
+                                    <h3>N:M-Bez. vs. schwacher Entitätstyp</h3>
+                                    <div id="er_ratings_likes">    
+                                        <div class="stretch erd">
+                                            [[
+                                            { _e: "Kunden", pos: [50, 10],
+                                             attributes: [
+                                                { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
+                                                   { _a:"...", pos: [140, 85] }
+                                             ]
+                                            },
+                                            { _e: "Produkte", pos: [730, 10],
+                                              attributes: [
+                                                { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
+                                                   { _a:"...", pos: [810, 85] }
+                                              ]
+                                            },
+                                            { _e: "Bewertungen", pos: [390, 10], options: ["weak"],
+                                            attributes: [ 
+                                                {_a:"Sterne", pos: [340, 100] }, 
+                                                {_a:"Text", pos: [480, 100] } ]
+                                            }
+                                           ],
+                                           [
+                                            { _r: "schreiben",
+                                              _e: ["Kunden", "Bewertungen"], options: ["weak"],
+                                              card: ["1", "N"]
+                                            },
+                                            { _r: "für",
+                                              _e: ["Bewertungen", "Produkte"], options: ["weak"],
+                                              card: ["N", "1"]
+                                            },
+                                            { _r: "gefallen", pos: [80, 161], 
+                                              _e: ["Kunden", "Bewertungen"], 
+                                              card: ["N", "M"]
+                                            }
+                                           ]]
+                                        </div></div>
+                                        <aside class="notes">Dadurch, dass die Bewertungen nun ein Entitätstyp sind, kann dieser nun an Beziehungen teilnehmen und Subtypen (siehe später in diesem Kapitel) haben. Kunden können bei einer Bewertung auf &quot;gefällt mir&quot; klicken. Die &quot;gefallen&quot;-Beziehung ist naturlich nicht doppelt umrahmt. Nicht die Kunden, denen eine Bewertung gefallen identifizieren diese, sondern diejenigen, die sie schreiben (und das bewertete Produkt). Löscht ein Kunde seinen Account, darf es keine Bewertungen mehr geben, von denen der Kunde Autor ist, aber es darf weiterhin Bewertungen geben, für die er oder sie ein Like abgegeben hat. In der Modellierung mit der &quot;bewertet&quot;-Beziehung (vorherige Folie oben) ist es nicht möglich, Bewertungslikes zu modellieren.</aside>
+                                </section>
+
+                                <section>
+                                    <h3>N:M- vs. zwei 1:N-Beziehungen</h3>
+                                    <div id="er_drink_bad" style="height: 173px; overflow:hidden">
+                                            <div class="stretch erd">
+                                                    [[
+                                                     { _e: "Gäste", pos: [150, 100],
+                                                      attributes: [
+                                                       { _a:"Kundennr", options:["primary"], pos: [89, 25] },
+                                                       { _a:"Tischnr", pos: [245, 25] }
+                                                      ]
+                                                     },
+                                                     { _e: "Getränke", pos: [530, 100],
+                                                       attributes: [
+                                                        { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
+                                                        { _a:"Preis", pos: [627, 25]}
+                                                       ]
+                                                     }
+                                                    ],
+                                                    [
+                                                    { _r: "trinken",
+                                                       _e: ["Gäste", "Getränke"],
+                                                       card: ["N", "M"]
+                                                     }
+                                                    ]]
+                                                                </div>
+                                                            </div>
+
+                                            <div class="fragment" id="er_drink_good" style="margin-top: -20px">
+                                                <p style="font-size:70%; z-index:9999999 !important">Besser:</p>
+                                                    <div class="stretch erd" style="margin-top: -25px;">
+                                                            [[
+                                                                { _e: "Gäste", pos: [20, 100],
+                                                                attributes: [
+                                                                { _a:"Kundennr", options:["primary"], pos: [5, 25] },
+                                                                { _a:"Tischnr", pos: [120, 25] }
+                                                                ]
+                                                                },
+                                                                { _e: "Bestellpositionen", pos: [350, 100], options: ["weak"],
+                                                                attributes: [
+                                                                { _a:"Positionsnr.", options:["extending_primary"], pos: [375, 25] }
+                                                                ]
+                                                                },
+                                                                { _e: "Getränke", pos: [750, 100],
+                                                                attributes: [
+                                                                { _a:"Bezeichnung", pos: [695, 25], options:["primary"] },
+                                                                { _a:"Preis", pos: [847, 25]}
+                                                                ]
+                                                                }
+                                                            ],
+                                                            [
+                                                            { _r: "geben auf",
+                                                                _e: ["Gäste", "Bestellpositionen"], options: ["weak"],
+                                                                card: ["1", "N"]
+                                                                },
+                                                                { _r: "von",
+                                                                _e: ["Bestellpositionen", "Getränke"],
+                                                                card: ["N", "1"]
+                                                                }
+                                                            ]]
+                                                                        </div>
+                                                                    </div>
+
+                                    <aside class="notes">Gäste bestellen in einer Bar Getränke. Ein Gast kann mehrere Getränke trinken (Kunde Nr. 5 trinkt Rotwein und Mineralwasser) und ein Getränk kann von mehreren Gästen bestellt werden (Kunden 7 und 8 trinken Weißwein). Das Problem hier ist jedoch, dass niemand ein bestimmtes Getränk mehrfach trinken kann. Wir lösen das Problem, indem ein Kunde mehrere Bestellpositionen aufgibt. Jede Position erhält eine für den Kunden eindeutige Nummer und enthält nur ein Getränk. Bestellt ein Kunde 2x Rotwein und 1x Mineralwasser, werden dazu drei Bestellpositionen erfasst.</aside>
+                                </section>
+
+                                <section>
                                     <h2>Ternäre Beziehungen</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
                                     <ul>
                                         <li>Bisher: Beziehungs-Grad = 2 (binäre Beziehung)</li>
                                         <li>Grad: Anzahl der teilnehmenden Entitätstypen</li>
@@ -709,70 +971,73 @@
                                                 </ul>
                                             <aside class="notes">Diese Lösung ist nicht weniger oder mehr richtig als die Lösung mit der ternären Beziehung auf der vorherigen Folie, aber sie modelliert eine komplett andere Miniwelt.</aside>
                                 </section>
+
                                 <section>
-                                    <h3>N:M- vs. zwei 1:N-Beziehungen</h3>
-                                    <div id="er_drink_bad" style="height: 173px; overflow:hidden">
-                                            <div class="stretch erd">
-                                                    [[
-                                                     { _e: "Gäste", pos: [150, 100],
-                                                      attributes: [
-                                                       { _a:"Kundennr", options:["primary"], pos: [89, 25] },
-                                                       { _a:"Tischnr", pos: [245, 25] }
-                                                      ]
-                                                     },
-                                                     { _e: "Getränke", pos: [530, 100],
-                                                       attributes: [
-                                                        { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
-                                                        { _a:"Preis", pos: [627, 25]}
-                                                       ]
-                                                     }
-                                                    ],
-                                                    [
-                                                    { _r: "trinken",
-                                                       _e: ["Gäste", "Getränke"],
-                                                       card: ["N", "M"]
-                                                     }
-                                                    ]]
-                                                                </div>
-                                                            </div>
-
-                                            <div class="fragment" id="er_drink_good" style="margin-top: -20px">
-                                                <p style="font-size:70%; z-index:9999999 !important">Besser:</p>
-                                                    <div class="stretch erd" style="margin-top: -25px;">
-                                                            [[
-                                                                { _e: "Gäste", pos: [20, 100],
-                                                                attributes: [
-                                                                { _a:"Kundennr", options:["primary"], pos: [5, 25] },
-                                                                { _a:"Tischnr", pos: [120, 25] }
-                                                                ]
-                                                                },
-                                                                { _e: "Bestellpositionen", pos: [350, 100], options: ["weak"],
-                                                                attributes: [
-                                                                { _a:"Positionsnr.", options:["extending_primary"], pos: [375, 25] }
-                                                                ]
-                                                                },
-                                                                { _e: "Getränke", pos: [750, 100],
-                                                                attributes: [
-                                                                { _a:"Bezeichnung", pos: [695, 25], options:["primary"] },
-                                                                { _a:"Preis", pos: [847, 25]}
-                                                                ]
-                                                                }
-                                                            ],
-                                                            [
-                                                            { _r: "geben auf",
-                                                                _e: ["Gäste", "Bestellpositionen"], options: ["weak"],
-                                                                card: ["1", "N"]
-                                                                },
-                                                                { _r: "von",
-                                                                _e: ["Bestellpositionen", "Getränke"],
-                                                                card: ["N", "1"]
-                                                                }
-                                                            ]]
-                                                                        </div>
-                                                                    </div>
-
-                                    <aside class="notes">Gäste bestellen in einer Bar Getränke. Ein Gast kann mehrere Getränke trinken (Kunde Nr. 5 trinkt Rotwein und Mineralwasser) und ein Getränk kann von mehreren Gästen bestellt werden (Kunden 7 und 8 trinken Weißwein). Das Problem hier ist jedoch, dass niemand ein bestimmtes Getränk mehrfach trinken kann. Wir lösen das Problem, indem ein Kunde mehrere Bestellpositionen aufgibt. Jede Position erhält eine für ihn oder sie eindeutige Nummer und enthält nur ein Getränk. Bestellt ein Kunde 2x Rotwein und 1x Mineralwasser, werden dazu drei Bestellpositionen erfasst.</aside>
+                                    <h2>Generalisierung</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
+                                    <ul>
+                                        <li>Spezialisierung, Vererbung</li>
+                                        <li>Attribute, Primärschlüssel und<br>Beziehungen des Super-Typen<br>werden an die Sub-Typen<br>vererbt.</li>
+                                        <li>&quot;is-a&quot;-Pfeil im ER-Diagramm</li>
+                                    </ul>
+                                    <div style="position:absolute; left: 620px; top: 150px; height: 400px; overflow:hidden;">
+                                    <div class="erd" style="width: 400px;">
+                                            [[
+                                             { _e: "Kunden", pos: [110, 100],
+                                              attributes: [
+                                                { _a:"Kundennr", options:["primary"], pos: [15, 10] },
+                                                { _a:"Name", pos: [130, 10] },
+                                                { _a:"E-Mail", pos: [250, 10] }
+                                              ]
+                                             },
+                                             { _e: "Privatkunden", pos: [10, 250], isa: {_e:"Kunden"},
+                                                attributes: []},
+                                             { _e: "Geschäftskunden", pos: [200, 250], isa: {_e:"Kunden"}, 
+                                                attributes: []}
+                                            ],
+                                            [
+                                            ]]
+                                    </div></div>
+                                    <aside class="notes">Der Entitätstyp &quot;Kunden&quot; hat zwei Sub-Typen &quot;Privatkunden&quot; und &quot;Geschäftskunden&quot;. In unserer Datenbank können wir also für jeden Kunden speichern, ob er einfach nur Kunde ist, oder aber auch Geschäftskunde und Privatkunde. Es gibt Notationen, in der Überlappungen (Mehrklassenzugehörigkeit) und abstrakte Typen (nicht instanziierbar) modelliert werden können. In unserer Notation ist eine Entität stets nur eine direkte Instanz von einem Entitätstypen, und damit implizit auch Instanz von dessen Super-Typen. Jeder Privatkunde ist also auch Kunde. Subtypen können auch wieder Subtypen haben, sodass sich komplexe Typhierarchien modellieren lassen.</aside>
                                 </section>
+
+                                <section>
+                                    <h2>Generalisierung</h2>
+                                    <div class="erd stretch">
+                                            [[
+                                             { _e: "Kunden", pos: [110, 100],
+                                              attributes: [
+                                                { _a:"Kundennr", options:["primary"], pos: [15, 10] },
+                                                { _a:"Name", pos: [130, 10] },
+                                                { _a:"E-Mail", pos: [250, 10] }
+                                              ]
+                                             },
+                                             { _e: "Privatkunden", pos: [10, 250], isa: {_e:"Kunden"},
+                                                attributes: [ {_a:"Bonuspunke", pos: [35, 334]} ]},
+                                             { _e: "Geschäftskunden", pos: [200, 250], isa: {_e:"Kunden"}, 
+                                                attributes: [ { _a:"USt-IdNr.", pos: [225, 334]} ]},
+                                            { _e: "Produkte", pos: [730, 100],
+                                                attributes: [
+                                                { _a:"Produktnr", options:["primary"], pos: [690, 10] }, 
+                                                { _a:"...", pos: [810, 10] }
+                                                ]
+                                            }
+                                            ],
+                                            [
+                                            { _r: "bewerten",
+                                                _e: ["Kunden", "Produkte"],
+                                                card: ["N", "M"],
+                                                attributes: [ {_a:"Sterne", pos: [390, 10] }, {_a:"Text", pos: [500, 10] } ]
+                                            },
+                                            { _r: "verkaufen", pos: [538, 189],
+                                                _e: ["Geschäftskunden", "Produkte"],
+                                                card: ["1", "N"]
+                                            }
+                                            ]]
+                                    </div>
+                                    <aside class="notes">Das ER-Diagramm wurde erweitert um Subtypen-spezifische Attribute und Beziehungen. Nur Geschäftskunden können Produkte verkaufen, aber alle Kunden können sie bewerten. Privatkunden sammeln Bonuspunkte und für Geschäftskunden wird die Umsatzsteuernummer vermerkt.</aside>
+                                </section>
+                                
                                 <section>
                                     <h2>Notationsformen</h2>
                                     <div class="columns">

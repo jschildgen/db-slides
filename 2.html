@@ -1152,6 +1152,136 @@
                                                             </div>
                                         <aside class="notes">Kunden können viele Tarife buchen, jeder Tarif kann mehrfach gebucht werden und in einem Fitnessstudio können mehrfach Tarife gebucht werden. In der Chen-Notation konnten wir modellieren, dass ein Kunde in ein und dem selben Fitnessstudio nur einen einzigen Tarif buchen kann. Dies ist in der (Min,Max)-Notation so nicht darstellbar. Hier muss sich lediglich für jeden Entitätstyp gefragt werden: Kann es vorkommen, dass eine Entität dieses Typs nie an der Beziehung teilnimmt und dass sie mehrfach teilnimmt? Gibt es Kunden, die nichts (0) buchen? Ja. Gibt es Kunden die mehrmals (N) buchen? Ja (in einem anderen Fitnessstudio). Daher (0,N).</aside>
                                 </section>
+
+                                <section>
+                                    <h2>Kapitelzusammenfassung</h2>
+                                    <ul>
+                                        <li>DB-Entwurf mit ER-Diagrammen</li>
+                                        <li>Entitätstypen, Attribute, Beziehungen</li>
+                                        <li>Primärschlüssel</li>
+                                        <li>Schwache Entitätstypen</li>
+                                        <li>Ternäre Beziehungen</li>
+                                        <li>Generalisierung</li>
+                                        <li>Chen-, modifizierte Chen-, Min-Max-Notation</li>
+                                    </ul>
+                                </section>
+
+                                <section>
+                                    <h3>Kochrezept: ER-Diagramm erstellen</h3>
+                                    <div style="position: absolute; top: 80px; right:0px; font-size:250px"><i class="fas fa-highlighter green"></i></div>
+                                    <ol>
+                                        <li>Text lesen; beim Lesen markieren;<br>wichtige Zusatzinfos unterstreichen
+                                            <ul>
+                                                <li><mark style="background-color:violet; color:black">Rosa</mark>: Entitätstypen</li>
+                                                <li><mark style="background-color:yellow; color:black">Gelb</mark>: Attribute</li>
+                                                <li><mark style="background-color:greenyellow; color:black">Grün</mark>: Beziehungen</li>
+                                            </ul>
+                                            
+                                        </li>
+                                        <li>Das Markierte in ER-Diagramm überführen</li>
+                                        <li>Nochmals Text lesen und ER-Diagramm überprüfen</li>
+                                        <li>Letzte Überprüfung mittels Checkliste (nächste Folie)</li>
+                                    </ol>
+                                </section>
+                                <section>
+                                    <h3>Checkliste: ER-Diagramm erstellen</h3>
+                                    <div style="position: absolute; top: 80px; right:0px; font-size:200px"><i class="fas fa-tasks green"></i></div>
+                                    <p><i class="far fa-square"></i> Sind alle Kardinalitäten an Beziehungen?</p>
+                                    <p><i class="far fa-square"></i> Kardinalitäten richtig herum?</p>
+                                    <p><i class="far fa-square"></i> Gibt es überflüssige Entitätstypen?</p>
+                                    <p><i class="far fa-square"></i> Hat jeder Entitätstyp einen Primärschlüssel?</p>
+                                    <p><i class="far fa-square"></i> Müssen manche Entitätstypen schwach sein?</p>
+                                    <p><i class="far fa-square"></i> Ist die entsprechende Beziehung doppelt umrahmt?</p>
+                                    <p><i class="far fa-square"></i> Sind erweiternde Primärschlüssel unterstrichelt?</p>
+                                    <p><i class="far fa-square"></i> Sind Generalisierungen korrekt modelliert?</p>
+                                </section>
+                                <section>
+                                    <h3>Beispielaufgabe</h3>
+                                <p>
+                                    Eine Bibliothek möchte eine Datenbank einsetzen, um Bücher zu speichern. Jedes Buch hat eine eindeutige ISBN, mehrere Autoren, und einen Titel. Bücher sind von einem Verlag. Von einem Verlag kann es mehrere Bücher geben. Jeder Verlag wird durch eine Verlags-ID identifiziert und hat einen Namen sowie einen Ort. 
+                                </p>
+                                </section>
+                                <section>
+                                    <h3>Beispielaufgabe</h3>
+                                    <p>
+                                            Eine Bibliothek möchte eine Datenbank einsetzen, um <mark style="background-color:violet; color:black">Bücher</mark> zu speichern. Jedes Buch hat eine <u style="text-decoration-color: gold">eindeutige</u> <mark style="background-color:yellow; color:black">ISBN</mark>, <u style="text-decoration-color: gold">mehrere</u> <mark style="background-color:yellow; color:black">Autoren</mark>, und einen <mark style="background-color:yellow; color:black">Titel</mark>. <mark style="background-color:greenyellow; color:black">Bücher sind von einem Verlag</mark>. <u style="text-decoration-color: greenyellow">Von einem Verlag kann es mehrere Bücher geben</u>. Jeder <mark style="background-color:violet; color:black">Verlag</mark> wird durch eine <mark style="background-color:yellow; color:black">Verlags-ID</mark> <u style="text-decoration-color: gold">identifiziert</u> und hat einen <mark style="background-color:yellow; color:black">Namen</mark> sowie einen <mark style="background-color:yellow; color:black">Ort</mark>. 
+                                    </p>
+                                    <div style="height: 300px; overflow:hidden">
+                                            <div class="stretch erd">
+                                                    [[
+                                                     { _e: "Bücher", pos: [150, 100],
+                                                      attributes: [
+                                                       { _a:"ISBN", options:["primary"], pos: [50, 13] },
+                                                       { _a:"Autoren", options: ["multi"], pos: [175, 13] },
+                                                       { _a:"Titel", pos: [295, 13] }
+                                                      ]
+                                                     },
+                                                     { _e: "Verlage", pos: [530, 100],
+                                                       attributes: [
+                                                        { _a:"Verlags-ID", pos: [475, 25], options:["primary"] },
+                                                        { _a:"Name", pos: [595, 25] },
+                                                        { _a:"Ort", pos: [702, 63] }
+                                                       ]
+                                                     }
+                                                    ],
+                                                    [
+                                                     { _r: "sind von",
+                                                       _e: ["Bücher", "Verlage"],
+                                                       card: ["N", "1"]
+                                                     }
+                                                    ]]
+                                                                </div></div>
+                                </section>
+
+                                <section>
+                                    <h3>Falsche Lösung</h3>
+                                    <div class="fragment" style="position: absolute; top: -70px; left:300px; font-size: 600px; z-index: 99999;"><i class="fas fa-times red"></i></div>
+                                    <div>
+                                            <div class="stretch erd">
+                                                    [[
+                                                    { _e: "Bibliothek", pos: [30, 100],
+                                                      attributes: [
+                                                      ]
+                                                     },
+                                                     { _e: "Datenbank", pos: [180, 300],
+                                                      attributes: [
+                                                      ]
+                                                     },
+                                                     { _e: "Bücher", pos: [350, 100],
+                                                      attributes: [
+                                                       { _a:"ISBN", pos: [250, 13] },
+                                                       { _a:"Autoren", options: ["multi"], pos: [375, 13] },
+                                                       { _a:"Titel", pos: [495, 13] }
+                                                      ]
+                                                     },
+                                                     { _e: "Verlage", pos: [730, 100],
+                                                       attributes: [
+                                                        { _a:"Verlags-ID", pos: [675, 25], options:["primary"] },
+                                                        { _a:"Name", pos: [795, 25] }
+                                                       ]
+                                                     }
+                                                    ],
+                                                    [
+                                                     { _r: "sind von",
+                                                       _e: ["Bücher", "Verlage"],
+                                                       card: ["1", "N"]
+                                                     },
+                                                     { _r: "setzt ein",
+                                                       _e: ["Bibliothek", "Datenbank"],
+                                                       card: ["1", "1"]
+                                                     },
+
+                                                     { _r: "verwaltet",
+                                                       _e: ["Datenbank", "Bücher"],
+                                                       card: ["", ""]
+                                                     }
+                                                    ]]
+                                                                </div></div>
+                                    
+                                    <aside class="notes">In diesem ER-Diagramm fehlen Kardinalitäten an einer Beziehung, an einer anderen Beziehung sind sie falsch herum. Dem Entitätstyp &quot;Bücher&quot; fehlt der Primärschlüssel. Die Entitätstypen &quot;Bibliothek&quot; und &quot;Datenbank&quot; sind völlig falsch. Wir speichern viele Bücher und viele Verlage, aber wir speichern keine Bibliotheken und Datenbanken! Man erkennt überflüssige Entitätstypen auch daran, dass einem dazu keine Attribute einfallen.</aside>
+                                </section>
+                                
+                                
                         </div>
                     </div>
             

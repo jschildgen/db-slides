@@ -162,3 +162,7 @@ ul, ol, div, p {
 	position: absolute;
 	font-size: 14px;
 }
+
+img, pre, code {
+	box-shadow:none !important
+}

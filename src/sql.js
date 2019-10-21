@@ -7,6 +7,8 @@
  * 
  * Alternatively, a table can just show the result of an SQL query:
  * <span data-sql-query="SELECT ..."/>
+ * In this case data-sql-pk and data-sql-fk can be a comma-separated list
+ * of primary-key and foreign-key columns which will be underlined.
  * 
  * The query can be modified during the presentation. 
  * Press Ctrl+Enter to re-execute it.

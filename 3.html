@@ -1,0 +1,352 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken 1 - Kapitel 3 - Relationenmodell</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reset.css">
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                            <h4 style="text-align:center"><b>Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h4>
+                            <h1>Datenbanken 1</h1>
+                            <h3>Kapitel 3: Das Relationenmodell</h3>
+                            <h4 style="text-align:center">2019-10-28</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                        </section>
+                        <section>
+                            <h2>In diesem Kapitel...</h2>
+                            <ul>
+                                <li>... lernen wir, dass eine Relation eine Tabelle ist,</li>
+                                <li>... überführen wir ER-Diagr. in ein Relationenschema,</li>
+                                <li>... schauen wir uns drei Normalformen an,</li>
+                                <li>... wenden wir relationale Algebra an.</li>
+                            </ul>
+                            <p></p>
+                            <span data-sql-query="SELECT * FROM produkte LIMIT 3" data-sql-pk="produktnummer"></span>
+                        </section> 
+                        <section>
+                            <h2>Relation (= Tabelle)</h2>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 14</div>
+                            <h4>Metadaten</h4>
+                            <ul>
+                                <li>Name der Relation (= Tabellennname)</li>
+                                <li>Attribute (= Spalten)</li>
+                                <li>Datentypen und Eigenschaften der Attribute<br>(Primärschlüssel, Fremdschlüssel, ...)</li>
+                            </ul>
+                            <h4>Daten</h4>
+                            <ul>
+                                <li>Menge von Tupeln (= Zeilen)</li>
+                                <li>Tupel besitzt einen Wert in jedem Attribut</li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h2>Relation: Produkte</h2>
+                            <h4>Metadaten</h4>
+                            <p>PRODUKTE(<u>produktnummer</u>,bezeichnung,preis,hersteller)</p>
+                            <p>W(produktnummer) = integer,</p>
+                            <p>W(bezeichnung) = string, usw. </p>
+                            <h4>Daten</h4>
+                            <p>PRODUKTE = {(17, Schokoriegel, 0.89, Monsterfood), ...}</p>
+                            <aside class="notes">Der Primärschlüssel (Produktname) wird unterstrichen. W(A) ist der Wertetyp des Attributs A.</aside>
+                        </section>
+                        <section>
+                            <h3>Relation = Menge von Tupeln</h3>
+                            <p>R(A1,A2,...) &SubsetEqual; W(A1) &Cross; W(A2) &Cross; ...</p>
+                            <ul>
+                                <li>Mengen haben keine Duplikate</li>
+                                <li>Mengen haben keine Ordnung</li>
+                                <li>Ordnung der Attribute spielt keine Rolle</li>
+                            </ul>
+                            <aside class="notes">Die in einer Relation befindlichen Tupel sind eine Teilmenge aus dem kartesischen Produkts der Datentypen ihrer Attribute. Mengen haben keine Ordnung, d. h. es gibt keine erste, zweite, etc. Zeile. Auch auf Attributen besteht keine Ordnung. Es gibt kein erstes Attribut. Attribute werden über ihren Attributsnamen identifiziert. Mengen sind frei von Duplikaten, d. h. jede Zeile ist eindeutig.</aside>
+                        </section>
+
+                        <section>
+                                <h3>NULL-Werte</h3>
+                                <p>NULL = nicht vorhandener Wert</p>
+                                <div>
+                                        <p style="margin-bottom:-2mm; text-align: center; font-size: 70%;">produkte</p>
+                                        <span  data-sql-query="SELECT produktnr, bezeichnung, preis FROM produkte WHERE produktnr IN (17)
+                                        UNION ALL SELECT 88, 'Katzenfutter', null" data-sql-pk="firma">
+                                </div>
+                                <p class="fragment" data-fragment-index="1">Mögliche Bedeutungen für Preis IS NULL:</p>
+                                <ul class="fragment" style="margin-top: 3mm; font-size:70%" data-fragment-index="1">
+                                    <li>Der Preis ist unbekannt</li>
+                                    <li>Das Produkt ist ausverkauft</li>
+                                    <li>Produkte dieser Art haben keinen Preis</li>
+                                    <li>Preis nur auf Anfrage</li>
+                                </ul>
+                                <aside class="notes">In unseren Beispieltabellen stellen wir NULL-Werte als &quot;-&quot; dar. Wenn der Preis 0 ist, ist das Produkt kostenlos, Preis NULL hat jedoch eine andere Bedeutung.</aside>
+                            </section>
+
+                        <section>
+                            <h2>Primärschlüssel</h2>
+                            <p>PK &SubsetEqual; {A1, A2, ...}</p>
+                            <ul>
+                                <li>Primärschlüssel identifiziert Tupel eindeutig</li>
+                                <li>Es darf Relationen ohne Primärschlüssel geben</li>
+                                <li>Primärschlüssel ist eindeutig: <br>Es darf keine zwei verschiedene   Tupel in der Relation geben, die in den Primärschlüsselattributen die gleichen Werte haben.</li>
+                                <li>Primärschlüssel dürfen keine NULL-Werte enthalten</li>
+                            </ul>
+                            <aside class="notes">Der Primärschlüssel einer Relation ist eine Teilmenge ihrer Attribute.</aside>
+                        </section>
+                        
+                            <section>
+                                    <h3>Beispiel: hersteller</h3>
+                                    <div>
+                                            <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">hersteller</p>
+                                            <span  data-sql-query="SELECT * FROM hersteller WHERE firma IN (
+                                                SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
+                                            ) UNION ALL SELECT 'Sonstige', NULL" data-sql-pk="firma">
+                                    </div>
+                                    <ul style="margin-top: 3mm;">
+                                        <li>Der Firmenname eines Herstellers ist eindeutig</li>
+                                        <li>Der Firmenname darf nicht NULL sein</li>
+                                        <li>Das Land darf NULL sein</li>
+                                    </ul>
+                                    <aside class="notes">Hier wird die Beziehung &quot;Produkte sind von Hersteller&quot; mittels einer Fremdschlüsselbeziehung modelliert. Die Attributmenge {hersteller} referenziert die Attributmenge {firma} der Herstellertabelle. Die Datentypen von den Spaten &quot;hersteller&quot; und &quot;firma&quot; müssen übereinstimmen. In die Spalte &quot;hersteller&quot; dürfen nur Werte stehen, die auch tatsächlich in der Firma-Spalete der Hersteller-Relation existieren.</aside>
+                                </section>
+                        <section>
+                            <h2>Fremdschlüssel</h2>
+                            <ul>
+                                <li class="fragment">Mit Fremdschlüsseln werden Beziehungen<br>Wert-basiert modelliert</li>
+                                <li class="fragment">Fremdschlüssel referenziert Attributmenge</li>
+                                <li class="fragment">Fremdschlüsselattribute haben die gleichen Datentypen wie die referenzierten Attribute</li>
+                                <li class="fragment">In Fremdschlüsselattributen dürfen nur Werte stehen, die auch tatsächlich in der referenzierten Relation in den referenzierten Attributen existieren; NULL ist aber auch erlaubt</li>
+                            </ul>
+                            
+                        </section>
+                        <section>
+                            <h3>Beispiel: produkte und hersteller</h3>
+                            <div class="columns">
+                             <div style="margin-top:0px; margin-right: 8mm;">
+                                    <p style="text-align: center; font-size: 70%;">produkte</p>
+                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,29)" data-sql-pk="produktnr">
+                            </div>
+                            <div style="margin-top:0px;">
+                                    <p style="text-align: center; font-size: 70%;">hersteller</p>
+                                    <span  data-sql-query="SELECT * FROM hersteller WHERE firma IN (
+                                        SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
+                                    )" data-sql-pk="firma">
+
+                                
+                            </div>
+                            </div>
+                            <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
+                            <aside class="notes">Hier wird die Beziehung &quot;Produkte sind von Hersteller&quot; mittels einer Fremdschlüsselbeziehung modelliert. Die Attributmenge {hersteller} referenziert die Attributmenge {firma} der Herstellertabelle. Die Datentypen von den Spaten &quot;hersteller&quot; und &quot;firma&quot; müssen übereinstimmen. In die Spalte &quot;hersteller&quot; dürfen nur Werte stehen, die auch tatsächlich in der Firma-Spalete der Hersteller-Relation existieren.</aside>
+                        </section>
+                        <section>
+                                <h3>Zusammengesetzte Schlüssel</h3>
+                                        <div>
+                                                <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">hersteller</p>
+                                                <span data-sql-query="SELECT * FROM hersteller WHERE firma IN (
+                                                    SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
+                                                ) UNION ALL SELECT 'Monsterfood', 'China'" data-sql-pk="firma,land"/>
+                                        </div>
+                                        <div>
+                                           <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">produkte</p>
+                                           <div data-sql-query="SELECT produktnr, bezeichnung, preis, hersteller, land FROM produkte join hersteller on produkte.hersteller=hersteller.firma WHERE produktnr IN (17,29)" data-sql-pk="produktnr"/>
+                                        </div>
+                                        <p style="font-size:70%">produkte(hersteller,land) ist Fremdschlüssel auf hersteller(firma,land)</p>
+                                            
+                                        <aside class="notes">In diesem Beispiel haben wir als Primärschlüssel der Herstellerrelation die Kombination aus den Spalten Firma und Land gewählt. Nun darf es also zwei Hersteller mit dem gleichen Firmennamen geben, vorausgesetzt sie sind von einem unterschiedlichen Land. Alle Relationen, die die Hersteller-Relation referenzieren (hier: Produkte) müssen dementsprechend zusammengesetzte Fremdschlüssel verwenden.</aside>
+                                           
+                        </section>
+                        <section>
+                        <h3>Zusammengesetzte Schlüssel</h3>
+                        <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">termine</p>
+                        <table style="font-size:0.7em">
+                                <thead>
+                                    <tr><th><u>Datum</u></th><th><u>Uhrzeit</u></th><th><u>Raum</u></th><th>Dauer</th><th>Bezeichnung</th></tr>
+                                    <tr><td>2019-10-14</td><td>14:15</td><td>D14/404</td><td>90</td><td>Vorlesung: Datenbanken 1</td></tr>
+                                    <tr><td>2019-10-21</td><td>16:00</td><td>D14/112</td><td>90</td><td>Praktikum: Datenbanken 1</td></tr>
+                        </table>
+                        <div class="columns">
+                                <div style="margin-top:0px; margin-right: 8mm;">
+                                        <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">personen</p>
+                                        <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span>
+                                </div>
+                                <div style="margin-top:0px;">
+                                        <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">nehmen_teil</p>
+                                        <table style="font-size:0.7em">
+                                                <thead>
+                                                    <tr><th><u>PersNr</u></th><th><u>Datum</u></th><th><u>Uhrzeit</u></th><th><u>Raum</u></th></tr>
+                                                    <tr><td>5</td><td>2019-10-14</td><td>14:15</td><td>D14/404</td></tr>
+                                                    <tr><td>8</td><td>2019-10-14</td><td>14:15</td><td>D14/404</td></tr>
+                                                    <tr><td>5</td><td>2019-10-21</td><td>16:00</td><td>D14/112</td></tr>
+                                        </table> 
+    
+                                    
+                                </div>
+                        </div>
+                                       <p style="font-size:70%">nehmen_teil.persnr ist Fremdschlüssel auf personen.persnr</p>
+                                       <p style="font-size:70%; margin-right: -10mm;">nehmen_teil(datum,uhrzeit,raum) ist Fremdschl. auf termine(datum,uhrzeit,raum)</p>
+                            <aside class="notes">Hier wird eine N:M-Beziehung &quot;Personen nehmen an Terminen teil&quot; mittels einer nehmen_teil-Relation modelliert. Peter nimmt an der Vorlesung und am Praktikum teil. </aside>
+                        </section>
+                        <section>
+                            <h3>Transformation<br>ER-Diagramm &rightarrow; Relationenmodell</h3>
+                        
+                        <table style="font-size: 70%">
+                            <thead><th>ER-Diagramm</th><th>&nbsp;</th><th>Relationenmodell</th></thead>
+                            <tbody>
+                                <tr><td>Entitätstyp</td><td>&rightarrow;</td><td>Relation (=Tabelle)</td></tr>
+                                <tr><td>Attribut</td><td>&rightarrow;</td><td>Attribut (=Spalte)</td></tr>
+                                <tr><td>Primärschlüssel</td><td>&rightarrow;</td><td>Primärschlüssel</td></tr>
+                                <tr><td>Sub-Attribute</td><td>&rightarrow;</td><td>Einzelne Attribute</td></tr>
+                                <tr><td>Mehrwertiges Attribut</td><td>&rightarrow;</td><td>Attribut (=Spalte)</td></tr>
+                                <tr><td>1:N-Beziehung</td><td>&rightarrow;</td><td>Fremdschlüssel</td></tr>
+                                <tr><td>N:M-Beziehung</td><td>&rightarrow;</td><td>Relation</td></tr>
+                                <tr><td>Schwache Entitätstypen</td><td>&rightarrow;</td><td>Relation</td></tr>
+                                <tr><td>Generalisierung</td><td>&rightarrow;</td><td>Relation(en)</td></tr>
+                            </tbody>
+                        </table>
+                        </section>
+
+                        <section>
+                            <h3>Entitätstyp &rightarrow; Relation</h3>
+                            <table style="font-size: 70%;">
+                                    <tbody>
+                                        <tr><td>Entitätstyp</td><td>&rightarrow;</td><td>Relation (=Tabelle)</td></tr>
+                                        <tr><td>Attribut</td><td>&rightarrow;</td><td>Attribut (=Spalte)</td></tr>
+                                        <tr><td>Primärschlüssel</td><td>&rightarrow;</td><td>Primärschlüssel</td></tr>
+                                    </tbody>
+                                </table>
+                            <div class="columns">
+                            <div class="erd" style="margin-top:15mm; width: 400px;">
+                                    [[
+                                     { _e: "Personen", pos: [130, 100],
+                                      attributes: [
+                                        { _a:"PersNr", options:["primary"], pos: [69, 13] },
+                                        { _a:"Name", pos: [225, 13] }
+                                      ]
+                                     }
+                                    ],
+                                    [
+                                    ]]
+                            </div>
+                            <div><p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
+                                <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span></div>
+                            </div>
+                            <aside class="notes">Jeder Entitätstyp des ER-Diagramms wird in eine Relation überführt, die den gleichen Namen trägt. Für jedes Attribut gibt es eine Spalte in der Relation, Primärschlüsselattribute sind genau wie im ER-Diagramm unterstrichen.</aside>
+                        </section>
+                        <section>
+                                <h3>Sub-Attribute &rightarrow; Einzelne Attribute</h3>
+                                
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:15mm; width: 450px;">
+                                                [[
+                                                 { _e: "Personen", pos: [150, 100],
+                                                  attributes: [
+                                                   { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                                   { _a:"Name", pos: [245, 13] },
+                                                   { _a:"Adresse", pos: [172, 182], 
+                                                        attributes: [
+                                                        { _a: "Straße", pos: [102, 240] },
+                                                        { _a: "PLZ", pos: [217, 240] }, 
+                                                        { _a: "Ort", pos: [329, 240] }
+                                                        ] }
+                                                  ]
+                                                 }
+                                                ],
+                                                [
+                                                 
+                                                ]]
+                                        </div>
+                                <div><p>Personen(<br>&nbsp;PersNr,<br>&nbsp;Name,<br>&nbsp;Adresse_Strasse,<br>&nbsp;Adresse_PLZ,<br>&nbsp;Adresse_Ort<br>)</p>
+                                </div>
+                                <aside class="notes">Die einfachste Möglichkeit, Unterattribute im Relationenmodell abzubilden, ist es die Attributshierarchie flachzuklopfen. Da Attribute im Relationenmodell atomare Werte haben, erstellen wir für jedes Sub-Attribut eine eigene Spalte.</aside>
+                        </section>
+                        <section>
+                                <h3>Mehrwertiges Attribut &rightarrow; Relation</h3>
+                                
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:5mm; width: 350px;">
+                                                [[
+                                             { _e: "Personen", pos: [150, 100],
+                                              attributes: [
+                                               { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                               { _a:"Name", pos: [245, 13] },
+                                               { _a:"Telefon", pos: [172, 182], options:["multi"] }
+                                              ]
+                                             }
+                                            ],
+                                            [
+                                             
+                                            ]]
+                                        </div>
+                                <div>
+                                    <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
+                                    <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span>
+                                </div><div>
+                                    <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Telefonnummern</p>
+                                    <table style="font-size:0.7em">
+                                        <thead>
+                                            <tr><th><u>PersNr</u></th><th><u>Telefon</u></th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>4</td><td>0151-1</td></tr>
+                                            <tr><td>4</td><td>0151-2</td></tr>
+                                            <tr><td>5</td><td>0151-3</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+
+                                <p style="position: abolsute; top:5cm" font-size:70%">telefonnummern.persnr ist Fremdschlüssel auf personen.persnr</p>
+                                <aside class="notes">Ute hat zwei Telefonnummer, Peter nur eine und Anna gar keine.</aside>
+                        </section>
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/js/reveal.js"></script>
+                    <script src="lib/jquery.js"></script>
+                    <script src="lib/lodash.js"></script>
+                    <script src="lib/backbone.js"></script>
+                    <script src="lib/joint.min.js"></script>
+            
+                    <script src="src/init_reveal.js"></script>
+            
+                    <script>
+                    if(window.location.search.match( /print-pdf/gi )) {
+                            document.getElementById('header').style="display:none";
+                            document.getElementById('footer').style="display:none";
+                    }
+                    </script>
+            
+            
+                </body>
+            </html>

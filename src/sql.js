@@ -5,13 +5,14 @@
  * Add data-sql="some_id" to the <code> element and the result will be
  * displayed in the <span id="some_id">. 
  * 
- * Alternatively, a table can just show the result of an SQL query:
- * <span data-sql-query="SELECT ..."/>
- * In this case data-sql-pk and data-sql-fk can be a comma-separated list
- * of primary-key and foreign-key columns which will be underlined.
- * 
  * The query can be modified during the presentation. 
  * Press Ctrl+Enter to re-execute it.
+ * 
+ * Alternatively, a table can just show the result of an SQL query:
+ * <span data-sql-query="SELECT ..."/>
+ * Here, data-sql-pk can be a comma-separated list
+ * of primary-key columns which will be underlined.
+ * 
  *
  * By Johannes Schildgen, 2019
  */
@@ -35,8 +36,7 @@ var SQLPlugin = (function(){
 
             document.querySelectorAll('span[data-sql-query]').forEach(function(item) {
                 var pk = item.getAttribute('data-sql-pk') != undefined ? item.getAttribute('data-sql-pk').split(',').map(function(e) { return e.trim() }) : [];
-                var fk = item.getAttribute('data-sql-fk') != undefined ? item.getAttribute('data-sql-fk').split(',').map(function(e) { return e.trim() }) : [];
-                execute_query(item.getAttribute('data-sql-query'), item, pk, fk);
+                execute_query(item.getAttribute('data-sql-query'), item, pk);
             });
 		}
 	}
@@ -118,7 +118,7 @@ function create_db() {
 }
 
 
-function execute_query(query, res_element, pk=[], fk=[]) {
+function execute_query(query, res_element, pk=[]) {
     db.transaction(function(tx) {
         tx.executeSql(query, [], function(tx, results) {
             if(results.rows.length == 0) { // empty result set
@@ -132,7 +132,6 @@ function execute_query(query, res_element, pk=[], fk=[]) {
             var header = results.rows.item(0);
             for(var column in header) {
                 if(pk.indexOf(column)>-1) { column = '<u>'+column+'</u>'; }
-                if(fk.indexOf(column)>-1) { column = '<u style="text-decoration-style:dashed">'+column+'</u>'; }
                 html += '<th>'+column+'</th>';
             }
 

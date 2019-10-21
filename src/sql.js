@@ -34,7 +34,7 @@ var SQLPlugin = (function(){
                 }});
             });
 
-            document.querySelectorAll('span[data-sql-query]').forEach(function(item) {
+            document.querySelectorAll('[data-sql-query]').forEach(function(item) {
                 var pk = item.getAttribute('data-sql-pk') != undefined ? item.getAttribute('data-sql-pk').split(',').map(function(e) { return e.trim() }) : [];
                 execute_query(item.getAttribute('data-sql-query'), item, pk);
             });
@@ -77,13 +77,13 @@ function create_db() {
         tx.executeSql("DROP TABLE IF EXISTS produkte");
         tx.executeSql("DROP TABLE IF EXISTS hersteller");
         tx.executeSql("DROP TABLE IF EXISTS kunden");
-        tx.executeSql("CREATE TABLE kunden (kundennummer INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(500) UNIQUE, passwort CHAR(32), land VARCHAR(100), geworben_von INT REFERENCES kunden(kundennummer) ON DELETE SET NULL)");
+        tx.executeSql("CREATE TABLE kunden (kundennr INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(500) UNIQUE, passwort CHAR(32), land VARCHAR(100), geworben_von INT REFERENCES kunden(kundennr) ON DELETE SET NULL)");
         tx.executeSql("CREATE TABLE hersteller (firma VARCHAR(50) PRIMARY KEY, land VARCHAR(100))");
-        tx.executeSql("CREATE TABLE produkte (produktnummer INT PRIMARY KEY, bezeichnung VARCHAR(100) NOT NULL, preis DECIMAL(9,2), hersteller VARCHAR(50) REFERENCES hersteller(firma) ON UPDATE CASCADE)");
-        tx.executeSql("CREATE TABLE bewertungen (kundennummer INT REFERENCES kunden(kundennummer), produktnummer INT REFERENCES produkte(produktnummer), sterne INT DEFAULT 5 CHECK(sterne BETWEEN 1 AND 5), bewertungstext VARCHAR(100000), PRIMARY KEY(kundennummer, produktnummer))");
-        tx.executeSql("CREATE TABLE bewertungslikes (liker INT REFERENCES kunden(kundennummer), kundennummer INT REFERENCES kunden(kundennummer), produktnummer INT REFERENCES produkte(produktnummer))");
-        tx.executeSql("CREATE TABLE bestellungen (bestellnummer INT PRIMARY KEY, kundennummer INT REFERENCES kunden(kundennummer), zeit TIMESTAMP, preis DECIMAL(9,2))");
-        tx.executeSql("CREATE TABLE bestellungen_positionen (bestellnummer INT REFERENCES bestellungen(bestellnummer), produktnummer INT REFERENCES produkte(produktnummer), anzahl INT, PRIMARY KEY(bestellnummer, produktnummer))");
+        tx.executeSql("CREATE TABLE produkte (produktnr INT PRIMARY KEY, bezeichnung VARCHAR(100) NOT NULL, preis DECIMAL(9,2), hersteller VARCHAR(50) REFERENCES hersteller(firma) ON UPDATE CASCADE)");
+        tx.executeSql("CREATE TABLE bewertungen (kundennr INT REFERENCES kunden(kundennr), produktnr INT REFERENCES produkte(produktnr), sterne INT DEFAULT 5 CHECK(sterne BETWEEN 1 AND 5), bewertungstext VARCHAR(100000), PRIMARY KEY(kundennr, produktnr))");
+        tx.executeSql("CREATE TABLE bewertungslikes (liker INT REFERENCES kunden(kundennr), kundennr INT REFERENCES kunden(kundennr), produktnr INT REFERENCES produkte(produktnr))");
+        tx.executeSql("CREATE TABLE bestellungen (bestellnr INT PRIMARY KEY, kundennr INT REFERENCES kunden(kundennr), zeit TIMESTAMP, preis DECIMAL(9,2))");
+        tx.executeSql("CREATE TABLE bestellungen_positionen (bestellnr INT REFERENCES bestellungen(bestellnr), produktnr INT REFERENCES produkte(produktnr), anzahl INT, PRIMARY KEY(bestellnr, produktnr))");
 
         
         tx.executeSql("INSERT INTO kunden VALUES(4,'Ute', 'ute@example.com', NULL, 'Deutschland', NULL)");                              
@@ -143,7 +143,7 @@ function execute_query(query, res_element, pk=[]) {
                 html += '<tr>'
 
                 for(var column in row) {
-                    html += '<td>'+row[column]+'</td>';
+                    html += '<td>'+(row[column]!=null ? row[column] : '-') +'</td>';
                 }
 
                 html += '</tr>';

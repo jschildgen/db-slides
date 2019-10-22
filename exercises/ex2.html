@@ -17,7 +17,7 @@
             <b>Datenbanken 1 - WS 2019/20</b><br>
             Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@h-da.de<br>
-            <b>Übungsblatt 2 vom 04.11.2019</b>
+            <b>Übungsblatt 2 vom 04./11./12.11.2019</b>
         </div>
         <div><img src="../img/hda.png" style="border:0; height:80px"></div>
     </div>
@@ -53,7 +53,7 @@
             [
              { _r: "wird gebaut", pos: [350, 180],
                _e: ["Dings", "Foo", "Bar"],
-               card: ["1", "1", "M"],
+               card: ["1", "1", "N"],
              },
              { _r: "hat",
                _e: ["Dings", "Foo"],
@@ -107,13 +107,53 @@
 </section>
 
     <section style="page-break-inside:avoid; padding-top: 2.5cm">
-    <h1>Aufgabe 2: ER-Diagramm einer Mitfahrbörse</h1>
-    <p>Erstellen Sie ein ER-Diagramm für die Mitfahrbörse Blablabla.</p>
-<p>Benutzer registrieren sich bei Blablabla mit ihrer Handynummer und geben ihren Namen an. Außerdem beschreiben sie ihr Auto: Farbe und Modell.</p>
-<p>Wenn ein Benutzer eine Fahrt erstellt, erhält diese eine automatisch generierte Fahrtnummer. Es müssen Start- und Zielort eingegeben werden, sowie eine beliebige Anzahl von Zwischenstopps. Bei Blablabla geht es nicht ums Geld, daher sind alle Fahrten kostenlos.</p>
-<p>Benutzer können sich für Fahrten eines anderen Benutzers eingetragen, wenn sie mitfahren möchten. Dazu wird lediglich ein Status notiert, damit klar ist, ob die Meldung noch unbestätigt oder bereits bestätigt ist.</p>
-<p>Die Kommunikation erfolgt über SMS, daher braucht Blablabla kein eigenes Nachrichtensystem.</p>
-<p>Benutzer können Bewertungen schreiben, um andere Benutzer zu loben oder sich über sie zu beschweren. Bewertungen sind entweder positiv, neutral oder negativ. Außerdem kann ein Text geschrieben werden.</p>
+    <h1>Aufgabe 2: ER-Diagramm eines Autovermieters</h1>
+    <p>Erstellen Sie ein ER-Diagramm für den Autovermieter Entenpreis.</p>
+<p>Ein Kunde registriert sich bei Entenpreis mit seiner E-Mail-Adresse und einem Passwort, außerdem erhält er eine automatisch generierte Kundennummer.</p>
+<p>Wenn ein Kunde eine Buchung aufgibt, wird eine global eindeutige Buchungsnummer generiert und zusätzlich das Buchungsdatum und das Datum der Ausleihe und Rückgabe gespeichert.</p>
+<p>Eine Buchung umfasst immer nur ein einziges Fahrzeug. Fahrzeuge sind von einem bestimmten Modell. Modelle haben eine Marke, eine Modellbezeichnung und einen Preis. Beispielsweise gibt des den "Citroen 2CV" für 100 EUR pro Tag. Von diesem Modell existieren ein Dutzend buchbare Fahrzeuge, jedes hat eine laufende Nummer (von 1 bis 12) und ein Nummernschild.</p>
+<p>Modelle teilen sich auf in PKWs, Transporter und LKWs. Bei LKWs wird die zulässige Gesamtmasse gespeichert.</p>
+<p>Kunden können beliebig viele PKWs als Favoriten markieren. Für Transporter und LKWs ist das nicht möglich.</p>
+</section>
+
+<section>
+    <h1>Aufgabe 3: Transformation ER ins Relationenmodell</h1>
+    <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema:</p>
+    <div style="height: 9.5cm; overflow: hidden; margin-left: -2.5cm">
+            <div class="erd">
+                    [[
+                     { _e: "Personen", pos: [150, 100],
+                      attributes: [
+                       { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                       { _a:"Name", pos: [245, 13] }
+                      ]
+                     },
+                     { _e: "Theaterstück", pos: [530, 100],
+                       attributes: [
+                        { _a:"Bezeichnung", pos: [485, 25], options:["primary"] },
+                        { _a:"Genres", pos: [610, 25], options:["multi"]}
+                       ]
+                     },
+                     { _e: "Rollen", pos: [334, 277],
+                       attributes: [
+                        { _a:"Vorname", pos: [205, 212], options:["primary"] },
+                        { _a:"Nachname", pos: [205, 275], options:["primary"] },
+                        { _a:"Beschreibung", pos: [510, 274] }
+                       ]
+                     }
+                    ],
+                    [
+                     { _r: "spielt mit", pos: [350, 180],
+                       _e: ["Personen", "Theaterstück", "Rollen"],
+                       card: ["1", "N", "M"],
+                       attributes: [{_a:"Jahr", pos: [450, 200]}]
+                     },
+                     { _r: "Regisseur",
+                       _e: ["Personen", "Theaterstück"],
+                       card: ["1", "N"]
+                     }
+                    ]]
+                                </div></div>
 </section>
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

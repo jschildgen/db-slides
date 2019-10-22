@@ -53,8 +53,8 @@
                             <ul>
                                 <li>... lernen wir, dass eine Relation eine Tabelle ist,</li>
                                 <li>... überführen wir ER-Diagr. in ein Relationenschema,</li>
-                                <li>... schauen wir uns drei Normalformen an,</li>
-                                <li>... wenden wir relationale Algebra an.</li>
+                                <li>... wenden wir relationale Algebra an,</li>
+                                <li>... schauen wir uns drei Normalformen an.</li>
                             </ul>
                             <p></p>
                             <span data-sql-query="SELECT * FROM produkte LIMIT 3" data-sql-pk="produktnummer"></span>
@@ -142,6 +142,7 @@
                                 </section>
                         <section>
                             <h2>Fremdschlüssel</h2>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 15</div>
                             <ul>
                                 <li class="fragment">Mit Fremdschlüsseln werden Beziehungen<br>Wert-basiert modelliert</li>
                                 <li class="fragment">Fremdschlüssel referenziert Attributmenge</li>
@@ -152,6 +153,7 @@
                         </section>
                         <section>
                             <h3>Beispiel: produkte und hersteller</h3>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 16</div>
                             <div class="columns">
                              <div style="margin-top:0px; margin-right: 8mm;">
                                     <p style="text-align: center; font-size: 70%;">produkte</p>
@@ -258,7 +260,7 @@
                                     [
                                     ]]
                             </div>
-                            <div><p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
+                            <div class="fragment" style="margin-top: -1mm;"><p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
                                 <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span></div>
                             </div>
                             <aside class="notes">Jeder Entitätstyp des ER-Diagramms wird in eine Relation überführt, die den gleichen Namen trägt. Für jedes Attribut gibt es eine Spalte in der Relation, Primärschlüsselattribute sind genau wie im ER-Diagramm unterstrichen.</aside>
@@ -286,7 +288,7 @@
                                                  
                                                 ]]
                                         </div>
-                                <div><p>Personen(<br>&nbsp;PersNr,<br>&nbsp;Name,<br>&nbsp;Adresse_Strasse,<br>&nbsp;Adresse_PLZ,<br>&nbsp;Adresse_Ort<br>)</p>
+                                <div class="fragment" style="margin-top: -1mm;"><p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;Adresse_Strasse,<br>&nbsp;Adresse_PLZ,<br>&nbsp;Adresse_Ort<br>)</p>
                                 </div>
                                 <aside class="notes">Die einfachste Möglichkeit, Unterattribute im Relationenmodell abzubilden, ist es die Attributshierarchie flachzuklopfen. Da Attribute im Relationenmodell atomare Werte haben, erstellen wir für jedes Sub-Attribut eine eigene Spalte.</aside>
                         </section>
@@ -308,10 +310,11 @@
                                              
                                             ]]
                                         </div>
-                                <div>
+                                <div class="fragment" data-fragment-index="1" style="margin-top: -1mm;">
+                                    
                                     <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
                                     <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span>
-                                </div><div>
+                                </div><div class="fragment" data-fragment-index="1" style="margin-top: -1mm;">
                                     <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Telefonnummern</p>
                                     <table style="font-size:0.7em">
                                         <thead>
@@ -329,6 +332,558 @@
                                 <p style="position: abolsute; top:5cm" font-size:70%">telefonnummern.persnr ist Fremdschlüssel auf personen.persnr</p>
                                 <aside class="notes">Ute hat zwei Telefonnummer, Peter nur eine und Anna gar keine.</aside>
                         </section>
+                        <section>
+                            <h3>1:N-Beziehung &rightarrow; Fremdschlüssel</h3>
+
+                            <div class="columns">
+                                    <div class="erd" style="margin-top:5mm; width: 350px;">
+                                            [[
+                                             { _e: "Produkte", pos: [30, 100],
+                                               attributes: [
+                                                { _a:"Produktnr", pos: [15, 25], options:["primary"] },
+                                                { _a:"Bezeichnung", pos: [134, 25] },
+                                                { _a:"Preis", pos: [200, 106] }
+                                               ]
+                                             },
+                                             { _e: "Hersteller", pos: [30, 304],
+                                               attributes: [
+                                                { _a:"Firma", pos: [200, 280], options:["primary"] },
+                                                { _a:"Land", pos: [200, 345] }
+                                               ]
+                                             }
+                                            ],
+                                            [
+                                             { _r: "sind von",
+                                               _e: ["Produkte", "Hersteller"],
+                                               card: ["N", "1"]      }
+                                            ]]
+                                                        </div>
+
+                                                        <div class="fragment" style="margin-top: -10mm;">
+                                    
+                                                                <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Produkte</p>
+                                                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,18,88) " data-sql-pk="produktnr"></span>
+                                                            
+                                                                <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Hersteller</p>
+                                                                <span data-sql-query="SELECT * FROM hersteller WHERE firma IN ('Monsterfood', 'Holzkopf')" data-sql-pk="firma"></span>
+
+                                                                <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
+                                                            </div>
+                                                    </div>
+                                        <aside class="notes">An die Relation, die im ER-Diagramm an der gegenüberliegenden Seite von der 1 steht, wird ein Fremdschlüssel hinzugefügt. Und zwar hat dieser die gleichen Spaltentypen wie der referenzierte Primärschlüssel. Der Fremdschlüssel-Spaltenname ist hier der Name der referenzierten Tabelle, man kann aber auch den Namen der referenzierten Spalte (Firma) oder den Beziehungsnamen (sind_von) nehmen.</aside>
+                        </section>
+                        <section>
+                            <h3>Rekursive Beziehung &rightarrow; Fremdschl.</h3>
+                            <div class="columns">
+                            
+                                <div><img src="img/2/er_rekursiv.jpg" style="border:0; box-shadow:none; width:300px"></div>
+                                <div class="fragment">
+                                            <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
+                                            <span data-sql-query="SELECT kundennr as PersNr, name as Name, geworben_von AS Chef FROM kunden" data-sql-pk="PersNr"></span>
+
+                                            <p style="font-size:70%">personen.chef ist Fremdschlüssel auf personen.persnr</p>
+                                    </div>
+                            </div>
+                            <aside class="notes">Personen ist nun eine sich selbst referenzierende Tabelle. In der Fremdschlüsselspalte &quot;Chef&quot; ist die ID des Chefs einer Person zu finden. Ute hat keinen Chef, daher ist bei ihr Chef NULL. Es wäre sogar möglich, dort die eigene PersNr einzutragen.</aside>
+                        </section>
+
+                        <section>
+                                <h3>N:M-Beziehung &rightarrow; Relation</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 17</div>
+    
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:-9mm; width: 350px;">
+                                                [[
+                                                 { _e: "Kunden", pos: [30, 100],
+                                                   attributes: [
+                                                    { _a:"Kundennr", pos: [12, 30], options:["primary"] },
+                                                    { _a:"Name", pos: [124, 23] },
+                                                    { _a:"E-Mail", pos: [204, 71]}
+                                                   ]
+                                                 },
+                                                 { _e: "Produkte", pos: [30, 304],
+                                                   attributes: [
+                                                   { _a:"Produktnr", pos: [15, 400], options:["primary"] },
+                                                   { _a:"Bezeichnung", pos: [134, 400] },
+                                                   { _a:"Preis", pos: [200, 340] }
+                                                   ]
+                                                 }
+                                                ],
+                                                [
+                                                 { _r: "bewerten",
+                                                   _e: ["Kunden", "Produkte"],
+                                                   attributes: [ {_a:"Sterne", pos: [150, 175] }, {_a:"Text", pos: [150, 240] } ],
+                                                   card: ["N", "M"]      }
+                                                ]]
+                                                            </div>
+    
+                                                            <div class="fragment" style="margin-top: -1mm;">
+                                        
+                                                                    <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">kunden_bewerten_produkte</p>
+                                                                    <span data-sql-query="SELECT kundennr, produktnr, sterne, substr(bewertungstext, 0,19) as text FROM bewertungen WHERE produktnr IN (17,18,88) " data-sql-pk="kundennr,produktnr"></span>
+                                                                
+                                                                    
+                                                                    <p style="font-size:70%">kunden_bewerten_produkte.kundennr<br>ist Fremdschlüssel auf kunden.kundennr</p>
+                                                                    <p style="font-size:70%">kunden_bewerten_produkte.produktnr<br>ist Fremdschlüssel auf produkte.produktnr</p>
+                                                                </div>
+                                                        </div>
+                                            <aside class="notes">Aus einer N:M-Beziehung wird eine eigene Relation. Diese trägt als Namen z. B. den Beziehungsnamen (bewerten) oder etwas anderes, was verständlich ist (kunden_bewerten_produkte, bewertungen, ...). Die neue Relation besitzt Fremdschlüsselspalten, welche die Primärschlüssel der an der Beziehung teilnehmenden Entities referenzieren. Die Kombination all dieser Fremdschlüsselspalten bilden den Primärschlüssel der Beziehungstabelle. Als weitere Nicht-Schlüssel-Attribute werden die Beziehungsattribute - sofern vorhanden - hinzugefügt. </aside>
+                            </section>
+
+                            <section>
+                                <h3>Schwache Entitätstypen &rightarrow; Relation</h3>
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:5mm; width: 350px;">
+                                                [[
+                                                 { _e: "Anbieter", pos: [30, 100],
+                                                   attributes: [
+                                                    { _a:"Anbieternr", pos: [15, 25], options:["primary"] },
+                                                    { _a:"Anbietername", pos: [134, 25] }
+                                                   ]
+                                                 },
+                                                 { _e: "Handytarife", pos: [30, 304], options: ["weak"],
+                                                   attributes: [
+                                                    { _a:"Tarifbezeichn.", pos: [200, 280], options:["extending_primary"] },
+                                                    { _a:"Datenvolumen", pos: [200, 345] },
+                                                    { _a:"Preis", pos: [120, 400] }
+                                                   ]
+                                                 }
+                                                ],
+                                                [
+                                                 { _r: "haben", options: ["weak"],
+                                                   _e: ["Anbieter", "Handytarife"],
+                                                   card: ["1", "N"]      }
+                                                ]]
+                                                            </div>
+    
+                                                            <div class="fragment" style="margin-top: -1mm;">
+                                                                <p style="font-size: 70%;">Anbieter(<br>&nbsp;<u>Anbieternr</u>,<br>&nbsp;Anbietername<br>)</p>
+                                                                <p style="font-size: 70%;">Handytarife(<br>&nbsp;<u>Anbieternr</u>,<br>&nbsp;<u>Tarifbezeichnung</u>,<br>&nbsp;Datenvolumen,<br>&nbsp;Preis<br>)</p>
+                                                                <p style="font-size:70%">handytarife.anbieternr ist<br>Fremdschlüssel auf anbieter.anbieternr</p>
+                                                            </div>
+                                            </div>
+                                            <aside class="notes">Der schwache Entitätstyp erbt den Primärschlüssel von anderen Entitätstypen. Hier erbt Handytarife den Primärschlüssel von Anbieter, zusätzlich wird er erweitert um die Tarifbezeichnung.
+                                            </aside>
+                            </section>
+                            <section>
+                                <h3>Schwache Entitätstypen &rightarrow; Relation</h3>
+                                <div id="er_ratings" style="height: 4.5cm; overflow: hidden;">    
+                                        <div class="stretch erd">
+                                            [[
+                                            { _e: "Kunden", pos: [50, 10],
+                                             attributes: [
+                                                { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
+                                                   { _a:"...", pos: [140, 85] }
+                                             ]
+                                            },
+                                            { _e: "Produkte", pos: [730, 10],
+                                              attributes: [
+                                                { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
+                                                   { _a:"...", pos: [810, 85] }
+                                              ]
+                                            },
+                                            { _e: "Bewertungen", pos: [390, 10], options: ["weak"],
+                                            attributes: [ 
+                                                {_a:"Sterne", pos: [340, 100] }, 
+                                                {_a:"Text", pos: [480, 100] } ]
+                                            }
+                                           ],
+                                           [
+                                            { _r: "schreiben",
+                                              _e: ["Kunden", "Bewertungen"], options: ["weak"],
+                                              card: ["1", "N"]
+                                            },
+                                            { _r: "für",
+                                              _e: ["Bewertungen", "Produkte"], options: ["weak"],
+                                              card: ["N", "1"]
+                                            }
+                                           ]]
+                                        </div></div>
+                                        <div class="fragment">
+                                                <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, ...)<br>
+                                                                           Produkte(<u>Produktnr</u>, ...)<br>
+                                                                           Bewertungen(<u>Kundennr, Produktnummer</u>, Sterne, Text)</p>
+                                                <p style="font-size: 70%;">bewertungen.kundennr ist Fremdschlüssel auf kunden.kundennr<br>
+                                                                           bewertungen.produktnr ist Fremdschlüssel auf produkte.produktnr</p>
+                                        </div>
+                                        <aside class="notes">Der schwache Entitätstyp Bewertungen ist von zwei Entitätstypen existenzabhängig: Kunden und Produkte. Die Bewertungen-Relation hat also als Primärschlüssel die Kombination aus den Primärschlüsseln ebendieser beider Tabellen: Kundennr, Produktnr.<br>Das Resultat ist genau das gleiche wie die Relation, die aus der N:M-Beziehung &quot;bewerten&quot; entstanden ist (siehe 2 Folien zurück).</aside>
+                            </section>
+
+                            <section>
+                                <h3>Ternäre Beziehung &rightarrow; Relation</h3>
+                                <div id="er_degree_3" style="height: 9cm; overflow: hidden;">
+                                        <div class="stretch erd">
+                                                [[
+                                                 { _e: "Kunden", pos: [150, 100],
+                                                  attributes: [
+                                                   { _a:"Kundennr", options:["primary"], pos: [89, 13] },
+                                                   { _a:"Name", pos: [245, 13] }
+                                                  ]
+                                                 },
+                                                 { _e: "Tarife", pos: [530, 100],
+                                                   attributes: [
+                                                    { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
+                                                    { _a:"Mindestlaufzeit", pos: [599, 25]},
+                                                    { _a:"Preis", pos: [698, 71]}
+                                                   ]
+                                                 },
+                                                 { _e: "Fitnessstudios", pos: [334, 277],
+                                                   attributes: [
+                                                    { _a:"Strasse", pos: [205, 212], options:["primary"] },
+                                                    { _a:"Hausnummer", pos: [205, 275], options:["primary"] }
+                                                   ]
+                                                 }
+                                                ],
+                                                [
+                                                 { _r: "buchen",
+                                                   _e: ["Kunden", "Tarife", "Fitnessstudios"],
+                                                   card: ["N", "1", "M"],
+                                                   attributes: [{_a:"Datum", pos: [462, 195]}]
+                                                 }
+                                                ]]
+                                                            </div>
+                                                        </div>
+
+                                <div class="fragment">
+                                        <p style="font-size: 70%;">Buchung(<u>Kundennr, Studio_Str, Studio_Hausnr</u>, Tarif_Bezeichnung, Datum)</p>
+                                        <p style="font-size: 70%; margin-right: -5mm;">buchung.kundennr ist Fremdschlüssel auf kunden.kundennr<br>
+                                                                    buchung.tarif_bezeichnung ist Fremdschlüssel auf tarife.bezeichnung<br>
+                                                                    buchung(studio_str, studio_hausnr) ist FK auf fitnessstudios(strasse, hausnummer)</p>
+                                        <aside class="notes">Genau wie bei einer binären N:M-Beziehung, wird auch bei einer höhergradigen Beziehung eine separate Relation erstellt. Der Primärschlüssel wird nur aus den Entitätstypen gebildet, an denen keine 1 steht. </aside>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h2>Generalisierung im Relationenmodell</h2>
+                                <p>Mehrere Möglichkeiten<br>der Umsetzung:</p>
+                                <ul>
+                                    <li>Volle Redundanz</li>
+                                    <li>Hausklassenmodell</li>
+                                    <li>Vertikale Partitionierung</li>
+                                    <li>Hierarchierelation</li>
+                                </ul>
+                                <div id="er_generalization">
+                                <div style="position:absolute; left: 625px; top: 220px; height: 400px; overflow:hidden;">
+                                        <div class="erd" style="width: 400px;">
+                                                [[
+                                                 { _e: "Kunden", pos: [110, 100],
+                                                  attributes: [
+                                                    { _a:"Kundennr", options:["primary"], pos: [15, 10] },
+                                                    { _a:"Name", pos: [130, 10] },
+                                                    { _a:"E-Mail", pos: [250, 10] }
+                                                  ]
+                                                 },
+                                                 { _e: "Privatkunden", pos: [10, 230], isa: {_e:"Kunden"},
+                                                 attributes: [ {_a:"Bonuspunke", pos: [35, 310]} ]},
+                                                 { _e: "Geschäftskunden", pos: [200, 230], isa: {_e:"Kunden"}, 
+                                                 attributes: [ { _a:"USt-IdNr.", pos: [225, 310]} ]},
+                                                ],
+                                                [
+                                                ]]
+                                        </div></div>
+                                </div>
+                            </section>
+                            <section>
+                                    <h3>Volle Redundanz</h3>
+                                    <ul style="width:12cm">
+                                        <li style="font-size: 70%;">Jeder Entitätstyp wird zur eigenständigen Relation (alle Spalten)</li>
+                                        <li style="font-size: 70%;">Beim Einfügen in Sub-Relationen wird redundante Information in die entsprechenden Super-Relationen eingefügt.</li>
+                                    </ul>
+                                    <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
+                                                               Privatkunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte)<br>
+                                                               Geschäftskunden(<u>Kundennr</u>, Name, E-Mail, USt-ID)<br></p>
+                                    <p style="font-size: 70%;">Privatkunden.Kundennr und<br>Geschäftskunden.Kundennr sind Fremdschlüssel<br>auf Kunden.Kundennr.</p>
+                                    <div data-clone="er_generalization"></div>
+                                    <aside class="notes">Durch die Fremdschlüsselbeziehungen wird garantiert, dass die Zeile auch in der Über-Relation existiert.</aside>
+                                </section>
+
+                                <section>
+                                        <h3>Volle Redundanz</h3>
+                                        <div class="columns">
+                                            
+                                        <div style="margin-top: -12mm;">
+                                            <p style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden"></span>
+
+                                            <p style="font-size: 70%; margin-bottom: -1mm;">Privatkunden</p>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5"></span>
+
+                                            <p style="font-size: 70%; margin-bottom: -1mm;">Geschäftskunden</p>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8"></span>
+                                        </div>
+                                    </div>
+                                    <aside class="notes">Peter ist Privatkunde, Anna ist Geschäftskunde und Ute einfach nur Kunde. Beim Einfügen, Ändern und Löschen von Kunden muss sorgfältig darauf geachtet werden, dass diese Operationen konsistent auf allen betreffenden Tabellen erfolgen. Daher ist diese Variante in der Regel nicht empfehlenswert.</aside>
+                                    </section>
+                                
+                                <section>
+                                    <h3>Hausklassenmodell</h3>
+                                    <ul style="width:12cm">
+                                            <li style="font-size: 70%;">Jeder Entitätstyp wird zur eigenständigen Relation (alle Spalten)</li>
+                                            <li style="font-size: 70%;">Es wird nur in die speziellste Relation eingefügt.</li>
+                                        </ul>
+                                        <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
+                                                                   Privatkunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte)<br>
+                                                                   Geschäftskunden(<u>Kundennr</u>, Name, E-Mail, USt-ID)<br></p>
+                                                                   <p style="font-size: 70%;">Hier keine Fremdschlüssel.</p>
+                                        <div data-clone="er_generalization"></div>
+                                        <aside class="notes">Im Hausklassenmodell ist die Suche aufwändig, da diese häufig mehrere Relationen betreffen kann.</aside>
+                                </section>
+
+                                <section>
+                                        <h3>Hausklassenmodell</h3>
+                                        <div class="columns">
+                                            
+                                        <div style="margin-top: -12mm;">
+                                            <p style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr NOT IN (5,8)"></span>
+
+                                            <p style="font-size: 70%; margin-bottom: -1mm;">Privatkunden</p>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5"></span>
+
+                                            <p style="font-size: 70%; margin-bottom: -1mm;">Geschäftskunden</p>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8"></span>
+                                        </div>
+                                    </div>
+                                    <aside class="notes">Peter ist Privatkunde, Anna ist Geschäftskunde und Ute einfach nur Kunde. Wollen wir nun alle Kunden finden, muss eine Vereinigung der drei Relationen gebildet werden.</aside>
+                                    </section>
+                            
+                                    <section>
+                                            <h3>Vertikale Partitionierung</h3>
+                                            <ul style="width:12cm">
+                                                    <li style="font-size: 70%;">Jeder Entitätstyp wird zur eigenständigen Relation<br>(PK + spezielle Spalten)</li>
+                                                </ul>
+                                                <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
+                                                                           Privatkunden(<u>Kundennr</u>, Bonuspunkte)<br>
+                                                                           Geschäftskunden(<u>Kundennr</u>, USt-ID)<br></p>
+                                                                           <p style="font-size: 70%;">Privatkunden.Kundennr und<br>Geschäftskunden.Kundennr sind Fremdschlüssel<br>auf Kunden.Kundennr.</p>
+                                                <div data-clone="er_generalization"></div>
+                                                <aside class="notes">Lediglich die Primärschlüsselwerte sind in dieser Variante redundant. Alles andere wird in den speziellen Relationen gespeichert. Zur Suche sind oft Verbundoperationen nötig, da Daten ein und derselben Entität über mehrere Relationen verteilt (partitioniert) gespeichert werden.</aside>
+                                        </section>
+
+                                        <section>
+                                                <h3>Vertikale Partitionierung</h3>
+                                                <div class="columns">
+                                                    
+                                                <div style="margin-top: -12mm;">
+                                                    <p style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr"></span>
+        
+                                                    <p style="font-size: 70%; margin-bottom: -1mm;">Privatkunden</p>
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5"></span>
+        
+                                                    <p style="font-size: 70%; margin-bottom: -1mm;">Geschäftskunden</p>
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8"></span>
+                                                </div>
+                                            </div>
+                                            <aside class="notes">Möchte man hier den Namen und die Umsatzsteuer-ID aller Geschäftskunden wissen, muss man in zwei Tabellen (Kunden und Geschäftskunden) schauen.</aside>
+                                            </section>
+
+                                        <section>
+                                            <h3>Hierarchierelation</h3>
+                                            <ul>
+                                                    <li style="font-size: 70%;">Nur eine einzige Relation mit ALLEN Spalten.</li>
+                                                    <li style="font-size: 70%;">Type_Tag gibt den Entitätstypen an</li>
+                                                </ul>
+                                                <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte, USt-ID, Type_Tag)</p>
+                                                <p class="fragment" data-fragment-index="1" style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
+                                                    <span class="fragment" data-fragment-index="1" data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email, null as bonuspunkte, null as ust_id, 'Kunde' as type_tag FROM kunden WHERE kundennr NOT IN (5,8)
+                                                    union all SELECT kundennr, name, email, 2811 as bonuspunkte, null as ust_id, 'Privatkunde' as type_tag FROM kunden WHERE kundennr = 5
+                                                    union all SELECT kundennr, name, email, null as bonuspunkte, '555-...' as ust_id, 'Geschäftskunde' as type_tag FROM kunden WHERE kundennr = 8"></span>
+                                                <aside class="notes">In dieser Variante ist sowohl Suchen als auch Einfügen besonders einfach. Bei komplexen Generalisierungshierarchien kann es jedoch sehr viele Spalten mit vielen NULL-Werten geben.</aside>
+                                        </section>
+                                        <section>
+                                            <h3>NOT NULL / UNIQUE</h3>
+                                            <div style="margin-left: 220px; height: 150px; overflow: hidden;">
+                                                    <div class="erd">
+                                                            [[
+                                                                { _e: "Personen", pos: [20, 25],
+                                                                attributes: [
+                                                                ]
+                                                                },
+                                                                { _e: "Orte", pos: [350, 25],
+                                                                attributes: [
+                                                                ]
+                                                                }
+                                                            ],
+                                                            [
+                                                            { _r: "geboren in",
+                                                                _e: ["Personen", "Orte"],
+                                                                card: ["mc", "1"]
+                                                                }
+                                                            ]]
+                                                                        </div>
+                                                                    </div>
+                                                <table>
+                                                    <tbody>
+                                                        <tr><td>c</td><td>mc</td><td>-</td></tr>
+                                                        <tr><td>1</td><td>mc</td><td>NOT NULL</td></tr>
+                                                        <tr><td>c</td><td>c</td><td>UNIQUE</td></tr>
+                                                        <tr><td>1</td><td>c</td><td>UNIQUE NOT NULL</td></tr>
+                                                    </tbody>
+                                                </table>
+                                                <aside class="notes">Wenn im ER-Diagramm die erweiterte Chen-Notation (1, m, c, mc) oder die Min-Max-Notation verwendet wird, können die genaueren Kardinalitätsrestriktionen ins Relationenmodell übernommen werden. Im hier zu sehenden Diagramm sind Personen in genau einem Ort geboren, d. h. die Geburtsort-Spalte muss NOT NULL sein. NOT NULL heißt, es darf keine NULL-Werte in der Spalte geben. UNIQUE heißt, dass keine doppelten Werte vorkommen dürfen.</aside>
+                                        </section>
+                                        <section>
+                                                <h3>NOT NULL / UNIQUE</h3>
+                                                <div style="margin-left: 220px; height: 290px; overflow: hidden;">
+                                                        <div class="erd">
+                                                                [[
+                                                                    { _e: "Personen", pos: [20, 25],
+                                                                    attributes: [
+                                                                    ]
+                                                                    },
+                                                                    { _e: "Orte", pos: [350, 25],
+                                                                    attributes: [
+                                                                    ]
+                                                                    },
+                                                                    { _e: "Kreditkarten", pos: [350, 150],
+                                                                    attributes: [
+                                                                    ]
+                                                                    }
+                                                                ],
+                                                                [
+                                                                { _r: "geboren in",
+                                                                    _e: ["Personen", "Orte"],
+                                                                    card: ["mc", "1"]
+                                                                    },
+                                                                    { _r: "haben", pos: [217, 138],
+                                                                    _e: ["Personen", "Kreditkarten"],
+                                                                    card: ["1", "c"]
+                                                                    }
+                                                                ]]
+                                                                            </div>
+                                                                        </div>
+                                                    <p>Personen(<u>PersNr</u>, Name, E-Mail,<br>&nbsp;Geburtsort NOT NULL,<br>&nbsp;Kreditkarte UNIQUE)</p>
+                                                    
+                                                    <aside class="notes">Personen brauchen einen Geburtsort, daher muss die Spalte NOT NULL sein. Da jede Kreditkarte nur einmal verwendet werden darf, ist die Fremdschlüsselspalte &quot;Kreditkarte&quot; UNIQUE. Das &quot;c&quot; bei Kreditkarten gibt an, dass es Personen ohne Kreditkarte geben darf, daher sind NULL-Werte in der Kreditkarten-Spalte erlaubt. </aside>
+                                            </section>
+                                            <section>
+                                                <h2>Relationale Algebra</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 18</div>
+                                                <p>Die Relationale Algebra besteht aus Operationen, die auf ein oder mehreren Relationen angewendet werden können. Das Ergebnis einer solchen Operation ist wieder eine Relation.</p>
+                                                <p>Beispiel: Vereinigung</p>
+                                                <div class="columns" style="margin-top: -10mm;">
+                                                    <div><p style="font-size: 70%;">Kunden</p>
+                                                    <span data-sql-query="select kundennr, name from kunden where kundennr = 4"></span></div>
+                                                    <div><p style="font-size: 70%;">Privatkunden</p>
+                                                    <span data-sql-query="select kundennr, name from kunden where kundennr = 5"></span></div>
+                                                    <div><p style="font-size: 70%;">Kunden &Union; Privatk.</p>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
+                                                </div>
+                                                <aside class="notes">Der Vereinigungsoperation &Union; wird auf zwei Relationen angewandt und liefert wieder eine Relation zurück.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>Mengenoperationen</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 19</div>
+                                                <ul>
+                                                    <li>Relationen sind Mengen von Tupeln</li>
+                                                    <li>Mengen können vereinigt, geschnitten und voneinander subtrahiert werden</li>
+                                                    <li>Das geht aber nur, wenn die Mengen vereinigungsverträglich sind</li>
+                                                </ul>
+                                                <p></p>
+                                                <h4>Vereinigungsverträglichkeit</h4>
+                                                <ul>
+                                                    <li>Gleiche Anzahl von Spalten</li>
+                                                    <li>Kompatible Datentypen</li>
+                                                </ul>
+                                            </section>
+                                            <section>
+                                                <h2>&Intersection; Schnittmenge</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 19</div>
+                                                <p>Diejenigen Zeilen, die in beiden Relationen vorkommen.</p>
+                                                <p></p>
+                                                <div class="columns" style="margin-top: -1mm;">
+                                                        <div><p style="font-size: 70%;">Kunden</p>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
+                                                        <div><p style="font-size: 70%;">Privatkunden</p>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)"></span></div>
+                                                        <div><p style="font-size: 70%;">Kunden &Intersection; Privatk.</p>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr = 5"></span></div>
+                                                    </div>
+                                                <aside class="notes">Die Zeile muss exakt gleich aussehen, sodass sie im Ergebnis zu sehen ist. Die Operation &Intersection; würde nicht funktionieren, wenn die beiden Tabellen eine unterschiedliche Anzahl an Spalten haben. Auch, wenn Datentypen nicht kompatibel wären (z. B. erste Spalte keine Zahl sondern ein Datum), sind die Mengen nicht vereinigungsverträglich und daher kann auch keine Schnittmenge gebildet werden. Auf Englisch heißt die Schnittmenge Intersection.</aside>
+                                            </section>
+                                            <section>
+                                                    <h2>\ Mengensubtraktion</h2>
+                                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 19</div>
+                                                    <p>Die Zeilen der ersten ohne die der zweiten Relation.</p>
+                                                    <p></p>
+                                                    <div class="columns" style="margin-top: -1mm;">
+                                                            <div><p style="font-size: 70%;">Kunden</p>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
+                                                            <div><p style="font-size: 70%;">Privatkunden</p>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)"></span></div>
+                                                            <div><p style="font-size: 70%;">Kunden \ Privatk.</p>
+                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4)"></span></div>
+                                                        </div>
+                                                    <aside class="notes">Der Minus-Operator \ ist anders als die Vereinigung und Schnittmenge nicht symmetrisch. Die Zeilen der zweiten Relation werden von denen der ersten abgezogen. Im gezeigten Beispiel werden von {Ute, Peter} die Personen {Peter, Anna} abgezogen. Wenn man etwas abzieht, was nicht in der Menge ist (Anna), passiert nichts. Aber Peter wird abgezogen, sodass im Ergebnis lediglich Ute ist.</aside>
+                                                </section>
+                                            <section>
+                                                    <h2>&Union; Vereinigung</h2>
+                                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 20</div>
+                                                    <p>Alle Zeilen aus beiden Relationen.</p>
+                                                    <p></p>
+                                                    <div class="columns" style="margin-top: -1mm;">
+                                                            <div><p style="font-size: 70%;">Kunden</p>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
+                                                            <div><p style="font-size: 70%;">Privatkunden</p>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)"></span></div>
+                                                            <div><p style="font-size: 70%;">Kunden &Union; Privatk.</p>
+                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)"></span></div>
+                                                        </div>
+                                                    <aside class="notes">Relationen sind Mengen von Tupeln und in Mengen gibt es keine Duplikate. Daher erscheint hier im Ergebnis der Kunde Peter nur einmal, obwohl er in beiden Relationen jeweils einmal vorkommt. Auf Englisch heißt Vereinigung Union.</aside>
+                                                </section>
+                                            <section>
+                                                <h2>&pi; Projektion</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 21</div>
+                                                <p>$\pi_{A_1, A_2, \dots, A_n}(R)$</p>
+                                                <p>Beschränkung der Relation $R$ auf die Spalten $A_1, A_2, \dots, A_n$</p>
+                                                <div class="columns" style="margin-top: -6mm;">
+                                                        <div><p style="font-size: 70%;">Kunden</p>
+                                                        <span data-sql-query="select kundennr, name, email from kunden where kundennr IN (4,5,8)"></span></div>
+                                                        
+                                                        <div><p style="font-size: 70%;">$\pi_{kundennr, name}$(Kunden)</p>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)"></span></div>
+                                                    </div>
+                                                    <aside class="notes">Die Projektion ist ein unärer Operator, das heißt er nimmt nur eine Relation als Eingabe (Vereinigung etc. sind binär). Das Ergebnis beinhaltet die Eingaberelation, jedoch nur mit den spezifizierten Spalten. Im Beispiel interessieren wir uns nur für die Kundennummern und Namen von Kunden, nicht für weitere Attribute.</aside>
+                                            </section>
+                                            <section>
+                                                    <h2>&pi; Projektion</h2>
+                                                    <p>Achtung: Duplikateliminierung!</p>
+                                                    <div class="columns" style="margin-top: -6mm;">
+                                                            <div><p style="font-size: 70%;">Produkte</p>
+                                                            <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)"></span></div>
+                                                            
+                                                            <div><p style="font-size: 70%;">$\pi_{hersteller}$(Produkte)</p>
+                                                                <span data-sql-query="select distinct hersteller from produkte where produktnr IN (17,18,29,88,999)"></span></div>
+                                                        </div>
+                                                        <aside class="notes">Relationen sind Mengen von Tupeln und Mengen beinhalten keine Duplikate. Daher kann es vorkommen, dass das Ergebnis einer Projektion weniger Zeilen als die Eingaberelation hat.</aside>
+                                                </section>
+                                            <section>
+                                                <h2>&sigma; Selektion</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 22</div>
+                                                <p>$\sigma_{P}(R)$</p>
+                                                <p>Auswahl derjenigen Zeilen der Relation $R$, die das Kriterium $P$ erfüllen.</p>
+                                                <div class="columns" style="margin-top: -6mm;">
+                                                        <div><p style="font-size: 70%;">Produkte</p>
+                                                        <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)"></span></div>
+                                                        <div>&nbsp;</div>
+                                                        <div><p style="font-size: 70%;">$\sigma_{hersteller='Monsterfood'}$(Produkte)</p>
+                                                            <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where hersteller  = 'Monsterfood'"></span></div>
+                                                    </div>
+                                            </section>
+                                            <section>
+                                                <h2>Selektion</h2>
+                                                <p>$\sigma_{preis>1}(\sigma_{hersteller='Monsterfood'}$(Produkte))</p>
+                                                <p>Klammern weglassen:<br>
+                                                    $\sigma_{preis>1}\sigma_{hersteller='Monsterfood'}$(Produkte)</p>
+                                                <p>Selektionen mit AND verbinden:<br>
+                                                        $\sigma_{preis>1 \wedge hersteller='Monsterfood'}$(Produkte)</p>
+                                                <p>OR geht so:<br>
+                                                        $\sigma_{preis>1 \vee hersteller='Monsterfood'}$(Produkte)</p>
+                                                <p>Das entspricht:<br>
+                                                    $\sigma_{preis>1}(Produkte) \cup \sigma_{hersteller='Monsterfood'}$(Produkte)</p>
+                                                    
+                                            </section>
                         </div>
                     </div>
             

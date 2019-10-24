@@ -36,7 +36,8 @@ var SQLPlugin = (function(){
 
             document.querySelectorAll('[data-sql-query]').forEach(function(item) {
                 var pk = item.getAttribute('data-sql-pk') != undefined ? item.getAttribute('data-sql-pk').split(',').map(function(e) { return e.trim() }) : [];
-                execute_query(item.getAttribute('data-sql-query'), item, pk);
+                var tablename = item.getAttribute('data-sql-tablename') != undefined ? item.getAttribute('data-sql-tablename') : null;
+                execute_query(item.getAttribute('data-sql-query'), item, pk, tablename);
             });
 		}
 	}
@@ -118,21 +119,26 @@ function create_db() {
 }
 
 
-function execute_query(query, res_element, pk=[]) {
+function execute_query(query, res_element, pk=[], tablename = null) {
     db.transaction(function(tx) {
         tx.executeSql(query, [], function(tx, results) {
             if(results.rows.length == 0) { // empty result set
                 res_element.innerHTML = '- leere Ergebnismenge -';
                 return;
             }
-            
-            html = '<table style="font-size:0.7em"><thead><tr>';
+
+            var header = results.rows.item(0);
+
+            html = '<table style="font-size:0.7em"></tr><thead>';
+            if(tablename != null) {
+                html += '<tr><td colspan="'+Object.keys(header).length+'" align="center" style="border-bottom: none; padding-bottom:0px;">'+tablename+'</td></tr>';
+            }
+            html += '<tr>';
 
             //header
-            var header = results.rows.item(0);
             for(var column in header) {
                 if(pk.indexOf(column)>-1) { column = '<u>'+column+'</u>'; }
-                html += '<th>'+column+'</th>';
+                html += '<th style="padding-top:0px;">'+column+'</th>';
             }
 
             html += '</tr><thead>';

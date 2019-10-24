@@ -44,6 +44,10 @@
     justify-content: space-around;
 }
 
+p.small,div.small,li.small,ul.small,ol.small,span.small {
+  font-size: 70%;
+}
+
 /* colors: http://paletton.com/#uid=73i0u0kjAAl9uSqf1JJn-uIsLrg */
 i.green { color:rgba(66, 169, 170, 0.99) }
 i.yellow { color:#ffcb63 }

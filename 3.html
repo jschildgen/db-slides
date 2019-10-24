@@ -99,9 +99,8 @@
                                 <h3>NULL-Werte</h3>
                                 <p>NULL = nicht vorhandener Wert</p>
                                 <div>
-                                        <p style="margin-bottom:-2mm; text-align: center; font-size: 70%;">produkte</p>
                                         <span  data-sql-query="SELECT produktnr, bezeichnung, preis FROM produkte WHERE produktnr IN (17)
-                                        UNION ALL SELECT 88, 'Katzenfutter', null" data-sql-pk="firma">
+                                        UNION ALL SELECT 88, 'Katzenfutter', null" data-sql-pk="firma" data-sql-tablename="produkte">
                                 </div>
                                 <p class="fragment" data-fragment-index="1">Mögliche Bedeutungen für Preis IS NULL:</p>
                                 <ul class="fragment" style="margin-top: 3mm; font-size:70%" data-fragment-index="1">
@@ -128,10 +127,9 @@
                             <section>
                                     <h3>Beispiel: hersteller</h3>
                                     <div>
-                                            <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">hersteller</p>
                                             <span  data-sql-query="SELECT * FROM hersteller WHERE firma IN (
                                                 SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
-                                            ) UNION ALL SELECT 'Sonstige', NULL" data-sql-pk="firma">
+                                            ) UNION ALL SELECT 'Sonstige', NULL" data-sql-pk="firma" data-sql-tablename="hersteller">
                                     </div>
                                     <ul style="margin-top: 3mm;">
                                         <li>Der Firmenname eines Herstellers ist eindeutig</li>
@@ -156,14 +154,12 @@
                             <div class="trackinfo"><i class="fas fa-headphones"></i> 16</div>
                             <div class="columns">
                              <div style="margin-top:0px; margin-right: 8mm;">
-                                    <p style="text-align: center; font-size: 70%;">produkte</p>
-                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,29)" data-sql-pk="produktnr">
+                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,29)" data-sql-pk="produktnr" data-sql-tablename="produkte">
                             </div>
                             <div style="margin-top:0px;">
-                                    <p style="text-align: center; font-size: 70%;">hersteller</p>
                                     <span  data-sql-query="SELECT * FROM hersteller WHERE firma IN (
                                         SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
-                                    )" data-sql-pk="firma">
+                                    )" data-sql-pk="firma" data-sql-tablename="hersteller">
 
                                 
                             </div>
@@ -174,14 +170,13 @@
                         <section>
                                 <h3>Zusammengesetzte Schlüssel</h3>
                                         <div>
-                                                <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">hersteller</p>
                                                 <span data-sql-query="SELECT * FROM hersteller WHERE firma IN (
                                                     SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
-                                                ) UNION ALL SELECT 'Monsterfood', 'China'" data-sql-pk="firma,land"/>
+                                                ) UNION ALL SELECT 'Monsterfood', 'China'" data-sql-pk="firma,land" data-sql-tablename="hersteller"/>
                                         </div>
                                         <div>
-                                           <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">produkte</p>
-                                           <div data-sql-query="SELECT produktnr, bezeichnung, preis, hersteller, land FROM produkte join hersteller on produkte.hersteller=hersteller.firma WHERE produktnr IN (17,29)" data-sql-pk="produktnr"/>
+                                           <div data-sql-query="SELECT produktnr, bezeichnung, preis, hersteller, land FROM produkte join hersteller on produkte.hersteller=hersteller.firma WHERE produktnr IN (17,29)"
+                                            data-sql-pk="produktnr" data-sql-tablename="produkte"/>
                                         </div>
                                         <p style="font-size:70%">produkte(hersteller,land) ist Fremdschlüssel auf hersteller(firma,land)</p>
                                             
@@ -260,8 +255,8 @@
                                     [
                                     ]]
                             </div>
-                            <div class="fragment" style="margin-top: -1mm;"><p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
-                                <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span></div>
+                            <div class="fragment" style="margin-top: -1mm;">
+                                <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr" data-sql-tablename="personen"></span></div>
                             </div>
                             <aside class="notes">Jeder Entitätstyp des ER-Diagramms wird in eine Relation überführt, die den gleichen Namen trägt. Für jedes Attribut gibt es eine Spalte in der Relation, Primärschlüsselattribute sind genau wie im ER-Diagramm unterstrichen.</aside>
                         </section>
@@ -361,11 +356,9 @@
 
                                                         <div class="fragment" style="margin-top: -10mm;">
                                     
-                                                                <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Produkte</p>
-                                                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,18,88) " data-sql-pk="produktnr"></span>
+                                                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,18,88) " data-sql-pk="produktnr" data-sql-tablename="produkte"></span>
                                                             
-                                                                <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Hersteller</p>
-                                                                <span data-sql-query="SELECT * FROM hersteller WHERE firma IN ('Monsterfood', 'Holzkopf')" data-sql-pk="firma"></span>
+                                                                <span data-sql-query="SELECT * FROM hersteller WHERE firma IN ('Monsterfood', 'Holzkopf')" data-sql-pk="firma" data-sql-tablename="hersteller"></span>
 
                                                                 <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
                                                             </div>
@@ -378,8 +371,7 @@
                             
                                 <div><img src="img/2/er_rekursiv.jpg" style="border:0; box-shadow:none; width:300px"></div>
                                 <div class="fragment">
-                                            <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
-                                            <span data-sql-query="SELECT kundennr as PersNr, name as Name, geworben_von AS Chef FROM kunden" data-sql-pk="PersNr"></span>
+                                            <span data-sql-query="SELECT kundennr as PersNr, name as Name, geworben_von AS Chef FROM kunden" data-sql-pk="PersNr" data-sql-tablename="personen"></span>
 
                                             <p style="font-size:70%">personen.chef ist Fremdschlüssel auf personen.persnr</p>
                                     </div>
@@ -419,8 +411,7 @@
     
                                                             <div class="fragment" style="margin-top: -1mm;">
                                         
-                                                                    <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">kunden_bewerten_produkte</p>
-                                                                    <span data-sql-query="SELECT kundennr, produktnr, sterne, substr(bewertungstext, 0,19) as text FROM bewertungen WHERE produktnr IN (17,18,88) " data-sql-pk="kundennr,produktnr"></span>
+                                                                    <span data-sql-query="SELECT kundennr, produktnr, sterne, substr(bewertungstext, 0,19) as text FROM bewertungen WHERE produktnr IN (17,18,88) " data-sql-pk="kundennr,produktnr" data-sql-tablename="kunden_bewerten_produkte"></span>
                                                                 
                                                                     
                                                                     <p style="font-size:70%">kunden_bewerten_produkte.kundennr<br>ist Fremdschlüssel auf kunden.kundennr</p>
@@ -601,15 +592,12 @@
                                         <h3>Volle Redundanz</h3>
                                         <div class="columns">
                                             
-                                        <div style="margin-top: -12mm;">
-                                            <p style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
-                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden"></span>
+                                        <div>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden" data-sql-tablename="kunden"></span>
 
-                                            <p style="font-size: 70%; margin-bottom: -1mm;">Privatkunden</p>
-                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5"></span>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5" data-sql-tablename="privatkunden"></span>
 
-                                            <p style="font-size: 70%; margin-bottom: -1mm;">Geschäftskunden</p>
-                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8"></span>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8" data-sql-tablename="geschaeftskunden"></span>
                                         </div>
                                     </div>
                                     <aside class="notes">Peter ist Privatkunde, Anna ist Geschäftskunde und Ute einfach nur Kunde. Beim Einfügen, Ändern und Löschen von Kunden muss sorgfältig darauf geachtet werden, dass diese Operationen konsistent auf allen betreffenden Tabellen erfolgen. Daher ist diese Variante in der Regel nicht empfehlenswert.</aside>
@@ -633,15 +621,12 @@
                                         <h3>Hausklassenmodell</h3>
                                         <div class="columns">
                                             
-                                        <div style="margin-top: -12mm;">
-                                            <p style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
-                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr NOT IN (5,8)"></span>
+                                        <div>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr NOT IN (5,8)" data-sql-tablename="kunden"></span>
 
-                                            <p style="font-size: 70%; margin-bottom: -1mm;">Privatkunden</p>
-                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5"></span>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5" data-sql-tablename="privatkunden"></span>
 
-                                            <p style="font-size: 70%; margin-bottom: -1mm;">Geschäftskunden</p>
-                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8"></span>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8" data-sql-tablename="geschaeftskunden"></span>
                                         </div>
                                     </div>
                                     <aside class="notes">Peter ist Privatkunde, Anna ist Geschäftskunde und Ute einfach nur Kunde. Wollen wir nun alle Kunden finden, muss eine Vereinigung der drei Relationen gebildet werden.</aside>
@@ -664,15 +649,12 @@
                                                 <h3>Vertikale Partitionierung</h3>
                                                 <div class="columns">
                                                     
-                                                <div style="margin-top: -12mm;">
-                                                    <p style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
-                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr"></span>
+                                                <div>
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr" data-sql-tablename="kunden"></span>
         
-                                                    <p style="font-size: 70%; margin-bottom: -1mm;">Privatkunden</p>
-                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5"></span>
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5" data-sql-tablename="privatkunden"></span>
         
-                                                    <p style="font-size: 70%; margin-bottom: -1mm;">Geschäftskunden</p>
-                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8"></span>
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8" data-sql-tablename="geschaeftskunden"></span>
                                                 </div>
                                             </div>
                                             <aside class="notes">Möchte man hier den Namen und die Umsatzsteuer-ID aller Geschäftskunden wissen, muss man in zwei Tabellen (Kunden und Geschäftskunden) schauen.</aside>
@@ -685,8 +667,7 @@
                                                     <li style="font-size: 70%;">Type_Tag gibt den Entitätstypen an</li>
                                                 </ul>
                                                 <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte, USt-ID, Type_Tag)</p>
-                                                <p class="fragment" data-fragment-index="1" style="font-size: 70%; margin-bottom: -1mm;">Kunden</p>
-                                                    <span class="fragment" data-fragment-index="1" data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email, null as bonuspunkte, null as ust_id, 'Kunde' as type_tag FROM kunden WHERE kundennr NOT IN (5,8)
+                                                    <span class="fragment" data-fragment-index="1" data-sql-pk="kundennr" data-sql-tablename="kunden" data-sql-query="SELECT kundennr, name, email, null as bonuspunkte, null as ust_id, 'Kunde' as type_tag FROM kunden WHERE kundennr NOT IN (5,8)
                                                     union all SELECT kundennr, name, email, 2811 as bonuspunkte, null as ust_id, 'Privatkunde' as type_tag FROM kunden WHERE kundennr = 5
                                                     union all SELECT kundennr, name, email, null as bonuspunkte, '555-...' as ust_id, 'Geschäftskunde' as type_tag FROM kunden WHERE kundennr = 8"></span>
                                                 <aside class="notes">In dieser Variante ist sowohl Suchen als auch Einfügen besonders einfach. Bei komplexen Generalisierungshierarchien kann es jedoch sehr viele Spalten mit vielen NULL-Werten geben.</aside>
@@ -763,12 +744,10 @@
                                                 <p>Die Relationale Algebra besteht aus Operationen, die auf ein oder mehreren Relationen angewendet werden können. Das Ergebnis einer solchen Operation ist wieder eine Relation.</p>
                                                 <p>Beispiel: Vereinigung</p>
                                                 <div class="columns" style="margin-top: -10mm;">
-                                                    <div><p style="font-size: 70%;">Kunden</p>
-                                                    <span data-sql-query="select kundennr, name from kunden where kundennr = 4"></span></div>
-                                                    <div><p style="font-size: 70%;">Privatkunden</p>
-                                                    <span data-sql-query="select kundennr, name from kunden where kundennr = 5"></span></div>
-                                                    <div><p style="font-size: 70%;">Kunden &Union; Privatk.</p>
-                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
+                                                    <div><span data-sql-query="select kundennr, name from kunden where kundennr = 4" data-sql-tablename="kunden"></span></div>
+                                                    <div><span data-sql-query="select kundennr, name from kunden where kundennr = 5" data-sql-tablename="privatkunden"></span></div>
+                                                    <div>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden &Union; privatk."></span></div>
                                                 </div>
                                                 <aside class="notes">Der Vereinigungsoperation &Union; wird auf zwei Relationen angewandt und liefert wieder eine Relation zurück.</aside>
                                             </section>
@@ -793,12 +772,12 @@
                                                 <p>Diejenigen Zeilen, die in beiden Relationen vorkommen.</p>
                                                 <p></p>
                                                 <div class="columns" style="margin-top: -1mm;">
-                                                        <div><p style="font-size: 70%;">Kunden</p>
-                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
-                                                        <div><p style="font-size: 70%;">Privatkunden</p>
-                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)"></span></div>
-                                                        <div><p style="font-size: 70%;">Kunden &Intersection; Privatk.</p>
-                                                            <span data-sql-query="select kundennr, name from kunden where kundennr = 5"></span></div>
+                                                        <div>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden"></span></div>
+                                                        <div>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)" data-sql-tablename="privatkunden"></span></div>
+                                                        <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr = 5" data-sql-tablename="kunden &Intersection; privatk."></span></div>
                                                     </div>
                                                 <aside class="notes">Die Zeile muss exakt gleich aussehen, sodass sie im Ergebnis zu sehen ist. Die Operation &Intersection; würde nicht funktionieren, wenn die beiden Tabellen eine unterschiedliche Anzahl an Spalten haben. Auch, wenn Datentypen nicht kompatibel wären (z. B. erste Spalte keine Zahl sondern ein Datum), sind die Mengen nicht vereinigungsverträglich und daher kann auch keine Schnittmenge gebildet werden. Auf Englisch heißt die Schnittmenge Intersection.</aside>
                                             </section>
@@ -808,12 +787,12 @@
                                                     <p>Die Zeilen der ersten ohne die der zweiten Relation.</p>
                                                     <p></p>
                                                     <div class="columns" style="margin-top: -1mm;">
-                                                            <div><p style="font-size: 70%;">Kunden</p>
-                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
-                                                            <div><p style="font-size: 70%;">Privatkunden</p>
-                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)"></span></div>
-                                                            <div><p style="font-size: 70%;">Kunden \ Privatk.</p>
-                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4)"></span></div>
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden"></span></div>
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)" data-sql-tablename="privatkunden"></span></div>
+                                                            <div>
+                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4)" data-sql-tablename="kunden \ privatk."></span></div>
                                                         </div>
                                                     <aside class="notes">Der Minus-Operator \ ist anders als die Vereinigung und Schnittmenge nicht symmetrisch. Die Zeilen der zweiten Relation werden von denen der ersten abgezogen. Im gezeigten Beispiel werden von {Ute, Peter} die Personen {Peter, Anna} abgezogen. Wenn man etwas abzieht, was nicht in der Menge ist (Anna), passiert nichts. Aber Peter wird abgezogen, sodass im Ergebnis lediglich Ute ist.</aside>
                                                 </section>
@@ -823,12 +802,12 @@
                                                     <p>Alle Zeilen aus beiden Relationen.</p>
                                                     <p></p>
                                                     <div class="columns" style="margin-top: -1mm;">
-                                                            <div><p style="font-size: 70%;">Kunden</p>
-                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)"></span></div>
-                                                            <div><p style="font-size: 70%;">Privatkunden</p>
-                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)"></span></div>
-                                                            <div><p style="font-size: 70%;">Kunden &Union; Privatk.</p>
-                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)"></span></div>
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden"></span></div>
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)" data-sql-tablename="privatkunden"></span></div>
+                                                            <div>
+                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)" data-sql-tablename="kunden &Union; privatk."></span></div>
                                                         </div>
                                                     <aside class="notes">Relationen sind Mengen von Tupeln und in Mengen gibt es keine Duplikate. Daher erscheint hier im Ergebnis der Kunde Peter nur einmal, obwohl er in beiden Relationen jeweils einmal vorkommt. Auf Englisch heißt Vereinigung Union.</aside>
                                                 </section>
@@ -838,22 +817,22 @@
                                                 <p>$\pi_{A_1, A_2, \dots, A_n}(R)$</p>
                                                 <p>Beschränkung der Relation $R$ auf die Spalten $A_1, A_2, \dots, A_n$</p>
                                                 <div class="columns" style="margin-top: -6mm;">
-                                                        <div><p style="font-size: 70%;">Kunden</p>
-                                                        <span data-sql-query="select kundennr, name, email from kunden where kundennr IN (4,5,8)"></span></div>
+                                                        <div>
+                                                        <span data-sql-query="select kundennr, name, email from kunden where kundennr IN (4,5,8)" data-sql-tablename="kunden"></span></div>
                                                         
-                                                        <div><p style="font-size: 70%;">$\pi_{kundennr, name}$(Kunden)</p>
+                                                        <div><p style="font-size: 70%;">$\pi_{kundennr, name}(Kunden)$</p>
                                                             <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)"></span></div>
                                                     </div>
-                                                    <aside class="notes">Die Projektion ist ein unärer Operator, das heißt er nimmt nur eine Relation als Eingabe (Vereinigung etc. sind binär). Das Ergebnis beinhaltet die Eingaberelation, jedoch nur mit den spezifizierten Spalten. Im Beispiel interessieren wir uns nur für die Kundennummern und Namen von Kunden, nicht für weitere Attribute.</aside>
+                                                    <aside class="notes">Die Projektion ist ein unärer Operator, das heißt er nimmt nur eine Relation als Eingabe (Vereinigung etc. sind binär). Das Ergebnis ist gleich der Eingaberelation, jedoch nur mit den spezifizierten Spalten. Im Beispiel interessieren wir uns nur für die Kundennummern und Namen von Kunden, nicht für weitere Attribute.</aside>
                                             </section>
                                             <section>
                                                     <h2>&pi; Projektion</h2>
                                                     <p>Achtung: Duplikateliminierung!</p>
                                                     <div class="columns" style="margin-top: -6mm;">
-                                                            <div><p style="font-size: 70%;">Produkte</p>
-                                                            <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)"></span></div>
+                                                            <div>
+                                                            <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)" data-sql-tablename="produkte"></span></div>
                                                             
-                                                            <div><p style="font-size: 70%;">$\pi_{hersteller}$(Produkte)</p>
+                                                            <div><p style="font-size: 70%;">$\pi_{hersteller}(Produkte)$</p>
                                                                 <span data-sql-query="select distinct hersteller from produkte where produktnr IN (17,18,29,88,999)"></span></div>
                                                         </div>
                                                         <aside class="notes">Relationen sind Mengen von Tupeln und Mengen beinhalten keine Duplikate. Daher kann es vorkommen, dass das Ergebnis einer Projektion weniger Zeilen als die Eingaberelation hat.</aside>
@@ -864,25 +843,102 @@
                                                 <p>$\sigma_{P}(R)$</p>
                                                 <p>Auswahl derjenigen Zeilen der Relation $R$, die das Kriterium $P$ erfüllen.</p>
                                                 <div class="columns" style="margin-top: -6mm;">
-                                                        <div><p style="font-size: 70%;">Produkte</p>
-                                                        <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)"></span></div>
+                                                        <div>
+                                                        <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)" data-sql-tablename="produkte"></span></div>
                                                         <div>&nbsp;</div>
-                                                        <div><p style="font-size: 70%;">$\sigma_{hersteller='Monsterfood'}$(Produkte)</p>
+                                                        <div><p style="font-size: 70%;">$\sigma_{hersteller='Monsterfood'}(Produkte)$</p>
                                                             <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where hersteller  = 'Monsterfood'"></span></div>
                                                     </div>
                                             </section>
                                             <section>
                                                 <h2>Selektion</h2>
-                                                <p>$\sigma_{preis>1}(\sigma_{hersteller='Monsterfood'}$(Produkte))</p>
-                                                <p>Klammern weglassen:<br>
-                                                    $\sigma_{preis>1}\sigma_{hersteller='Monsterfood'}$(Produkte)</p>
-                                                <p>Selektionen mit AND verbinden:<br>
-                                                        $\sigma_{preis>1 \wedge hersteller='Monsterfood'}$(Produkte)</p>
-                                                <p>OR geht so:<br>
-                                                        $\sigma_{preis>1 \vee hersteller='Monsterfood'}$(Produkte)</p>
-                                                <p>Das entspricht:<br>
-                                                    $\sigma_{preis>1}(Produkte) \cup \sigma_{hersteller='Monsterfood'}$(Produkte)</p>
+                                                <p class="small">$\sigma_{preis>1}(\sigma_{hersteller='Monsterfood'}(Produkte))$</p>
+                                                <p class="fragment small">Klammern weglassen:<br>
+                                                    $\sigma_{preis>1}\sigma_{hersteller='Monsterfood'}(Produkte)$</p>
+                                                <p class="fragment small">Selektionen mit AND verbinden:<br>
+                                                        $\sigma_{preis>1 \wedge hersteller='Monsterfood'}(Produkte)$</p>
+                                                <p class="fragment small">OR geht so:<br>
+                                                        $\sigma_{preis>1 \vee hersteller='Monsterfood'}(Produkte)$</p>
+                                                <p class="fragment small">Das entspricht:<br>
+                                                    $\sigma_{preis>1}(Produkte) \cup \sigma_{hersteller='Monsterfood'}(Produkte)$</p>
+                                                
+                                                <aside class="notes">Welche Produkte vom Hersteller Monsterfood kosten mehr als 1 EUR? Die unteren beiden Ausdrücke liefern Produkte, die von Monsterfood sind oder mehr als einen Euro kosten (oder beides ist der Fall).</aside>
+                                            </section>
+
+                                            <section>
+                                                <h3>Operatorabfolgen</h3>
+                                                <p>&quot;Von welchen Herstellern aus Österreich gibt es keine Produkte?&quot;</p>
+                                                <div class="columns">
+                                                <div>
+                                                <ol class="small">
+                                                    <li class="fragment" data-fragment-index="1">Welche Hersteller sind aus Österreich?<br>$\sigma_{land='Österreich'}(Hersteller)$</li>
+                                                    <li class="fragment" data-fragment-index="3">Wie heißen diese Hersteller?<br>$\pi_{firma}\sigma_{land='Österreich'}(Hersteller)$</li>
+                                                    <li class="fragment" data-fragment-index="5">Vor welchen Herstellern sind unsere Produkte?<br>$\pi_{hersteller}(Produkte)$</li>
+                                                    <li class="fragment" data-fragment-index="7">Subtraktion von 2. und 3.:<br>$\pi_{firma}\sigma_{land='Österreich'}(Hersteller) \setminus \pi_{hersteller}(Produkte)$</li>
+                                                </ol>
+                                                <span class="fragment" data-fragment-index="8" data-sql-query="select firma from hersteller where land = 'Österreich' except select hersteller from produkte "></span>
+                                                </div>
+                                                <div><span class="fragment" data-fragment-index="2" data-sql-query="select * from hersteller where land = 'Österreich'"></span>
+                                                    <span class="fragment" data-fragment-index="4" data-sql-query="select firma from hersteller where land = 'Österreich'"></span>
+                                                    <span class="fragment" data-fragment-index="6" data-sql-query="select distinct hersteller from produkte"></span></div>
                                                     
+                                                </div>
+                                                
+                                            </section>
+                            
+                                            <section>
+                                                <h2>&Cross; Kartesisches Produkt</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 25</div>
+                                                <p>&quot;Jedes mit jedem&quot;</p>
+                                                <p class="small">$Produkte \times Bewertungen$</p>
+                                                <span style="font-size: 84%;" data-sql-query="select produkte.produktnr, bezeichnung, preis, hersteller, kundennr, bewertungen.produktnr as &quot;produktnr &quot;, sterne, '...' as text from produkte, bewertungen where produkte.produktnr in (17,18,29)
+                                                                                              union all select '...','...','...','...','...','...','...','...'"></span>
+                                                <aside class="notes">Das kartesische Produkt aus zwei Relationen hat alle Attribute beider Relationen und besteht aus jedem Tupel der einen verknüpft mit jedem Tupel der anderen Relation.</aside>
+                                            </section>
+
+                                            <section>
+                                                    <h3>Tabellenprefix</h3>
+                                                    <p>Der Name der Relation kann bei Attributen als Prefix angegeben werden.</p>
+                                                    <p class="small">$\sigma_{Produkte.Produktnr=Bewertungen.Produktnr}(Produkte \times Bewertungen)$</p>
+                                                    <span style="font-size: 84%;" data-sql-query="select produktnr, bezeichnung, preis, hersteller, kundennr, produktnr as &quot;produktnr &quot;, sterne, '...' as text from produkte join bewertungen using(produktnr)"></span>
+                                                    <aside class="notes">In dieser Anfrage werden alle Produkte mit allen Bewertungen verbunden und im Anschluss eine Selektion darüber gemacht, sodass die Produktnummer des Produktes und der Bewertung übereinstimmt. Alles andere wären unsinnige Zeilen (Bewertung eines anderen Produkts). Da das Attribut Produktnr in beiden Relationen vorkommen, verwenden wir den Relationennamen als Prefix, z. B. produkte.produktnr, um die Attribute voneinander zu unterscheiden</aside>
+                                            </section>
+
+                                            <section>
+                                                <h2>&rho; Umbenennungsoperator</h2>
+                                                <div class="columns">
+                                                <div>
+                                                <h4>Relation umbenennen</h4>
+                                                <p>$\rho_{P1}(Produkte)$</p>
+                                                </div>
+                                                <div>
+                                                <h4>Attribut umbenennen</h4>
+                                                <p>$\rho_{bez\leftarrow bezeichnung}(Produkte)$</p>
+                                                </div>
+                                                </div>
+                                                <div class="fragment">
+                                                    <p class="small">Welche Produkte kosten mehr als die Spülmaschinentabs?</p>
+                                                    <p class="small fragment">$\pi_{P.*}\sigma_{P.preis>S.preis}((\sigma_{bezeichnung='Spülmaschinentabs'}(\rho_{S}(Produkte))) \times \rho_{P}(Produkte))$</p>
+                                                </div>
+                                                <aside class="notes">Spätestens wenn man ein und dieselbe Relation mehrfach innerhalb einer Anfrage braucht, ist es hilfreich Relationen oder Attribute umzubennennen. Diese Umbenennung ist natürlich nur gültig für die aktuelle Anfrage, die Relation bzw. die Spalte wird natürlich nicht wirklich in den DB-Metadaten geändert. </aside>
+                                            </section>
+                                            <section>
+                                                <h2>&bowtie; Join (Verbund)</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 24</div>
+                                                <p>Ein Join ist ein Kreuzprodukt mit anschließender Selektion, die Spaltenwerte der beiden Relationen vergleicht</p>
+                                                <h4>Gleichverbund</h4>
+                                                <p>$R \bowtie_{R.A_i=S.A_j}S = \sigma_{R.A_i=S.A_j}(R \times S)$</p>
+                                                <p class="small">Welche Produkte sind von einem Hersteller aus den USA?</p>
+                                                <p class="small">$\pi_{Bezeichnung}\sigma_{Land='USA'}(Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}(Hersteller))$</p>
+                                            </section>
+                                            <section>
+                                                <h3>Suche nach Join-Partnern</h3>
+                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}(Hersteller)$</p>
+                                                <div class="columns">
+                                                    <div data-sql-query="select * from produkte where produktnr < 90" data-sql-tablename="produkte"></div>
+                                                    <div>&nbsp;&nbsp;&nbsp;</div>
+                                                    <div data-sql-query="select * from hersteller" data-sql-tablename="hersteller"></div>
+                                                </div>
                                             </section>
                         </div>
                     </div>

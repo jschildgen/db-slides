@@ -136,7 +136,7 @@
                                         <li>Der Firmenname darf nicht NULL sein</li>
                                         <li>Das Land darf NULL sein</li>
                                     </ul>
-                                    <aside class="notes">Hier wird die Beziehung &quot;Produkte sind von Hersteller&quot; mittels einer Fremdschlüsselbeziehung modelliert. Die Attributmenge {hersteller} referenziert die Attributmenge {firma} der Herstellertabelle. Die Datentypen von den Spaten &quot;hersteller&quot; und &quot;firma&quot; müssen übereinstimmen. In die Spalte &quot;hersteller&quot; dürfen nur Werte stehen, die auch tatsächlich in der Firma-Spalete der Hersteller-Relation existieren.</aside>
+                                    <aside class="notes">Hier wird die Beziehung &quot;Produkte sind von Hersteller&quot; mittels einer Fremdschlüsselbeziehung modelliert. Die Attributmenge {hersteller} referenziert die Attributmenge {firma} der Herstellertabelle. Die Datentypen von den Spaten &quot;hersteller&quot; und &quot;firma&quot; müssen übereinstimmen. In die Spalte &quot;hersteller&quot; dürfen nur Werte stehen, die auch tatsächlich in der Firma-Spalte der Hersteller-Relation existieren.</aside>
                                 </section>
                         <section>
                             <h2>Fremdschlüssel</h2>
@@ -165,7 +165,6 @@
                             </div>
                             </div>
                             <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
-                            <aside class="notes">Hier wird die Beziehung &quot;Produkte sind von Hersteller&quot; mittels einer Fremdschlüsselbeziehung modelliert. Die Attributmenge {hersteller} referenziert die Attributmenge {firma} der Herstellertabelle. Die Datentypen von den Spaten &quot;hersteller&quot; und &quot;firma&quot; müssen übereinstimmen. In die Spalte &quot;hersteller&quot; dürfen nur Werte stehen, die auch tatsächlich in der Firma-Spalete der Hersteller-Relation existieren.</aside>
                         </section>
                         <section>
                                 <h3>Zusammengesetzte Schlüssel</h3>
@@ -309,7 +308,7 @@
                                     
                                     <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
                                     <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span>
-                                </div><div class="fragment" data-fragment-index="1" style="margin-top: -1mm;">
+                                </div><div class="fragment" data-fragment-index="1" style="margin-top: -1mm; width:8cm">
                                     <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Telefonnummern</p>
                                     <table style="font-size:0.7em">
                                         <thead>
@@ -321,10 +320,11 @@
                                             <tr><td>5</td><td>0151-3</td></tr>
                                         </tbody>
                                     </table>
+                                    <p class="small">telefonnummern.persnr ist Fremdschlüssel auf personen.persnr</p>
                                 </div>
                                 </div>
 
-                                <p style="position: abolsute; top:5cm" font-size:70%">telefonnummern.persnr ist Fremdschlüssel auf personen.persnr</p>
+                                
                                 <aside class="notes">Ute hat zwei Telefonnummer, Peter nur eine und Anna gar keine.</aside>
                         </section>
                         <section>
@@ -885,6 +885,14 @@
                                                 </div>
                                                 
                                             </section>
+                                            <section>
+                                                <h2>Operatorbäume</h2>
+                                                <!-- created with https://dbis-uibk.github.io/relax/calc.htm -->
+                                                <!-- gist: d67f16874b528abc6e6c88d07a50b2dc -->
+                                                <!-- query: π firma ( σ land='Österreich' (hersteller) ) \ π hersteller (produkte) -->
+                                                <img src="img/3/op_tree_manufacturers.png" alt="Operatorbaum" class="noborder">
+                                                <aside class="notes">Ein Operatorbaum stellt ein Ausdruck der relationalen Algebra in Baum-Form dar. Die Wurzel (ganz oben) liefert das Ergebnis, in den Blättern (ganz unten) befinden sich die verwendeten Relationen. Dazwischen bilden unäre und binäre Operationen die Knoten des Baumes.</aside>
+                                            </section>
                             
                                             <section>
                                                 <h2>&Cross; Kartesisches Produkt</h2>
@@ -916,29 +924,126 @@
                                                 <p>$\rho_{bez\leftarrow bezeichnung}(Produkte)$</p>
                                                 </div>
                                                 </div>
-                                                <div class="fragment">
-                                                    <p class="small">Welche Produkte kosten mehr als die Spülmaschinentabs?</p>
-                                                    <p class="small fragment">$\pi_{P.*}\sigma_{P.preis>S.preis}((\sigma_{bezeichnung='Spülmaschinentabs'}(\rho_{S}(Produkte))) \times \rho_{P}(Produkte))$</p>
+                                                <div class="fragment columns">
+                                                    <div><p class="small">Welche Produkte kosten mehr als die Spülmaschinentabs?</p></div>
+                                                    <!--<p class="small fragment">$\pi_{P.*}\sigma_{P.preis>S.preis}((\sigma_{bezeichnung='Spülmaschinentabs'}(\rho_{S}(Produkte))) \times \rho_{P}(Produkte))$</p>-->
+                                                    <!-- relax query: π P.produktnr, P.bezeichnung, P.preis, P.hersteller (σ P.preis > S.preis ((σ bezeichnung='Spülmaschinentabs' (ρ S (produkte))) ⨯ ρ P (produkte))) -->
+                                                    <div class="fragment"><img src="img/3/op_tree_products_more_expensive.png" alt="Operatorbaum" class="noborder" style="height:9cm"></div>
                                                 </div>
-                                                <aside class="notes">Spätestens wenn man ein und dieselbe Relation mehrfach innerhalb einer Anfrage braucht, ist es hilfreich Relationen oder Attribute umzubennennen. Diese Umbenennung ist natürlich nur gültig für die aktuelle Anfrage, die Relation bzw. die Spalte wird natürlich nicht wirklich in den DB-Metadaten geändert. </aside>
+                                                <aside class="notes">Spätestens wenn man ein und dieselbe Relation mehrfach innerhalb einer Anfrage braucht, ist es hilfreich Relationen oder Attribute einen Alias zu geben. </aside>
                                             </section>
                                             <section>
                                                 <h2>&bowtie; Join (Verbund)</h2>
                                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 24</div>
-                                                <p>Ein Join ist ein Kreuzprodukt mit anschließender Selektion, die Spaltenwerte der beiden Relationen vergleicht</p>
-                                                <h4>Gleichverbund</h4>
-                                                <p>$R \bowtie_{R.A_i=S.A_j}S = \sigma_{R.A_i=S.A_j}(R \times S)$</p>
-                                                <p class="small">Welche Produkte sind von einem Hersteller aus den USA?</p>
-                                                <p class="small">$\pi_{Bezeichnung}\sigma_{Land='USA'}(Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}(Hersteller))$</p>
+                                                <p>Ein Join ist ein Kreuzprodukt mit anschließender Selektion, welche die Spaltenwerte der beiden Relationen vergleicht</p>
+                                                <h4>Gleichverbund (Equi-Join)</h4>
+                                                <p>$R \bowtie_{P}S = \sigma_{P}(R \times S)$</p>
+                                                <p class="small fragment">Welche Produkte sind von einem Hersteller aus den USA?</p>
+                                                <p class="small fragment">$\pi_{Bezeichnung}\sigma_{Land='USA'}(Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}(Hersteller))$</p>
+                                                <p class="fragment">Es gilt: $R &bowtie; S = S &bowtie; R$</p>
+                                                <aside class="notes">$R \bowtie_{P}S$ bedeutet, dass die beiden Relationen R und S anhand des Join-Prädikats P verbunden werden.</aside>
                                             </section>
                                             <section>
                                                 <h3>Suche nach Join-Partnern</h3>
-                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}(Hersteller)$</p>
+                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
                                                 <div class="columns">
                                                     <div data-sql-query="select * from produkte where produktnr < 90" data-sql-tablename="produkte"></div>
                                                     <div>&nbsp;&nbsp;&nbsp;</div>
                                                     <div data-sql-query="select * from hersteller" data-sql-tablename="hersteller"></div>
                                                 </div>
+                                                <aside class="notes">Man kann sich die Ausführung eines Joins auch so vorstellen, dass eine Relation von oben nach unten durchscannt wird - z. B. hier die Produkttabelle - und für jede Zeile ein (oder kein oder mehrere) Join-Partner in der anderen Relation - hier: Hersteller - gesucht wird. Die Attributwerte der gefundenen Zeile wird an die Ergebniszeile drangehangen. Wird kein Join-Partner gefunden - hier beim Katzenfutter der Fall -, taucht die Zeile nicht im Ergebnis auf. Würde eine Zeile mehrere Joinpartner finden, taucht sie mehrfach im Ergebnis auf. Jeweils einmal mit dem entsprechenden Join-Partner.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Ergebnis des Joins</h3>
+                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90"></div>
+                                                <p>Der Join ist verlustbehaftet.</p>
+                                                <aside class="notes">Die Ergebnisrelation des Joins zwischen zwei Relationen besitzt alle Spalten beider Relationen. Zu jeder Zeile der beiden Relationen existieren entsprechend viele Zeilen im Ergebnis, je nachdem wie viele Join-Partner zu ihr gefunden werden. Der Hersteller Monsterfood hat sogar zwei Join-Partner gefunden, daher taucht die Hersteller-Zeile (Monsterfood, USA) im Ergebnis zweimal auf. Das Produkt Katzenfutter hat hier keinen Join-Partner gefunden, der Hersteller Holzkopf ebenfalls nicht. Da also beim Join etwas verloren gegangen ist (Katzenfutter und Hersteller Holzkopf), nennt man den Join verlustbehaftet.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Verlustfreier Join</h3>
+                                                
+                                                <div class="columns">
+                                                    <div data-sql-query="select * from produkte where produktnr in (17,18,29)" data-sql-tablename="produkte"></div>
+                                                    <div>&nbsp;&nbsp;&nbsp;</div>
+                                                    <div data-sql-query="select * from hersteller where firma in ('Calgonte', 'Monsterfood')" data-sql-tablename="hersteller"></div>
+                                                </div>
+                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr in (17,18,29)"></div>
+                                                <aside class="notes">Hier taucht jedes Tupel aus beiden Relationen im Join-Ergebnis auf. Der Join ist verlustfrei.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Rekonstruktion der Tabellen</h3>
+                                                <div data-sql-tablename="V" data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr in (17,18,29)"></div>
+                                            
+                                                <p>&nbsp;</p>
+                                                <p>$produkte = \pi_{produktnr, bezeichnung, preis, hersteller}(V)$</p>
+                                                <p>$hersteller = \pi_{firma, land}(V)$</p>
+                                                <aside class="notes">Aus dem Join-Ergebnis V lassen sich die beiden ursprünglichen Relationen wieder mittels Projektionen rekonstruieren. Das funktioniert allerdings nur, wenn der Verbund verlustfrei ist.</aside>
+                                            </section>
+
+                                            <section>
+                                                <h2>Äußerer Verbund</h2>
+                                                <h4>&bowtie; Innerer Verbund</h4>
+                                                <p>Nur die Zeilen, die Join-Partner finden, sind im Ergebnis</p>
+                                                <h4>&#x27D5; Linker äußerer Verbund</h4>
+                                                <p>Alle Zeilen der linken Relation sind definitiv im Ergebnis</p>
+                                                <h4>&#x27D6; Rechter äußerer Verbund</h4>
+                                                <p>Alle Zeilen der rechten Relation sind definitiv im Ergebnis</p>
+                                                <h4>&#x27D7; Voller äußerer Verbund</h4>
+                                                <p>Alle Zeilen beider Relation sind definitiv im Ergebnis</p>
+                                            </section>
+                                            <section>
+                                                <h3>&#x27D5; Linker äußerer Verbund</h3>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 27</div>
+                                                <p>$Produkte &#x27D5;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte left join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90"></div>
+                                                <aside class="notes">Alle Zeilen der links vom Left-Join-Operator stehenden Relation erscheinen auf jeden Fall im Ergebnis. Wenn sie keinen Join-Partner in der rechten Tabelle finden - das ist hier beim Katzenfutter der Fall -, bleiben die Attribute der rechten Tabelle alle NULL.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>&#x27D6; Rechter äußerer Verbund</h3>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 28</div>
+                                                <p>$Produkte &#x27D6;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select produkte.*, hersteller.* from hersteller left join (select * from produkte where produktnr < 90) produkte on produkte.hersteller=hersteller.firma"></div>
+                                                <p>Es gilt: $R &#x27D6; S = S &#x27D5; R$</p>
+                                                <aside class="notes">Beim right outer Join sind zusätzlich zu den normalen Join-Ergebniszeilen diejenigen Zeilen der rechten Tabelle im Ergebnis wiederzufinden, die keinen Join-Partner in der linken Tabelle finden. Auch hier werden die Spalten der linken Tabelle mit NULL-Werten belegt.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>&#x27D7; Voller äußerer Verbund</h3>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 29</div>
+                                                <p>$Produkte &#x27D7;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte left join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90
+                                                union all select null,null,null,null, hersteller.* from hersteller where firma = 'Holzkopf'"></div>
+                                                <p>Es gilt: $R &#x27D7; S = S &#x27D7; R$</p>
+                                                <aside class="notes">Jede Zeile der linken Relation und jede Zeile der rechten Relation tauchen stets im Ergebnis des full outer Joins auf. Der volle äußere Verbund ist damit immer verlustfrei.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Join-Varianten</h3>
+                                                    <h4>Innerer / linker / rechter / voller äußerer Join</h4>
+                                                    <p>$R \bowtie_{P} S$ &nbsp;&nbsp; $R &#x27D5;_{P} S$ &nbsp;&nbsp; $R &#x27D6;_{P} S$ &nbsp;&nbsp; $R &#x27D7;_{P} S$</p>
+                                                    <h4>Gleichverbund (Equi-Join)</h4>
+                                                    <p>$R \bowtie_{R.a = S.x \wedge R.b = S.y \wedge \dots} S$ </p>
+                                                    <h4>Theta-Join</h4>
+                                                    <p>$R \bowtie_{R.a \theta S.x \wedge \dots} S$ &nbsp; mit $\theta \in \{&lt;,&le;,=,&ne;,&ge;,&gt;\}$</p>
+                                            </section>
+
+                                            <section>
+                                                <h3>Beispiele: Equi-/Theta-Joins</h3>
+                                                <p>Finde zu jedem Produkt seinen Hersteller:</p>
+                                                <p>$produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}hersteller$</p>
+                                                <p>Finde zu jedem Produkt teurere Produkte als es selbst:</p>
+                                                <p>$\rho_{P1}(produkte) \bowtie_{P1.preis &lt; P2.preis} \rho_{P2}(produkte)$</p>
+                                                <div data-sql-query="select p1.produktnr, p1.bezeichnung, p1.preis, p1.hersteller, p2.produktnr as &quot;produktnr &quot;, ' ' as '...' from produkte p1, produkte p2 where p1.preis < p2.preis and p1.produktnr=18"></div>
+                                            </section>
+
+                                            <section>      
+                                                <h3>Join-Varianten</h3> 
+                                                    <h4>Natürlicher Verbund (natural Join)</h4>
+                                                    <p>$R \bowtie R$<br>Gleichverbund über diejenigen Attribute, die mit gleichem Namen in beiden Relationen vorkommen. Im Ergebnis sind solche Attribute nur einmal vorhanden.</p>
+                                                    <h4>Self-Join</h4>
+                                                    <p>$R \bowtie_P R$</p>
+                                                    <h4>Semi-Join</h4>
+                                                    <p>$R \ltimes_P S = \pi_{R.*}(R \bowtie_P S)$</p>
                                             </section>
                         </div>
                     </div>

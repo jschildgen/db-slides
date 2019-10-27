@@ -1039,11 +1039,51 @@
                                             <section>      
                                                 <h3>Join-Varianten</h3> 
                                                     <h4>Natürlicher Verbund (natural Join)</h4>
-                                                    <p>$R \bowtie R$<br>Gleichverbund über diejenigen Attribute, die mit gleichem Namen in beiden Relationen vorkommen. Im Ergebnis sind solche Attribute nur einmal vorhanden.</p>
+                                                    <p>$R \bowtie S$<br>Gleichverbund über die gleich heißenden Attribute. Im Ergebnis sind solche Attribute nur einmal vorhanden.</p>
                                                     <h4>Self-Join</h4>
                                                     <p>$R \bowtie_P R$</p>
                                                     <h4>Semi-Join</h4>
                                                     <p>$R \ltimes_P S = \pi_{R.*}(R \bowtie_P S)$</p>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Natürlicher Verbund</h3>
+                                                <p>$produkte \bowtie bewertungen$</p>
+                                                <div class="small" data-sql-query="select * from produkte join bewertungen using (produktnr)"></div>
+                                                <p class="fragment small">Entspricht:<br>$\pi_{produkte.produktnummer, bezeichnung, preis, hersteller, kundennr, sterne, bewertungstext}$<br>$(produkte \bowtie_{produkte.kundennr = bewertungen.kundennr} bewertungen)$</p>
+                                                <aside class="notes">In den Relationen Produkte und Bewertungen gibt es ein gemeinsames Attribut, die Produktnummer. Daher ist der natürliche Verbund ein Gleichverbund über die Produktnummer. Diese Spalte taucht im Ergebnis dann aber nur einmal auf.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Self-Join</h3>
+                                                <div data-sql-tablename="personen" data-sql-query="select kundennr as persnr, name, geworben_von as chef from kunden"></div>
+                                                <p>$\rho_{K1}(personen) \bowtie_{K1.chef = K2.persnr} \rho_{K2}(personen)$</p>
+                                                <div data-sql-query="select k1.kundennr as persnr, k1.name, k1.geworben_von as chef, k2.kundennr as &quot;persnr &quot;, k2.name as &quot;name &quot;, k2.geworben_von as &quot;chef &quot; from kunden k1 join kunden k2 on k1.geworben_von=K2.kundennr"></div>
+                                                <aside class="notes">Wir joinen die Personentabelle mit sich selbst anhand der Fremdschlüsselbeziehung zwischen Chef und Kundennr. Im Ergebnis sehen wir zu jeder Person, die einen Chef hat, die Details zur Person und zum jeweiligen Chef. Würden wir den Join &bowtie; durch einen Left-Join &#x27D5; ersetzen, so erschienen auch Personen ohne Chef im Ergebnis. Dann mit NULL-Werten in den hinteren drei Spalten.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Semi-Join</h3>
+                                                <p style="font-size: 90%;">$produkte \ltimes_{produkte.produktnr=bewertungen.produktnr} bewertungen $</p>
+                                                <div data-sql-query="select produkte.* from produkte join bewertungen using (produktnr)"></div>
+                                                <p class="fragment small">Alle Produkte, die schon einmal bewertet wurden.</p>
+                                                <aside class="notes">Der Semi-Join unterscheidet sich vom inneren Verbund dadurch, dass im Ergebnis nur die Spalten der linken Relation zu sehen ist. Der Semi-Join hat also die gleichen Attribute wie die linke Relation, aber nur diejenigen Zeilen, die einen Join-Partner in der rechten Relation finden würden. Im Beispiel hier interessiert man sich also nicht dafür, wer ein Produkt wie bewertet hat, sondern lediglich <em>dass</em> es bewertet wurde. Verwendet wurde hier der linke Semi-Join &ltimes;. Beim rechten Semi-Join &rtimes; wird sich auf die Attribute der rechten Relation beschränkt.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>&divide; Division</h2>
+                                                <p>$R \div S$</p>
+                                                <p>Diejenigen Tupel aus R (ohne die Spalten von S), die in jeder Kombination mit allen Tupeln aus S vorkommen.</p>
+                                                <p>Es gilt: $(R \times S) \div S = R$</p>
+                                                <aside class="notes">Die Division ist hilfreich bei Fragen der Art &quot;Wer hat alle...&quot; oder &quot;Wer hat jedes...&quot;. Der Operator kann auch mit den bisher vorgestellten Operationen dargestellt werden: $R \div S = \pi_{R.* \setminus S.*}(R) \setminus \pi_{R.* \setminus S.*}((\pi_{R.* \setminus S.*}(R)\times S) \setminus R)$ (Formel nicht klausurrelevant)</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Division</h3>
+                                                <p class="small">Welche Kunden haben alle Produkte bewertet?</p>
+                                                <div class="columns">
+                                                    <div><p>$\pi_{kundennr, produktnr}(bewertungen)$</p><div data-sql-query="select kundennr, produktnr from bewertungen union all select 4, 29"></div></div>
+                                                    <div>&nbsp;&nbsp;&nbsp;</div>
+                                                    <div><p>$\pi_{produktnr}(produkte)$</p><div data-sql-query="select produktnr from produkte where produktnr in (17,29)"></div></div>
+                                                </div>
+                                                <p>$\pi_{kundennr, produktnr}(bewertungen) \div \pi_{kundennr}(kunden)$</p>
+                                                <div data-sql-query="select 5 as kundennr"></div>
+                                                <aside class="notes">Hier gehen wir der Einfachheit halber davon aus, dass es nur die beiden Produkte 17 und 29 gibt. Die Division liefert diejenigen Kunden, die alle diese Produkte bewertet hat.</aside>
                                             </section>
                         </div>
                     </div>

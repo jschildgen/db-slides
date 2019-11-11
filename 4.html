@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken 1 - Kapitel 4 - SQL</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reset.css">
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                            <h4 style="text-align:center"><b>Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h4>
+                            <h1>Datenbanken 1</h1>
+                            <h3>Kapitel 4: SQL</h3>
+                            <h4 style="text-align:center">2019-10-28</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                        </section>
+                        <section>
+                            <h2>SQL...</h2>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 33, 36</div>
+                            <ul class="small">
+                                <li>... ist der Nachfolger von SEQUEL (Structured English Query Language),</li>
+                                <li>... wurde in den 1970er-Jahren entworfen,</li>
+                                <li>... ist ein eigenständiger Begriff,</li>
+                                <li>... wird manchmal als Abkürzung für Structured Query Language gesehen,</li>
+                                <li>... ist eine standardisierte Anfragefrage für strukturierte Datenbanken,</li>
+                                <li>... ist größtenteils unabhängig vom verwendeten relationalen DBMS (RDBMS).</li>
+                            </ul>
+                            <aside class="notes">SQL ist eine leicht zu erlernende aber trotzdem sehr mächtige Anfragesprache für alle Aufgaben bei der Arbeit mit relationalen Datenbanken. Gelegentliche Benutzer können schnell simple Abfragen schreiben, erfahrene Benutzer können sich fortgeschrittenen Sprachkonstrukten bedienen. Der SQL-Standard ist ein ISO-Standard und wird ständig weiterentwickelt (SQL92, ..., SQL:2016). Dadurch, dass die Sprache standardisiert ist, verwenden alle populären relationalen Datenbankmanagementsysteme als Anfragesprache SQL. Dies macht Anwendungen portabel (Wechsel zu anderem DBMS) und es reduziert den Lernaufwand für die Anwender.</aside>
+                        </section>
+                        
+                        <section>
+                            <h2>Populäre RDBMS</h2>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 34-35</div>
+                            <p class="small">Quelle: db-engines.com/de/ranking</p>
+                            <ol>
+                                <li>Oracle</li>
+                                <li>MySQL</li>
+                                <li>Microsoft SQL Server</li>
+                                <li>PostgreSQL <span class="fragment small">&leftarrow; verwenden wir im Rahmen dieser Vorlesung</span></li>
+                                <li>IBM DB2</li>
+                                <li>SQLite</li>
+                                <li>MariaDB</li>
+                            </ol>
+                            <aside class="notes">Die hier dargestellte Liste ist geordnet nach der Popularität der relationalen DBMS. Oracle, SQL Server und DB2 sind kommerzielle Systeme, MySQL, PostgreSQL, SQLite und MariaDB sind open source. MySQL wurde 2010 von Oracle aufgekauft und es hat sich ein zu MySQL kompatibler Fork MariaDB entwickelt. Alle hier dargestellten Systeme außer SQLite laufen als Serverprozess, sodass sich Anwendungen mit dem Datenbank-Server verbinden können, um Anfragen auf diesen zu stellen.</aside>
+                        </section>
+                        <section>
+                            <h2>PostgreSQL</h2>
+                            <ul style="width:18cm">
+                                <li>&quot;The world's most advanced open source database&quot;</li>
+                                <li>Einfach zu installieren, viele Features, Transaktionen, gute Dokumentation, ...</li>
+                                <li>SQL-Clients: psql, pgAdmin3, pgAdmin4</li>
+                            </ul>
+                            <img src="img/4/postgres.png" class="noborder" style="position: absolute; width: 5cm; right: 1cm; top: 3cm">
+                            <aside class="notes">psql ist ein Konsolen-Client, um z. B. in einer SSH-Shell direkt SQL-Befehle an eine PostgreSQL-Datenbank zu schicken und das Ergebnis zu betrachten. pgAdmin ist ein GUI-Client für verschiedene Betriebssysteme.</aside>
+                        </section>
+                        <section>
+                            <h2>DBeaver</h2>
+                            <p>Wir verwenden im Rahmen dieser Vorlesung den kostenlosen universellen SQL-Client DBeaver.</p>
+                        </section>
+                        
+                        <section>
+                                <h2>Sprachkomponenten</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 37</div>
+                                <h4>DDL: Data Definition Language</h4>
+                                <ul class="small">
+                                    <li>Definition des Datenbankschemas (Metadaten)</li>
+                                    <li><code>CREATE TABLE</code>, <code>DROP TABLE</code>, <code>ALTER TABLE</code>, <code>CREATE VIEW</code>, ...</li>
+                                </ul>
+                                <p/>
+                                <h4 class="fragment" data-fragment-index="1">DML: Data Manipulation Language</h4>
+                                <ul class="fragment small" data-fragment-index="1">
+                                    <li>Einfügen, Ändern, Löschen und Lesen von Daten</li>
+                                    <li><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>SELECT</code>, ...</li>
+                                </ul>
+                                <p/>
+                                <h4 class="fragment" data-fragment-index="2">DCL: Data Control Language</h4>
+                                <ul class="fragment small" data-fragment-index="2">
+                                    <li>Benutzer-, Rollen- und Rechteverwaltung</li>
+                                    <li><code>CREATE USER</code>, <code>CREATE ROLE</code>, <code>GRANT</code>, <code>REVOKE</code>, ...</li>
+                                </ul>
+                                <aside class="notes">SELECT gehört zur DML, da die Daten für den Zeitpunkt der Anfragestellung manipuliert werden. Der Benutzer sieht eine modifizierte Form der Daten. Natürlich wird diese Änderung anders als z. B. bei UPDATE nicht persistent in der Datenbank gespeichert. </aside>
+                            </section> 
+
+                            <section>
+                                <h2>SQL ausprobieren</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 38</div>
+                                <h4>SQL Island</h4>
+                                <img src="img/4/sql_island.png" class="noborder" style="position: absolute; width: 2.5cm; right: 1cm; top: 1mm">
+                                <ul>
+                                    <li>Lernspiel, welches keine Vorkenntnisse voraussetzt.</li>
+                                    <li><a href="http://www.sql-island.de" target="_blank">sql-island.de</a></li>
+                                </ul>
+                                <p></p>
+                                <h4>SQL Fiddle, DB Fiddle, Rextester</h4>
+                                <ul>
+                                    <li>Tabellen erstellen, befüllen und abfragen im Browser</li>
+                                    <li><a href="http://sqlfiddle.com" target="_blank">sqlfiddle.com</a>, <a href="https://dbfiddle.uk" target="_blank">dbfiddle.uk</a>, <a href="http://rextester.com/" target="_blank">rextester.com</a></li>
+                                    
+                                </ul>
+                                <aside class="notes">Alle hier dargestellten Anwendungen sind SQL-Spielwiesen, die ohne Anmeldung direkt im Browser verwendet werden können. Das Lernspiel SQL Island hat eine Handlung, man muss von einer Insel entkommen. Die Tabellen dazu sind bereits angelegt und mit Daten gefüllt. Bei den anderen Tools muss man selbst Tabellen anlegen und befüllen. Man hat verschiedene DBMS zur Auswahl.</aside>
+                            </section>
+                            <section>
+                                <h2>Sprachelemente</h2>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT email FROM kunden WHERE name = 'Ute';</code></pre>
+                                <h4 style="font-size: 90%;">SQL-Schlüsselworte (Keywords)</h4>
+                                <ul class="small">
+                                    <li style="margin-top: -3mm;">Groß-/Kleinschreibung egal</li>
+                                    <li>SELECT, FROM, WHERE, GROUP, BY, INSERT, CREATE, USER, AS, ...</li>
+                                </ul>
+                                
+                                <h4 style="font-size: 90%; margin-top: 2mm;">Identifikatoren (Namen von Tabellen, Spalten, etc.)</h4>
+                                <ul class="small">
+                                    <li style="margin-top: -3mm;">Reguläre: case-insensitive; Begrenzte: case-sensitive</li>
+                                    <li>Beispiele: email, kunden, name, "user", "Kunden", "A B"</li>
+                                </ul>
+                                
+                                <h4 style="font-size: 90%; margin-top: 2mm;">Literale (Werte eines Datentyps)</h4>
+                                <ul class="small">
+                                    <li style="margin-top: -3mm;">Groß-/Kleinschreibung nicht egal!</li>
+                                    <li>Beispiele: 'Ute', 'Otto''s Imbiss', 5, 2.99, NULL, '2019-11-18'</li>
+                                </ul>
+
+                                <aside class="notes">Merkregel: Bei allem, was man in Anführungszeichen schreibt, kommt es auf die korrekte Groß-/Kleinschreibung an. Bei regulären Identifikatoren sind reservierte SQL-Keywords und Sonderzeichen (außer _) verboten, bei begrenzten Identifikatoren ist dies erlaubt. In MySQL werden begrenzte Identifikatoren in `Apostrophe` geschrieben, bei PostgreSQL in &quot;Anführungszeichen&quot;.</aside>
+                            </section>
+
+                            <section>
+                                <h2>DDL: CREATE, ALTER, DROP</h2>
+                                <p>Anlegen, Verändern und Entfernen von <em>Datenbankobjekten</em> (Tabellen, Sichten, Funktionen, ...)</p>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE personen (pid INT, name VARCHAR(500), geboren DATE);</code></pre>
+                            
+                                <h4>CREATE TABLE</h4>
+                                <ul class="small">
+                                    <li>Name der zu erstellenden Tabelle</li>
+                                    <li>Spalten in Klammern, Komma-getrennt</li>
+                                    <li>Zu jeder Spalte: Name, Datentyp, evtl. Spaltenoptionen</li>
+                                </ul>
+
+                                <aside class="notes">Das Semikolon am Ende einer Anfrage lassen wir ab sofort einfach weg. Es ist lediglich wichtig, wenn man in einem SQL-Editor mehrere Anfragen formuliert, um diese voneinander zu treffen.</aside>
+                            </section>
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/js/reveal.js"></script>
+                    <script src="lib/jquery.js"></script>
+                    <script src="lib/lodash.js"></script>
+                    <script src="lib/backbone.js"></script>
+                    <script src="lib/joint.min.js"></script>
+            
+                    <script src="src/init_reveal.js"></script>
+            
+                    <script>
+                    if(window.location.search.match( /print-pdf/gi )) {
+                            document.getElementById('header').style="display:none";
+                            document.getElementById('footer').style="display:none";
+                    }
+                    </script>
+            
+            
+                </body>
+            </html>

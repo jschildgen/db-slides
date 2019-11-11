@@ -159,6 +159,7 @@
 
                             <section>
                                 <h2>DDL: CREATE, ALTER, DROP</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 44</div>
                                 <p>Anlegen, Verändern und Entfernen von <em>Datenbankobjekten</em> (Tabellen, Sichten, Funktionen, ...)</p>
                                 <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE personen (pid INT, name VARCHAR(500), geboren DATE);</code></pre>
                             
@@ -170,6 +171,59 @@
                                 </ul>
 
                                 <aside class="notes">Das Semikolon am Ende einer Anfrage lassen wir ab sofort einfach weg. Es ist lediglich wichtig, wenn man in einem SQL-Editor mehrere Anfragen formuliert, um diese voneinander zu treffen.</aside>
+                            </section>
+                            <section>
+                                <h2>Datentypen</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 39-41</div>
+                                <table class="small">
+                                    <thead><tr><th>Datentyp</th><th>Alias</th><th>Beschreibung</th><th>Beispiel</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>INTEGER</td><td>INT</td><td>Ganze Zahl</td><td>-217</td></tr>
+                                        <tr><td>DECIMAL(p,s)</td><td>NUMERIC</td><td>Zahl mit p Stellen, davon s nach dem Dezimalpunkt</td><td>DECIMAL(5,2) -149.99</td></tr>
+                                        <tr><td>DOUBLE</td><td>REAL</td><td>Fließkommazahl (nicht exakt)</td><td>-15.127E-2</td></tr>
+                                        <tr><td>CHARACTER(l)</td><td>CHAR</td><td>Zeichenkette mit fixer Länge l</td><td>CHAR(3) 'AB '</td></tr>
+                                        <tr><td>CHARACTER VARYING(l)</td><td>VARCHAR</td><td>Zeichenkette mit max. Länge l</td><td>VARCHAR(3) 'AB'</td></tr>
+                                        <tr><td>DATE</td><td></td><td>Datum (Jahr, Monat, Tag)</td><td>'2019-11-18'</td></tr>
+                                        <tr><td>TIMESTAMP</td><td></td><td>Zeitstempel (Datum und Uhrzeit)</td><td>'2019-11-18 14:37:52.681'</td></tr>
+                                    </tbody>
+                                </table>
+                                <aside class="notes">Diese Liste ist nicht vollständig. Es gibt noch viele weitere Datentypen in SQL und jedes DBMS bringt weitere Typen mit. Die hier dargestellte Fließkommazahl ist $-15$,$127\cdot 10^{-2}$.</aside>
+                            </section>
+                            <section>
+                                <h3>CREATE TABLE - Spaltenoptionen</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 45, 47</div>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (
+ kundennummer INT PRIMARY KEY, name VARCHAR(100) NOT NULL, 
+ email VARCHAR(500) CHECK (email LIKE '%@%') UNIQUE, 
+ passwort CHAR(32), land VARCHAR(100) DEFAULT 'Deutschland', 
+ geworben_von INT REFERENCES kunden(kundennummer));</code></pre>
+
+                                <h4>Constraints (Integritätsbedingungen):</h4>
+                                <ul class="small">
+                                    <li>PRIMARY KEY: Primärschlüssel</li>
+                                    <li>NOT NULL: Verbot von NULL-Werten</li>
+                                    <li>CHECK: Bedingung für akzeptierte Werte</li>
+                                    <li>UNIQUE: Eindeutigkeit</li>
+                                    <li>DEFAULT: Standardwert</li>
+                                    <li>REFERENCES: Fremdschlüsselreferenz</li>
+                                </ul>
+                                <aside class="notes">Hinter den Namen und Datentypen einer Spalte können Spaltenconstraints geschrieben werden. Dies sind Integritätsbedingungen, die stets erfüllt sein müssen. Beispielsweise verbietet ein UNIQUE-Constraint, dass in der Spalte in zwei Zeilen der gleiche Wert vorkommt. Das im Beispiel verwendete CHECK-Constraint garantiert, dass in jeder E-Mail-Adresse ein @-Zeichen vorkommen muss.</aside>
+                            </section>
+                            <section>
+                                <h3>Zusammengesetzte Primär-/Fremdschlüssel</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 46, 48</div>
+                                <pre><code class="hlsql" data-trim contenteditable data-line-numbers="6">CREATE TABLE bewertungen (
+ kundennummer INT REFERENCES kunden(kundennummer),
+ produktnummer INT REFERENCES produkte(produktnummer),
+ sterne INT DEFAULT 5 CHECK(sterne BETWEEN 1 AND 5),
+ bewertungstext VARCHAR(100000),
+ PRIMARY KEY(kundennummer, produktnummer));</code></pre>
+ <pre><code class="hlsql" data-trim contenteditable data-line-numbers="5-6">CREATE TABLE bewertungslikes (
+ liker INT REFERENCES kunden(kundennummer),
+ kundennummer INT, produktnummer INT,
+ PRIMARY KEY(liker, kundennummer, produktnummer),
+ FOREIGN KEY(kundennummer, produktnummer) 
+  REFERENCES bewertungen(kundennummer, produktnummer));</code></pre>
                             </section>
                         </div>
                     </div>

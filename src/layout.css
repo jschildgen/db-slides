@@ -44,7 +44,7 @@
     justify-content: space-around;
 }
 
-p.small,div.small,li.small,ul.small,ol.small,span.small {
+p.small,div.small,li.small,ul.small,ol.small,span.small,table.small {
   font-size: 70%;
 }
 

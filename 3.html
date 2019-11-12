@@ -224,7 +224,7 @@
                                 <tr><td>Attribut</td><td>&rightarrow;</td><td>Attribut (=Spalte)</td></tr>
                                 <tr><td>Primärschlüssel</td><td>&rightarrow;</td><td>Primärschlüssel</td></tr>
                                 <tr><td>Sub-Attribute</td><td>&rightarrow;</td><td>Einzelne Attribute</td></tr>
-                                <tr><td>Mehrwertiges Attribut</td><td>&rightarrow;</td><td>Attribut (=Spalte)</td></tr>
+                                <tr><td>Mehrwertiges Attribut</td><td>&rightarrow;</td><td>Relation</td></tr>
                                 <tr><td>1:N-Beziehung</td><td>&rightarrow;</td><td>Fremdschlüssel</td></tr>
                                 <tr><td>N:M-Beziehung</td><td>&rightarrow;</td><td>Relation</td></tr>
                                 <tr><td>Schwache Entitätstypen</td><td>&rightarrow;</td><td>Relation</td></tr>
@@ -753,6 +753,13 @@
                                                 <aside class="notes">Der Vereinigungsoperation &Union; wird auf zwei Relationen angewandt und liefert wieder eine Relation zurück.</aside>
                                             </section>
                                             <section>
+                                                <h3>RelaX - relational algebra calculator</h3>
+                                                <p><a href="https://dbis-uibk.github.io/relax/">https://dbis-uibk.github.io/relax/</a></p>
+                                                <p class="small">Gist-ID unseres Webshop-Schemas: d67f16874b528abc6e6c88d07a50b2dc</p>
+                                                <img src="img/3/relax.png" alt="RelaX" class="noborder stretch" style="margin-top:-3mm">
+                                                <aside class="notes">Mit dem webbasierten Tool RelaX kann man Ausdrücke der relationalen Algebra formulieren und ausführen. Oben links im Tool wähnt man aus verschiedenen Beispielschemas, man kann auch ein eigenes Schema erstellen oder ein vorgefertigtes mittels einer Gist-ID importieren. Die Gist-ID des Webshop-Beispiels aus dieser Vorlesung steht auf dieser Folie und kann zum Üben von Anfragen auf diesem Schema verwendet werden.</aside>
+                                            </section>
+                                            <section>
                                                 <h2>Mengenoperationen</h2>
                                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 19</div>
                                                 <ul>
@@ -940,7 +947,7 @@
                                                 <h4>Gleichverbund (Equi-Join)</h4>
                                                 <p>$R \bowtie_{P}S = \sigma_{P}(R \times S)$</p>
                                                 <p class="small fragment">Welche Produkte sind von einem Hersteller aus den USA?</p>
-                                                <p class="small fragment">$\pi_{Bezeichnung}\sigma_{Land='USA'}(Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}(Hersteller))$</p>
+                                                <p class="small fragment">$\pi_{Bezeichnung}\sigma_{Land='USA'}(Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller)$</p>
                                                 <p class="fragment">Es gilt: $R &bowtie; S = S &bowtie; R$</p>
                                                 <aside class="notes">$R \bowtie_{P}S$ bedeutet, dass die beiden Relationen R und S anhand des Join-Prädikats P verbunden werden.</aside>
                                             </section>

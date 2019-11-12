@@ -158,6 +158,15 @@
                             </section>
 
                             <section>
+                                <h2>Kommentare</h2>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM t -- Ein Doppelminus leitet einen Kommentar ein</code></pre>
+
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM t
+--WHERE x = 5</code></pre>
+                                <aside class="notes">Alles, was in einer Zeile auf ein <code>--</code> folgt, ist ein Kommentar und gehört nicht mehr zur Anfrage. Dies ist auch praktisch, um vorübergehend gewisse Teile einer Anfrage wegzulassen und später wieder zu entkommentieren.</aside>
+                            </section>
+
+                            <section>
                                 <h2>DDL: CREATE, ALTER, DROP</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 44</div>
                                 <p>Anlegen, Verändern und Entfernen von <em>Datenbankobjekten</em> (Tabellen, Sichten, Funktionen, ...)</p>
@@ -218,12 +227,113 @@
  sterne INT DEFAULT 5 CHECK(sterne BETWEEN 1 AND 5),
  bewertungstext VARCHAR(100000),
  PRIMARY KEY(kundennummer, produktnummer));</code></pre>
- <pre><code class="hlsql" data-trim contenteditable data-line-numbers="5-6">CREATE TABLE bewertungslikes (
+ <pre class="fragment"><code class="hlsql" data-trim contenteditable data-line-numbers="5-6">CREATE TABLE bewertungslikes (
  liker INT REFERENCES kunden(kundennummer),
  kundennummer INT, produktnummer INT,
  PRIMARY KEY(liker, kundennummer, produktnummer),
  FOREIGN KEY(kundennummer, produktnummer) 
   REFERENCES bewertungen(kundennummer, produktnummer));</code></pre>
+                            <aside class="notes">Wenn der Primärschlüssel zusammengesetzt ist aus mehreren Spalten, ist es nicht mehr möglich, einfach PRIMARY KEY in die Spaltenoptionen zu schreiben. Stattdessen muss das PRIMARY-KEY-Constraint unten drunter geschrieben werden. Der Grund dafür ist, dass es nicht mehrere Primärschlüssel geben kann. Eine Tabelle hat immer nur einen Primärschlüssel, dieser kann jedoch zusammengesetzt sein aus mehreren Spalten. Das gleiche gilt für FOREIGN-KEY-Constraints für zusammengesetzte Fremdschlüssel.</aside>
+                            </section>
+                            <section>
+                                <h2>Referentielle Aktionen</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 49</div>
+                                <pre><code class="hlsql" data-trim contenteditable data-line-numbers="5">CREATE TABLE produkte (
+ produktnummer INT PRIMARY KEY, 
+ bezeichnung VARCHAR(100) NOT NULL, preis DECIMAL(9,2), 
+ hersteller VARCHAR(50) REFERENCES hersteller(firma) 
+                        ON DELETE SET NULL ON UPDATE CASCADE);
+                                </code></pre>
+                                <p class="small">Was soll passieren, wenn ein Hersteller gelöscht wird, von dem es noch Produkte gibt? (Analog dazu: Was passiert, wenn man ihn umbenennt? <code>ON UPDATE</code>)</p>
+                                <ul class="small">
+                                    <li class="fragment"><b><code>ON DELETE CASCADE</code></b>: Alle Produkte auch löschen</li>
+                                    <li class="fragment"><b><code>ON DELETE SET NULL / SET DEFAULT</code></b>: NULL / Default-Wert setzen</li>
+                                    <li class="fragment"><b><code>ON DELETE RESTRICT</code></b>: Löschen verbieten</li>
+                                    <li class="fragment"><b><code>ON DELETE NO ACTION</code></b> (Standardverhalten): erst mal abwarten</li>
+                                </ul>
+                                <aside class="notes">Unter einer Aktion versteht man den Dann-Teil einer Wenn-Dann-Regel. Wenn man einen Hersteller löscht, dann... Im oben gezeigten Beispiel wird in einem solchen Fall wegen <code>ON DELETE SET NULL</code> der Wert der Hersteller-Spalte in der Produkte-Tabelle auf NULL gesetzt. Das <code>ON UPDATE CASCADE</code> sorgt dafür, dass bei einer Umbenennung im Primärschlüsselattribut des Herstellers (Firma) diese Umbenennung auch bei den Produkten dieses Herstellers erfolgt.</aside>
+                            </section>
+                            <section>
+                                <h3>ON DELETE NO ACTION</h3>
+                                <p class="small">Fachbereich (<u>FBName</u>)<br>
+                                                 Studierende (<u>MatrNr</u>, Name, FBName)<br>
+                                                 Professoren (<u>ProfNr</u>, Name, FBName)<br>
+                                                 Prüfungen (<u>MatrNr, ProfNr, Fach, Versuch</u>, Note)</p>
+                                <p class="small">&nbsp;</p>
+                                <p class="small">Studierende(FBName) REFERENCES Fachbereich(FBName) ON DELETE CASCADE<br>
+                                                 Professoren(FBName) REFERENCES Fachbereich(FBName) ON DELETE CASCADE<br>
+                                                 Prüfungen(MatrNr) REFERENCES Studierende(MatrNr) ON DELETE CASCADE<br>
+                                                 Prüfungen(ProfNr) REFERENCES Professoren(MatrNr)</p>
+
+                                <p class="small">Fachbereich wird gelöscht &Rightarrow; alle Studierenden in diesem werden gelöscht &Rightarrow; Die Prüfungen der Studierenden werden gelöscht. Professoren werden gelöscht. OK!</p>
+
+                                <div style="position:absolute; left: 560px; top: 80px; height: 240px; overflow:hidden;">
+                                        <div class="erd" style="width: 450px;">
+                                                [[
+                                                { _e: "Fachbereich", pos: [130, 15] },
+                                                { _e: "Studierender", pos: [5, 90] },
+                                                { _e: "Professor", pos: [260, 90] },
+                                                { _e: "Prüfung", pos: [130, 170], options:["weak"] },
+                                                 
+                                                ],
+                                                [ {_r: "hat", _e:["Fachbereich", "Studierender"], card:["1","N"], pos: [40, 0]},
+                                                  {_r: "hat", _e:["Fachbereich", "Professor"], card:["1","N"], pos: [300, 0]},
+                                                  {_r: "legt ab", _e:["Studierender", "Prüfung"], card:["1","N"], pos: [40, 155]},
+                                                  {_r: "prüft", _e:["Professor", "Prüfung"], card:["1","N"], pos: [300, 155]},
+                                                ]]
+                                        </div></div>
+                                    <aside class="notes">Würde statt NO ACTION hier RESTRICT verwendet werden, kann es passieren, dass zuerst versucht wird, Professoren des Fachbereichs zu löschen. Dies wird jedoch abgelehnt, weil noch Prüfungen von diesem existieren. Würden zuerst die Studenten gelöscht, funktioniert das Löschen des Fachbereichs. Da das Verhalten in dem Fall nicht deterministisch ist, spricht man hier von einem <em>unsicheren Schema</em>.</aside>
+                            </section>
+                            
+                            <section>
+                                    <h2>CREATE TABLE LIKE / AS</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 51</div>
+                                    <h4>CREATE TABLE</h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE pkw (bez VARCHAR(50) PRIMARY KEY, leistung INT);</code></pre>
+
+                                    <div class="fragment">
+                                    <h4>CREATE TABLE LIKE</h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE lkw LIKE pkw;</code></pre>
+                                    </div>
+
+                                    <div class="fragment">
+                                    <h4>CREATE TABLE AS</h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE schrottkarren AS 
+ SELECT * FROM pkw WHERE leistung < 60;</code></pre>
+                                    </div>
+
+                                    <aside class="notes">Alle drei hier gezeigten Befehle erstellen eine Tabelle. Bei der ersten gibt man die Spalten der Tabelle an, beim <code>CREATE TABLE LIKE</code> wird eine Tabelle mit den gleichen Spalten erstellt wie eine schon existierende Tabelle und <code>CREATE TABLE AS</code> speichert das Ergebnis einer SELECT-Anfrage in eine neu zu erstellende Tabelle. In den ersten beiden Kommandos ist die neue Tabelle leer, beim dritten Kommando können Daten in der neuen Tabelle sein. Mit <code>CREATE TABLE T2 AS SELECT * FROM T1</code> kann man eine Tabelle komplett mit Struktur und Daten kopieren.</aside>
+                            </section>
+
+                            <section>
+                                <h3>Sequenzen / Autoincrement</h3>
+                                <p>Primärschlüsselwerte (z. B. IDs) automatisch erzeugen lassen.</p>
+                                <h4>In MySQL:</h4>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr INT PRIMARY KEY AUTO_INCREMENT, ...);</code></pre>
+                                <h4>In PostgreSQL (aber auch MySQL):</h4>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr SERIAL PRIMARY KEY  , ...);</code></pre>
+                                <aside class="notes">In verschiedenen DBMS gibt es die Spaltenoption <code>AUTO_INCREMENT</code> (MySQL), <code>AUTOINCREMENT</code> (SQLite), <code>GENERATED BY DEFAULT AS IDENTITY</code> (SQL Standard, Oracle, DB2), <code>IDENTITY</code> (Microsoft SQL Server), o. ä. Spalten mit dieser Option müssen einen nummerischen Datentypen haben. Eingefügte Zeilen erhalten standardmäßig eine automatisch generierte laufende Nummer. Problematisch kann es werden, wenn nan beim Einfügen auch selbst einen Wert setzt, statt ihn automatisch generieren zu lassen. Der SQL Standard und DB2 unterstützen <code>INTEGER GENERATED ALWAYS AS IDENTITY</code>, damit immer (nicht nur als Default) eine automatische ID erzeugt wird.</aside>
+                            </section>
+
+                            <section>
+                                    <h2>ALTER / DROP</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 52</div>
+
+                                    <p>ALTER: Verändern von Datenbankobjekten</p>
+                                    <pre><code class="hlsql" data-trim contenteditable>ALTER TABLE bewertungen ADD COLUMN zeitstempel TIMESTAMP</code></pre>
+    
+                                    <p class="fragment" data-fragment-index="1">DROP: Entfernen von Datenbankobjekten</p>
+                                    <pre class="fragment" data-fragment-index="1"><code class="hlsql" data-trim contenteditable>DROP TABLE bewertungen</code></pre>
+                                    <aside class="notes">Die DDL-Befehle ALTER und DROP wirken sich genau wie CREATE auf den DB-Katalog aus. Das hier gezeigte ALTER TABLE ... ADD COLUMN-Kommando fügt eine neue Spalte namens &quot;zeitstempel&quot; vom Typ TIMESTAMP der Bewertungstabelle hinzu. Das gezeigte DROP-Kommando würde die Bewertungstabelle entfernen. Das heißt, es sind nicht nur alle Daten dieser Tabelle weg, sondern die ganze Tabelle existiert nicht mehr. Das DROP-Kommando hier würde aber abgelehnt werden, da es noch eine Tabelle Bewertungslikes gibt, bei der auf die Bewertungstabelle Fremdschlüsselreferenzen definiert sind. Man müsste also zunächst diese Tabelle oder zumindest die Fremdschlüssel droppen.</aside>
+                            </section>
+
+                            <section>
+                                <h3>DML: INSERT, UPDATE, DELETE, ...</h3>
+                                <p>Einfügen, ändern, löschen, abrufen von Daten.</p>
+                                <h4>INSERT</h4>
+                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
+                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(bezeichnung, preis) 
+             VALUES ('Katzenfutter', 4.99)</code></pre>
                             </section>
                         </div>
                     </div>

@@ -163,7 +163,10 @@
 
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM t
 --WHERE x = 5</code></pre>
-                                <aside class="notes">Alles, was in einer Zeile auf ein <code>--</code> folgt, ist ein Kommentar und gehört nicht mehr zur Anfrage. Dies ist auch praktisch, um vorübergehend gewisse Teile einer Anfrage wegzulassen und später wieder zu entkommentieren.</aside>
+
+<pre><code class="hlsql" data-trim contenteditable>SELECT kundennummer /*, email*/ FROM kunden</code></pre>
+
+                                 <aside class="notes">Alles, was in einer Zeile auf ein <code>--</code> folgt, ist ein Kommentar und gehört nicht mehr zur Anfrage. Dies ist auch praktisch, um vorübergehend gewisse Teile einer Anfrage wegzulassen und später wieder zu entkommentieren. Die Syntax <code>/* ... */</code> ermöglicht Kommentare innerhalb einer Zeile und Kommentare, die mehrere Zeilen umfassen.</aside>
                             </section>
 
                             <section>
@@ -218,6 +221,51 @@
                                 </ul>
                                 <aside class="notes">Hinter den Namen und Datentypen einer Spalte können Spaltenconstraints geschrieben werden. Dies sind Integritätsbedingungen, die stets erfüllt sein müssen. Beispielsweise verbietet ein UNIQUE-Constraint, dass in der Spalte in zwei Zeilen der gleiche Wert vorkommt. Das im Beispiel verwendete CHECK-Constraint garantiert, dass in jeder E-Mail-Adresse ein @-Zeichen vorkommen muss.</aside>
                             </section>
+
+                            <section>
+                                    <h3>NULL / NOT NULL</h3>
+                                    <h4>NULL (Standard)</h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, name VARCHAR(100) NULL)</code></pre>
+                                    <p>NULL-Werte sind in der Spalte erlaubt.</p>
+    
+                                    <h4>NOT NULL</h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, name VARCHAR(100) NOT NULL)</code></pre>
+                                    <p>NULL-Werte sind in der Spalte verboten.</p>
+                                    <aside class="notes">In den meisten DBMS ist <code>NULL</code> die Standard-Eigenschaft von Spalten, das heißt, man darf NULL-Werte in die Spalte eintragen. Will man dies verhindert, deklariert man die Spalte als <code>NOT NULL</code>. Im hier gezeigten unteren Beispiel ist das Attribut &quot;Name&quot; also ein Pflichtfeld.</aside>
+                            </section>
+
+                            <section>
+                                <h3>UNIQUE-Constraint</h3>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, email VARCHAR(500) UNIQUE)</code></pre>
+                                <p class="small">oder:</p>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* .... */ email VARCHAR(500), 
+                     UNIQUE(email))</code></pre>
+                                <aside class="notes">Spezifiziert man hinter einer Spalte die Eigenschaft <code>UNIQUE</code>, darf es in dieser Spalte keine doppelten Werte gegen. In unserer Kundentabelle dürfen also keine zwei Kunden die gleiche E-Mail-Adresse haben. Die untere Notation ist nötig, wenn das UNIQUE-Constraint aus mehreren Spalten besteht, also wenn die Kombination aus mehreren Spaltenwerten eindeutig sein soll.</aside>
+                            </section>
+
+                            <section>
+                                <h3>Primärschlüssel-Constraint</h3>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT PRIMARY KEY, ...)</code></pre>
+                                <p class="small">oder:</p>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT, ..., 
+                     PRIMARY KEY(kundennummer))</code></pre>
+                                
+                            <p>Primärschlüssel sind UNIQUE und NOT NULL.</p>
+                            <aside class="notes">Wenn der Primärschlüssel nur aus einer Spalte besteht, kann man <code>PRIMARY KEY</code> direkt hinter die Spalte schreiben. Primärschlüssel sind UNIQUE, d. h. es gibt keine Duplikate in der Tabelle in diesen Spalten. Außerdem sind Primärschlüsselattribute alle NOT NULL, d. h. in ihnen dürfen keine NULL-Werte vorkommen.</aside>
+                                
+                            </section>
+
+                            <section>
+                                <h3>Fremdschlüssel-Constraints</h3>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+ geworben_von INT REFERENCES kunden(kundennummer));</code></pre>
+                            <p class="small">oder:</p>
+                            <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+ geworben_von INT,
+ FOREIGN KEY(geworben_von) REFERENCES kunden(kundennummer));</code></pre>
+                            <aside class="notes">Besteht der Fremdschlüssel nur aus einer Spalte, kann <code>REFERENCES tabelle(spalte)</code> direkt hinter die Spalte geschrieben werden. Ansonsten muss die unten stehende <code>FOREIGN KEY</code>-Schreibweise verwendet werden.</aside>
+                            </section>
+
                             <section>
                                 <h3>Zusammengesetzte Primär-/Fremdschlüssel</h3>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 46, 48</div>
@@ -235,6 +283,7 @@
   REFERENCES bewertungen(kundennummer, produktnummer));</code></pre>
                             <aside class="notes">Wenn der Primärschlüssel zusammengesetzt ist aus mehreren Spalten, ist es nicht mehr möglich, einfach PRIMARY KEY in die Spaltenoptionen zu schreiben. Stattdessen muss das PRIMARY-KEY-Constraint unten drunter geschrieben werden. Der Grund dafür ist, dass es nicht mehrere Primärschlüssel geben kann. Eine Tabelle hat immer nur einen Primärschlüssel, dieser kann jedoch zusammengesetzt sein aus mehreren Spalten. Das gleiche gilt für FOREIGN-KEY-Constraints für zusammengesetzte Fremdschlüssel.</aside>
                             </section>
+                            
                             <section>
                                 <h2>Referentielle Aktionen</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 49</div>
@@ -244,7 +293,7 @@
  hersteller VARCHAR(50) REFERENCES hersteller(firma) 
                         ON DELETE SET NULL ON UPDATE CASCADE);
                                 </code></pre>
-                                <p class="small">Was soll passieren, wenn ein Hersteller gelöscht wird, von dem es noch Produkte gibt? (Analog dazu: Was passiert, wenn man ihn umbenennt? <code>ON UPDATE</code>)</p>
+                                <p class="small">Was soll passieren, wenn ein Hersteller gelöscht wird, von dem es noch Produkte gibt? (Analog dazu: Was passiert, wenn man ihn umbenennt? - <code>ON UPDATE</code>)</p>
                                 <ul class="small">
                                     <li class="fragment"><b><code>ON DELETE CASCADE</code></b>: Alle Produkte auch löschen</li>
                                     <li class="fragment"><b><code>ON DELETE SET NULL / SET DEFAULT</code></b>: NULL / Default-Wert setzen</li>
@@ -284,6 +333,37 @@
                                         </div></div>
                                     <aside class="notes">Würde statt NO ACTION hier RESTRICT verwendet werden, kann es passieren, dass zuerst versucht wird, Professoren des Fachbereichs zu löschen. Dies wird jedoch abgelehnt, weil noch Prüfungen von diesem existieren. Würden zuerst die Studenten gelöscht, funktioniert das Löschen des Fachbereichs. Da das Verhalten in dem Fall nicht deterministisch ist, spricht man hier von einem <em>unsicheren Schema</em>.</aside>
                             </section>
+
+                            <section>
+                                <h3>DEFAULT-Werte für Spalten</h3>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+                     land VARCHAR(100) DEFAULT 'Deutschland');</code></pre>
+                                <p>Wird beim Einfügen in die Tabelle der Wert für eine Spalte nicht gesetzt, wird der DEFAULT-Wert dort eingetragen (standardmäßig NULL).</p>
+                                <aside class="notes">Später beim <code>INSERT</code>-Kommando wird gezeigt, dass man nicht zwangsweise alle Spaltenwerte beim Einfügen einer neuen Zeile setzen muss. Die DEFAULT-Option legt für solche Fälle den Standardwert fest. Gibt es keinen definierten DEFAULT-Wert und wird der Wert nicht gesetzt, erhält die Zeile in der entsprechenden Spalte den Wert NULL. Ist auf der Spalte ein <code>NOT NULL</code>-Constraint definiert, kommt ein Fehler. Vor solchen Fehlern kann dann ein DEFAULT-Wert schützen. Wird mittels <code>ALTER TABLE ... ADD COLUMN</code> nachträglich eine neue Spalte mit DEFAULT-Wert einer existierenden Tabelle hinzugefügt, erhalten alle bisherigen Zeilen in der neuen Spalte diesen DEFAULT-Wert.</aside>
+                            </section>
+
+                            <section>
+                                    <h3>Sequenzen / Autoincrement</h3>
+                                    <p>Primärschlüsselwerte (z. B. IDs) automatisch erzeugen lassen.</p>
+                                    <h4>In MySQL:</h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr INT PRIMARY KEY AUTO_INCREMENT, ...);</code></pre>
+                                    <h4>In PostgreSQL (aber auch MySQL):</h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr SERIAL PRIMARY KEY  , ...);</code></pre>
+                                    <aside class="notes">In verschiedenen DBMS gibt es die Spaltenoption <code>AUTO_INCREMENT</code> (MySQL), <code>AUTOINCREMENT</code> (SQLite), <code>GENERATED BY DEFAULT AS IDENTITY</code> (SQL Standard, Oracle, DB2), <code>IDENTITY</code> (Microsoft SQL Server), o. ä. Spalten mit dieser Option müssen einen nummerischen Datentypen haben. Eingefügte Zeilen erhalten standardmäßig eine automatisch generierte laufende Nummer. Problematisch kann es werden, wenn nan beim Einfügen auch selbst einen Wert setzt, statt ihn automatisch generieren zu lassen. Der SQL Standard und DB2 unterstützen <code>INTEGER GENERATED ALWAYS AS IDENTITY</code>, damit immer (nicht nur als Default) eine automatische ID erzeugt wird.</aside>
+                                </section>
+
+                            <section>
+                                <h3>CHECK-Constraint</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 47</div>
+                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+ email VARCHAR(500) CHECK (email LIKE '%@%'));</code></pre>
+                     <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE bewertungen (/* ... */,
+ sterne INT CHECK (sterne BETWEEN 1 AND 5));</code></pre>
+                     <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE personen (/* ... */,
+ geburtsdatum DATE,
+ hochzeitsdatum DATE CHECK (hochzeitsdatum > geburtsdatum));</code></pre>
+                            <aside class="notes">Mit einem CHECK-Constraint lassen sich benutzerdefinierte Spalten-Constraints definieren. In Klammern hinter dem Stichwort <code>CHECK</code> steht ein beliebiger boolescher Ausdruck, der stets wahr sein muss. Beim Einfügen und Ändern von Zeilen überprüft das DBMS die Bedingung und lehnt die entsprechende Operation ab, wenn das CHECK-Constraint verletzt würde. In den gezeigten Beispielen muss in der E-Mail-Spalte immer ein @-Zeichen vorkommen, der Wertebereich der Sterne-Spalte wird eingeschränkt auf ganze Zahlen zwischen 1 und 5, und das Hochzeitsdatum muss immer echt später sein als das Geburtsdatum einer Person.</aside>
+                            </section>
                             
                             <section>
                                     <h2>CREATE TABLE LIKE / AS</h2>
@@ -305,15 +385,7 @@
                                     <aside class="notes">Alle drei hier gezeigten Befehle erstellen eine Tabelle. Bei der ersten gibt man die Spalten der Tabelle an, beim <code>CREATE TABLE LIKE</code> wird eine Tabelle mit den gleichen Spalten erstellt wie eine schon existierende Tabelle und <code>CREATE TABLE AS</code> speichert das Ergebnis einer SELECT-Anfrage in eine neu zu erstellende Tabelle. In den ersten beiden Kommandos ist die neue Tabelle leer, beim dritten Kommando können Daten in der neuen Tabelle sein. Mit <code>CREATE TABLE T2 AS SELECT * FROM T1</code> kann man eine Tabelle komplett mit Struktur und Daten kopieren.</aside>
                             </section>
 
-                            <section>
-                                <h3>Sequenzen / Autoincrement</h3>
-                                <p>Primärschlüsselwerte (z. B. IDs) automatisch erzeugen lassen.</p>
-                                <h4>In MySQL:</h4>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr INT PRIMARY KEY AUTO_INCREMENT, ...);</code></pre>
-                                <h4>In PostgreSQL (aber auch MySQL):</h4>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr SERIAL PRIMARY KEY  , ...);</code></pre>
-                                <aside class="notes">In verschiedenen DBMS gibt es die Spaltenoption <code>AUTO_INCREMENT</code> (MySQL), <code>AUTOINCREMENT</code> (SQLite), <code>GENERATED BY DEFAULT AS IDENTITY</code> (SQL Standard, Oracle, DB2), <code>IDENTITY</code> (Microsoft SQL Server), o. ä. Spalten mit dieser Option müssen einen nummerischen Datentypen haben. Eingefügte Zeilen erhalten standardmäßig eine automatisch generierte laufende Nummer. Problematisch kann es werden, wenn nan beim Einfügen auch selbst einen Wert setzt, statt ihn automatisch generieren zu lassen. Der SQL Standard und DB2 unterstützen <code>INTEGER GENERATED ALWAYS AS IDENTITY</code>, damit immer (nicht nur als Default) eine automatische ID erzeugt wird.</aside>
-                            </section>
+                            
 
                             <section>
                                     <h2>ALTER / DROP</h2>
@@ -330,10 +402,58 @@
                             <section>
                                 <h3>DML: INSERT, UPDATE, DELETE, ...</h3>
                                 <p>Einfügen, ändern, löschen, abrufen von Daten.</p>
-                                <h4>INSERT</h4>
+                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(produktnr, bezeichnung, preis, hersteller) 
+             VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
+                                <pre><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = 5.99 WHERE produktnr = 88</code></pre>
+                                <pre><code class="hlsql" data-trim contenteditable>DELETE FROM produkte WHERE produktnr = 88</code></pre>
+                                <aside class="notes">Hier wird das Produkt Katzenfutter mit der Produktnummer 88 eingefügt, dann der Preis auf 5,99 EUR erhölt und im dritten Kommando wird die Zeile wieder gelöscht.</aside>
+                            </section>
+
+                            <section>
+                                <h2>INSERT</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 53</div>
+                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(produktnr, bezeichnung, preis, hersteller) 
+             VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
+                                
+                                <div class="fragment">
+                                <p class="small">Nur ein Teil der Spalten setzen:</p>
+                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(preis, bezeichnung)
+             VALUES (4.99, 'Katzenfutter')</code></pre>
+                                </div>
+
+                                <div class="fragment    ">
+                                <p class="small">Spaltennamen weglassen:</p>
                                 <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
-                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(bezeichnung, preis) 
-             VALUES ('Katzenfutter', 4.99)</code></pre>
+                                </div>
+                                <p class="fragment small">Nachteile: Schwerer verständlich zu lesen, man muss auf die korrekte Reihenfolge achten, man darf keine Spalte vergessen, in der Zukunft könnten sich die Spalten ändern.</p>
+                                
+                                <aside class="notes">Wenn nur ein Teil der Tabellenspalten gesetzt werden, werden die anderen Spalten auf ihre DEFAULT-Werte, den nächsten AUTO_INCREMENT / SERIAL-Wert oder auf NULL gesetzt. Lässt man die Spaltennamen vor dem Stichwort <code>VALUES</code> weg, müssen alle Spalten der Tabelle in der richtigen Reihenfolge gesetzt werden. Wenn in der Zukunft eine neue Spalte in die Produkttabelle hinzugefügt wird, würde das untere Kommando nicht mehr funktionieren.</aside>
+                            </section>
+                            
+                            <section>
+                                <h2>UPDATE</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 54</div>
+                                <pre><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = 5.99 WHERE produktnr = 88</code></pre>
+
+                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte 
+SET preis = 5.99, bezeichnung = 'Spezial-Katzenfutter' 
+WHERE produktnr = 88</code></pre>
+
+                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = preis+1</code></pre>
+
+                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = preis * 1.1</code></pre>
+                                <aside class="notes">Das UPDATE-Kommando besteht aus einem SET-Teil und einem WHERE-Teil. Im SET werden Komma-getrennte Zuweisungen angegeben, um die neuen Spaltenwerte zu setzen. Der WHERE-Teil besteht aus einer Bedingung, die für eine Zeile erfüllt sein muss, damit diese entsprechend geändert wird. Lässt man die WHERE-Klausel weg, steht dies für <code>WHERE TRUE</code>, man ändert also alle Zeilen.</aside>
+                            </section>
+                            <section>
+                                <h2>DELETE / TRUNCATE TABLE</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 55</div>
+                                <pre><code class="hlsql" data-trim contenteditable>DELETE FROM produkte WHERE produktnr = 88</code></pre>
+
+                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>DELETE FROM produkte</code></pre>
+
+                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>TRUNCATE TABLE produkte</code></pre>
+
+                                <aside class="notes">Auch hier bestimmt die WHERE-Klausel wieder, welche Zeilen gelöscht werden sollen. Lässt man sie weg, löscht das System jede Zeile. Der TRUNCATE TABLE-Befehl ist jedoch meist schneller für solche Zwecke, er leert ebenfalls die komplette Tabelle.</aside>
                             </section>
                         </div>
                     </div>

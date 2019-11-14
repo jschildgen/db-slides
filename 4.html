@@ -621,15 +621,25 @@ GROUP BY hersteller</code></pre>
                                 <aside class="notes">In der GROUP BY-Klausel werden Spalten spezifiziert, nach deren Werten Gruppen gebildet werden. <code>GROUP BY hersteller</code> bedeutet, dass für jeden distinkten Wert in der hersteller-Spalte eine Gruppe gebildet wird. In unserem Beispiel sind dies drei. Für jede Gruppe kann nun der Wert in dieser GROUP BY-Spalte ausgegeben werden. Alle anderen Spalten dürfen nur innerhalb von Aggregatfunktionen in der SELECT-Liste vorkommen. Wir berechnen in dem Beispiel auf dieser Folie für jeden einzelnen Hersteller die Anzahl und Durchschnittspreise seiner Produkte.</aside>
                             </section>
                             <section>
-                                    <h2>GROUP BY</h2>
-                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 66</div>
-                                    <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, preis, COUNT(*)
+                                <h2>GROUP BY</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 66</div>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, preis, COUNT(*)
 FROM produkte
 GROUP BY hersteller, preis</code></pre>
-                                    <span class="sqlresult"></span>
-                                    <aside class="notes">Hier gruppieren wir nach Hersteller und Preis. Das heißt für jede Kombination aus einem Hersteller und einem Preis wird eine Gruppe gebildet. Das Ergebnis lesen wir jetzt so: Vom Hersteller Calgonte gibt es ein Produkt, welches 3.99 kostet. Auch hier ist wieder darauf zu achten, dass im SELECT-Teil nur Spalten stehen dürfen, die im GROUP BY vorkommen. Alle anderen dürfen nur innerhalb von Aggregatfunktionen auftreten.</aside>
-                                </section>
-                                
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Hier gruppieren wir nach Hersteller und Preis. Das heißt für jede Kombination aus einem Hersteller und einem Preis wird eine Gruppe gebildet. Das Ergebnis lesen wir jetzt so: Vom Hersteller Calgonte gibt es ein Produkt, welches 3.99 kostet. Auch hier ist wieder darauf zu achten, dass im SELECT-Teil nur Spalten stehen dürfen, die im GROUP BY vorkommen. Alle anderen dürfen nur innerhalb von Aggregatfunktionen auftreten.</aside>
+                            </section>
+                            
+                            <section>
+                                <h2>HAVING</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 69</div>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, AVG(preis)
+FROM produkte
+GROUP BY hersteller
+HAVING COUNT(*) >= 2</code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Die Ausführungsreihenfolge von SELECT-Abfragen ist wie folgt: Zunächst werden die Daten aus den Tabellen geholt, die in der FROM-Klausel stehen, dann wird die WHERE-Klausel ausgewertet, um die Zeilen zu filtern. Im Anschluss daran erfolgt die Gruppierung und die Ausgabe der Spalten und berechneten Aggregatfunktionen in der SELECT-Liste. Möchte man nach der Gruppierung nochmals eine Selektion ausführen, verwendet man die HAVING-Klausel. In ihr stehen in der Regel nur Aggregatfunktionen, da man andere Prädikate ja bereits im WHERE-Teil ausführen kann. Im gezeigten Beispiel berechnen wir für jeden Hersteller, von dem es mindestens zwei Produkte gibt, die Durchschnittspreise dieser Produkte.</aside>
+                            </section>
                         </div>
                     </div>
             

@@ -245,7 +245,8 @@
 
                             <section>
                                 <h3>Primärschlüssel-Constraint</h3>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT PRIMARY KEY, ...)</code></pre>
+                                <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-key green"></i></div>
+                                <pre style="width: 19.5cm; left:-62px;"><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT PRIMARY KEY, ...)</code></pre>
                                 <p class="small">oder:</p>
                                 <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT, ..., 
                      PRIMARY KEY(kundennummer))</code></pre>
@@ -344,7 +345,7 @@
 
                             <section>
                                     <h3>Sequenzen / Autoincrement</h3>
-                                    <p>Primärschlüsselwerte (z. B. IDs) automatisch erzeugen lassen.</p>
+                                    <p class="small">Primärschlüsselwerte (z. B. IDs) automatisch erzeugen lassen.</p>
                                     <h4>In MySQL:</h4>
                                     <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr INT PRIMARY KEY AUTO_INCREMENT, ...);</code></pre>
                                     <h4>In PostgreSQL (aber auch MySQL):</h4>
@@ -512,6 +513,7 @@ FROM produkte</code></pre>
                             <section>
                                 <h2>WHERE</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 58</div>
+                                <div style="position: absolute; top: -1cm; right:5px; font-size:170px" class="green">&sigma;</div>
                                 <pre><code class="hlsql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis > 3</code></pre>
                                 <span id="where_price_gt_3"></span>
                                 <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis >= 3 AND preis <= 9</code></pre>
@@ -531,12 +533,14 @@ FROM produkte</code></pre>
                             </section>
                             <section>
                                 <h2>Kreuzprodukt</h2>
+                                <div style="position: absolute; top: -1cm; right:5px; font-size:170px" class="green">&times;</div>
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte, hersteller</code></pre>
                                                                        <span class="sqlresult"></span>
                                 <aside class="notes">Listet man Komma-getrennt mehrere Tabellen in der FROM-Klausel auf, wird das kartesische Produkt (Cross-Join) zwischen diesen gebildet.</aside>
                             </section>
                             <section>
                                     <h2>Join</h2>
+                                    <div style="position: absolute; top: -1cm; right:5px; font-size:170px" class="green">&bowtie;</div>
                                     <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte, hersteller
 WHERE produkte.hersteller = hersteller.firma
                                     </code></pre>
@@ -660,6 +664,7 @@ WHERE preis = (SELECT MAX(preis) FROM produkte P2
                             <section>
                                 <h2>ORDER BY</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 70</div>
+                                <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-sort-amount-down-alt green"></i></div>
                                 <p class="small">&quot;Tabellen haben keine Ordnung, Ergebnisse schon.&quot;</p>
                                 <ul>
                                     <li><code>ASC</code>: aufsteigend sortieren (Standard)</li>
@@ -699,7 +704,7 @@ LIMIT 2, 5</code></pre>
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
 LIMIT 5 OFFSET 2</code></pre>
                                 <span class="sqlresult"></span>
-                                <aside class="notes">Der Offset sorgt dafür, dass zunächst eine bestimmte Anzahl von Zeilen übersprungen wird. Hier werden die beiden teuersten Produkte (Regal und Maschinenbau-Lehrbuch) übersprungen und erst die fünf danach teuersten Produkte ausgegeben.</aside>
+                                <aside class="notes">Die beiden hier dargestellten Anfragen sind äquivalent. Der Offset sorgt dafür, dass zunächst eine bestimmte Anzahl von Zeilen übersprungen wird. Hier werden die beiden teuersten Produkte (Regal und Maschinenbau-Lehrbuch) übersprungen und erst die fünf danach teuersten Produkte ausgegeben.</aside>
                             </section>
 
                         </div>

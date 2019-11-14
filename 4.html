@@ -640,6 +640,68 @@ HAVING COUNT(*) >= 2</code></pre>
                                 <span class="sqlresult"></span>
                                 <aside class="notes">Die Ausführungsreihenfolge von SELECT-Abfragen ist wie folgt: Zunächst werden die Daten aus den Tabellen geholt, die in der FROM-Klausel stehen, dann wird die WHERE-Klausel ausgewertet, um die Zeilen zu filtern. Im Anschluss daran erfolgt die Gruppierung und die Ausgabe der Spalten und berechneten Aggregatfunktionen in der SELECT-Liste. Möchte man nach der Gruppierung nochmals eine Selektion ausführen, verwendet man die HAVING-Klausel. In ihr stehen in der Regel nur Aggregatfunktionen, da man andere Prädikate ja bereits im WHERE-Teil ausführen kann. Im gezeigten Beispiel berechnen wir für jeden Hersteller, von dem es mindestens zwei Produkte gibt, die Durchschnittspreise dieser Produkte.</aside>
                             </section>
+
+                            <section>
+                                <h2>Sub-Anfragen</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 67-68</div>
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT hersteller, avg_preis FROM (
+ SELECT hersteller, COUNT(*) AS anzahl, AVG(preis) AS avg_preis 
+ FROM produkte GROUP BY hersteller
+) WHERE anzahl >= 2</code></pre>
+                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte
+WHERE preis = (SELECT MAX(preis) FROM produkte)</code></pre>
+
+<pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P1
+WHERE preis = (SELECT MAX(preis) FROM produkte P2 
+               WHERE P2.hersteller = P1.hersteller)</code></pre>
+               <aside class="notes">Unteranfragen dürfen fast überall innerhalb einer Anfrage stehen, auch in INSERT, UPDATE, DELETE, usw. Auch korrelierende Sub-Anfragen sind erlaubt. In einer solchen kommen Spalten der Oberanfrage vor (P1.hersteller in der unteren Anfrage). Die obere Query entspricht der Anfrage mit HAVING aus der vorherigen Folie. Die zweite Anfrage liefert Produkte, die den Maximalpreis haben, es gibt also keine teureren als diese. Die untere Anfrage ist ähnlich: Sie liefert Produkte, die den Maximalpreis von Produkten vom jeweiligen Hersteller haben. Die Anfrage liefert z. B. den Müsliriegel, da es von seinem Hersteller Monsterfood keine Produkte gibt, die mehr kosten.</aside>
+                            </section>
+
+                            <section>
+                                <h2>ORDER BY</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 70</div>
+                                <p class="small">&quot;Tabellen haben keine Ordnung, Ergebnisse schon.&quot;</p>
+                                <ul>
+                                    <li><code>ASC</code>: aufsteigend sortieren (Standard)</li>
+                                    <li><code>DESC</code>: absteigend sortieren</li>
+                                </ul>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis</code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Hier wird das Ergebnis der Anfrage aufsteigend nach den Werten der Preis-Spalte sortiert.</aside>
+                            </section>
+
+                            <section>
+                                <h2>ORDER BY</h2>
+                                <p class="small">&quot;Tabellen haben keine Ordnung, Ergebnisse schon.&quot;</p>
+                                
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte 
+ORDER BY hersteller NULLS LAST, preis DESC</code></pre>
+                                <span data-sql-query="SELECT * FROM produkte ORDER BY hersteller IS NULL, hersteller, preis DESC"></span>
+                                <aside class="notes">Gibt man mehrere Ausdrücke im ORDER BY an, wird zuerst nach dem ersten sortiert, dann nach dem zweiten, usw. NULLS FIRST bzw. NULLS LAST sorgt dafür, dass NULL-Werte in der zu sortierenden Spalte an den Anfang bzw. ans Ende sortiert werden. Hier kommt Calgonte im Alphabet vor Monsterfood, aber da es zwei Produkte von Monsterfood gibt, kommt wegen <code>preis DESC</code> das teuerste zuerst.</aside>
+                            </section>
+
+                            <section>
+                                <h2>LIMIT</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 71</div>
+                                <h4>SQL Standard (und DB2):</h4>
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+FETCH FIRST 5 ROWS ONLY</code></pre>
+                                <h4>PostgreSQL, MySQL, MariaDB, SQLite, ...</h4>
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+LIMIT 5</code></pre>
+                                <aside class="notes">Mit der LIMIT-Klausel lässt sich die Ergebnismenge auf eine bestimmte Anzahl von Tupeln begrenzen. <code>SELECT * FROM produkte LIMIT 5</code> würde irgendwelche fünf Produkte liefern. Die untere Anfrage auf dieser Folie liefert die fünf teuersten Produkte. <code>SELECT * FROM produkte ORDER BY preis DESC LIMIT 1</code> liefert das teuerste Produkt. Haben zwei Produkte den gleichen und den teuersten Preis, wird irgendeines von diesen ausgegeben.</aside>
+                            </section>
+
+                            <section>
+                                <h2>LIMIT mit OFFSET</h2>
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+LIMIT 2, 5</code></pre>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+LIMIT 5 OFFSET 2</code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Der Offset sorgt dafür, dass zunächst eine bestimmte Anzahl von Zeilen übersprungen wird. Hier werden die beiden teuersten Produkte (Regal und Maschinenbau-Lehrbuch) übersprungen und erst die fünf danach teuersten Produkte ausgegeben.</aside>
+                            </section>
+
                         </div>
                     </div>
             

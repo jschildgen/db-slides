@@ -103,6 +103,7 @@ function create_db() {
         tx.executeSql("INSERT INTO produkte VALUES(999, 'Katalog', 0.00, NULL)");
         tx.executeSql("INSERT INTO bewertungen VALUES(5, 17, 4, 'Guter Schokoriegel, aber die Verpackung geht schwer auf')");
         tx.executeSql("INSERT INTO bewertungen VALUES(5, 29, 1, 'Mein Geschirr wird nicht sauber!')");
+        tx.executeSql("INSERT INTO bewertungen VALUES(8, 29, 2, 'Nicht gut, aber billig.')");
         tx.executeSql("INSERT INTO bewertungslikes VALUES(8,5,17)");
         tx.executeSql("INSERT INTO bestellungen VALUES(101, 5, '2018-05-26 20:31:00', 34.80)");
         tx.executeSql("INSERT INTO bestellungen VALUES(102, 8, '2018-05-26 20:31:01', 100)");

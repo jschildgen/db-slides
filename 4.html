@@ -449,12 +449,187 @@ WHERE produktnr = 88</code></pre>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 55</div>
                                 <pre><code class="hlsql" data-trim contenteditable>DELETE FROM produkte WHERE produktnr = 88</code></pre>
 
+                                <pre><code class="hlsql" data-trim contenteditable>DELETE FROM produkte WHERE hersteller = 'Monsterfood'
+                       AND preis < 1.00 
+                                </code></pre>
+
                                 <pre class="fragment"><code class="hlsql" data-trim contenteditable>DELETE FROM produkte</code></pre>
 
                                 <pre class="fragment"><code class="hlsql" data-trim contenteditable>TRUNCATE TABLE produkte</code></pre>
 
                                 <aside class="notes">Auch hier bestimmt die WHERE-Klausel wieder, welche Zeilen gelöscht werden sollen. Lässt man sie weg, löscht das System jede Zeile. Der TRUNCATE TABLE-Befehl ist jedoch meist schneller für solche Zwecke, er leert ebenfalls die komplette Tabelle.</aside>
                             </section>
+                            <section>
+                                <h2>SELECT</h2>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+FROM produkte P LEFT JOIN hersteller H ON p.hersteller = H.firma
+WHERE P.preis > 3
+GROUP BY h.land
+HAVING COUNT(*) < 5
+ORDER BY COUNT(*)
+                                </code></pre>
+                                <p class="small">&quot;Zeige mir für jedes Land, in welchem weniger als fünf Produkte, die mehr als 3 EUR kosten, hergestellt wurden, die Anzahl der Produkte sowie die Durchschnittspreise an, aufsteigend sortiert nach der Anzahl.</p>
+                            <ul class="small">
+                                <li><code>SELECT</code>: Projektion</li>
+                                <li><code>FROM</code>: Tabellen und Joins</li>
+                                <li><code>WHERE</code>: Selektion</li>
+                                <li><code>GROUP BY</code>: Zeilen gruppieren</li>
+                                <li><code>HAVING</code>: Selektion nach der Gruppierung</li>
+                                <li><code>ORDER BY</code>: Ergebnis sortieren</li>
+                            </ul>
+                            </section>
+                            <section>
+                                <h3>SELECT &lt;spalten&gt; FROM &lt;tabelle&gt;</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 57</div>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT bezeichnung, preis, round(preis * 1.15, 2) AS preis_usd 
+FROM produkte</code></pre>
+                                <span class="sqlresult fragment"></span>
+                                <aside class="notes">Die SELECT-Klausel wird bei der Anfrageausführung erst sehr spät ausgewertet. In ihr findet die Projektion statt, um festzulegen, welche Spalten man letztendlich im Ergebnis sehen möchte. Man kann mehrere Spalten mit Kommata trennen, mit <code>AS</code> einen Alias definieren - also eine Umbenennung vornehmen - und man kann Funktionen aufrufen. In der FROM-Klausel stehen eine oder mehrere Tabellen, aus der die Daten stammen sollen.</aside>
+                            </section>
+                            <section>
+                                <h3>SELECT * FROM &lt;tabelle&gt;</h3>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte</code></pre>
+                                <span class="sqlresult fragment"></span>
+                                <aside class="notes">Mit <code>SELECT *</code> wird das ganze Tupel ausgegeben. In der Anfrage auf dieser Folio werden alle Spalten der Produkte-Tabelle angezeigt.</aside>
+                            </section>
+                            <section>
+                                <h3>SELECT DISTINCT</h3>
+                                <div class="columns">
+                                    <div style="width: 8cm;">
+                                            <pre><code class="hlsql" data-trim contenteditable data-sql="select_no_distinct">SELECT hersteller 
+FROM produkte</code></pre>
+                                            <span id="select_no_distinct"></span>
+                                    </div>
+                                    <div style="width: 12cm">
+                                            <pre><code class="hlsql" data-trim contenteditable data-sql="select_distinct">SELECT DISTINCT hersteller 
+FROM produkte</code></pre>
+                                            <span id="select_distinct"></span>
+                                    </div>
+                                </div>
+                                
+                                <aside class="notes">In SQL wird standardmäßig keine Duplikateliminierung vorgenommen. Das Ergebnis einer Anfrage kann also - anders als in der relationalen Algebra - gleiche Zeilen doppelt beinhalten. Um eine Duplikateliminierung durchzuführen schreibt man <code>SELECT DISTINCT</code> statt <code>SELECT</code>.</aside>
+                            </section>
+                            <section>
+                                <h2>WHERE</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 58</div>
+                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis > 3</code></pre>
+                                <span id="where_price_gt_3"></span>
+                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis >= 3 AND preis <= 9</code></pre>
+                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis BETWEEN 3 AND 9</code></pre>
+                                <aside class="notes">In der WHERE-Klausel steht eine beliebige boolesche Bedingung. Alle Zeilen, die diese Bedingung erfüllen, sind im Ergebnis. Es wird also eine Selektion ausgeführt. Hat eine Anfrage keine WHERE-Klausel, qualifiziert sich jede Zeile. Bedingungen lassen sich mit AND und OR verknüpfen und mit NOT negieren. Auch die Klammerung von Ausdrücken ist möglich.</aside>
+                            </section>
+                            <section>
+                                <h2>LIKE-Prädikat</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 59</div>
+                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_description">SELECT * FROM produkte WHERE bezeichnung = 'Müsliriegel'</code></pre>
+                                <span id="where_description"></span>
+                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_description_like">SELECT * FROM produkte WHERE bezeichnung LIKE 'M%'</code></pre>
+                                <span id="where_description_like"></span>
+                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE '%-%'</code></pre>
+                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE 'M_sliriegel'</code></pre>
+                                <aside class="notes">Strings müssen stets in 'einfache Anführungszeichen' geschrieben werden. 'Innerhalb eines Strings braucht''s zwei Anführungszeichen', um es zu escapen. Im LIKE-Prädikat wird eine Musterüberprüfung vorgenommen. <code>%</code> steht dabei für beliebige Zeichen und <code>_</code> für genau ein beliebiges Zeichen.</aside>
+                            </section>
+                            <section>
+                                <h2>Kreuzprodukt</h2>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte, hersteller</code></pre>
+                                                                       <span class="sqlresult"></span>
+                                <aside class="notes">Listet man Komma-getrennt mehrere Tabellen in der FROM-Klausel auf, wird das kartesische Produkt (Cross-Join) zwischen diesen gebildet.</aside>
+                            </section>
+                            <section>
+                                    <h2>Join</h2>
+                                    <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte, hersteller
+WHERE produkte.hersteller = hersteller.firma
+                                    </code></pre>
+                                                                           <span class="sqlresult"></span>
+                                    <aside class="notes">In der WHERE-Klausel lässt sich im Anschluss an das kartesische Produkt eine Join-Bedingung definieren, sodass sich ein Verbund wie hier auf der Folie gezeigt ausführen lässt.</aside>
+                                </section>
+                            <section>
+                                <h3>&lt;tabelle&gt; JOIN &lt;tabelle&gt; ON &lt;präd.&gt;</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 61-62</div>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte JOIN hersteller 
+ ON produkte.hersteller = hersteller.firma</code></pre>
+                                <span class="sqlresult"></span>
+
+                                <div class="fragment">
+                                <p class="small">   </p>
+                                <h4>Tabellen-Alias</h4>
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P JOIN hersteller H
+ ON P.hersteller = H.firma</code></pre>
+                                </div>
+                                <aside class="notes">Die <code>JOIN ... ON</code>-Syntax in der FROM-Klausel ist eine Alternative zum Join in der WHERE-Klausel. An ihr ist besser erkennbar, dass hier ein Join ausgeführt wird, es verhindert, dass man aus Versehen die Join-Bedingung vergisst und es trennt klar den Verbund von weiteren Prädikaten. Außerdem lässt sich mit der <code>JOIN</code>-Klausel auch einen äußeren Verbund auszuführen (siehe nächste Folie). Bei nicht eindeutigen Spaltennamen muss unbedingt ein Tabellenprefix vor die Spalte geschrieben werden. Um Anfragen kompakter zu gestalten, bietet es sich an Tabellenaliase in der FROM-Klausel einzuführen (hier: P und H).</aside>
+                            </section>
+                            <section>
+                                <h3>LEFT/RIGHT/FULL [OUTER] JOIN</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 63</div>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte P LEFT JOIN hersteller H
+ ON P.hersteller = H.firma</code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Ein äußerer Verbund lässt sich ausführen, indem statt dem <code>JOIN</code>-Schlüsselwort <code>LEFT JOIN</code>, <code>RIGHT JOIN</code> oder <code>FULL JOIN</code> geschrieben wird. Bei hier gezeigten linken äußeren Verbund sind alle Zeilen der linken Tabelle im Join-Ergebnis. Diejenigen, die keinen Join-Partner in der rechten Tabelle finden, erhalten in den entsprechenden Spalten einen NULL-Wert.</aside>
+                            </section>
+                            <section>
+                                <h3>JOIN ... USING(...)</h3>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT P.*, B.sterne 
+ FROM produkte P JOIN bewertungen B USING(produktnr)</code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes"><code>USING(produktnr)</code> ist eine verkürzte Schreibweise für den Equi-Join auf der Spalte Produktnummer, also in dem Fall für <code>ON P.produktnr = B.produktnr</code></aside>
+                            </section>
+                            <section>
+                                <h2>Aggregatfunktionen</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 64</div>
+                                <ul>
+                                    <li>COUNT: Anzahl</li>
+                                    <li>SUM: Summe</li>
+                                    <li>AVG: Durchschnittswert</li>
+                                    <li>MIN: Kleinster Wert</li>
+                                    <li>MAX: Größter Wert</li>
+                                    <li>...</li>
+                                </ul>
+                                <p class="small">Aggregatfunktion in der SELECT-Liste ohne GROUP BY-Klausel<br>&Rightarrow; die ganze Tabelle bildet eine große Gruppe<br> &Rightarrow; es kommt nur eine Zeile raus.</p>
+                            </section>
+                            <section>
+                                <h2>COUNT</h2>
+                                <div class="columns">
+                                <div style="width:6.5cm">
+                                    <pre><code class="hlsql" data-trim contenteditable data-sql="count_star">SELECT COUNT(*) 
+FROM produkte</code></pre>
+                                    <span id="count_star"></span>
+                                </div>
+                                <div style="width:10cm">
+                                    <pre><code class="hlsql" data-trim contenteditable data-sql="count_manufacturer">SELECT COUNT(hersteller) 
+FROM produkte</code></pre>
+                                    <span id="count_manufacturer"></span>
+                                </div>
+                                </div>
+                                <pre><code class="hlsql" data-trim contenteditable data-sql="count_distinct_manufacturer">SELECT COUNT(DISTINCT hersteller) FROM produkte</code></pre>
+                                <span id="count_distinct_manufacturer"></span>
+                                <aside class="notes"><code>COUNT(*)</code> (manche schreiben auch gerne <code>COUNT(1)</code>) zählt die Anzahl der Zeilen in der Gruppe. Da hier die Gruppe die ganze Tabelle ist, liefert dies die Anzahl der Zeilen in der Tabelle. COUNT mit Spaltenangaben zählt, wie viele Zeilen in den gegebenen Spalten keinen NULL-Wert haben. <code>COUNT(DISTINCT ...)</code> zählt die von NULL verschiedenen distinkten (unterschiedlichen) Werte in den gegebenen Spalten. In unserem Beispiel existieren die beiden Werte Calgonte und Monsterfood in der Hersteller-Spalte.</aside>
+                            </section>
+                            <section>
+                                <h2>SUM / AVG / MIN / MAX</h2>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT SUM(preis), AVG(preis), MIN(preis), MAX(preis)
+FROM produkte</code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Den Aggregatfunktionen SUM, AVG, MIN und MAX wird als Argument eine Spalte (oder ein Ausdruck, z. B. <code>SUM(preis * (1+steuersatz/100))</code> übergeben. Wir sehen hier im Ergebnis die Summe aller Preise, den Durchschnitt sowie den kleinsten und größten Preis. NULL-Werte werden in den Aggregatfunktionen übersprungen. Das heißt <code>AVG(preis)</code> berechnet sich aus der Summe der Preise, die nicht NULL sind, geteilt durch die Anzahl der Preise, die nicht NULL sind. Also: <code>SUM(preis)/COUNT(preis)</code></aside>
+                            </section>
+                            <section>
+                                <h2>GROUP BY</h2>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 65</div>
+                                <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, COUNT(*), AVG(preis)
+FROM produkte
+GROUP BY hersteller</code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">In der GROUP BY-Klausel werden Spalten spezifiziert, nach deren Werten Gruppen gebildet werden. <code>GROUP BY hersteller</code> bedeutet, dass für jeden distinkten Wert in der hersteller-Spalte eine Gruppe gebildet wird. In unserem Beispiel sind dies drei. Für jede Gruppe kann nun der Wert in dieser GROUP BY-Spalte ausgegeben werden. Alle anderen Spalten dürfen nur innerhalb von Aggregatfunktionen in der SELECT-Liste vorkommen. Wir berechnen in dem Beispiel auf dieser Folie für jeden einzelnen Hersteller die Anzahl und Durchschnittspreise seiner Produkte.</aside>
+                            </section>
+                            <section>
+                                    <h2>GROUP BY</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 66</div>
+                                    <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, preis, COUNT(*)
+FROM produkte
+GROUP BY hersteller, preis</code></pre>
+                                    <span class="sqlresult"></span>
+                                    <aside class="notes">Hier gruppieren wir nach Hersteller und Preis. Das heißt für jede Kombination aus einem Hersteller und einem Preis wird eine Gruppe gebildet. Das Ergebnis lesen wir jetzt so: Vom Hersteller Calgonte gibt es ein Produkt, welches 3.99 kostet. Auch hier ist wieder darauf zu achten, dass im SELECT-Teil nur Spalten stehen dürfen, die im GROUP BY vorkommen. Alle anderen dürfen nur innerhalb von Aggregatfunktionen auftreten.</aside>
+                                </section>
+                                
                         </div>
                     </div>
             

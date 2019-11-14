@@ -1093,6 +1093,7 @@
                                                 <div data-sql-query="select 5 as kundennr"></div>
                                                 <aside class="notes">Hier gehen wir der Einfachheit halber davon aus, dass es nur die beiden Produkte 17 und 29 gibt. Die Division liefert diejenigen Kunden, die alle diese Produkte bewertet hat.</aside>
                                             </section>
+                                            <!--
                                             <section>
                                                 <h2>Anfrageoptimierung</h2>
                                                 <p class="small">&quot;Wie heißen die Produkte, die Kunde Nr. 5 bewertet hat?&quot;</p>
@@ -1113,10 +1114,10 @@
                                             </section>
                                             <section>
                                                 <h3>Beispiel: Anfrageoptimierung</h3>
-                                                <p class="small">Annahme: 100.000 Kunden, 500.000 Bewertungen, 300.000 Produkte</p>
+                                                <p class="small">Annahme: 100.000 Kunden, 500.000 Bewertungen, 300.000 Produkte</p>-->
                                                 <!-- Query: π bezeichnung σ kundennr = 5 σ produkte.produktnr=bewertungen.produktnr (produkte⨯bewertungen) -->
                                                 <!-- Query: π bezeichnung (π produktnr, bezeichnung produkte⨝ π produktnr σ kundennr = 5 bewertungen)-->
-                                                <img src="img/3/query_opt_ratings.png" alt="Anfrageoptimierung" class="noborder stretch">
+                                                <!--<img src="img/3/query_opt_ratings.png" alt="Anfrageoptimierung" class="noborder stretch">
                                                 <aside class="notes">Der rechte Plan ist billiger, da die Zwischenergebnisse deutlich kleiner sind: 300.000+300.000+500.000+5+5+5+5=1.100.020; links: 150.001.300.010; Auch haben die Zwischenergebnisse weniger Spalten.</aside>
                                             </section>
                                             <section>
@@ -1212,7 +1213,7 @@
                                                 <p class="fragment small">Beispiel: |$produkte \bowtie bewertungen| = |bewertungen|$</p>
 
                                                 <aside class="notes">Haben die Tabellen R und S völlig verschiedene Werte in der Spalte a, ist das Ergebnis des Joins leer. Wenn die Join-Spalten eine Fremdschlüssel-Primärschlüssel-Beziehung darstellen, hat das Ergebnis des Joins so viele Zeilen, wie die Tabelle mit der Fremdschlüsselspalte (abzgl. der Anzahl von NULL-Werten in dieser), da jede solche Zeile genau einen Join-Partner in der anderen Tabelle findet, unabhängig davon, wie groß diese andere Tabelle ist. Gibt es beispielsweise nur ein Produkt, sind alle Bewertungen über dieses eine Produkt. Gibt es deutlich mehr Produkte als Bewertungen, sind einige Produkte nicht bewertet worden. Im Join-Resultat sind in jedem Fall genau so viele Zeilen wie in der Bewertungs-Tabelle. Die Produktnr-Spalte ist dort nie NULL.</aside>
-                                            </section>
+                                            </section>-->
                                             <section>
                                                 <h2>Normalformenlehre</h2>
                                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 30</div>
@@ -1440,7 +1441,7 @@
                                                     <li>Überführung ER &rightarrow; Relationenschema</li>
                                                     <li>Relationale Algebra: $\pi, \sigma, \bowtie, \times, \cup, \div, \dots$</li>
                                                     <li>Join: Inner, Left/Right/Full Outer, ...</li>
-                                                    <li>Anfrageoptimierung / Heuristiken</li>
+                                                    <!--<li>Anfrageoptimierung / Heuristiken</li>-->
                                                     <li>Funktionale Abhängigkeiten</li>
                                                     <li>Superschlüssel, Schlüsselkandidaten</li>
                                                     <li>Normalformen: 1NF, 2NF, 3NF</li>

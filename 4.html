@@ -240,7 +240,7 @@
                                 <p class="small">oder:</p>
                                 <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* .... */ email VARCHAR(500), 
                      UNIQUE(email))</code></pre>
-                                <aside class="notes">Spezifiziert man hinter einer Spalte die Eigenschaft <code>UNIQUE</code>, darf es in dieser Spalte keine doppelten Werte gegen. In unserer Kundentabelle dürfen also keine zwei Kunden die gleiche E-Mail-Adresse haben. Die untere Notation ist nötig, wenn das UNIQUE-Constraint aus mehreren Spalten besteht, also wenn die Kombination aus mehreren Spaltenwerten eindeutig sein soll.</aside>
+                                <aside class="notes">Spezifiziert man hinter einer Spalte die Eigenschaft <code>UNIQUE</code>, darf es in dieser Spalte keine doppelten Werte gegen. In unserer Kundentabelle dürfen also keine zwei Kunden die gleiche E-Mail-Adresse haben. Die untere Notation ist nötig, wenn das UNIQUE-Constraint aus mehreren Spalten besteht, also wenn die Kombination aus mehreren Spaltenwerten eindeutig sein soll. Anders als bei Primärschlüsseln (in einer Tabelle darf höchstens einen geben), können auf einer Tabelle beliebig viele UNIQU-Constraints definiert werden.</aside>
                             </section>
 
                             <section>
@@ -530,6 +530,13 @@ FROM produkte</code></pre>
                                 <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE '%-%'</code></pre>
                                 <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE 'M_sliriegel'</code></pre>
                                 <aside class="notes">Strings müssen stets in 'einfache Anführungszeichen' geschrieben werden. 'Innerhalb eines Strings braucht''s zwei Anführungszeichen', um es zu escapen. Im LIKE-Prädikat wird eine Musterüberprüfung vorgenommen. <code>%</code> steht dabei für beliebige Zeichen und <code>_</code> für genau ein beliebiges Zeichen.</aside>
+                            </section>
+                            <section>
+                                <h2>NULL-Werte</h2>
+                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_is_null">SELECT * FROM produkte WHERE hersteller IS NULL</code></pre>
+                                <span id="where_is_null"></span>
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE hersteller IS NOT NULL</code></pre>
+                                <aside class="notes">Überprüfungen, ob der Wert einer Spalte NULL ist, muss mit <code>IS NULL</code> erfolgen. Das Prädikat <code>IS NOT NULL</code> trifft auf Zeilen zu, die in der entsprechenden Spalte keinen NULL-Wert haben.</aside>
                             </section>
                             <section>
                                 <h2>Kreuzprodukt</h2>

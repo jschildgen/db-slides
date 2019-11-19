@@ -55,13 +55,14 @@
 <section  style="page-break-inside:avoid; padding-top: 2.5cm">
     <h1>Aufgabe 3: Normalisierung</h1>
     <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
-    <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, {schauspieler})</p>
+    <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
     <p>schauspieler ist ein mengenwertiges Attribut.</p>
     <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
     <ul>
         <li>serie &rightarrow; produzent</li>
         <li>serie, staffel &rightarrow; regisseur</li>
         <li>serie, staffel, folge &rightarrow; titel</li>
+        <li>produzent &rightarrow; sprache</li>
     </ul>
 </section>
 <section>

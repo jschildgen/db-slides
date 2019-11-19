@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Datenbanken 1 - Übungsblatt 4</title>
+    <link rel="stylesheet" href="exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Datenbanken 1 - WS 2019/20</b><br>
+            Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@h-da.de<br>
+            <b>Übungsblatt 4 vom 02./09./10.12.2019</b>
+        </div>
+        <div><img src="../img/hda.png" style="border:0; height:80px"></div>
+    </div>
+    <hr>
+    </header>
+<section style="padding-top: 2.5cm">
+    <h1>Aufgabe 1: CREATE TABLE (10P)</h1>
+    <p>Abgabe-Deadline: 02.12.2019 12:00 im Moodle</p>
+    <p>Erstellen Sie <code>CREATE TABLE</code>-Befehle, um das folgende ER-Diagramm eines sozialen Netzwerkes in Datenbanktabellen zu überführen. Verwenden Sie zur Umsetzung der Generalisierung die vertikale Partitionierung. Achten Sie auf Primärschlüssel, Fremdschlüssel, UNIQUE-, CHECK- und NOT NULL-Constraints sowie DEFAULT-Werte und wählen Sie geeignete Datentypen. Das eingesetzte DBMS soll PostgreSQL sein.</p>
+    <div style="height: 10.5cm; overflow: hidden;">
+    <div class="erd">
+        [[
+        { _e: "Beitrag", pos: [110, 100],
+         attributes: [
+           { _a:"BeitragsID", options:["primary"], pos: [15, 10] },
+           { _a:"gepostet_am", pos: [130, 10] },
+           { _a:"Beitragstext", pos: [250, 10] }
+         ]
+        },
+        { _e: "Sponsored_Post", pos: [10, 250], isa: {_e:"Beitrag"},
+           attributes: [ {_a:"Tagesbudget", pos: [35, 334]} ]},
+        { _e: "Foto", pos: [200, 250], isa: {_e:"Beitrag"}, 
+           attributes: [ { _a:"Dateiname", pos: [225, 334]} ]},
+       { _e: "Benutzer", pos: [470, 100],
+           attributes: [
+           { _a:"Benutzernr", options:["primary"], pos: [410, 10] }, 
+           { _a:"Name", pos: [520, 10] }
+           ]
+       }
+       ],
+       [
+       { _r: "postet",
+           _e: ["Beitrag", "Benutzer"],
+           card: ["mc", "1"],
+           attributes: [  ]
+       },
+       { _r: "verlinkt", pos: [505, 240],
+           _e: ["Foto", "Benutzer"],
+           card: ["mc", "mc"],
+           attributes: [{_a:"pos_x", pos: [410, 334]}, {_a:"pos_y", pos: [520, 334]}]
+       }
+       ]] </div></div>
+        <p>Hinweise:</p>
+        <ul>
+          <li>gepostet_am soll Datum und Uhrzeit beinhalten, wann der Beitrag gepostet wurde</li>
+          <li>Sponsored_Posts sind Werbebeiträge, die von Benutzern gepostet werden können. Für diese wird ein Tagesbudget in Euro und Cent festgelegt, welches bestimmt, wie oft der Beitrag auf den Profilen anderer Nutzer angezeigt wird. Das Mindestbudget beträgt 1 EUR pro Tag. Dies ist zugleich aus das Standard-Budget, wenn keins angegeben wird.</li>
+          <li>pos_x und pos_y beschreiben die Position auf dem Foto, an der sich die verlinkte Person befindet. Diese Zahlen haben keine Nachkommastellen. Sie sind optional.</li>
+          <li>Der Dateiname eines Fotos ist genau 32 Zeichen lang.</li>
+          <li>Die BeitragsID soll automatisch generiert werden.</li>
+        </ul>
+    
+        <p>Sie können das Schema entweder auf <a href="http://sqlfiddle.com/" target="_blank">http://sqlfiddle.com/</a> erstellen (wählen Sie dort oben PostgreSQL 9.6 aus) oder sich mit der PostgreSQL der Hochschule (siehe Aufgabe 3) verbinden.</p>
+            
+    </section>
+
+    <section style="page-break-inside:avoid; padding-top: 2.5cm">
+    <h1>Aufgabe 2: Automatische Transformation ER &rightarrow; SQL</h1>
+    <p>Nutzen Sie das CASE-Tool (Computer-aided Software Engineering) ERDplus (<a href="https://erdplus.com/" target="_blank">https://erdplus.com</a>), um das folgende ER-Diagramm zunächst in ein Relationenschema und dieses dann in SQL-Tabellen zu konvertieren. Verwenden Sie dazu wie hier abgebildet die Krähenfuß-Notation (Martin-Notation).</p>
+    <img src="img/ex4_er_bestellungen.png" style="width:100%">
+    <ul>
+      <li><img src="img/ex4_1.png" style="height: 12pt;"> steht für genau 1 (1)</li>
+      <li><img src="img/ex4_c.png" style="height: 12pt;"> steht für 0 oder 1 (c)</li>
+      <li><img src="img/ex4_m.png" style="height: 12pt;"> steht für mind. 1 (m)</li>
+      <li><img src="img/ex4_mc.png" style="height: 12pt;"> steht für beliebig viele (mc)</li>
+    </ul>
+    <p>Was aus dem ER-Diagramm lässt sich in dem erzeugten SQL nicht ausdrücken?</p>
+  </section>
+
+<section>
+    <h1>Aufgabe 3: SQL-Anfragen in PostgreSQL</h1>
+    <p>Richten Sie zunächst Ihren PostgreSQL-Benutzer ein (siehe auch <a href="https://code.fbi.h-da.de/lab-docs/db/wikis/postgresql/Zentraler-PostgreSQL-Server" target="_blank">https://code.fbi.h-da.de/lab-docs/db/wikis/postgresql/Zentraler-PostgreSQL-Server</a>):</p>
+    <ul>
+      <li>Verbinden Sie sich mit SSH (z. B. mit PuTTY) mit dem Server <code>postgres.fbi.h-da.de</code> (Port 22) mit Ihrem st...-Benutzer, bestätigen Sie die SSH-Keys und schließen Sie die Verbindung wieder.</li>
+    </ul>
+    <p>Nun können Sie den SQL-Client DBeaver verwenden und dort eine Verbindung zu der folgenden PostgreSQL-Datenbank einrichten:</p>
+    <ul>
+      <li>Host: 141.100.70.93</li>
+      <li>Benutzer / Passwort: Ihr Hochschul-Account (st...)</li>
+      <li>Name der Datenbank: Wie ihr Benutzername (st...)</li>
+    </ul>
+    <p>Legen Sie nun die Tabellen aus Aufgabe 2 an und formulieren Sie diese Anfragen mit SQL:</p>
+    <table border="0" style="width: 100%">
+        <tr><td>1.</td><td>Fügen Sie Kundin 1 mit dem Namen Olivia Opel ein und Kunde 2, Thorsten Trompete ein.</td></tr>
+        <tr><td>2.</td><td>Geben Sie die Kundentabelle vollständig aus.</td></tr>
+        <tr><td>3.</td><td>Ändern Sie den Namen von Kundin 1 in Olivia von Opel.</td></tr>
+        <tr><td>4.</td><td>Wie viele Kunden gibt es?</td></tr>
+        <tr><td>5.</td><td>Welche Kunden haben ein ' von ' im Namen?</td></tr>
+        <tr><td>6.</td><td>Löschen Sie Kunde 2.</td></tr>
+        </table>
+</section>
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

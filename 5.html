@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken 1 - Kapitel 5 - Mehrbenutzerbetrieb</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reset.css">
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                            <h4 style="text-align:center"><b>Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h4>
+                            <h1>Datenbanken 1</h1>
+                            <h3>Kapitel 5: Mehrbenutzerbetrieb</h3>
+                            <h4 style="text-align:center">2019-12-09</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                        </section>
+                        <section>
+                          <h2>In diesem Kapitel...</h2>
+                          <ul class="small">
+                              <li>... definieren wir Sichten,</li>
+                              <li>... lernen, wie man DB-Benutzer und Rollen verwaltet,</li>
+                              <li>... schauen wir uns das Transaktionenkonzept genauer an,</li>
+                              <li>... erfahren wir, wie man Mehrbenutzeranomalien vermeidet</li>
+                              <li>... und wie Recovery-Mechanismen funktionieren.</li>
+                          </ul>
+                      </section> 
+                      <section>
+                        <h2>Datenabstraktion</h2>
+                        <h4>Externe Ebene (Sichten / Views)</h4>
+                        <p style="margin-left: 50px">Sicht auf eine Teilmenge des<br>logischen Schemas für eine<br>bestimmte Benutzergruppe</p>
+                        <h4>Logische Ebene</h4>
+                        <p style="margin-left: 50px">DB-Gesamt-Schema</p>
+                        <h4>Physische Ebene</h4>
+                        <p style="margin-left: 50px">Internes Schema / Speicherung der Daten</p>
+                        
+                        <div id="svg_data_abstraction">
+                        <div class="sl-block" data-block-type="text" data-block-id="f950b0fdfdb807f255affb1a7b9083e0" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 720px; top: 171px;">
+                          <div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">Sicht</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 847px; top: 171px;" data-block-id="0784202251b42d7e07e357b78f9b8366">
+                          <div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">Sicht</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 593px; top: 171px;" data-block-id="e9cc541a3e41d442b19ca7c018ea9df7">
+                          <div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">Sicht</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 657px; top: 321px;" data-block-id="dd81c5662240a66c3473d3fcda17e1ea">
+                          <div class="sl-block-content green" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center">log. Schema</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 657px; top: 449px;" data-block-id="fd7cb8aab0729402c95ce463dbdde65a">
+                          <div class="sl-block-content orange" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">int. Schema</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" data-block-id="97ebbb519a4283ff5083d5f69defcf07" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 777px; top: 372px;">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="0" data-line-y2="113" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="87" viewBox="0 113 1 87">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="190" x2="0" y2="117"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="190" x2="0" y2="117"></line>
+                              <polygon fill="#000000" transform="translate(0,117) rotate(0)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 657px; top: 222px;" data-block-id="f476360cc7585a7a646a5bfb96f8ebb6">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="-119" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="119" height="99" viewBox="-119 101 119 99">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="-116" y2="104"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="-116" y2="104"></line>
+                              <polygon fill="#000000" transform="translate(-116,104) rotate(-50.242)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 776px; top: 222px;" data-block-id="f7a3327b02cacd25d26952306df608a9">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="1" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="99" viewBox="0 101 1 99">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="1" y2="105"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="1" y2="105"></line>
+                              <polygon fill="#000000" transform="translate(1,105) rotate(0.579)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 777px; top: 222px;" data-block-id="0770aeffdb19bbad6e1b058c7b08b2aa">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="124" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 19;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="124" height="99" viewBox="0 101 124 99">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="121" y2="103"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="121" y2="103"></line>
+                              <polygon fill="#000000" transform="translate(121,103) rotate(51.397)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                      </div>
+                      </section>
+      
+                      <section>
+                        <h2>Datenabstraktion (Bsp.)</h2>
+                        <h4>Externe Ebene (View für Webshop-Anwendung)</h4>
+                          <table style="font-size:0.7em" data-fragment-index="0">
+                            <thead>
+                              <tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th><th>Bewertung</th></tr>
+                              <tr><td>17</td><td>Schokoriegel</td><td>0.89</td><td>4.5</td></tr>
+                              <tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td><td>2.0</td></tr>
+                          </table>
+                        <h4>Logische Ebene</h4>
+                          <div class="columns stretch">
+                            <div style="margin-top:0px;">
+                          <table style="font-size:0.7em" data-fragment-index="0">
+                            <thead>
+                              <tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th></tr>
+                              <tr><td>17</td><td>Schokoriegel</td><td>0.89</td></tr>
+                              <tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td></tr>
+                          </table>
+                        </div>
+                        <div style="margin-top:0px;">
+                            <table style="font-size:0.7em" data-fragment-index="0">
+                            <thead>
+                              <tr><th><u>Kundennr</u></th><th><u>Produktnr</u></th><th>Bew</th></tr>
+                              <tr><td>5</td><td>17</td><td>4</td></tr>
+                              <tr><td>8</td><td>17</td><td>5</td></tr>
+                              <tr><td>5</td><td>29</td><td>2</td></tr>
+                          </table>
+      
+                          
+                        </div>
+                        </div>
+                        <p><b>Physische Ebene: </b>0010110000000100101111010101...</p>
+                      </section>
+                      <section>
+                        <h2>Sichten / Views</h2>
+
+                      </section>
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/js/reveal.js"></script>
+                    <script src="lib/jquery.js"></script>
+                    <script src="lib/lodash.js"></script>
+                    <script src="lib/backbone.js"></script>
+                    <script src="lib/joint.min.js"></script>
+            
+                    <script src="src/init_reveal.js"></script>
+            
+                    <script>
+                    if(window.location.search.match( /print-pdf/gi )) {
+                            document.getElementById('header').style="display:none";
+                            document.getElementById('footer').style="display:none";
+                    }
+                    </script>
+            
+            
+                </body>
+            </html>

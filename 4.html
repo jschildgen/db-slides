@@ -89,7 +89,9 @@
                         </section>
                         <section>
                             <h2>DBeaver</h2>
-                            <p>Wir verwenden im Rahmen dieser Vorlesung den kostenlosen universellen SQL-Client DBeaver.</p>
+                            
+                            <img src="img/4/dbeaver.png" alt="DBeaver" class="stretch noborder">
+                            <aside class="notes">Wir verwenden im Rahmen dieser Vorlesung den kostenlosen universellen SQL-Client DBeaver.</aside>
                         </section>
                         
                         <section>
@@ -374,7 +376,7 @@
 
                                     <div class="fragment">
                                     <h4>CREATE TABLE LIKE</h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE lkw LIKE pkw;</code></pre>
+                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE lkw (LIKE pkw);</code></pre>
                                     </div>
 
                                     <div class="fragment">
@@ -463,7 +465,7 @@ WHERE produktnr = 88</code></pre>
                             <section>
                                 <h2>SELECT</h2>
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
-FROM produkte P LEFT JOIN hersteller H ON p.hersteller = H.firma
+FROM hersteller H LEFT JOIN produkte P ON H.firma = p.hersteller
 WHERE P.preis > 3
 GROUP BY h.land
 HAVING COUNT(*) < 5
@@ -669,6 +671,25 @@ WHERE preis = (SELECT MAX(preis) FROM produkte P2
                             </section>
 
                             <section>
+                                    <h3>CTE: Common Table Expressions</h3>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 90</div>
+                                    <h4><code>WITH ... AS (SELECT ...) SELECT ...</code></h4>
+                                    <pre><code class="hlsql" data-trim contenteditable data-sql="cte_monsterfood">
+WITH monsterfood_produkte AS 
+ (SELECT * FROM produkte WHERE hersteller = 'Monsterfood')
+SELECT count(*) FROM monsterfood_produkte</code></pre>
+                                    <span id="cte_monsterfood"></span>
+                                    <pre><code class="hlsql" data-trim contenteditable data-sql="cte_monsterfood2">
+WITH monsterfood_produkte AS 
+    (SELECT * FROM produkte WHERE hersteller = 'Monsterfood')
+SELECT * FROM monsterfood_produkte
+WHERE preis = (SELECT max(preis) FROM monsterfood_produkte)</code></pre>
+                                    <span id="cte_monsterfood2"></span>
+
+                                    <aside class="notes">Mit CTEs lassen sich Subanfragen Alias-Namen geben. Das ist vor allem dann praktisch, wenn man eine Unteranfrage mehrfach benötigt. Im unteren Beispiel suchen wir Monsterfood-Produkte, die den Höchstpreis aller Monsterfood-Produkte haben.</aside>
+                                </section>
+
+                            <section>
                                 <h2>ORDER BY</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 70</div>
                                 <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-sort-amount-down-alt green"></i></div>
@@ -713,7 +734,258 @@ LIMIT 5 OFFSET 2</code></pre>
                                 <span class="sqlresult"></span>
                                 <aside class="notes">Die beiden hier dargestellten Anfragen sind äquivalent. Der Offset sorgt dafür, dass zunächst eine bestimmte Anzahl von Zeilen übersprungen wird. Hier werden die beiden teuersten Produkte (Regal und Maschinenbau-Lehrbuch) übersprungen und erst die fünf danach teuersten Produkte ausgegeben.</aside>
                             </section>
+                            <section>
+                                    <h2>SELECT</h2>
+                                    <pre><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+FROM hersteller H JOIN produkte P ON H.firma = p.hersteller
+WHERE P.preis > 3
+GROUP BY h.land
+HAVING COUNT(*) < 5
+ORDER BY COUNT(*)
+                                    </code></pre>
+                                    <p class="small">&quot;Zeige mir für jedes Land, in welchem weniger als fünf Produkte, die mehr als 3 EUR kosten, hergestellt wurden, die Anzahl der Produkte sowie die Durchschnittspreise an, aufsteigend sortiert nach der Anzahl.</p>
+                                    <span class="sqlresult"></span>   
+                                    <p class="small">Ich will im Ergebnis auch sehen, dass es z. B. aus Österreich 0 solche Produkte gibt!</p> 
+                                </section>
+                            
+                                <section>
+                                        <h2>SELECT mit OUTER JOIN</h2>
+                                        <div class="trackinfo"><i class="fas fa-headphones"></i> 73</div>
+                                        <pre><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+FROM hersteller H LEFT JOIN produkte P ON p.hersteller = H.firma
+WHERE P.preis > 3
+GROUP BY h.land HAVING COUNT(*) < 5 ORDER BY COUNT(*)
+                                        </code></pre>
+                                        <p class="small">Problem: WHERE-Prädikat <code>preis > 3</code> wird nach dem äußeren Verbund ausgeführt, schmeißt also die gewünschten Zeilen mit NULL-Werten wieder raus.</p>
+                                        <pre class="fragment"><code class="hlsql" data-trim contenteditable>SELECT /****/ 
+WHERE P.preis > 3 OR P.produktnr IS NULL</code></pre>
+<pre class="fragment"><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+FROM hersteller H
+ LEFT JOIN (SELECT * FROM produkte WHERE preis > 3) P 
+ ON p.hersteller = H.firma
+GROUP BY h.land HAVING COUNT(*) < 5 ORDER BY COUNT(*)</code></pre>
 
+                                <aside class="notes">Ein LEFT JOIN alleine löst das Problem nicht, dass Länder ohne teure Produkte im Ergebnis nicht auftauchen. Hier sind zwei Lösungen. Die erste liefert die Zeilen, die beim Left Join keinen Joinpartner gefunden haben, die zweite erzwingt ein frühzeitiges Filtern vor der Ausführung des Joins.</aside>
+                                    </section>
+
+                        <section>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 74-75</div>
+                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Union;</div>
+                                <h2>UNION</h2>
+                                <p class="small">Aus welchen Ländern sind unsere Kunden und Hersteller?</p>
+                                <pre><code class="hlsql" data-trim contenteditable>
+SELECT land FROM kunden
+UNION
+SELECT land FROM hersteller
+                                </code></pre>
+                                <span class="sqlresult"></span>
+                                <p class="small">Bei Mengenoperationen ohne das Stichwort <code>ALL</code> wird nach UNION, INTERSECT und EXCEPT eine Duplikateliminierung vorgenommen.</p>
+                        
+                                <aside class="notes">Die Ergebnismengen zweier SELECT-Anfragen lassen sich mit Mengenoperatoren (UNION, UNION ALL, INTERSECT, INTERSECT ALL, EXCEPT, EXCEPT ALL) kombinieren.</aside>
+                        </section>
+
+                        <section>
+                                <h2>UNION ALL</h2>
+                                <p class="small">Aus welchen Ländern sind unsere Kunden und Hersteller?</p>
+                                <pre><code class="hlsql" data-trim contenteditable>
+SELECT land FROM kunden
+UNION ALL
+SELECT land FROM hersteller
+                                </code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Auf der vorherigen Folie haben wir gesehen, dass jedes Land im Ergebnis nur einmal vorkommt. Das liegt daran, dass im Anschluss an Mengenoperationen ohne das Stichtwort <code>ALL</code> eine Duplikateliminierung vorgenommen wird. Hier sehen wir wegen <code>UNION ALL</code> auch doppelte Zeilen.</aside>
+                        </section>
+
+                        <section>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 76</div>
+                                <h2>INTERSECT</h2>
+                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Intersection;</div>
+                                <p class="small">In welchen Ländern gibt es Kunden und Hersteller?</p>
+                                <pre><code class="hlsql" data-trim contenteditable>
+SELECT land FROM kunden
+INTERSECT
+SELECT land FROM hersteller
+                                </code></pre>
+                                <span class="sqlresult"></span>
+                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>
+SELECT land FROM kunden
+INTERSECT ALL
+SELECT land FROM hersteller</code></pre>
+                                <aside class="notes">INTERSECT bildet die Schnittmenge zwischen zwei Mengen. Wichtig bei allen Mengenoperationen ist, dass die Mengen vereinigungsverträglich sind. Die Anzahl der Spalten muss also gleich und die Datentypen der Spalten müssen zueinander kompatibel sein. INTERSECT ALL eliminiert keine Duplikate. Würde es also zwei Kunden aus Italien und drei Hersteller aus Italien geben, stände Italien zweimal im Ergebnis.</aside>
+                                
+                        </section>
+                        
+                        <section>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 76</div>
+                                <h2>EXCEPT (MINUS)</h2>
+                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">\</div>
+                                <p class="small">In welchen Ländern gibt es Kunden, aber keine Hersteller?</p>
+                                <pre><code class="hlsql" data-trim contenteditable>
+SELECT land FROM kunden
+EXCEPT
+SELECT land FROM hersteller
+                                </code></pre>
+                                <span class="sqlresult"></span>
+
+                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                                        SELECT land FROM kunden
+                                        EXCEPT ALL
+                                        SELECT land FROM hersteller
+                                </code></pre>
+                                <span data-sql-query="SELECT 'Deutschland' AS land UNION ALL SELECT 'Deutschland' AS land   "></span>
+                                <aside class="notes">Gibt es drei Kunden und ein Hersteller aus Deutschland, bleibt bei EXCEPT ALL 2x Deutschland übrig.</aside>
+                        </section>
+
+                        <section>
+                            <h2>Das EXISTS-Prädikat</h2>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 78</div>
+                            <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Exists;</div>
+                            <ul>
+                                <li>Eingabe: Eine SELECT-Anfrage</li>
+                                <li>Ausgabe: <ul>
+                                    <li>TRUE, wenn die Anfrage mind. 1 Zeile liefert</li>
+                                    <li>FALSE, wenn die Anfrage die leere Menge liefert</li>
+                                </ul></li>
+                            </ul>
+                            <pre><code class="hlsql" data-trim contenteditable>
+SELECT * FROM hersteller H
+WHERE EXISTS 
+ (SELECT * FROM produkte P WHERE p.hersteller = H.firma)
+                            </code></pre>
+                            <span class="sqlresult"></span>
+                            <aside class="notes">Die Anfrage hier liefert Hersteller, von denen es Produkte gibt. Dies könnte man auch einfach mit einem (Semi-)Join lösen.</aside>
+                        </section>
+
+                        <section>
+                                <h2>NOT EXISTS</h2>
+                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&NotExists;</div>
+                                <p class="small">Von welchen Herstellern gibt es keine Produkte?</p>
+                                <pre><code class="hlsql" data-trim contenteditable>
+    SELECT * FROM hersteller H
+    WHERE NOT EXISTS 
+     (SELECT * FROM produkte P WHERE p.hersteller = H.firma)
+                                </code></pre>
+                                <span class="sqlresult"></span>
+                                <aside class="notes">Für Hersteller, von denen es Produkte gibt, liefert die innere SELECT-Anfrage ein nicht-leeres Ergebnis (nämlich die Produkte des jeweiligen Herstellers). Für die anderen Hersteller (hier: Holzkopf) liefert die Unteranfrage ein leeres Ergebnis, EXISTS ist also FALSE, NOT EXISTS ist damit TRUE und der Hersteller wird ausgegeben.</aside>
+                            </section>
+
+                            <section>
+                                    <h2>Das IN-Prädikat</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 79</div>
+                                    <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Element;</div>
+                                    <ul>
+                                        <li>Eingabe: Ein Ausdruck und entweder eine Werte-Liste oder eine SELECT-Anfrage</li>
+                                        <li>Ausgabe: <ul>
+                                            <li>TRUE, wenn der Ausdruck enthalten ist</li>
+                                            <li>FALSE, wenn der Ausdruck nicht enthalten ist</li>
+                                        </ul></li>
+                                    </ul>
+                                    <pre><code class="hlsql" data-trim contenteditable>
+SELECT * FROM hersteller H
+WHERE firma IN ('Holzkopf', 'Monsterfood')
+                                    </code></pre>
+                                    <span class="sqlresult"></span>
+                                    <aside class="notes">Hier erspart man durch die IN-Liste Schreibarbeit, da man ansonsten <code>WHERE hersteller = 'Holzkopf' OR hersteller = 'Monsterfood'</code> schreiben müsste.</aside>
+                                </section>
+
+                                <section>
+                                    <h2>Das IN-Prädikat</h2>
+                                    <div style="position: absolute; top: 5cm; right:5px; font-size:170px" class="green">&NotElement;</div>
+                                    <pre><code class="hlsql" data-trim contenteditable data-sql="sql_in">
+SELECT * FROM hersteller H
+WHERE firma IN (SELECT hersteller FROM produkte)
+                                    </code></pre>
+                                    <span id="sql_in"></span>
+
+                                    <pre><code class="hlsql" data-trim contenteditable data-sql="sql_not_in">
+SELECT * FROM hersteller H
+WHERE firma NOT IN 
+ (SELECT hersteller FROM produkte WHERE hersteller IS NOT NULL)
+                                    </code></pre>
+                                    <span id="sql_not_in"></span>
+                                    <aside class="notes">Oben: Hersteller, von denen es Produkte gibt; unten: Hersteller, von denen es keine Produkte gibt. Würde man unten das <code>WHERE hersteller IS NOT NULL</code> weglassen, würden in der Sub-Anfrage NULL-Werte auftauchen und das Ergebnis der Anfrage wäre leer. Berechnungen und Vergleiche mit NULL-Werten liefern stets NULL, was bei Prädikatsauswertungen immer mit FALSE gedeutet wird.</code></aside>
+                                </section>
+
+                                <section>
+                                    <h2>CAST: Typumwandlung</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 80</div>
+                                    <h4><code>CAST(ausdruck AS datentyp)</code></h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>
+SELECT preis, CAST(preis AS INT), CAST(preis AS VARCHAR(50))
+FROM produkte
+                                    </code></pre>
+                                    <span class="sqlresult"></span>
+                                    <aside class="notes">Unsere Preis-Spalte hat den Datentyp DECIMAL(9,2). Wenn wir die Werte dieser Spalte in INTEGER umwandeln, werden die Nachkommastellen verworfen. Casten wir auf VARCHAR, sehen wir im Ergebnis keinen Unterschied, allerdings liegen unsere Preise nun als Strings und nicht mehr als Zahl vor.</aside>
+                                </section>
+
+                                <section>
+                                    <h2>CASE WHEN</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 81</div>
+                                    <h4><code>CASE WHEN ... THEN ... ELSE ... END</code></h4>
+                                    <pre><code class="hlsql" data-trim contenteditable>
+SELECT bezeichnung, preis, 
+CASE WHEN preis < 1 THEN 'billig' 
+     WHEN preis < 5 THEN 'mittel' 
+     ELSE 'teuer' END
+FROM produkte
+                                    </code></pre>
+                                    <span class="sqlresult"></span>
+                                    <aside class="notes">Wenn die erste Bedingung nicht erfüllt ist, wird die zweite überprüft, usw.</aside>
+                                </section>
+
+                                <section>
+                                        <h2>CASE WHEN</h2>
+                                        <h4><code>CASE ... WHEN ... THEN ... ELSE ... END</code></h4>
+                                        <pre><code class="hlsql" data-trim contenteditable>
+    SELECT bezeichnung, preis, 
+    CASE preis WHEN 0 THEN 'kostenlos' ELSE preis END
+    FROM produkte ORDER BY preis
+                                        </code></pre>
+                                        <span class="sqlresult"></span>
+                                        <aside class="notes">Steht zwischen CASE und WHEN ein Ausdruck, kann man diesen Ausdruck ohne viel Schreibarbeit auf verschiedene Werte überprüfen. Der hier stehende Ausdruck ist äquivalent zu <code>CASE WHEN preis = 0 THEN 'kostenlos' ELSE preis END</code></aside>
+                                    </section>
+
+                                <section>
+                                    <h2>Dummy-Tabelle DUAL</h2>
+                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 81</div>
+                                    <p class="class">In einigen DBMS (Oracle, DB2, ...) gibt es die Tabelle DUAL.</p>
+                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM dual</code></pre>
+                                    <span data-sql-query="select null as dummy"></span>
+
+                                    <p class="small">Praktisch zum Rechnen und Ausprobieren von Funktionen:</p>
+                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END FROM DUAL</code></pre>
+                                    <span data-sql-query="SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END"></span>
+                                </section>
+
+                                <section>
+                                    <h3>SELECT ohne FROM in PostgreSQL</h3>
+                                    <pre><code class="hlsql" data-trim contenteditable>SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END</code></pre>
+                                    <span class="sqlresult"></span>
+
+                                    <div class="fragment">
+                                    <p class="small">Wie viele Tage sind noch bis Weihnachten?</p>
+                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT DATE '2019-12-25' - CURRENT_DATE</code></pre>
+                                    </div>
+
+                                    <aside class="notes">PostgreSQL erlaubt SELECT-Anfragen ohne FROM-Klausel. Dies enspricht Anfragen auf der DUAL-Tabelle von der vorherigen Folie. Man kann mit solchen Anfragen leicht Funktionen aufrufen und ausprobieren oder Berechnungen durchführen.</aside>
+                                </section>
+
+                                <section>
+                                        <h2>Kapitelzusammenfassung</h2>
+                                        <ul class="small">
+                                            <li>SQL: Anfragesprache für strukturierte Datenbanken</li>
+                                            <li>DDL: CREATE / ALTER / DROP TABLE</li>
+                                            <li>Datentypen: INT, VARCHAR, CHAR, DECIMAL, DATE, ...</li>
+                                            <li>Constraints: PRIMARY KEY, NOT NULL, CHECK, UNIQUE, ...</li>
+                                            <li>Referentielle Aktionen: ON DELETE/UPDATE ...</li>
+                                            <li>DML: INSERT, UPDATE, DELETE, TRUNCATE, SELECT</li>
+                                            <li>SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY ... LIMIT</li>
+                                            <li>[LEFT/RIGHT/FULL] JOIN ON ...</li>
+                                            <li>Aggregatfunktionen: COUNT, SUM, AVG, MIN, MAX</li>
+                                            <li>Subanfragen, CTEs, EXISTS, IN</li>
+                                            <li>Mengenoperationen: UNION / INTERSECT / EXCEPT [ALL]</li>
+                                        </ul>
+                                    </section>
                         </div>
                     </div>
             

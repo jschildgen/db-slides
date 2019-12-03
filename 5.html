@@ -158,9 +158,278 @@
                         <p><b>Physische Ebene: </b>0010110000000100101111010101...</p>
                       </section>
                       <section>
-                        <h2>Sichten / Views</h2>
+                        <h2>Sichten / Views in SQL</h2>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 94-96</div>
+                        <table style="font-size:0.7em" data-fragment-index="0">
+                          <thead>
+                            <tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th><th>Hersteller</th><th>Bewertung</th></tr>
+                            <tr><td>17</td><td>Schokoriegel</td><td>0.89</td><td>Monsterfood</td><td>4.5</td></tr>
+                            <tr><td>18</td><td>Müsliriegel</td><td>1.19</td><td>Monsterfood</td><td>-</td></tr>
+                            <tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td><td>Calgonte</td><td>2.0</td></tr>
+                        </table>
+                        <pre><code class="sql" data-trim>CREATE VIEW produkte_view AS
+SELECT P.produktnummer, P.bezeichnung, P.preis, P.hersteller, 
+       AVG(B.sterne) AS bewertung
+FROM produkte P LEFT JOIN bewertungen B 
+     ON P.produktnummer = B.produktnummer
+GROUP BY P.produktnummer, P.bezeichnung, P.preis, P.hersteller
+                        </code></pre>
+                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte_view</code></pre>
+                        <aside class="notes">Eine View ist eine Art virtuelle Tabelle. Sie wird definiert über einen Namen und eine SELECT-Anfrage. Sie kann genau wie Tabellen in der FROM-Klausel in SELECT-Anfragen abgefragt werden. In der hier dargestellten Anfrage wird ein Left-Join verwendet, damit auch Produkte, die nie bewertet wurden, im Ergebnis auftauchen.</aside>
+                      </section>
+                      <section>
+                        <h2>Views / Sichten in SQL</h2>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teuere_produkte AS SELECT * FROM produkte 
+                               WHERE preis > 10;</code></pre>
+                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM teuere_produkte WHERE hersteller = 'Monsterfood'</code></pre>
+                        <p class="small" style="margin-left: 2cm;">wird ausgeführt als:</p>
+                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM (SELECT * FROM produkte WHERE preis > 10)
+WHERE hersteller = 'Monsterfood'
+                        </code></pre>
+                        <aside class="notes">Erfolgt eine Abfrage auf eine View, wird der Name der View durch die Anfrage ersetzt, über die die View definiert ist. Danach erfolgen Optimierungen, sodass die hier dargestellt Anfrage äquivalent ist zu <code>SELECT * FROM produkte WHERE preis > 10 AND hersteller = 'Monsterfood'</code>. Anfragen auf Sichten sind nicht langsamer als die hinter der Sicht stehende Abfrage direkt auszuführen, sie sind aber auch nicht schneller.</aside>
+                      </section>
+                      <section>
+                        <h2>Einsatzszenarios von Views</h2>
+                        <h4>Vereinfachung / Speicherung von Anfragen</h4>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW produkte_view AS ... </code></pre>
+
+                        <h4>Datenunabhängigkeit</h4>
+                        <p class="small">Anwendungen greifen über View auf Daten zu; unabhängig, wie die tatsächlichen Tabelle aussehen.</p>
+
+                        <h4>Datenschutz</h4>
+                        <p class="small">Benutzern wird nur der Zugriff auf die View gewährt, nicht auf die zugrundeliegenden Tabellen.</p>
+
+                        <aside class="notes">Wenn Operationen wie Joins oder Aggregationen immer wieder in Anfragen vorkommen, kann man diese in eine View platzieren und damit den Zugriff vereinfachen. So sind auch Denormalisierungen von normalisierten Tabellen mittels Sichten möglich.</aside>
+                      </section>
+
+                      <section>
+                        <h3>CHECK OPTION</h3>
+                        <p class="small">INSERT, UPDATE und DELETE sind auf simplen Projektion/Selektion-Views erlaubt.</p>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teuere_produkte AS SELECT * FROM produkte 
+                            WHERE preis > 10;</code></pre>
+                        <p class="small">INSERT / UPDATE funktioniert ohne Überprüfung des WHERE-Prädikats.</p>
+                        
+                        <div class="fragment">
+                        <h4>WITH CHECK OPTION</h4>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teuere_produkte AS SELECT * FROM produkte 
+                            WHERE preis > 10 WITH CHECK OPTION;</code></pre>
+                        <p class="small">Das einzufügende oder zu ändernde Tupel muss das WHERE-Prädikat erfüllen.</p>
+                        </div>
+                        <aside class="notes">Ein <code>INSERT INTO teuere_produkte</code> ist hier möglich. Im unteren Fall jedoch nur, wenn das neue Produkt auch einen Preis von mehr als 10 EUR hat. <code>WITH CHECK OPTION</code> ist eine Kurzschreibweise für <code>WITH LOCAL CHECK OPTION</code>. Wenn eine View mit dieser Option eine andere View in der FROM-Klausel hat, wird nicht das Prädikat der anderen View überprüft, außer: Für diese ist ebenfalls eine CHECK OPTION gesetzt, oder wir spezifizieren für die View: <code>WITH CASCADED CHECK OPTION</code>.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Materialisierte Sichten</h2>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 98</div>
+                        <p class="small">Views sind nur virtuell, sie speichern nicht wirklich Daten.</p>
+                        <p class="small">Materialisierte Sichten jedoch speichern physisch das Ergebnis der dahinterstehenden Anfrage.</p>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE MATERIALIZED VIEW anz_produkte AS 
+SELECT COUNT(*) FROM produkte;</code></pre>
+                        
+                        <h4>REFRESH MATERIALIZED VIEW</h4>
+
+                        <pre><code class="sql" data-trim contenteditable>SELECT * FROM anz_produkte; -- zeigt an: 7
+INSERT INTO produkte (produktnr, bezeichnung) values (123, 'X'); 
+SELECT * FROM anz_produkte; -- zeigt immer noch 8
+REFRESH MATERIALIZED VIEW anz_produkte;
+SELECT * FROM anz_produkte; -- zeigt nun 9</code></pre>
+
+                      <aside class="notes">Beim Erstellen einer materialisierten Sicht, wird diese initial mit dem Anfrageergebnis befüllt. Es gibt Datenbankmanagementsysteme, die ein automatisches Auffrischen unterstützen. Dies erfolgt, wenn sich die Daten in den Basistabellen ändern. In PostgreSQL ist beinhaltet die materialisierte Sich in diesen Fällen veraltete Daten. Mit <code>REFRESH MATERIALIZED VIEW</code> kann ein Auffrischen angestoßen werden.</aside>
+                      </section>
+
+                      <section>
+                        <h3><b style="color: rgba(66, 169, 170, 0.99);">Benutzer</b> und <span style="color:#5473b9;">Rollen</span></h3>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
+                        <pre style="margin-top: -3mm;"><code class="hlsql" data-trim contenteditable>CREATE USER doktor_x WITH PASSWORD 'geheimespasswort1';
+CREATE USER schwester_y WITH PASSWORD 'geheimespasswort2';
+CREATE USER big_boss WITH PASSWORD 'geheimespasswort3';
+CREATE USER ninja WITH PASSWORD 'geheimespasswort4';
+                        </code></pre>
+
+                        <div id="users_roles"><div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 303px; top: 361px;" data-block-id="cf0f9578dc297f96836c8564b5ee566d">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; font-size: 300%;">
+                                <p style="text-align: center; font-size: 60%;"><i class="blue fas fa-stethoscope"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 199px; top: 454px;" data-block-id="f9d18d57b18081851467dffc45b2713a">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-md"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 400px; top: 454px;" data-block-id="a1f37fc54654159aec65123df5729ca5">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-nurse"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 567px; top: 454px;" data-block-id="2096fb78d3154bc4825082e05048e841">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-tie"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 257px; top: 440px;" data-block-id="dc95b17d39fdb0bf373a87986b8142de">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="173" data-line-y2="24" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="61" height="39" viewBox="112 24 61 39">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="168" y2="27"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="168" y2="27"></line>
+                                    <polygon fill="#000000" transform="translate(168,27) rotate(57.407)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 385px; top: 440px;" data-block-id="a6e4eebbfe1d3ad0e621959f6bb7eed1">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="50" data-line-y2="25" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="62" height="38" viewBox="50 25 62 38">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="55" y2="28"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="55" y2="28"></line>
+                                    <polygon fill="#000000" transform="translate(55,28) rotate(-58.496)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 400px; top: 269px;" data-block-id="3fc974d55082bec3a6fd9516fc656719">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18; font-size: 300%;">
+                                <p style="text-align: center; font-size: 60%;"><i class="blue fas fa-hospital-alt"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 486px; top: 361px;" data-block-id="19a16e8abf0bb71e1df1967b213964d5">
+                            <div class="sl-block-content" data-line-x1="131" data-line-y1="157" data-line-x2="18" data-line-y2="39" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 19;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="113" height="118" viewBox="18 39 113 118">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="131" y1="157" x2="22" y2="43"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="131" y1="157" x2="22" y2="43"></line>
+                                    <polygon fill="#000000" transform="translate(22,43) rotate(-43.76)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 720px; top: 454px;" data-block-id="4dbb3a72b70e356a0db2b01ecf525821">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-ninja"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 373px; top: 351px;" data-block-id="eb7867c7a8ba6d26d4a6cc2c885ef175">
+                            <div class="sl-block-content" data-line-x1="131" data-line-y1="157" data-line-x2="174" data-line-y2="125" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 21;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="43" height="32" viewBox="131 125 43 32">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="131" y1="157" x2="169" y2="129"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="131" y1="157" x2="169" y2="129"></line>
+                                    <polygon fill="#000000" transform="translate(169,129) rotate(53.344)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 574px; top: 269px;" data-block-id="54652319d1bd580533b32344f2b28fba">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22; font-size: 300%;">
+                                <p style="text-align: center; font-size: 60%;"><i class="blue fas fa-money-bill-alt"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 622px; top: 367px;" data-block-id="dbc6be64b1113df5fdb6e55634282c31">
+                            <div class="sl-block-content" data-line-x1="102" data-line-y1="63" data-line-x2="103" data-line-y2="-44" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 23;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="107" viewBox="102 -44 1 107">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="102" y1="63" x2="103" y2="-38"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="102" y1="63" x2="103" y2="-38"></line>
+                                    <polygon fill="#000000" transform="translate(103,-38) rotate(0.535)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div></div>
+
+                        <aside class="notes">Die Data Control Language (DCL) wird genutzt, um Benutzer und Rollen anzulegen. Hier legen wir vier Benutzer an. Diese können sich mit dem angegebenen Nutzernamen und Passwort mit der Datenbank verbinden. In PostgreSQL sind Benutzer und Rollen übrigens das gleiche. <code>CREATE USER</code> ist lediglich ein Alias für <code>CREATE ROLE</code>.</aside>
 
                       </section>
+                      <section>
+                          <h3><span style="color: rgba(66, 169, 170, 0.99);">Benutzer</span> und <b style="color:#5473b9;">Rollen</b></h3>
+                          <pre style="margin-top: -3mm;"><code class="hlsql" data-trim contenteditable>CREATE ROLE klinikpersonal;
+GRANT klinikpersonal TO doktor_x, schwester_y;
+CREATE ROLE mitarbeiter;
+GRANT mitarbeiter TO big_boss, klinikpersonal;
+CREATE ROLE finanzen;
+GRANT finanzen TO big_boss;
+                          </code></pre>
+                          <div data-clone="users_roles"></div>
+                      </section>
+
+                      <section>
+                        <h3>GRANT: Berechtigung erteilen</h3>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
+                        <p class="small">GRANT &lt;Recht&gt; ON &lt;Objekt&gt; TO &lt;Rolle&gt;</p>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Mitarbeiter dürfen sich mit der Datenbank verbinden
+GRANT CONNECT ON klinik_db TO mitarbeiter;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Die Finanzabteilung darf die Tabelle Reisekosten lesen
+GRANT SELECT ON klinik.reisekosten TO finanzen;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Doktor X darf alles auf der Patienten-Tabelle machen
+GRANT ALL PRIVILEGES ON klinik.patienten TO doktor_x;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Schwester Y darf Patienten einsehen, erstellen und ändern
+GRANT SELECT, INSERT, UPDATE ON klinik.patienten TO schwester_y;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>GRANT SELECT ON klinik.raeume TO PUBLIC; -- Das darf jeder</code></pre>
+
+                        <aside class="notes">Mit dem GRANT-Befehl wird festgelegt, <b>wer</b> auf <b>welchem</b> Objekt <b>was</b> machen darf. Hinter dem Stichwort <code>ON</code> steht das Objekt. Für das CONNECT-Recht ist dies eine Datenbank. Bei den anderen hier angegeben Privilegien steht hinter dem Stichwort <code>ON</code> eine oder mehrere Tabellen, oder alle Tabellen eines Schemas. In der Rolle PUBLIC sind alle Benutzer.</aside>
+                      </section>
+
+                      <section>
+                        <h3>REVOKE: Berechtigung entziehen</h3>
+                        
+                        <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume TO PUBLIC;</code></pre>
+                        <pre><code class="sql" data-trim>CREATE VIEW klinik.raeume_view AS
+SELECT * FROM klinik.raeume WHERE gebaeude IN (10,12,13,15);
+                        </code></pre>
+                        <p class="small">REVOKE &lt;Recht&gt; ON &lt;Objekt&gt; FROM &lt;Rolle&gt;</p>
+                        <pre><code class="sql" data-trim>REVOKE SELECT ON klinik.raeume FROM PUBLIC;</code></pre>
+                        <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume_view TO PUBLIC;</code></pre>
+
+                        <aside class="notes">Wichtig: Man kann nur Rechte entziehen, die man genau so auch erteilt hat. Man kann im gezeigten Beispiel nicht das Recht nur gewissen Benutzern der Rolle PUBLIC entziehen (nur allen). Genau so kann nach einem GRANT ALL PRIVILEGES nicht lediglich das INSERT-Recht o.&nbsp;ä. entzogen werden. REVOKE macht also ein GRANT wieder vollständig rückgängig. Im hier gezeigten Beispiel erstellen wir eine Sicht aus Gründen der <b>Row-Level-Security</b>. Wir möchten den Benutzern der Rolle PUBLIC nicht erlauben, alle Räume zu sehen, sondern lediglich Räume in den Gebäuden 10, 12, 13 und 15. Analog lässt sich auch <b>Column-Level-Security</b> realisieren. Man lässt einfach in der View-Definition Spalten weg, um den Zugriff nur auf bestimmte Spalten zu beschränken.</aside>
+                      </section>
+
+                      <section>
+                        <h3>GRANT OPTION</h3>
+                        <p>Das Privileg, ein Privileg weiterzugeben.</p>
+                        <pre><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss
+WITH GRANT OPTION;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>REVOKE GRANT OPTION FOR SELECT ON ALL TABLES IN SCHEMA klinik 
+FROM big_boss; -- nur GRANT OPTION entziehen, nicht das Recht</code></pre>
+
+<h4 class="fragment">REVOKE ... RESTRICT | CASCADE</h4>
+<pre class="fragment"><code class="sql" data-trim>REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss 
+RESTRICT; -- nur, wenn es nicht weitergegeben wurde</code></pre>
+
+<pre class="fragment"><code class="sql" data-trim>REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss
+CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
+                        <aside class="notes">Der Benutzer big_boss hat das Recht, SELECT-Anfragen auf allen Tabellen und Views im Klinik-Schema auszuführen. Außerdem hat er das Recht, dieses Recht auch anderen Benutzern und Rollen zu geben. Intern wird gespeichert, wer wann wem welches Recht gegeben hat. Mit diesen Infos können dann z.&nbsp;B. Rechte wieder kaskadiert entzogen werden.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Transaktionen</h2>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 111</div>
+                        <h4>ACID</h4>
+                        <ul>
+                            <li>Atomarität</li>
+                            <li>Konsistenz</li>
+                            <li>Isolation</li>
+                            <li>Dauerhaftigkeit</li>
+                        </ul>
+                      </section>
+
+                      <section>
+                        <h3>Commit / Rollback</h3>
+
+                        <p class="small">Mit einer <code>commit</code>-Operation beendet man eine Transkation.<br><code>rollback</code> beendet ebenfalls die Transkation, sie führt jedoch zum Abort, sodass alle Änderungen rückgängig gemacht werden.</p>
+
+                        <h4>Autocommit</h4>
+                        <div class="columns">
+                          <div style="width: 16cm;"><p class="small">DB-Anwendungen setzen Autocommit-Einstellung. Bei SQL-Clients wie dem DBeaver ist Autocommit standardmäßig an.</p></div>
+                          <div style="width: 8cm;"><img src="img/5/autocommit.png" alt="DBeaver Autocommit" style="width:8cm" class="noborder"></div>
+                        </div>
+                        <aside class="notes">Autocommit bedeutet, dass jede SQL-Anfrage automatisch committet wird. Stelle man um auf manuelles Commit, muss man selbst eine <code>commit</code>-Operation ausführen, damit Änderungen wirklich in der Datenbank gespeichert werden. Ist Autocommit aus, kann die laufende Transaktion mittels <code>rollback</code> auch komplett zurückgerollt werden.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Atomarität</h2>
+                        <p>Eine TA wird entweder ganz oder gar nicht ausgeführt.</p>
+
+                        <pre class="fragment"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Dogdog', 'England');
+INSERT INTO produkte VALUES (129, 'Hundefutter', 8.95, 'Digdog');
+COMMIT;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Techbob', 'USA');
+INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
+<p class="fragment small" style="color: red">SQL-Fehler [23505]: ERROR: duplicate key value violates unique constraint "produkte_pkey"
+    Detail: Key (produktnummer)=(129) already exists.</p>
+    <p class="fragment small">&Rightarrow; Der Hersteller Techbob wird auch nicht eingefügt!</p>
+
+    <aside class="notes">In diesen und in den nun folgenden Beispielen ist Autocommit ausgestellt. Zunächst wird ein Hersteller und ein Produkt eingefügt und diese Transaktion erfolgreich mit einem Commit beendet. Dann folgen zwei INSERTS, wobei das zweite davon fehlschlängt. Dadurch wird die Transaktion abgebrochen, also ohne Erfolg beendet. Nichts aus der Transaktion wurde ausgeführt.</aside>
+                      </section>
+
                         </div>
                     </div>
             

@@ -398,6 +398,7 @@ CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
                             <li>Isolation</li>
                             <li>Dauerhaftigkeit</li>
                         </ul>
+                        <aside class="notes">Eine ACID-Transaktion erfüllt die Eigenschaften Atomarität (sie wird vollständig oder gar nicht ausgeführt), Konsistenz (sie hinterlässt die Datenbank in einem konsistenten Zustand), Isolation (sie wird von keinen anderen parallel laufenden Transaktionen beeinflusst) und Dauerhaftigkeit (sie speichert Änderungen persistent).</aside>
                       </section>
 
                       <section>
@@ -429,6 +430,267 @@ INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
 
     <aside class="notes">In diesen und in den nun folgenden Beispielen ist Autocommit ausgestellt. Zunächst wird ein Hersteller und ein Produkt eingefügt und diese Transaktion erfolgreich mit einem Commit beendet. Dann folgen zwei INSERTS, wobei das zweite davon fehlschlängt. Dadurch wird die Transaktion abgebrochen, also ohne Erfolg beendet. Nichts aus der Transaktion wurde ausgeführt.</aside>
                       </section>
+
+                      <section>
+                        <h2>Konsistenz</h2>
+                        <p>Eine TA führt die Datenbank von einem konsistenten Zustand in wieder einen konsistenten Zustand.</p>
+
+                        <pre class=""><code class="sql" data-trim>INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
+                            <p class="small" style="color: red">SQL-Fehler [23505]: ERROR: duplicate key value violates unique constraint "produkte_pkey"
+                                Detail: Key (produktnummer)=(129) already exists.</p>
+
+                        <p class="small">Alle geltenden Integritätsbedigungen müssen zum Ende einer Transaktion erfüllt sein: Primärschlüssel-, Fremdschlüssel-, UNIQUE-, NOT NULL-, CHECK-Constraints, etc.</p>
+                              <aside class="notes">Es ist erlaubt, dass in Mitten einer Transaktion die Datenbank in einem inkonsistenten Zustand ist. Aber spätestens beim Commit muss dafür gesorgt werden, dass alle Integritätsbedigungen erfüllt sind. Sind sie es nicht, kann die Transaktion nicht erfolgreich abschließen und wird abgebrochen und zurückgesetzt.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Isolation</h2>
+                        <p>Parallel laufendende Transaktionen beeinflussen sich nicht.</p>
+                        <h4>Mehrbenutzeranomalien</h4>
+                        <ul class="small">
+                          <li><b>Dirty Read</b>: TA2 liest noch nicht committete Änderungen von TA1</li>
+                          <li><b>Lost Update</b>: TA1 und TA2 schreiben gleichzeitig; wer gewinnt?</li>
+                          <li><b>Non-repeatable Read:</b> TA liest mal veraltete und mal aktualisierte Werte</li>
+                          <li>...</li>
+                        </ul>
+                        <p>Ziel: Gefühlter Einbenutzerbetrieb!</p>
+                        <aside class="notes">Um in Datenbanken eine hohe Performanz zu ermöglichen, ist es erlaubt, dass viele Transaktionen parallel laufen. Die dabei naturgemäß auftretenden Mehrbenutzeranomalien müssen dabei verhindert werden. Für eine Transaktion soll es sich so anfühlen, als ob sie die einzige gerade laufende Transaktion ist.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Dirty Read</h2>
+                        <div class="columns">
+                          <div style="width: 12cm;">TA1
+                              <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.89 EUR
+
+UPDATE produkte
+SET preis = 0 
+WHERE produktnr = 17;
+
+
+ROLLBACK;</code></pre>
+                          </div>
+                          <div>TA2
+                              <pre style="width: 12cm;"><code class="sql">
+
+
+
+
+
+SELECT preis FROM produkte
+WHERE produktnr = 17; -- 0 EUR
+COMMIT;</code></pre>
+                          </div>
+                        </div>
+                        <aside class="notes">Es wäre ein Dirty Read, wenn TA2 die noch nicht freigegebene Preisänderung von TA1 sehen würde. Das Transaktions-Management-System (TMS) eines DBMS muss gewährleisten, dass Änderungen für andere Transaktionen erst nach dem Commit der Änderung sichtbar werden.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Lost Update</h2>
+                        <div class="columns">
+                            <div style="width: 12cm;">TA1
+                                <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.89 EUR
+  
+UPDATE produkte
+SET preis = preis + 0.1
+WHERE produktnr = 17; -- 0.99 EUR
+  
+COMMIT;</code></pre>
+                            </div>
+                            <div>TA2
+                                <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte
+WHERE produktnr = 17; -- 0.89 EUR
+
+UPDATE produkte
+SET preis = preis + 0.1
+WHERE produktnr = 17; -- 0.99 EUR
+
+COMMIT;</code></pre>
+                            </div>
+                          </div>
+                          <aside class="notes">Zwei Transkationen möchten den Preis eines Produktes um 10 Cent erhöhen. Als Endresultat sollte das Produkte also 0.89+0.1+0.1 = 1.09 EUR kosten. Da im gezeigten Szenario die Änderungen gleichzeitig und unisoliert passierten, trat ein Lost Update aus. Eine der beiden Änderungsoperationen ist verloren gegangen. Das Transaktions-Management-System muss solche Lost Updates verhindern, sodass der Endzustand der Datenbank äquivalent ist zu dem Endzustand, den die DB hätte, wenn die Transaktionen nicht gleichzeitig, sondern seriell hintereinander gelaufen wären.</aside>
+                      </section>
+
+                      <section>
+                          <h2>Non-repeatable Read</h2>
+                          <div class="columns">
+                              <div style="width: 12cm;">TA1
+                                  <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.89 EUR
+    
+
+
+
+SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.99 EUR
+  
+COMMIT;</code></pre>
+                              </div>
+                              <div>TA2
+                                  <pre style="width: 12cm;"><code class="sql">
+
+UPDATE produkte
+SET preis = preis + 0.1
+WHERE produktnr = 17; -- 0.99 EUR
+COMMIT;
+
+
+
+
+</code></pre>
+                              </div>
+                            </div>
+                            <aside class="notes">Im Einbenutzerbetrieb wäre es unmöglich, dass eine Transaktion zwei verschiedene Ergebnisse für die gleiche Abfrage erhält, außer sie hätte die Daten selbst geändert. Das TMS muss gewährleisten, dass in einem Fall, wie er hier gezeigt wird, wiederholtes Lesen stets das gleiche Ergebnis liefert.</aside>
+                        </section>
+
+                       <section>
+                         <h2>Serialisierbarkeit</h2>
+                         <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-random green"></i></div>
+                         <p class="small">Jede Transaktion besteht aus Lese- und Schreibaktionen: $r_1(x), r_1(y), w_1(x), c_1$</p>
+                         <h4>Serieller Ablauf</h4>
+                         <p class="small">Keine verzahnte Ausführung, z. B. $r_1(x), r_1(y), w_1(x), c_1, r_2(z), r_2(x), c_2, r_3(y), c_3$</p>
+                         <h4>Serialisierbarkeit (&quot;Final-State-serialisierbar&quot;)</h4>
+                         <p class="small">Ablauf ist serialisierbar, wenn Anfragen das gleiche Ergebnis liefern und DB im gleichen Zustand hinterlassen wird, wie bei irgendeinem seriellen Ablauf.</p>
+                         <h4>Serialisierbarkeit (&quot;Konflikt-serialisierbar&quot;)</h4>
+                         <p class="small">Ablauf ist serialisierbar, wenn es keine Zyklen im Serialisierbarkeitsgraph gibt.</p>
+                         <aside class="notes">Die Notation $r_1(x)$ bzw. $w_1(x)$ bedeutet, dass eine Transaktion 1 ein Objekt X (z. B. eine Tabelle oder eine Zeile oder einen Spaltenwert) liest bzw. schreibt. $c_1$ ist das Commit von TA1. Final-State-Serialisierbarkeit ist schwierig zu überprüfen und außerdem kann auch rein zufällig das gleiche herauskommen wie bei einem seriellen Ablauf. Daher wird in der Regel auf Konflikt-Serialisierbarkeit überprüft.</aside>
+                        </section>
+
+                        <section>
+                          <h2>Serialisierbarkeitsgraph</h2>
+                          <h4>Konfliktoperationen</h4>
+                          <ul>
+                            <li>r &rightarrow; w</li>
+                            <li>w &rightarrow; r</li>
+                            <li>w &rightarrow; w</li>
+                          </ul>
+                          <p class="small">Von verschiedenen TAs auf gleichem Objekt.</p>
+                          <p class="small">Im Serialisierbarkeitsgraphen sind die TA die Knoten und es gibt eine Kante von einer TA zu einer anderen, wenn Konfliktoperationen zwischen diesen existieren.</p>
+                        </section>
+
+                        <section>
+                          <h2>Serialisierbarkeitsgraph</h2>
+                          <p class="small">Beispiel: $r_1(x), w_1(y), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
+                          <p class="small">Konfliktoperationen hier:</p>
+                          <ul class="fragment small">
+                            <li>$w_1(y) \rightarrow w_3(y)$</li>
+                            <li>$r_2(x) \rightarrow w_1(x)$</li>
+                            <li>$w_1(x) \rightarrow w_3(x)$</li>
+                          </ul>
+                          <p class="fragment small">Serialisierbarkeitsgraph: TA2 &rightarrow; TA1 &rightarrow; TA3</p>
+                          <p class="fragment small">Kein Zyklus &Rightarrow; Der Ablauf ist serialisierbar</p>
+                          <p class="fragment small">Äquivalenter serieller Ablauf: TA2, TA1, TA3</p>
+                          <aside class="notes">Um den Serialisierbarkeitsgraphen zu erzeugen, geht man wie folgt vor: Für jede Operation prüft man, ob Konfliktoperationen von einer anderen Transaktion auf dem gleichen Objekt zeitlich später folgen. Falls ja, erstellt man, falls noch nicht vorhanden, eine Kante von der ersten zur zweiten Transkation. Manchmal gibt es mehrere äquivalente serielle Abläufpläne. Alle diese würden zum gleichen Ergebnis führen wie der gegebene verzahnte Ablauf.</aside>
+                        </section>
+
+                        <section>
+                            <h2>Serialisierbarkeitsgraph</h2>
+                            <p class="small">Anderes Beispiel: $r_1(x), w_1(x), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
+                            <p class="small">Konfliktoperationen hier:</p>
+                            <ul class="fragment small">
+                              <li>$w_1(x) \rightarrow r_2(x)$</li>
+                              <li>$r_2(x) \rightarrow w_1(x)$</li>
+                              <li>$w_1(x) \rightarrow w_3(x)$</li>
+                            </ul>
+                            <p class="fragment small">Serialisierbarkeitsgraph: TA2 &RightArrowLeftArrow; TA1 &rightarrow; TA3</p>
+                            <p class="fragment small">Zyklus &Rightarrow; Der Ablauf ist nicht serialisierbar</p>
+                            <aside class="notes">Es gibt keinen äquivalenten seriellen Ablauf, daher ist der hier gegebene Ablauf nicht serialisierbar..</aside>
+                          </section>
+
+                          <section>
+                            <h2>SX-Sperrverfahren</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-lock green"></i></div>
+                            <p class="small">Sperrverfahren werden eingesetzt, um Serialisierbarkeit zu erreichen. Bevor eine TA ein Objekt liest oder schreibt, muss es dies mit einer Sperre versehen.</p>
+                            <h4>Sperrmatrix</h4>
+                            <table>
+                                <tr><td>&nbsp;</td><td>S</td><td>X</td></tr>
+                                <tr><td>S</td><td>&check;</td><td>-</td></tr>
+                                <tr><td>X</td><td>-</td><td>-</td></tr>
+                            </table>
+                            <aside class="notes">Beim SX-Sperrverfahren gibt es Shared-Sperren (S) und eXklusive Sperren (X). Mehrere TAs können eine gemeinsame S-Sperre auf dem gleichen Objekt haben, aber nur eine TA darf eine X-Sperre auf einem Objekt haben. Vor dem Lesen eines Objektes wird die S-Sperre angefordert, vor dem Schreiben eine X-Sperre. Links in der Sperrmatrix steht die aktuell auf einem Objekt existierende Sperre anderer Transaktionen. Obem steht, welche Sperre eine Transkation anfordern möchte. Der Haken gibt an, ob sie die Sperre bekommen kann oder nicht. Im letzteren Fall muss die TA warten, bis die Sperre wieder freigegeben wurde.</aside>
+                          </section>
+
+                          <section>
+                            <h2>SX-Sperrverfahren</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-lock-open green"></i></div>
+                            <p class="class">Beispiel: $r_1(x), r_2(x), c_1, c_2$</p>
+                            <table style="font-size: 60%;">
+                                <thead>
+                                <tr><th>TA1</th><th>TA2</th><th>Gesetzte Sperren</th></tr>
+                                </thead>
+                                <tr class="fragment"><td>$r_1(x)$</td><td></td><td>$S_1(x)$</td></tr>
+                                <tr class="fragment"><td></td><td>$r_2(x)$</td><td>$S_{1,2}(x)$</td></tr>
+                                <tr class="fragment"><td>$c_1$</td><td></td><td>$S_2(x)$</td></tr>
+                                <tr class="fragment"><td></td><td>$c_2$</td><td></td></tr>
+                              </table>
+                              <aside class="notes">Damit TA1 das Objekt x lesen kann, muss es zunächst eine S-Sperre auf x anfordern. Dies funktioniert, da im Moment noch keine Sperre auf x existiert. Auch TA2 möchte das Objekt x lesen. Aktuell gibt es eine S-Sperre von TA1 auf x, die sich aber mit der angeforderten S-Sperre verträgt. Es gibt nun also eine S-Sperre von TA1 und TA2 auf x. Beim Commit oder Rollback einer Transaktion werden Sperren wieder freigegeben. In unserem Beispiel sehen wir, dass nach dem Commit von TA1 nur noch die S-Sperre von TA2 auf x existiert. Im nächsten Schritt, beim Commit von TA2, wird auch diese aufgelöst, sodass es schließlich keine Sperren mehr gibt.</aside>
+                          </section>
+
+                          <section>
+                            <h2>SX-Sperrverfahren</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-hourglass-half green"></i></div>
+                            <p class="small">Beispiel: $r_1(x), w_1(x), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
+                            <table style="font-size: 60%;">
+                              <thead>
+                              <tr><th>TA1</th><th>TA2</th><th>TA3</th><th>Gesetzte Sperren</th></tr>
+                              </thead>
+                              <tr class="fragment"><td>$r_1(x)$</td><td></td><td></td><td>$S_1(x)$</td></tr>
+                              <tr class="fragment"><td>$w_1(x)$</td><td></td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment"><td></td><td>warten</td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment"><td>$w_1(x)$</td><td>warten</td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment"><td></td><td>warten</td><td>$w_3(y)$</td><td>$X_1(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td>warten</td><td>warten</td><td>$X_1(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td>$c_1$</td><td></td><td></td><td>$X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td>$r_2(x)$</td><td>warten</td><td>$S_2(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td>$c_2$</td><td>warten</td><td>$X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td></td><td>$w_3(x)$</td><td>$X_3(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td></td><td>$c_3$</td><td></td></tr>
+                            </table>
+                          </section>
+                          <section>
+                            <h2>Deadlocks</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-ban green"></i></div>
+                            <p class="small">Beispiel: $r_1(x), r_2(y), w_2(x), w_1(y), c_1, c_2$</p>
+                            <table style="font-size: 60%;">
+                                <thead>
+                                <tr><th>TA1</th><th>TA2</th><th>Gesetzte Sperren</th></tr>
+                                </thead>
+                                <tr class="fragment"><td>$r_1(x)$</td><td></td><td>$S_1(x)$</td></tr>
+                                <tr class="fragment"><td></td><td>$r_2(y)$</td><td>$S_1(x), S_2(y)$</td></tr>
+                                <tr class="fragment"><td></td><td>warten</td><td>$S_1(x), S_2(y)$</td></tr>
+                                <tr class="fragment"><td>warten</td><td>warten</td><td>$S_1(x), S_2(y)$</td></tr>
+                              </table>
+                              <p class="fragment small">TA2 wartet auf TA1 und umgekehrt &Rightarrow; Deadlock</p>
+                              <p class="fragment small">Lösung: Eine der TAs muss vom TMS zurückgesetzt werden.</p>
+                              <aside class="notes">Ein Transaktions-Management-System muss in der Lage sein, Deadlocks zu erkennen (z. B. durch Erkennung zyklischer Wartebedingungen oder mittels Timeouts) und sie aufzulösen, damit Transaktionen nicht unendlich lange warten. In der Regel wird ein Deadlock aufgelöst, indem eine der TAs zurückgesetzt wird und somit die andere fortfahren kann.</aside>
+                          </section>
+
+                          <section>
+                            <h2>SQL-Isolationslevels</h2>
+                            <div class="columns">
+                              <div style="width: 12cm;"><p class="small">
+                                <ul class="small">
+                                  <li>Read Committed</li>
+                                  <li>Read Uncommitted</li>
+                                  <li>Repeatable Read</li>
+                                  <li>Serializable</li>
+                                </ul>
+                              </div>
+
+                              <div style="width: 12cm;"><img src="img/5/autocommit.png" alt="DBeaver Autocommit" style="width:12cm" class="noborder"></div>
+                            </div>
+                            <table class="fragment small" style="margin-top: -3mm;">
+                                <tr><td></td><td><b>Dirty Read</b></td><td><b>Non&#8209;Repeatable&nbsp;Read</b></td><td><b>Phantomproblem</b></td></tr>
+                                <tr><td><b>Read&nbsp;Uncommitted</b></td><td>möglich</td><td>möglich</td><td>möglich</td></tr>
+                                <tr><td><b>Read Committed</b> </td><td>nicht&nbsp;mögl.</td><td>möglich</td><td>möglich</td></tr>
+                                <tr><td><b>Repeatable Read</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>möglich</td></tr>
+                                <tr><td><b>Serializable</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>nicht mögl.</td></tr>
+                            </table>
+                            <p class="fragment small">Lost Updates werden stets verhindert, sie sind in allen Iso'levels nicht möglich.</p>
+                            <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regele eine bessere Performance möglich.</aside>
+                          </section>
 
                         </div>
                     </div>

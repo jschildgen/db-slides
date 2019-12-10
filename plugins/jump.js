@@ -45,7 +45,7 @@ var keyHandle= function(event) {
 		var isEnterKey = event.which === 13;
 		var isJumpToSlideEmpty = jumpToSlide === "";
 
-		if (isEnterKey && !isJumpToSlideEmpty) {
+		if (isEnterKey && !isJumpToSlideEmpty && !isSpecialKey) {
 			// horizontal and vertical slides are separated by a dash
 			jumpToSlide = jumpToSlide.split("-");
 			jumpToSlide[0] = isNaN(jumpToSlide[0]) ? 0 : parseInt(jumpToSlide[0]) - 1;

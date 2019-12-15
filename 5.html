@@ -448,8 +448,8 @@ INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
                         <p>Parallel laufendende Transaktionen beeinflussen sich nicht.</p>
                         <h4>Mehrbenutzeranomalien</h4>
                         <ul class="small">
-                          <li><b>Dirty Read</b>: TA2 liest noch nicht committete Änderungen von TA1</li>
-                          <li><b>Lost Update</b>: TA1 und TA2 schreiben gleichzeitig; wer gewinnt?</li>
+                          <li><b>Dirty Read</b>: TA<sub>2</sub> liest noch nicht committete Änderungen von TA<sub>1</sub></li>
+                          <li><b>Lost Update</b>: TA<sub>1</sub> und TA<sub>2</sub> schreiben gleichzeitig; wer gewinnt?</li>
                           <li><b>Non-repeatable Read:</b> TA liest mal veraltete und mal aktualisierte Werte</li>
                           <li>...</li>
                         </ul>
@@ -460,8 +460,8 @@ INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
                       <section>
                         <h2>Dirty Read</h2>
                         <div class="columns">
-                          <div style="width: 12cm;">TA1
-                              <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
+                          <div style="width: 12cm;">TA<sub>1</sub>
+                              <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte 
 WHERE produktnr = 17; -- 0.89 EUR
 
 UPDATE produkte
@@ -469,10 +469,11 @@ SET preis = 0
 WHERE produktnr = 17;
 
 
-ROLLBACK;</code></pre>
+
+</code><code class="fragment sql" data-fragment-index="2">ROLLBACK;</code></pre>
                           </div>
-                          <div>TA2
-                              <pre style="width: 12cm;"><code class="sql">
+                          <div>TA<sub>2</sub>
+                              <pre style="width: 12cm;"><code class="fragment sql" data-fragment-index="1">
 
 
 
@@ -480,34 +481,36 @@ ROLLBACK;</code></pre>
 
 SELECT preis FROM produkte
 WHERE produktnr = 17; -- 0 EUR
-COMMIT;</code></pre>
+COMMIT;
+
+</code></pre>
                           </div>
                         </div>
-                        <aside class="notes">Es wäre ein Dirty Read, wenn TA2 die noch nicht freigegebene Preisänderung von TA1 sehen würde. Das Transaktions-Management-System (TMS) eines DBMS muss gewährleisten, dass Änderungen für andere Transaktionen erst nach dem Commit der Änderung sichtbar werden.</aside>
+                        <aside class="notes">Es wäre ein Dirty Read, wenn TA<sub>2</sub> die noch nicht freigegebene Preisänderung von TA<sub>1</sub> sehen würde. Das Transaktions-Management-System (TMS) eines DBMS muss gewährleisten, dass Änderungen für andere Transaktionen erst nach dem Commit der Änderung sichtbar werden.</aside>
                       </section>
 
                       <section>
                         <h2>Lost Update</h2>
                         <div class="columns">
-                            <div style="width: 12cm;">TA1
-                                <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
+                            <div style="width: 12cm;">TA<sub>1</sub>
+                                <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte 
 WHERE produktnr = 17; -- 0.89 EUR
-  
-UPDATE produkte
+
+</code><code class="fragment sql" data-fragment-index="1">UPDATE produkte
 SET preis = preis + 0.1
 WHERE produktnr = 17; -- 0.99 EUR
   
-COMMIT;</code></pre>
+</code><code class="fragment sql" data-fragment-index="3">COMMIT;</code></pre>
                             </div>
-                            <div>TA2
+                            <div>TA<sub>2</sub>
                                 <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte
 WHERE produktnr = 17; -- 0.89 EUR
 
-UPDATE produkte
+</code><code class="fragment sql" data-fragment-index="2">UPDATE produkte
 SET preis = preis + 0.1
 WHERE produktnr = 17; -- 0.99 EUR
 
-COMMIT;</code></pre>
+</code><code class="fragment sql" data-fragment-index="4">COMMIT;</code></pre>
                             </div>
                           </div>
                           <aside class="notes">Zwei Transkationen möchten den Preis eines Produktes um 10 Cent erhöhen. Als Endresultat sollte das Produkte also 0.89+0.1+0.1 = 1.09 EUR kosten. Da im gezeigten Szenario die Änderungen gleichzeitig und unisoliert passierten, trat ein Lost Update aus. Eine der beiden Änderungsoperationen ist verloren gegangen. Das Transaktions-Management-System muss solche Lost Updates verhindern, sodass der Endzustand der Datenbank äquivalent ist zu dem Endzustand, den die DB hätte, wenn die Transaktionen nicht gleichzeitig, sondern seriell hintereinander gelaufen wären.</aside>
@@ -516,7 +519,7 @@ COMMIT;</code></pre>
                       <section>
                           <h2>Non-repeatable Read</h2>
                           <div class="columns">
-                              <div style="width: 12cm;">TA1
+                              <div style="width: 12cm;">TA<sub>2</sub>
                                   <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
 WHERE produktnr = 17; -- 0.89 EUR
     
@@ -528,8 +531,8 @@ WHERE produktnr = 17; -- 0.99 EUR
   
 COMMIT;</code></pre>
                               </div>
-                              <div>TA2
-                                  <pre style="width: 12cm;"><code class="sql">
+                              <div>TA<sub>2</sub>
+                                  <pre style="width: 12cm;"><code class="fragment sql">
 
 UPDATE produkte
 SET preis = preis + 0.1
@@ -545,6 +548,42 @@ COMMIT;
                             <aside class="notes">Im Einbenutzerbetrieb wäre es unmöglich, dass eine Transaktion zwei verschiedene Ergebnisse für die gleiche Abfrage erhält, außer sie hätte die Daten selbst geändert. Das TMS muss gewährleisten, dass in einem Fall, wie er hier gezeigt wird, wiederholtes Lesen stets das gleiche Ergebnis liefert.</aside>
                         </section>
 
+                        <section>
+                          <h2>Phantomproblem</h2>
+                          <div class="columns">
+                              <div style="width: 12cm;">TA<sub>1</sub>
+                                  <pre style="width: 12cm;"><code class="sql" data-trim>SELECT * FROM produkte 
+WHERE hersteller = 'Monsterfood';
+-- 2 Produkte werden angezeigt
+    
+
+
+
+SELECT COUNT(*) FROM produkte 
+WHERE hersteller = 'Monsterfood';
+-- Ergebnis: 3
+  
+COMMIT;</code></pre>
+                              </div>
+                              <div>TA<sub>2</sub>
+                                  <pre style="width: 12cm;"><code class="fragment sql">
+
+
+INSERT INTO produkte
+VALUES (..., 'Monsterfood');
+COMMIT;
+
+
+
+
+
+
+</code></pre>
+                              </div>
+                            </div>
+                            <aside class="notes">Das Phantomproblem ist ähnlich zum Non-repeatable Read, bezieht sich jedoch auf während einer laufenden Transaktion neu hinzugefügte oder gelöschte Zeilen. TA<sub>1</sub> möchte alle Monsterfood-Produkte anzeigen und zusätzlich deren Anzahl (oder Preis-Summe, o.ä.) berechnen. Das Ergebnis ist inkonsistent, weil zwischenzeitlich TA<sub>2</sub> ein neues Produkt hinzugefügt hat.</aside>
+                        </section>
+
                        <section>
                          <h2>Serialisierbarkeit</h2>
                          <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-random green"></i></div>
@@ -555,7 +594,7 @@ COMMIT;
                          <p class="small">Ablauf ist serialisierbar, wenn Anfragen das gleiche Ergebnis liefern und DB im gleichen Zustand hinterlassen wird, wie bei irgendeinem seriellen Ablauf.</p>
                          <h4>Serialisierbarkeit (&quot;Konflikt-serialisierbar&quot;)</h4>
                          <p class="small">Ablauf ist serialisierbar, wenn es keine Zyklen im Serialisierbarkeitsgraph gibt.</p>
-                         <aside class="notes">Die Notation $r_1(x)$ bzw. $w_1(x)$ bedeutet, dass eine Transaktion 1 ein Objekt X (z. B. eine Tabelle oder eine Zeile oder einen Spaltenwert) liest bzw. schreibt. $c_1$ ist das Commit von TA1. Final-State-Serialisierbarkeit ist schwierig zu überprüfen und außerdem kann auch rein zufällig das gleiche herauskommen wie bei einem seriellen Ablauf. Daher wird in der Regel auf Konflikt-Serialisierbarkeit überprüft.</aside>
+                         <aside class="notes">Die Notation $r_1(x)$ bzw. $w_1(x)$ bedeutet, dass eine Transaktion 1 ein Objekt X (z. B. eine Tabelle oder eine Zeile oder einen Spaltenwert) liest bzw. schreibt. $c_1$ ist das Commit von TA<sub>1</sub>. Final-State-Serialisierbarkeit ist schwierig zu überprüfen und außerdem kann auch rein zufällig das gleiche herauskommen wie bei einem seriellen Ablauf. Daher wird in der Regel auf Konflikt-Serialisierbarkeit überprüft.</aside>
                         </section>
 
                         <section>
@@ -579,9 +618,9 @@ COMMIT;
                             <li>$r_2(x) \rightarrow w_1(x)$</li>
                             <li>$w_1(x) \rightarrow w_3(x)$</li>
                           </ul>
-                          <p class="fragment small">Serialisierbarkeitsgraph: TA2 &rightarrow; TA1 &rightarrow; TA3</p>
+                          <p class="fragment small">Serialisierbarkeitsgraph: TA<sub>2</sub> &rightarrow; TA<sub>1</sub> &rightarrow; TA<sub>3</sub></p>
                           <p class="fragment small">Kein Zyklus &Rightarrow; Der Ablauf ist serialisierbar</p>
-                          <p class="fragment small">Äquivalenter serieller Ablauf: TA2, TA1, TA3</p>
+                          <p class="fragment small">Äquivalenter serieller Ablauf: TA<sub>2</sub>, TA<sub>1</sub>, TA<sub>3</sub></p>
                           <aside class="notes">Um den Serialisierbarkeitsgraphen zu erzeugen, geht man wie folgt vor: Für jede Operation prüft man, ob Konfliktoperationen von einer anderen Transaktion auf dem gleichen Objekt zeitlich später folgen. Falls ja, erstellt man, falls noch nicht vorhanden, eine Kante von der ersten zur zweiten Transkation. Manchmal gibt es mehrere äquivalente serielle Abläufpläne. Alle diese würden zum gleichen Ergebnis führen wie der gegebene verzahnte Ablauf.</aside>
                         </section>
 
@@ -589,13 +628,55 @@ COMMIT;
                             <h2>Serialisierbarkeitsgraph</h2>
                             <p class="small">Anderes Beispiel: $r_1(x), w_1(x), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
                             <p class="small">Konfliktoperationen hier:</p>
-                            <ul class="fragment small">
+                            <ul class="fragment small" data-fragment-index="1">
                               <li>$w_1(x) \rightarrow r_2(x)$</li>
                               <li>$r_2(x) \rightarrow w_1(x)$</li>
                               <li>$w_1(x) \rightarrow w_3(x)$</li>
                             </ul>
-                            <p class="fragment small">Serialisierbarkeitsgraph: TA2 &RightArrowLeftArrow; TA1 &rightarrow; TA3</p>
-                            <p class="fragment small">Zyklus &Rightarrow; Der Ablauf ist nicht serialisierbar</p>
+                            <p class="fragment small" data-fragment-index="2">Serialisierbarkeitsgraph: TA<sub>2</sub> &RightArrowLeftArrow; TA<sub>1</sub> &rightarrow; TA<sub>3</sub></p>
+                            <p class="fragment small" data-fragment-index="3">Zyklus &Rightarrow; Der Ablauf ist nicht serialisierbar</p>
+                            
+                            <div class="fragment" data-fragment-index="2">
+                            <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 722px; top: 170px;" data-block-id="bac83d9b29a51e3a4b046cfc6c3673e1">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 300%;">
+                                    <p style="font-size:70%">TA<sub>1</sub></p>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 712px; top: 273px;" data-block-id="efe2b7f915bcb8e4bb9db6028bba6215">
+                                <div class="sl-block-content" data-line-x1="102" data-line-y1="57" data-line-x2="64" data-line-y2="127" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 12;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="38" height="70" viewBox="64 57 38 70">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="102" y1="57" x2="67" y2="122"></line>
+                                        <line stroke="#000000" stroke-width="4" x1="102" y1="57" x2="67" y2="122"></line>
+                                        <polygon fill="#000000" transform="translate(67,122) rotate(208.496)" points="0,-6 6,6 -6,6"></polygon>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 838px; top: 279px;" data-block-id="5fb757cb6cb7997bdf02b16fd47328fd">
+                                <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="152" data-line-y2="135" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 13;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="40" height="72" viewBox="112 63 40 72">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="149" y2="130"></line>
+                                        <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="149" y2="130"></line>
+                                        <polygon fill="#000000" transform="translate(149,130) rotate(150.945)" points="0,-6 6,6 -6,6"></polygon>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 668px; top: 248px;" data-block-id="3dd154d88a733acf2cd62dca57d9d424">
+                                <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="172" data-line-y2="-40" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="60" height="103" viewBox="112 -40 60 103">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="169" y2="-35"></line>
+                                        <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="169" y2="-35"></line>
+                                        <polygon fill="#000000" transform="translate(169,-35) rotate(30.222)" points="0,-6 6,6 -6,6"></polygon>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 615px; top: 331px;" data-block-id="4f14a7b04309835f86c7c2935f03b455">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 300%;">
+                                    <p style="font-size:70%">TA<sub>2</sub></p>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 796px; top: 331px;" data-block-id="beb8381f9c5769f2463503ffa09bc44f">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; font-size: 300%;">
+                                    <p style="font-size:70%">TA<sub>3</sub></p>
+                                </div>
+                            </div>
+                            </div>
                             <aside class="notes">Es gibt keinen äquivalenten seriellen Ablauf, daher ist der hier gegebene Ablauf nicht serialisierbar..</aside>
                           </section>
 
@@ -618,14 +699,14 @@ COMMIT;
                             <p class="class">Beispiel: $r_1(x), r_2(x), c_1, c_2$</p>
                             <table style="font-size: 60%;">
                                 <thead>
-                                <tr><th>TA1</th><th>TA2</th><th>Gesetzte Sperren</th></tr>
+                                <tr><th>TA<sub>1</sub></th><th>TA<sub>2</sub></th><th>Gesetzte Sperren</th></tr>
                                 </thead>
                                 <tr class="fragment"><td>$r_1(x)$</td><td></td><td>$S_1(x)$</td></tr>
                                 <tr class="fragment"><td></td><td>$r_2(x)$</td><td>$S_{1,2}(x)$</td></tr>
                                 <tr class="fragment"><td>$c_1$</td><td></td><td>$S_2(x)$</td></tr>
                                 <tr class="fragment"><td></td><td>$c_2$</td><td></td></tr>
                               </table>
-                              <aside class="notes">Damit TA1 das Objekt x lesen kann, muss es zunächst eine S-Sperre auf x anfordern. Dies funktioniert, da im Moment noch keine Sperre auf x existiert. Auch TA2 möchte das Objekt x lesen. Aktuell gibt es eine S-Sperre von TA1 auf x, die sich aber mit der angeforderten S-Sperre verträgt. Es gibt nun also eine S-Sperre von TA1 und TA2 auf x. Beim Commit oder Rollback einer Transaktion werden Sperren wieder freigegeben. In unserem Beispiel sehen wir, dass nach dem Commit von TA1 nur noch die S-Sperre von TA2 auf x existiert. Im nächsten Schritt, beim Commit von TA2, wird auch diese aufgelöst, sodass es schließlich keine Sperren mehr gibt.</aside>
+                              <aside class="notes">Damit <sub>1</sub> das Objekt x lesen kann, muss es zunächst eine S-Sperre auf x anfordern. Dies funktioniert, da im Moment noch keine Sperre auf x existiert. Auch TA<sub>2</sub> möchte das Objekt x lesen. Aktuell gibt es eine S-Sperre von TA<sub>1</sub> auf x, die sich aber mit der angeforderten S-Sperre verträgt. Es gibt nun also eine S-Sperre von TA<sub>1</sub> und TA<sub>2</sub> auf x. Beim Commit oder Rollback einer Transaktion werden Sperren wieder freigegeben. In unserem Beispiel sehen wir, dass nach dem Commit von TA<sub>1</sub> nur noch die S-Sperre von TA<sub>2</sub> auf x existiert. Im nächsten Schritt, beim Commit von TA<sub>2</sub>, wird auch diese aufgelöst, sodass es schließlich keine Sperren mehr gibt.</aside>
                           </section>
 
                           <section>
@@ -634,7 +715,7 @@ COMMIT;
                             <p class="small">Beispiel: $r_1(x), w_1(x), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
                             <table style="font-size: 60%;">
                               <thead>
-                              <tr><th>TA1</th><th>TA2</th><th>TA3</th><th>Gesetzte Sperren</th></tr>
+                              <tr><th>TA<sub>1</sub></th><th>TA<sub>2</sub></th><th>TA<sub>3</sub></th><th>Gesetzte Sperren</th></tr>
                               </thead>
                               <tr class="fragment"><td>$r_1(x)$</td><td></td><td></td><td>$S_1(x)$</td></tr>
                               <tr class="fragment"><td>$w_1(x)$</td><td></td><td></td><td>$X_1(x)$</td></tr>
@@ -655,14 +736,14 @@ COMMIT;
                             <p class="small">Beispiel: $r_1(x), r_2(y), w_2(x), w_1(y), c_1, c_2$</p>
                             <table style="font-size: 60%;">
                                 <thead>
-                                <tr><th>TA1</th><th>TA2</th><th>Gesetzte Sperren</th></tr>
+                                <tr><th>TA<sub>1</sub></th><th>TA<sub>2</sub></th><th>Gesetzte Sperren</th></tr>
                                 </thead>
                                 <tr class="fragment"><td>$r_1(x)$</td><td></td><td>$S_1(x)$</td></tr>
                                 <tr class="fragment"><td></td><td>$r_2(y)$</td><td>$S_1(x), S_2(y)$</td></tr>
                                 <tr class="fragment"><td></td><td>warten</td><td>$S_1(x), S_2(y)$</td></tr>
                                 <tr class="fragment"><td>warten</td><td>warten</td><td>$S_1(x), S_2(y)$</td></tr>
                               </table>
-                              <p class="fragment small">TA2 wartet auf TA1 und umgekehrt &Rightarrow; Deadlock</p>
+                              <p class="fragment small">TA<sub>2</sub> wartet auf TA<sub>1</sub> und umgekehrt &Rightarrow; Deadlock</p>
                               <p class="fragment small">Lösung: Eine der TAs muss vom TMS zurückgesetzt werden.</p>
                               <aside class="notes">Ein Transaktions-Management-System muss in der Lage sein, Deadlocks zu erkennen (z. B. durch Erkennung zyklischer Wartebedingungen oder mittels Timeouts) und sie aufzulösen, damit Transaktionen nicht unendlich lange warten. In der Regel wird ein Deadlock aufgelöst, indem eine der TAs zurückgesetzt wird und somit die andere fortfahren kann.</aside>
                           </section>

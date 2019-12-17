@@ -242,7 +242,7 @@
                                 <p class="small">oder:</p>
                                 <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* .... */ email VARCHAR(500), 
                      UNIQUE(email))</code></pre>
-                                <aside class="notes">Spezifiziert man hinter einer Spalte die Eigenschaft <code>UNIQUE</code>, darf es in dieser Spalte keine doppelten Werte gegen. In unserer Kundentabelle dürfen also keine zwei Kunden die gleiche E-Mail-Adresse haben. Die untere Notation ist nötig, wenn das UNIQUE-Constraint aus mehreren Spalten besteht, also wenn die Kombination aus mehreren Spaltenwerten eindeutig sein soll. Anders als bei Primärschlüsseln (in einer Tabelle darf höchstens einen geben), können auf einer Tabelle beliebig viele UNIQU-Constraints definiert werden.</aside>
+                                <aside class="notes">Spezifiziert man hinter einer Spalte die Eigenschaft <code>UNIQUE</code>, darf es in dieser Spalte keine doppelten Werte gegen. In unserer Kundentabelle dürfen also keine zwei Kunden die gleiche E-Mail-Adresse haben. Die untere Notation ist nötig, wenn das UNIQUE-Constraint aus mehreren Spalten besteht, also wenn die Kombination aus mehreren Spaltenwerten eindeutig sein soll. Anders als bei Primärschlüsseln (in einer Tabelle darf höchstens einen geben), können auf einer Tabelle beliebig viele UNIQUE-Constraints definiert werden.</aside>
                             </section>
 
                             <section>
@@ -967,7 +967,7 @@ FROM produkte
                                     <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT DATE '2019-12-25' - CURRENT_DATE</code></pre>
                                     </div>
 
-                                    <aside class="notes">PostgreSQL erlaubt SELECT-Anfragen ohne FROM-Klausel. Dies enspricht Anfragen auf der DUAL-Tabelle von der vorherigen Folie. Man kann mit solchen Anfragen leicht Funktionen aufrufen und ausprobieren oder Berechnungen durchführen.</aside>
+                                    <aside class="notes">PostgreSQL erlaubt SELECT-Anfragen ohne FROM-Klausel. Dies entspricht Anfragen auf der DUAL-Tabelle von der vorherigen Folie. Man kann mit solchen Anfragen leicht Funktionen aufrufen und ausprobieren oder Berechnungen durchführen.</aside>
                                 </section>
 
                                 <section>

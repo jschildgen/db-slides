@@ -179,9 +179,9 @@ GROUP BY P.produktnummer, P.bezeichnung, P.preis, P.hersteller
                       </section>
                       <section>
                         <h2>Views / Sichten in SQL</h2>
-                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teuere_produkte AS SELECT * FROM produkte 
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teure_produkte AS SELECT * FROM produkte 
                                WHERE preis > 10;</code></pre>
-                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM teuere_produkte WHERE hersteller = 'Monsterfood'</code></pre>
+                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM teure_produkte WHERE hersteller = 'Monsterfood'</code></pre>
                         <p class="small" style="margin-left: 2cm;">wird ausgeführt als:</p>
                         <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM (SELECT * FROM produkte WHERE preis > 10)
 WHERE hersteller = 'Monsterfood'
@@ -205,17 +205,17 @@ WHERE hersteller = 'Monsterfood'
                       <section>
                         <h3>CHECK OPTION</h3>
                         <p class="small">INSERT, UPDATE und DELETE sind auf simplen Projektion/Selektion-Views erlaubt.</p>
-                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teuere_produkte AS SELECT * FROM produkte 
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teure_produkte AS SELECT * FROM produkte 
                             WHERE preis > 10;</code></pre>
                         <p class="small">INSERT / UPDATE funktioniert ohne Überprüfung des WHERE-Prädikats.</p>
                         
                         <div class="fragment">
                         <h4>WITH CHECK OPTION</h4>
-                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teuere_produkte AS SELECT * FROM produkte 
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teure_produkte AS SELECT * FROM produkte 
                             WHERE preis > 10 WITH CHECK OPTION;</code></pre>
                         <p class="small">Das einzufügende oder zu ändernde Tupel muss das WHERE-Prädikat erfüllen.</p>
                         </div>
-                        <aside class="notes">Ein <code>INSERT INTO teuere_produkte</code> ist hier möglich. Im unteren Fall jedoch nur, wenn das neue Produkt auch einen Preis von mehr als 10 EUR hat. <code>WITH CHECK OPTION</code> ist eine Kurzschreibweise für <code>WITH LOCAL CHECK OPTION</code>. Wenn eine View mit dieser Option eine andere View in der FROM-Klausel hat, wird nicht das Prädikat der anderen View überprüft, außer: Für diese ist ebenfalls eine CHECK OPTION gesetzt, oder wir spezifizieren für die View: <code>WITH CASCADED CHECK OPTION</code>.</aside>
+                        <aside class="notes">Ein <code>INSERT INTO teure_produkte</code> ist hier möglich. Im unteren Fall jedoch nur, wenn das neue Produkt auch einen Preis von mehr als 10 EUR hat. <code>WITH CHECK OPTION</code> ist eine Kurzschreibweise für <code>WITH LOCAL CHECK OPTION</code>. Wenn eine View mit dieser Option eine andere View in der FROM-Klausel hat, wird nicht das Prädikat der anderen View überprüft, außer: Für diese ist ebenfalls eine CHECK OPTION gesetzt, oder wir spezifizieren für die View: <code>WITH CASCADED CHECK OPTION</code>.</aside>
                       </section>
 
                       <section>
@@ -224,11 +224,11 @@ WHERE hersteller = 'Monsterfood'
                         <p class="small">Views sind nur virtuell, sie speichern nicht wirklich Daten.</p>
                         <p class="small">Materialisierte Sichten jedoch speichern physisch das Ergebnis der dahinterstehenden Anfrage.</p>
                         <pre><code class="hlsql" data-trim contenteditable>CREATE MATERIALIZED VIEW anz_produkte AS 
-SELECT COUNT(*) FROM produkte;</code></pre>
+SELECT COUNT(*) as anz FROM produkte;</code></pre>
                         
                         <h4>REFRESH MATERIALIZED VIEW</h4>
 
-                        <pre><code class="sql" data-trim contenteditable>SELECT * FROM anz_produkte; -- zeigt an: 7
+                        <pre><code class="sql" data-trim contenteditable>SELECT * FROM anz_produkte; -- zeigt an: 8
 INSERT INTO produkte (produktnr, bezeichnung) values (123, 'X'); 
 SELECT * FROM anz_produkte; -- zeigt immer noch 8
 REFRESH MATERIALIZED VIEW anz_produkte;
@@ -403,6 +403,7 @@ CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
 
                       <section>
                         <h3>Commit / Rollback</h3>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 112-113</div>
 
                         <p class="small">Mit einer <code>commit</code>-Operation beendet man eine Transkation.<br><code>rollback</code> beendet ebenfalls die Transkation, sie führt jedoch zum Abort, sodass alle Änderungen rückgängig gemacht werden.</p>
 
@@ -419,7 +420,7 @@ CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
                         <p>Eine TA wird entweder ganz oder gar nicht ausgeführt.</p>
 
                         <pre class="fragment"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Dogdog', 'England');
-INSERT INTO produkte VALUES (129, 'Hundefutter', 8.95, 'Digdog');
+INSERT INTO produkte VALUES (129, 'Hundefutter', 8.95, 'Dogdog');
 COMMIT;</code></pre>
 
                         <pre class="fragment"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Techbob', 'USA');
@@ -439,8 +440,8 @@ INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
                             <p class="small" style="color: red">SQL-Fehler [23505]: ERROR: duplicate key value violates unique constraint "produkte_pkey"
                                 Detail: Key (produktnummer)=(129) already exists.</p>
 
-                        <p class="small">Alle geltenden Integritätsbedigungen müssen zum Ende einer Transaktion erfüllt sein: Primärschlüssel-, Fremdschlüssel-, UNIQUE-, NOT NULL-, CHECK-Constraints, etc.</p>
-                              <aside class="notes">Es ist erlaubt, dass in Mitten einer Transaktion die Datenbank in einem inkonsistenten Zustand ist. Aber spätestens beim Commit muss dafür gesorgt werden, dass alle Integritätsbedigungen erfüllt sind. Sind sie es nicht, kann die Transaktion nicht erfolgreich abschließen und wird abgebrochen und zurückgesetzt.</aside>
+                        <p class="small">Alle geltenden Integritätsbedingungen müssen zum Ende einer Transaktion erfüllt sein: Primärschlüssel-, Fremdschlüssel-, UNIQUE-, NOT NULL-, CHECK-Constraints, etc.</p>
+                              <aside class="notes">Es ist erlaubt, dass in Mitten einer Transaktion die Datenbank in einem inkonsistenten Zustand ist. Aber spätestens beim Commit muss dafür gesorgt werden, dass alle Integritätsbedingungen erfüllt sind. Sind sie es nicht, kann die Transaktion nicht erfolgreich abschließen und wird abgebrochen und zurückgesetzt.</aside>
                       </section>
 
                       <section>
@@ -519,7 +520,7 @@ WHERE produktnr = 17; -- 0.99 EUR
                       <section>
                           <h2>Non-repeatable Read</h2>
                           <div class="columns">
-                              <div style="width: 12cm;">TA<sub>2</sub>
+                              <div style="width: 12cm;">TA<sub>1</sub>
                                   <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
 WHERE produktnr = 17; -- 0.89 EUR
     
@@ -690,7 +691,7 @@ COMMIT;
                                 <tr><td>S</td><td>&check;</td><td>-</td></tr>
                                 <tr><td>X</td><td>-</td><td>-</td></tr>
                             </table>
-                            <aside class="notes">Beim SX-Sperrverfahren gibt es Shared-Sperren (S) und eXklusive Sperren (X). Mehrere TAs können eine gemeinsame S-Sperre auf dem gleichen Objekt haben, aber nur eine TA darf eine X-Sperre auf einem Objekt haben. Vor dem Lesen eines Objektes wird die S-Sperre angefordert, vor dem Schreiben eine X-Sperre. Links in der Sperrmatrix steht die aktuell auf einem Objekt existierende Sperre anderer Transaktionen. Obem steht, welche Sperre eine Transkation anfordern möchte. Der Haken gibt an, ob sie die Sperre bekommen kann oder nicht. Im letzteren Fall muss die TA warten, bis die Sperre wieder freigegeben wurde.</aside>
+                            <aside class="notes">Sperrverfahren werden eingesetzt, um Isolation zu gewährleisten. Beim SX-Sperrverfahren gibt es Shared-Sperren (S) und eXklusive Sperren (X). Mehrere TAs können eine gemeinsame S-Sperre auf dem gleichen Objekt haben, aber nur eine TA darf eine X-Sperre auf einem Objekt haben. Vor dem Lesen eines Objektes wird die S-Sperre angefordert, vor dem Schreiben eine X-Sperre. Links in der Sperrmatrix steht die aktuell auf einem Objekt existierende Sperre anderer Transaktionen. Oben steht, welche Sperre eine Transkation anfordern möchte. Der Haken gibt an, ob sie die Sperre bekommen kann oder nicht. Im letzteren Fall muss die TA warten, bis die Sperre wieder freigegeben wurde.</aside>
                           </section>
 
                           <section>
@@ -770,8 +771,93 @@ COMMIT;
                                 <tr><td><b>Serializable</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>nicht mögl.</td></tr>
                             </table>
                             <p class="fragment small">Lost Updates werden stets verhindert, sie sind in allen Iso'levels nicht möglich.</p>
-                            <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regele eine bessere Performance möglich.</aside>
+                            <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regel eine bessere Performance möglich.</aside>
                           </section>
+
+                          <section>
+                            <h3>Multi-Version-Concurrency-Control</h3>
+                            <ul class="small">
+                              <li>Ein Objekt (Tabelle, Zeile, Wert, ...) kann in mehreren Versionen existieren.</li>
+                              <li class="fragment">TA schreibt: $w_1(x)$ &Rightarrow; neue Version $x'$ anlegen</li>
+                              <li class="fragment">TA liest: $r_2(x)$ &Rightarrow; alte Version $x$ wird gelesen</li>
+                              <li class="fragment">TA committet: $c_1$ &Rightarrow; neue Version wird gültig und sichtbar für andere TAs</li>
+                            </ul>
+                            <p class="fragment small">Beispiel (nicht Konflikt-serialisierbar):
+                              $r_1(x), w_1(x), r_2(x), w_1(x), c_1, c_2$<br>
+                              <span style="display:inline-block; width: 17cm;"></span>&UpperLeftArrow; TA<sub>2</sub> liest alte Version</p>
+                              <p class="fragment small">Das ist äquivalent zu folgendem und somit doch Konflikt-serialisierbar:<br>
+                              $r_1(x), r_2(x), w_1(x), w_1(x), c_1, c_2$
+                            
+
+                            <aside class="notes">Moderne DBMS wie PostgreSQL, Oracle, DB2, SQL Server verwenden MVCC zur Transaktionssicherung. Jede Aktion einer TA basiert logisch gesehen auf einem Schnappschuss der Datenbank zum Zeitpunkt des TA-Starts. Im gezeigten Beispiel liest TA<sub>2</sub> den Wert von x, den es vor der Änderung von TA<sub>1</sub> hatte. Es ist daher auch kein Dirty Read.<br>
+                            Beim Schreiben eines Objektes wird eine neue Version davon angelegt. Die TA selbst arbeitet natürlich auf seiner geänderten Kopie, andere laufende Transaktion arbeiten auf der alten Version. Selbst wenn die TA committet, muss die alte Version noch beibehalten werden, solange noch laufende TAs diese alte Version benötigen.</aside>
+                          </section>
+
+                          <section>
+                            <h2>Recovery-Mechanismen</h2>
+                            <p class="small">Transaktionen müssen auch bei TA-, System- und Hardwarefehlern ACID-konform ausgeführt werden (atomar, ..., dauerhaft).</p>
+                            <p class="fragment small">Aus Performance-Gründen schreiben TAs erst einmal Änderungen nur im RAM; von Zeit zu Zeit werden die geänderten Blöcke dann auf die Festplatte ge-flush-t.</p>
+                            <p class="fragment small">Alle Änderungen einer TA werden aber in ein <b>Transaktions-Log</b> eingetragen, welches immer spätestens bei einem Commit auf die Platte geschrieben wird.</p>
+                            <table class="fragment small">
+                              <thead><tr><th>LSN</th><th>TA</th><th>PageID</th><th>Undo</th><th>Redo</th><th>PrevLSN</th></tr></thead>
+                              <tbody><tr><td>27</td><td>TA<sub>1</sub></td><td>x</td><td>Undo-Info</td><td>Redo-Info</td><td>22</td></tr></tbody>
+                            </table>
+                            <aside class="notes">Das Transaktions-Log speichert, wer (TA) wann (LSN = Log-Sequenz-Nummer) was (PageID) wie geändert hat (Redo) und wie man diese Änderung zurückgängig machen kann (Undo). Die Undo- und Redo-Infos so etwas wie &quot;Byte 17 bis Byte 20 haben sich verändert in 1A5B2FFF&quot;. Die LSN ist eine laufende Nummer, um die Einträge zu ordnen. Die PrevLSN beinhaltet die LSN der vorherigen Aktion der gleichen TA. Mit all diesen Infos können im Fehlerfall Änderungen rückgängig gemacht werden und noch nicht auf die Platte geschriebene Änderungen nachgeholt werden.</aside>
+                          </section>
+
+                          <section>
+                            <h2>Transaktionsfehler</h2>
+                            <p class="small">Beispiel: $r_1(x), r_2(y), r_1(z), w_1(x), w_2(y), w_1(z), a_1, c_2$</p>
+                            <table class="small" style="margin-top: -5mm;">
+                                <thead><tr><th>LSN</th><th>TA</th><th>PageID</th><th>Undo</th><th>Redo</th><th>PrevLSN</th></tr></thead>
+                                <tbody>
+                                  <tr class="fragment"><td>1</td><td>TA<sub>1</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                  <tr class="fragment"><td>2</td><td>TA<sub>2</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                  <tr class="fragment"><td>3</td><td>TA<sub>1</sub></td><td>x</td><td>Undo-Info</td><td><b>Redo-Info</b></td><td>1</td></tr>
+                                  <tr class="fragment"><td>4</td><td>TA<sub>2</sub></td><td>y</td><td>Undo-Info</td><td>Redo-Info</td><td>2</td></tr>
+                                  <tr class="fragment"><td>5</td><td>TA<sub>1</sub></td><td>z</td><td>Undo-Info</td><td><b>Redo-Info</b></td><td>3</td></tr>
+                                  <tr class="fragment"><td>6</td><td>TA<sub>1</sub></td><td>Abort</td><td>-</td><td>-</td><td>5</td></tr>
+                                  <tr class="fragment"><td>7</td><td>TA<sub>2</sub></td><td>Commit</td><td>-</td><td>-</td><td>4</td></tr>
+                                </tbody>
+                              </table>
+                            <aside class="notes">Irgendetwas hat nicht wie gewünscht funktioniert, daher rollt die Anwendung TA<sub>1</sub> zurück. Das DBMS verwendet dazu die hier fett markierten Redo-Infos. Diese können leicht im Log gefunden werden, indem man immer in die PrevLSN-Spalte schaut und dann an die entsprechende Zeile springt. BOT steht für Begin of Transaction.</aside>
+                          </section>
+
+                          <section>
+                              <h2>Systemfehler</h2>
+                              <p class="small">Beispiel: $r_1(x), r_2(y), r_1(z), w_1(x), w_2(y), w_1(z), c_1,$ &#8623; Crash!</p>
+                              <table class="fragment small" style="margin-top: -5mm;">
+                                  <thead><tr><th>LSN</th><th>TA</th><th>PageID</th><th>Undo</th><th>Redo</th><th>PrevLSN</th></tr></thead>
+                                  <tbody>
+                                    <tr><td>1</td><td>TA<sub>1</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                    <tr class=""><td>2</td><td>TA<sub>2</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                    <tr class=""><td>3</td><td>TA<sub>1</sub></td><td>x</td><td>Undo-Info</td><td>Redo-Info</td><td>1</td></tr>
+                                    <tr class=""><td>4</td><td>TA<sub>2</sub></td><td>y</td><td><b>Undo-Info</b></td><td>Redo-Info</td><td>2</td></tr>
+                                    <tr class=""><td>5</td><td>-</td><td>Flush</td><td>-</td><td>-</td><td>-</td></tr>
+                                    <tr class=""><td>6</td><td>TA<sub>1</sub></td><td>z</td><td>Undo-Info</td><td><b>Redo-Info</b></td><td>3</td></tr>
+                                    <tr class=""><td>7</td><td>TA<sub>1</sub></td><td>Commit</td><td>-</td><td>-</td><td>6</td></tr>
+                                  </tbody>
+                                </table>
+                              <aside class="notes">Bei einem Systemfehler ist immer die Frage, welche Transaktionen sind Gewinner (haben committed) und welche sind Verlierer (waren noch aktiv). Da das System zu Zeitpunkt 5 zuletzt einen Flush gemacht hat, um DB-Seiten auf die Festplatte zu persistieren, müssen alle davor durchgeführten Aktionen von Verlierern rückgängig gemacht und noch nicht eingebrachte Änderungen von Gewinnern nachgeholt werden.</aside>
+                            </section>
+  
+                            <section>
+                              <h2>Kapitelzusammenfassung</h2>
+                                  <ul class="small">
+                                    <li>Sichten: CREATE VIEW ... AS</li>
+                                    <li>WITH [LOCAL|CASCADED] CHECK OPTION</li>
+                                    <li>Materialisierte Sichten / REFRESH</li>
+                                    <li>Benutzer und Rollen</li>
+                                    <li>GRANT / REVOKE</li>
+                                    <li>ACID-Transaktionen</li>
+                                    <li>Mehrbenutzeranomalien (Dirty Read, Lost Update, ...)</li>
+                                    <li>Serialisierbarkeit / Serialisierbarkeitsgraph</li>
+                                    <li>SX-Sperrverfahren</li>
+                                    <li>Isolationslevels</li>
+                                    <li>MVCC</li>
+                                    <li>Recovery / Transaktions-Log</li>
+                                  </ul>
+                            </section>
 
                         </div>
                     </div>

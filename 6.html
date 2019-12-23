@@ -170,15 +170,7 @@ iter.close();</code></pre>
                 <section>
                     <h2>JDBC</h2>
                     <p class="small">SQL-Anfragen werden API-Methoden als Strings übergeben.</p>
-                    <pre><code class="hljava" data-trim contenteditable>
-ResultSet rs = stmt.executeQuery("SELECT bezeichnung, preis 
-                                  FROM produkte");
-while (rs.next()) {
-  bezeichnung = rs.getString(1);
-  preis = rs.getBigDecimal(2);
-  System.out.println(bezeichnung+" kostet "+preis+" EUR");
-}
-rs.close();
+                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#23-30' data-trim contenteditable>
                     </code></pre>
                     <p class="small">Vorteile: Flexibel (Anfragen können dynamisch zur Laufzeit generiert werden), kein Precompiler nötig, kompatibel mit allen Java-IDEs und vielen Frameworks.</p>
                     <aside class="notes">JDBC (Java Database Connectivity) ist eine universelle API-Schnittstelle für die Programmiersprache Java. </aside>
@@ -203,22 +195,7 @@ rs.close();
 
                 <section>
                     <h2>Connection</h2>
-                    <pre><code class="hljava" data-trim contenteditable>
-final String url = "jdbc:postgresql://localhost/meine_db";
-final String user = "test";
-final String password = "test";
-Connection conn = null;
-try {
-    // Verbindung aufbauen
-    conn = DriverManager.getConnection(url, user, password);
-    System.out.println("Verbunden mit der PostgreSQL-DB!");
-    // Mit der DB interagieren...
-    
-    // Am Ende Verbindung wieder schließen
-    conn.close();
-} catch (SQLException e) {
-    System.out.println(e.getMessage());
-}</code></pre>
+                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#9-16,21,20,33-37' data-sample-mark="4,7,12" data-sample-indent="remove" data-trim contenteditable></code></pre>
                 <aside class="notes">Eine JDBC-URL besteht aus <code>jdbc:</code>, dem Treiber-Namen, der Adresse des DB-Servers, dem Datenbanknamen und evtl. weiteren optionalen Properties. <code>DriverManager.getConnection</code> stellt eine Verbindung zur Datenbank her und liefert ein <code>Connection</code>-Objekt zurück. Mittels dieses Objekts kann nun mit der Datenbank gearbeitet werden. Tritt ein Fehler beim Verbinden auf (z. B. falsches Passwort), wird eine <code>SQLException</code> geworfen. Auch andere Methoden, z.&nbsp;B. diejenigen, die Anfragen an die Datenbank schicken, werfen im Fehlerfall ebendiese Exception. </aside>
                 </section>
 

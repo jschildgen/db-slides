@@ -26,6 +26,7 @@ Reveal.initialize({
     { src: 'src/clone.js', async: true },
     { src: 'src/erd.js' },
     { src: 'plugins/jump.js', async: true },
-    { src: 'plugins/badges.js' }
+    { src: 'plugins/badges.js' },
+    { src: 'plugins/sampler.js' }
 ]
 });

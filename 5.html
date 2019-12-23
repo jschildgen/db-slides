@@ -427,9 +427,9 @@ COMMIT;</code></pre>
 INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
 <p class="fragment small" style="color: red">SQL-Fehler [23505]: ERROR: duplicate key value violates unique constraint "produkte_pkey"
     Detail: Key (produktnummer)=(129) already exists.</p>
-    <p class="fragment small">&Rightarrow; Der Hersteller Techbob wird auch nicht eingefügt!</p>
+    <p class="fragment small">&Rightarrow; Die TA kann komplett zurückgerollt werden, sodass der Hersteller Techbob auch nicht eingefügt wird.</p>
 
-    <aside class="notes">In diesen und in den nun folgenden Beispielen ist Autocommit ausgestellt. Zunächst wird ein Hersteller und ein Produkt eingefügt und diese Transaktion erfolgreich mit einem Commit beendet. Dann folgen zwei INSERTS, wobei das zweite davon fehlschlängt. Dadurch wird die Transaktion abgebrochen, also ohne Erfolg beendet. Nichts aus der Transaktion wurde ausgeführt.</aside>
+    <aside class="notes">In diesen und in den nun folgenden Beispielen ist Autocommit ausgestellt. Zunächst wird ein Hersteller und ein Produkt eingefügt und diese Transaktion erfolgreich mit einem Commit beendet. Dann folgen zwei INSERTs, wobei das zweite davon fehlschlängt. Nun lässt sich die Transaktion abbrechen, sodass nichts aus der Transaktion ausgeführt wurde.</aside>
                       </section>
 
                       <section>
@@ -813,14 +813,14 @@ COMMIT;
                                 <tbody>
                                   <tr class="fragment"><td>1</td><td>TA<sub>1</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
                                   <tr class="fragment"><td>2</td><td>TA<sub>2</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
-                                  <tr class="fragment"><td>3</td><td>TA<sub>1</sub></td><td>x</td><td>Undo-Info</td><td><b>Redo-Info</b></td><td>1</td></tr>
+                                  <tr class="fragment"><td>3</td><td>TA<sub>1</sub></td><td>x</td><td><b>Undo-Info</b></td><td>Redo-Info</td><td>1</td></tr>
                                   <tr class="fragment"><td>4</td><td>TA<sub>2</sub></td><td>y</td><td>Undo-Info</td><td>Redo-Info</td><td>2</td></tr>
-                                  <tr class="fragment"><td>5</td><td>TA<sub>1</sub></td><td>z</td><td>Undo-Info</td><td><b>Redo-Info</b></td><td>3</td></tr>
+                                  <tr class="fragment"><td>5</td><td>TA<sub>1</sub></td><td>z</td><td><b>Undo-Info</b></td><td>Redo-Info</td><td>3</td></tr>
                                   <tr class="fragment"><td>6</td><td>TA<sub>1</sub></td><td>Abort</td><td>-</td><td>-</td><td>5</td></tr>
                                   <tr class="fragment"><td>7</td><td>TA<sub>2</sub></td><td>Commit</td><td>-</td><td>-</td><td>4</td></tr>
                                 </tbody>
                               </table>
-                            <aside class="notes">Irgendetwas hat nicht wie gewünscht funktioniert, daher rollt die Anwendung TA<sub>1</sub> zurück. Das DBMS verwendet dazu die hier fett markierten Redo-Infos. Diese können leicht im Log gefunden werden, indem man immer in die PrevLSN-Spalte schaut und dann an die entsprechende Zeile springt. BOT steht für Begin of Transaction.</aside>
+                            <aside class="notes">Irgendetwas hat nicht wie gewünscht funktioniert, daher rollt die Anwendung TA<sub>1</sub> zurück. Das DBMS verwendet dazu die hier fett markierten Undo-Infos. Diese können leicht im Log gefunden werden, indem man immer in die PrevLSN-Spalte schaut und dann an die entsprechende Zeile springt. BOT steht für Begin of Transaction.</aside>
                           </section>
 
                           <section>

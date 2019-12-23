@@ -31,31 +31,72 @@
         <p><b>Welche Bücher vom Verlag &quot;Springer&quot; (2P) besitzen das Schlagwort &quot;Künstliche Intelligenz&quot;? (3P) Geben Sie die ISBN, den Titel und die Anzahl der Autoren aus (5P).</b> In Klammern stehen die Teilpunkte, die Sie bekommen, wenn Sie Aufgabe nur teilweise lösen.</p>
 </section>
 <section>
-    <h1>Aufgabe 1: SELECT-Anfragen (10P)</h1>
-    <p>Abgabe-Deadline: 16.12.2019 12:00 im Moodle</p>
-        <p>Auf der Webseite des Datenbankmanagementsystems Hyper können Sie SQL-Anfragen gegen das Uni-Schema aus dem Kemper-Datenbanksysteme-Buch (siehe auch Übungsblatt 3) stellen: <a href="http://hyper-db.de/interface.html" target="_blank">http://hyper-db.de/interface.html</a></p>
-        <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
-            Studenten(<u>MatrNr</u>, Name, Semester)<br>
-            Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
-            hoeren(<u>MatrNr, VorlNr</u>)</p>
-         <p>Vorlesungen.gelesen_von ist Fremdschlüssel auf Professoren.PersNr<br>
-            hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
-            hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
-
-        <p>Formulieren Sie die folgenden Anfragen mittels SQL. Jede richtige Lösung gibt 2 Punkte. Teilweise richtige Lösungen geben einen Punkt. Copy-pasten Sie einfach die SQL-Query in das Lösungfeld in Ihrer Moodle-Abgabe.</p>
-
-        <table border="0" style="width: 100%">
-        <tr><td>1.</td><td>Wie viele Professoren, die den Rang C4 haben, gibt es?</td></tr>
-        <tr><td>2.</td><td>Geben Sie die Namen der Studierenden aus, die die Vorlesung &quot;Grundzüge&quot; hören, und zwar alphabetisch aufsteigend sortiert.</td></tr>
-        <tr><td>3.</td><td>Geben zu jedem Professor, der mindestens zwei Vorlesungen hält, den Namen sowie die Gesamt-SWS-Zahl der von ihm oder ihr gehaltenen Vorlesungen aus. </td></tr>
-        <tr><td>4.</td><td>Wie sind die Namen der Studierenden, die zusammen mit dem Studenten namens &quot;Feuerbach&quot; zumindest eine gemeinsame Vorlesung hören? Geben Sie keinen Namen doppelt aus.</td></tr>
-        <tr><td>5.</td><td>Welche Professoren haben den Rang C4 und halten keine einzige 4-SWS-Vorlesung.</td></tr>
-        </table>
+    <h1>Aufgabe 1: Rechtemanagement, Transaktionen, JDBC (10P)</h1>
+    <p>Abgabe-Deadline: 20.01.2019 12:00 im Moodle</p>
+    <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
+    <table border="0" style="width: 100%; margin-top: -5mm;">
+    <tr>
+        <td style="width:10mm">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td style="text-align: center; width:15mm">Richtig</td>
+        <td style="text-align: center; width:15mm">Falsch</td>
+    </tr>
+    <tr>
+        <td>1.</td><td>Wenn ich GRANT rolle TO benutzer ausführe, hat der angegebene Benutzer alle Berechtigungen der spezifizierten Rolle.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>2.</td><td>Mit REVOKE ... RESTRICT verbiete ich, ein Recht weiterzugeben.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>3.</td><td>Wenn eine Transaktion Daten schreibt und sie diese selbst wieder liest, nennt man dies ein Dirty Read.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>4.</td><td>Es laufen zwei Transaktionen parallel. Eine schreibt in x und die andere liest x gleichzeitig. Hier kann ein Lost Update auftreten.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>5.</td><td>Das Phantomproblem kann auftreten, wenn zwischen zwei Leseoperationen eine andere Transaktion Datensätze löscht.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>6.</td><td>Es gibt einen Zyklus im Serialisierbarkeitsgraph der folgenden Historie: w<sub>1</sub>(x), w<sub>2</sub>(x), r<sub>2</sub>(y), r<sub>1</sub>(y), w<sub>3</sub>(y), c<sub>1</sub>, c<sub>2</sub>, c<sub>3</sub></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>7.</td><td>Wird bei der Historie aus der vorherigen Frage das SW-Sperrverfahren eingesetzt, muss TA<sub>2</sub> warten, bevor sie in x schreiben darf.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>8.</td><td>Die Redo-Info im Transaktionslog wird verwendet, um noch nicht auf die Festplatte geschriebene Aktionen von Gewinner-Transaktionen auszuführen.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>9.</td><td>In JDBC enthält ein PreparedStatement Fragezeichen als Platzhalter, die vor der Query-Ausführung mit Werten belegt werden können.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    <tr>
+        <td>10.</td><td>In JDBC liefert executeQuery einen Array zurück, der die Ergebnisse der übergebenen Anfrage beinhaltet.</td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+        <td style="text-align: center"><i class="far fa-square"></i></td>
+    </tr>
+    </table>
             
     </section>
 
     <section style="page-break-inside:avoid; padding-top: 3cm">
-    <h1>Aufgabe 2: Sichten in SQL</h1>
+    <h1>Aufgabe 2: Anwendungsentwicklung mit JDBC</h1>
     <p>Auf <a href="https://data.deutschebahn.com/dataset/data-stationsdaten" target="_blank">https://data.deutschebahn.com/dataset/data-stationsdaten</a> finden Sie Datensätze mit deutschen Bahnhöfen.</p>
     <ol>
         <li>Laden Sie sich einen Datensatz im CSV-Format herunter.</li>

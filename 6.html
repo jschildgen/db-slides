@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken 1 - Kapitel 5 - Mehrbenutzerbetrieb</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reset.css">
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                            <h4 style="text-align:center"><b>Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h4>
+                            <h1>Datenbanken 1</h1>
+                            <h3>Kapitel 6: Anwendungsentwicklung</h3>
+                            <h4 style="text-align:center">2020-01-14</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                        </section>
+                        <section>
+                          <h3>In diesem Kapitel erstellen wir...</h3>
+                          <ul class="small">
+                              <li>... Java-Anwendungen, die mit JDBC mit der Datenbank kommunizieren,</li>
+                              <li>... Funktionen und Prozeduren direkt in der Datenbank,</li>
+                              <li>... Trigger</li>
+                              <li>... Indexe</li>
+                          </ul>
+                      </section> 
+                      <section>
+                          <h3>Anwendungsentwicklung</h3>
+                            <ul class="small">
+                                <li class="fragment">Lauffähige Anwendung in Java, C++, Python, PHP, ...</li>
+                                <li class="fragment">Konsolenprogramm, GUI, App, Serverprozess, ...</li>
+                                <li class="fragment">Komponenten:
+                                    <ul>
+                                        <li>Connection (Aufbau einer Verbindung zur DB)</li>
+                                        <li class="fragment">Statement (Ausführung einer SQL-Anfrage)</li class="fragment">
+                                        <li class="fragment">PreparedStatement (Statement mit Platzhaltern)</li class="fragment">
+                                        <li class="fragment">ResultSet (Ergebnis einer ausgeführten Anfrage)</li class="fragment">
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <aside class="notes">Im ersten Teil dieses Kapitels betrachten wir Anwendungen, die nicht in der Datenbank laufen, sondern eigenständig sind. Sie stellen eine Verbindung zur Datenbank her, um an diese Anfragen zu schicken und die Ergebnisse dieser Anfragen zu verarbeiten.</aside>
+
+                          <div class="sl-block" data-block-type="text" style="height: auto; width: 246px; left: 677px; top: 176.642px;" data-block-id="1953b372e575e378d1427477af8b1697">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; background-color:rgba(66, 169, 170, 0.99); border-style: solid; border-width: 1px; border-color: rgb(34, 34, 34);" data-fragment-index="0">
+                                <p style="text-align:center; color:white">Anwendung</p>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 799px; top: 229.642px;" data-block-id="672bf175b9e8a52980602cc2fc21f817">
+                            <div class="sl-block-content" data-line-x1="181" data-line-y1="247" data-line-x2="180" data-line-y2="142" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 13;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="105" viewBox="180 142 1 105">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="180.88571946838732" y1="235.00054418066827" x2="180" y2="142"></line>
+                                    <line stroke="#000000" stroke-width="8" x1="180.88571946838732" y1="235.00054418066827" x2="180" y2="142"></line>
+                                    <polygon fill="#000000" transform="translate(180.88571946838732,235.00054418066827) rotate(-0.546)" points="0,12 12,-12 -12,-12"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="shape" style="width: 245px; height: 59.5px; left: 678px; top: 351.642px;" data-block-id="c5318ebc130b3ee4af70f0e7f5a66b0b">
+                            <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 60">
+                                    <rect width="245" height="59.5" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 678px; top: 328.642px;" data-block-id="10bb4dffa7d7c5d1c68a72c2ef8c8568">
+                            <div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 15;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+                                    <defs>
+                                        <clipPath id="shape-mask-3-1577110259178">
+                                            <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+                                        </clipPath>
+                                    </defs>
+                                    <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-3-1577110259178)"></ellipse>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 678px; top: 388.642px;" data-block-id="fb8d8844b750525fc1a245f2849e3c7f">
+                            <div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 11;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+                                    <defs>
+                                        <clipPath id="shape-mask-2-1577110259174">
+                                            <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+                                        </clipPath>
+                                    </defs>
+                                    <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-2-1577110259174)"></ellipse>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 351.642px;" data-block-id="0942b832f1efe1703b62b47780b11474">
+                            <div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 16;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                    <line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 922px; top: 351.642px;" data-block-id="5287c637c5f2b0817dcaacb255726fe9">
+                            <div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 17;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                    <line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 244px; left: 678px; top: 371.642px;" data-block-id="aa1aed179e2353e33c8a1878f6b5b433">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18;">
+                                <p style="text-align: center;">Datenbank</p>
+                            </div>
+                        </div>
+                      </section>
+
+                      <section>
+                          <h2>Beispielanwendungen</h2>
+                          <div class="columns">
+                              <div>Konsolenprogramm
+                                <img style="margin-top: -1.5cm;" src="img/6/console.png" class="noborder"></div>
+                                <div class="fragment">GUI / App
+                                <img src="img/6/todoapp.png" class="noborder">
+                                <br/><br/><br/></div>
+                          </div>
+                          <aside class="notes">Das Python-Programm links stellt eine Verbindung mit einer Datenbank her, stellt eine SELECT-Anfrage und zeigt die Ergebnisse auf der Konsole an. Die Android-Anwendung rechts ist eine Todo-App (Bildquelle: Antonio Pardo, https://www.flickr.com/photos/apardo/3323321813). Diese Anwendung läuft lokal ohne Internetzugriff und speichert die Daten in eine SQLite-Datenbank, die auf dem Handy gespeichert ist.</aside>
+                      </section>
+                      <section>
+                          <h2>Anwendungsserver</h2>
+                          <p>Java EE, JSP, Java Servlets, .NET, PHP, Django, ...</p>
+                          <p class="small">Endanwendung (z. B. Webbrowser) &rightarrow; Anwendungsserver &rightarrow; Datenbank</p>
+                          <img src="img/6/webapp.png" class="noborder stretch">
+                          <aside class="notes">Das hier gezeigte Tablet stellt keine direkte Verbindung zu einer Datenbank her, um die Daten für die Diagramme zu laden. Ansonsten könnte der Nutzer der App eventuell sogar die DB-Benutzerdaten auslesen. Stattdessen läuft auf einem Webserver eine Anwendung, welche mit der Datenbank interagiert und eine HTML-Seite erzeugt. Diese ruft der Browser des Tablets auf und zeigt sie an. Auch die Todo-App der vorherigen Folie könnte Server-basiert realisiert werden. In dem Fall reicht es, dass der Anwendungsserver die Daten als JSON oder XML bereitstellt, sodass die Smartphone-App diese dann entsprechend darstellen kann.</aside>
+                      </section>
+
+                      <section>
+                          <h2>Embedded SQL</h2>
+                          <p class="small">Ansatz: SQL-Anfragen und Programmcode mischen,<br>
+                             dann erzeugt ein Precompiler das eigentliche lauffähige Programm.</p>
+
+                        <p class="small">Beispiel: SQL Object-Language Bindings (OLB) für Java (vormals SQLJ)</p>
+                        <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>ProdukteIterator iter;
+#sql iter = { SELECT bezeichnung, preis FROM produkte };
+do {
+  #sql { FETCH :iter INTO :bezeichnung, :preis };
+  System.out.println(bezeichnung+" kostet "+preis+" EUR");
+} while (!iter.endFetch());
+iter.close();</code></pre>
+<p class="fragment small">Vorteil: Syntaxüberprüfung der Anfrage und Prüfung auf gültige Tabellen- und Spaltennamen kann bereits bei der Compile-Zeit erfolgen.</p>
+                <aside class="notes">Die Zeilen, die im Beispielcode mit #sql beginnen, werden vom Precompiler in Java-Code übersetzt. Gleichzeitig erfolgt eine Überprüfung, ob die Anfrage syntaktisch korrekt ist. Neben dem Java-Programm wird auch eine Profil-Datei erzeugt, die in die Datenbank gespeichert werden kann. Die Datenbank würde dabei einen Fehler liefern, wenn z. B. ein ungültiger Spaltenname verwendet wurde.</aside>      
+                </section>
+                <section>
+                    <h2>JDBC</h2>
+                    <p class="small">SQL-Anfragen werden API-Methoden als Strings übergeben.</p>
+                    <pre><code class="hljava" data-trim contenteditable>
+ResultSet rs = stmt.executeQuery("SELECT bezeichnung, preis 
+                                  FROM produkte");
+while (rs.next()) {
+  bezeichnung = rs.getString(1);
+  preis = rs.getBigDecimal(2);
+  System.out.println(bezeichnung+" kostet "+preis+" EUR");
+}
+rs.close();
+                    </code></pre>
+                    <p class="small">Vorteile: Flexibel (Anfragen können dynamisch zur Laufzeit generiert werden), kein Precompiler nötig, kompatibel mit allen Java-IDEs und vielen Frameworks.</p>
+                    <aside class="notes">JDBC (Java Database Connectivity) ist eine universelle API-Schnittstelle für die Programmiersprache Java. </aside>
+                </section> 
+
+                <section>
+                    <h2>Driver</h2>
+                    <div class="columns">
+                    <div>
+                        <p class="small">Jedes DBMS hat seinen eigenen JDBC-Treiber: MySQL, PostgreSQL, Oracle, ...</p>
+                        <p class="small">&Rightarrow; Entsprechende Jar herunterladen und dem Java-Projekt zur Verfügung stellen</p>
+                    </div>
+                    <div>
+                        <img src="img/6/driver_jar.png" alt="Driver Jar" style="width:25cm">
+                    </div>
+                    </div>
+
+                    <p class="small">Nun kann über die Klasse <code>DriverManager</code> eine Verbindung aufgebaut werden.</p>
+                    
+                    <aside class="notes">Bis Java 1.6 war es nötig, den Treiber mittels <code>Class.forName("org.postgresql.Driver");</code> zu laden. Mittlerweile unterstützen die meisten JDBC-Treiber den Java Service Provider-Mechanismus, sodass der Treiber automatisch geladen wird, den die JVM im Classpath findet.</aside>
+                </section>
+
+                <section>
+                    <h2>Connection</h2>
+                    <pre><code class="hljava" data-trim contenteditable>
+final String url = "jdbc:postgresql://localhost/meine_db";
+final String user = "test";
+final String password = "test";
+Connection conn = null;
+try {
+    // Verbindung aufbauen
+    conn = DriverManager.getConnection(url, user, password);
+    System.out.println("Verbunden mit der PostgreSQL-DB!");
+    // Mit der DB interagieren...
+    
+    // Am Ende Verbindung wieder schließen
+    conn.close();
+} catch (SQLException e) {
+    System.out.println(e.getMessage());
+}</code></pre>
+                <aside class="notes">Eine JDBC-URL besteht aus <code>jdbc:</code>, dem Treiber-Namen, der Adresse des DB-Servers, dem Datenbanknamen und evtl. weiteren optionalen Properties. <code>DriverManager.getConnection</code> stellt eine Verbindung zur Datenbank her und liefert ein <code>Connection</code>-Objekt zurück. Mittels dieses Objekts kann nun mit der Datenbank gearbeitet werden. Tritt ein Fehler beim Verbinden auf (z. B. falsches Passwort), wird eine <code>SQLException</code> geworfen. Auch andere Methoden, z.&nbsp;B. diejenigen, die Anfragen an die Datenbank schicken, werfen im Fehlerfall ebendiese Exception. </aside>
+                </section>
+
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/js/reveal.js"></script>
+                    <script src="lib/jquery.js"></script>
+                    <script src="lib/lodash.js"></script>
+                    <script src="lib/backbone.js"></script>
+                    <script src="lib/joint.min.js"></script>
+            
+                    <script src="src/init_reveal.js"></script>
+            
+                    <script>
+                    if(window.location.search.match( /print-pdf/gi )) {
+                            document.getElementById('header').style="display:none";
+                            document.getElementById('footer').style="display:none";
+                    }
+                    </script>
+            
+            
+                </body>
+            </html>

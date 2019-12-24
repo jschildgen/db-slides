@@ -195,7 +195,7 @@ iter.close();</code></pre>
 
                 <section>
                     <h2>Connection</h2>
-                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#9-16,21,20,33-37' data-sample-mark="4,7,12" data-sample-indent="remove" data-trim contenteditable></code></pre>
+                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#9-16,21,20,33-37' data-sample-mark="4,7,12" data-trim contenteditable></code></pre>
                 <aside class="notes">Eine JDBC-URL besteht aus <code>jdbc:</code>, dem Treiber-Namen, der Adresse des DB-Servers, dem Datenbanknamen und evtl. weiteren optionalen Properties. <code>DriverManager.getConnection</code> stellt eine Verbindung zur Datenbank her und liefert ein <code>Connection</code>-Objekt zurück. Mittels dieses Objekts kann nun mit der Datenbank gearbeitet werden. Tritt ein Fehler beim Verbinden auf (z. B. falsches Passwort), wird eine <code>SQLException</code> geworfen. Auch andere Methoden, z.&nbsp;B. diejenigen, die Anfragen an die Datenbank schicken, werfen im Fehlerfall ebendiese Exception. </aside>
                 </section>
 

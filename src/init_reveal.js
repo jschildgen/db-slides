@@ -14,6 +14,9 @@ Reveal.initialize({
  keyboard: { 
     27: null // don't do anything when ESC is pressed 
  },
+ sampler : {
+   removeIndentation: true
+ },
  dependencies: [
     { src: 'reveal.js/plugin/markdown/marked.js' },
     { src: 'reveal.js/plugin/markdown/markdown.js' },

@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Datenbanken 1 - Kapitel 5 - Mehrbenutzerbetrieb</title>
+		<title>Datenbanken 1 - Kapitel 6 - Anwendungsentwicklung</title>
 
 		<link rel="stylesheet" href="reveal.js/css/reset.css">
 		<link rel="stylesheet" href="reveal.js/css/reveal.css">
@@ -53,12 +53,13 @@
                           <ul class="small">
                               <li>... Java-Anwendungen, die mit JDBC mit der Datenbank kommunizieren,</li>
                               <li>... Funktionen und Prozeduren direkt in der Datenbank,</li>
-                              <li>... Trigger</li>
-                              <li>... Indexe</li>
+                              <li>... Trigger,</li>
+                              <li>... Indexe.</li>
                           </ul>
                       </section> 
                       <section>
                           <h3>Anwendungsentwicklung</h3>
+                          <div class="trackinfo"><i class="fas fa-headphones"></i> 99</div>
                             <ul class="small">
                                 <li class="fragment">Lauffähige Anwendung in Java, C++, Python, PHP, ...</li>
                                 <li class="fragment">Konsolenprogramm, GUI, App, Serverprozess, ...</li>
@@ -199,6 +200,46 @@ iter.close();</code></pre>
                 <aside class="notes">Eine JDBC-URL besteht aus <code>jdbc:</code>, dem Treiber-Namen, der Adresse des DB-Servers, dem Datenbanknamen und evtl. weiteren optionalen Properties. <code>DriverManager.getConnection</code> stellt eine Verbindung zur Datenbank her und liefert ein <code>Connection</code>-Objekt zurück. Mittels dieses Objekts kann nun mit der Datenbank gearbeitet werden. Tritt ein Fehler beim Verbinden auf (z. B. falsches Passwort), wird eine <code>SQLException</code> geworfen. Auch andere Methoden, z.&nbsp;B. diejenigen, die Anfragen an die Datenbank schicken, werfen im Fehlerfall ebendiese Exception. </aside>
                 </section>
 
+                <section>
+                    <h2>Statement und ResultSet</h2>
+                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#22-31' data-sample-mark="" data-trim contenteditable></code></pre>
+                
+                <aside class="notes">Um eine Anfrage an die Datenbank zu schicken, kann auf der vorhandenen <code>Connection</code>ein <code>Statement</code>-Objekt erzeugt werden. Eine Anfrage wird mit der <code>executeQuery</code>- oder <code>executeUpdate</code>-Methode an die Datenbank geschickt. Erstere liefert ein <code>ResultSet</code> zurück, zweitere dient zur Ausführung von <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, usw. und liefert die Anzahl der betroffenen Zeilen zurück.<br>
+                Über ein <code>ResultSet</code> kann mittels der <code>next()</code>-Methode iteriert werden. <code>next()</code> liefert <code>false</code>, wenn wir am Ende der Ergebnismenge angekommen sind. Wie im Beispiel gezeigt, kann man mit einer While-Schleife Zeile für Zeile über das Ergebnis einer ausgeführten Anfrage iterieren. In jeder Iteration stehen einem Datentyp-spezifische Methoden bereit, um auf die Spaltenwerte der aktuellen Zeile zuzugreifen; entweder über die Position (beginnend mit 1) oder über das Spaltenlabel: <code>rs.getString(1)</code> und <code>rs.getString("bezeichnung")</code> liefert beides den Wert der Ergebnisspalte &quot;bezeichnung&quot;.</aside>
+                </section>
+
+                <section>
+                    <h2>SQL-Injections</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 100</div>
+                    <div style="position: absolute; top: 20px; right:5px; font-size:160px"><i class="fas fa-exclamation-triangle red"></i></div>
+                    <p class="small">Vorsicht beim Erzeugen von Query-Strings,<br>die Benutzereingaben beinhalten! (&rightarrow; <a href="https://www.xkcd.com/327/" target="_blank">xkcd.com/327</a>)</p>
+                    <pre><code class="java" data-trim contenteditable>
+ResultSet rs = st.executeQuery("SELECT bezeichnung, preis " +
+                               "FROM webshop.produkte " +
+                               "WHERE produktnr = "+produktnr);</code></pre>
+                    <p class="fragment small"><em>Geben Sie eine Produktnummer ein: </em><input type="text" value="17; DROP TABLE webshop.produkte;" style="font-size: 22pt; width:13cm"></p>
+                    <p class="fragment"><input type="text" value="17 UNION (SELECT email||' '||passwort, NULL FROM webshop.kunden)" style="font-size: 22pt; width:25cm"></p>
+                    <aside class="notes">Mit SQL-Injections lassen sich Sicherheitslücken ausnutzen, die es dem Benutzer ermöglichen Datenbankbefehle einzuschleusen. Die hier gezeigte Anfrage ist gut gemeint. Wenn der Benutzer Produktnummer 17 eingibt, soll <code>SELECT ... WHERE produktnr = 17</code> ausgeführt werden. Dadurch, dass der Benutzerinput ohne Überprüfung und Maskierung von Sonderzeichen einfach so als Teil der Anfrage an den String drangehangen wird, ermöglicht man dem Anwender beliebige Anfragen auf der Datenbank auszuführen. Ersterer Hack würde die Produkte-Tabelle droppen. JDBC verhindert dies jedoch glücklicherweise, da <code>allowMultiQueries</code> standardmäßig <code>false</code> ist. Der zweite Hack würde jedoch funktionieren. Er ermöglicht dem Angreifer die Einsicht der E-Mail-Adressen und Passwörter aller Kunden.</aside>
+                </section>
+
+                <section>
+                    <h2>SQL-Injections</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 101</div>
+                    <div style="position: absolute; top: 20px; right:5px; font-size:160px"><i class="fas fa-exclamation-triangle red"></i></div>
+                    <p class="small">Anderes Beispiel: Login-Formular</p>
+                    <table class="small" style="border: none; background-color: gainsboro;">
+                        <tr><td style="border: none;">E-Mail:</td style="border: none;"><td style="border: none;"><input style="font-size: 20pt; width: 10cm" value="peter@example.com' --"></td style="border: none;"></tr>
+                        <tr><td style="border: none;">Passwort:</td style="border: none;"><td style="border: none;"><input style="font-size: 20pt; width: 10cm" value=""></td style="border: none;"></tr>
+                        <tr><td colspan="2"><input type="button" style="width:100%; font-size:200%; " value="Einloggen"></td></tr>
+                    </table>
+                    <pre><code class="java" data-trim contenteditable>
+ResultSet rs = st.executeQuery("SELECT COUNT(*) " +
+                                "FROM webshop.kunden " +
+                                "WHERE email = '"+email+"' " +
+                                "AND passwort = md5('"+pass+"')";</code></pre>
+                    <aside class="notes">Dadurch dass der Hacker hier mit dem Anführungszeichen den String abschließt und mittels <code>--</code> den Rest der Anfrage auskommentiert, ergibt sich eine gültige Anfrage, welche lediglich überprüft, ob es den Benutzer gibt und nicht, ob das Passwort stimmt. Im Endeffekt wird ausgeführt: <code>SELECT COUNT(*) FROM webshop.kunden WHERE email = 'peter@example.com' -- AND passwort = md5('')</code>. Alles ab <code>--</code> wird ignoriert. Andere Hacks sind möglich mit <code>' OR 1=1 --</code> oder Ähnlichem.
+                    <br>Die md5-Funktion erzeugt einen Hash aus dem Passwort (z. B. d41d8cd98f00b204e9800998ecf8427e), welcher mit dem gespeicherten Hash verglichen wird. Dies verhindert das Abspeichern von Klartext-Passwörtern. Da md5 jedoch unsicher ist, sollte stattdessen eher sha256 verwendet werden.</aside>
+                </section>
                         </div>
                     </div>
             

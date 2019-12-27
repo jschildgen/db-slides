@@ -241,7 +241,7 @@ iter.close();</code></pre>
                         <tr><td colspan="2"><input type="button" style="width:100%; font-size:200%; " value="Einloggen"></td></tr>
                     </table>
                     <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/Login_SQLInjection.java#26-28'></code></pre>
-                    <aside class="notes">Dadurch dass der Hacker hier mit dem Anführungszeichen den String abschließt und mittels <code>--</code> den Rest der Anfrage auskommentiert, ergibt sich eine gültige Anfrage, welche lediglich überprüft, ob es den Benutzer gibt und nicht, ob das Passwort stimmt. Im Endeffekt wird ausgeführt: <code>SELECT COUNT(*) FROM webshop.kunden WHERE email = 'peter@example.com' -- AND passwort = md5('')</code>. Alles ab <code>--</code> wird ignoriert. Andere Hacks sind möglich mit <code>' OR 1=1 --</code> oder Ähnlichem.
+                    <aside class="notes">Dadurch dass der Hacker hier mit dem Anführungszeichen den String abschließt und mittels <code>--</code> den Rest der Anfrage auskommentiert, ergibt sich eine gültige Anfrage, welche lediglich überprüft, ob es den Benutzer gibt und nicht, ob das Passwort stimmt. Im Endeffekt wird ausgeführt: <code>SELECT COUNT(*) FROM webshop.kunden WHERE email = 'peter@example.com' -- AND passwort = md5('')</code>. Alles ab <code>--</code> wird ignoriert.
                     <br>Die md5-Funktion erzeugt einen Hash aus dem Passwort (z. B. d41d8cd98f00b204e9800998ecf8427e), welcher mit dem gespeicherten Hash verglichen wird. Dies verhindert das Abspeichern von Klartext-Passwörtern. Da md5 jedoch unsicher ist, sollte stattdessen eher sha256 verwendet werden.</aside>
                 </section>
 
@@ -267,6 +267,137 @@ iter.close();</code></pre>
                     <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/MetadataExample.java#27-33' data-sample-mark=""></code></pre>
                     <aside class="notes">JDBC stellt Methoden bereit, um auf die Metadaten der Datenbank (z. B. Tabellen, Spalten einer Tabelle, ...) und auf Metadaten eines ResultSets zuzugreifen.</aside>
                 </section>
+
+                <section>
+                    <h2>Routinen</h2>
+                    <p>Benutzerdefinierte Routinen sind in der DB gespeicherte Datenbankobjekte (wie Tabellen und Views):</p>
+                    <ul>
+                        <li><b>Prozeduren</b> tun etwas</li>
+                        <li><b>Funktionen (UDF)</b> liefern einen Ergebniswert</li>
+                        <li><b>Tabellenfunktionen</b> liefern eine Tabelle</li>
+                        <li><b>Methoden</b> gehören zu einem User-defined Datatype</li>
+                    </ul>
+                    <p>Routen haben einen Namen und Eingabeparameter.</p>
+                    <aside class="notes">Die meisten Datenbankmanagementsysteme erlauben die Erstellung von Routinen in einer Programmiersprache. In PostgreSQL heißt diese Sprache PL/pgSQL (Prozedurale Spracherweiterung für PostgreSQL). Neben SQL-Anfragen (SELECT, INSERT, ...) gibt es auch IF-Blöcke, FOR-Schleifen, usw. Methoden werden in dieser Vorlesung nicht behandelt.</aside>
+                </section>
+
+                <section>
+                    <h2>PG/plSQL</h2>
+                    <h4>Block:</h4>
+                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                        [ DECLARE 
+                        -- hier können Variablen definiert werden ]
+                        BEGIN
+                        -- Anweisungen ...
+                        END
+                    </code></pre>
+                    <h4>Kontrollstrukturen:</h4>
+                        <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                            IF ... THEN ... [ELSE ...] END;
+                            WHILE ... LOOP ... END LOOP;
+                            LOOP ... EXIT WHEN ...; END LOOP;
+                            FOR ... IN ... .. ... LOOP ... END LOOP;
+                            FOR ... IN 'SELECT ...' LOOP ... END LOOP;
+                        </code></pre>
+                </section>
+
+                <section>
+                    <h2>Stored Procedures</h2>
+                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+CREATE FUNCTION alles_leeren() RETURNS void AS
+$$ BEGIN
+ TRUNCATE bewertungen CASCADE;
+ TRUNCATE produkte CASCADE;
+ TRUNCATE hersteller CASCADE;
+ TRUNCATE kunden CASCADE;
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable>SELECT alles_leeren();</code></pre>
+
+                <aside class="notes">In diesem einfachen Beispiel hat unsere Prozedur <code>alles_leeren</code> keine Eingabeparameter (daher die leeren Klammern <code>()</code>), wir definieren keine Variablen und verwenden auch keine Kontrollstrukturen oder Schleifen. Es werden lediglich vier <code>TRUNCATE</code>-Kommandos ausgeführt. In PostgreSQL sind Prozeduren <code>FUNCTION</code>-Objekte mit dem Rückgabetyp <code>void</code>. Man ruft sie in einem <code>SELECT</code>-Kommando ohne <code>FROM</code>-Klausel auf. Seit PostgreSQL 11 gibt es jedoch auch <code>CREATE PROCEDURE</code>, welche dann mit einem <code>CALL</code>-Befehl aufgerufen werden (siehe übernächste Folie). In anderen DBMS werden Prozeduren mit einem <code>EXECUTE</code>-Befehl ausgeführt.</aside>
+                </section>
+            <section>
+                <h3>RAISE NOTICE</h3>
+                <p class="small">RAISE NOTICE gibt einen Infotext auf der Konsole aus.</p>
+                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+CREATE FUNCTION hallo() RETURNS void AS $$
+DECLARE
+    x INT := 5;
+BEGIN
+    RAISE NOTICE 'Hallo!!!';
+    RAISE NOTICE 'x ist %', x;
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable>SELECT hallo();</code></pre>
+            <img src="img/6/dbeaver_notice.png" alt="DBeaver Serverausgabe anzeigen" style="width:12cm">
+            <aside class="notes">Verwendet man im Notice %-Platzhalter, kann man deren Werte als zusätzliche Parameter übermitteln. Diese Folie zeigt auch, wie man Variablen deklariert. Bei <code>x INT := 5;</code> hat x den Wert 5. Mit <code>x INT</code> würde man lediglich die Variable x ohne Wert definieren, damit man diesen später zuweisen kann.</aside>
+            </section>
+
+            <section>
+                <h2>Stored Procedures</h2>
+                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+CREATE PROCEDURE bestelle_produkt(_kundennr INT, 
+                                  _produktnr INT) AS $$
+DECLARE
+   _bestellnr INT;
+BEGIN
+  SELECT MAX(bestellnummer)+1 INTO _bestellnr FROM bestellungen;
+  RAISE NOTICE 'Bestellnummer: %', _bestellnr;
+  INSERT INTO bestellungen(bestellnummer, kundennummer, zeit, 
+    preis) VALUES (_bestellnr, _kundennr, current_timestamp,
+    (SELECT preis FROM produkte WHERE produktnr=_produktnr));
+  INSERT INTO bestellungen_positionen (bestellnummer, 
+    produktnummer, anzahl) VALUES (_bestellnr, _produktnr, 1);
+  COMMIT;
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CALL bestelle_produkt(5, 17);</code></pre>
+                    
+            <aside class="notes">Anders als bei <code>CREATE FUNCTION</code> werden bei PostgreSQL im <code>CREATE PROCEDURE</code> auch Transaktionen (<code>COMMIT</code> / <code>ROLLBACK</code>) unterstützt. Damit wird garantiert, dass beide hier dargestellten <code>INSERT</code>s ausgeführt werden (oder keines) und dass die mit MAX ermittelte neue Bestellnummer auch in jedem Fall gültig ist, auch wenn andere Transaktionen parallel Bestellungen einfügen (&rightarrow; Phantomproblem).</aside>
+            </section>
+            
+            <section>
+                <h3>Eingabeparameter</h3>
+                <p class="small">Zugriff über den Namen oder die Position (<code>$1</code>, ...)</p>
+
+<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CREATE PROCEDURE test(i int, s VARCHAR) AS $$
+BEGIN
+ RAISE NOTICE 'i ist %', i;     -- i ist 99
+ RAISE NOTICE 's ist %', $2;    -- s ist Tomate
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable>CALL test(99, 'Tomate');</code></pre>
+<aside class="notes"><code>$2</code> steht hier für den zweiten Parameter, also für <code>s</code>. Wir verwenden in den Beispielen aber auch oft Variablennamen, die mit einem Unterstrich beginnen (z. B. <code>_produktnr</code>), damit man sie nicht mit Spaltennamen oder ähnlichem verwechselt.</aside>
+</section>
+
+<section>
+    <h2>Funktionen</h2>
+    <p>UDF = User-defined Function</p>
+
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE FUNCTION addieren(int, int) RETURNS INT AS
+$$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
+
+    <pre><code class="hlsql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
+
+    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre>
+
+    <aside class="notes">Funktionen haben beliebig viele Eingabeparameter und liefern genau einen Rückgabewert zurück. Der Datentyp des Rückgabewerts steht oben hinter <code>RETURNS</code>. Mit einem <code>RETURN</code>-Kommando terminiert die Funktion und erzeugt die Rückgabe. Man kann die Funktion genau wie eingebaute SQL-Funktionen (UPPER, MD5, ...) in SELECT-Anfragen mit und ohne FROM-Klausel verwenden, aber auch in INSERT, UPDATE, etc. Die hier dargestellte Funktion addiert zwei Zahlen. Die Eingabeparameternamen kann man wie hier gezeigt einfach weggelassen, wenn man auf sie lediglich mittels <code>$1</code> etc. zugreift.</aside>
+</section>
+
+<section>
+    <h2>Tabellenfunktionen</h2>
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE FUNCTION produkte_von(VARCHAR) RETURNS TABLE
+(produktnr INT, bezeichnung VARCHAR(100), 
+ preis DECIMAL(9,2), hersteller VARCHAR(50)) AS $$ 
+SELECT produktnr, bezeichnung, preis, hersteller 
+FROM produkte WHERE hersteller = $1 
+$$ LANGUAGE sql;
+</code></pre>
+        
+            <pre><code class="hlsql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
+        
+        <aside class="notes">Tabellenfunktionen liefert eine Tabelle zurück mit beliebig vielen Zeilen. Die Spalten und deren Typen werden im <code>CREATE FUNCTION</code>-Kommando im <code>RETURNS TABLE</code>-Teil definiert. Genau wie eine View wird eine Tabellenfunktion in der <code>FROM</code>-Klausel einer SELECT-Anfrage aufgerufen. Eine Tabellenfunktion ist quasi eine View mit Parametern.</aside>
+</section>
 
                         </div>
                     </div>

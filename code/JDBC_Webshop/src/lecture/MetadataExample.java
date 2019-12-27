@@ -29,7 +29,7 @@ public class MetadataExample {
             for (i = 1; i <= numberColumns; i++) {
                 String cName = meta.getColumnName(i);
                 String dType = meta.getColumnTypeName(i);
-                System.out.println(" Name: " + cName + " Datentyp: " + dType);
+                System.out.println("Spalte: "+cName+", Datentyp: "+dType);
             }
 
             rs.close();

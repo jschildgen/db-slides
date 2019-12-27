@@ -304,7 +304,7 @@ iter.close();</code></pre>
                 <section>
                     <h2>Stored Procedures</h2>
                     <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
-CREATE FUNCTION alles_leeren() RETURNS void AS
+CREATE OR REPLACE FUNCTION alles_leeren() RETURNS void AS
 $$ BEGIN
  TRUNCATE bewertungen CASCADE;
  TRUNCATE produkte CASCADE;
@@ -314,13 +314,13 @@ END $$ LANGUAGE plpgsql;</code></pre>
 
 <pre><code class="hlsql dont_execute_sql" contenteditable>SELECT alles_leeren();</code></pre>
 
-                <aside class="notes">In diesem einfachen Beispiel hat unsere Prozedur <code>alles_leeren</code> keine Eingabeparameter (daher die leeren Klammern <code>()</code>), wir definieren keine Variablen und verwenden auch keine Kontrollstrukturen oder Schleifen. Es werden lediglich vier <code>TRUNCATE</code>-Kommandos ausgeführt. In PostgreSQL sind Prozeduren <code>FUNCTION</code>-Objekte mit dem Rückgabetyp <code>void</code>. Man ruft sie in einem <code>SELECT</code>-Kommando ohne <code>FROM</code>-Klausel auf. Seit PostgreSQL 11 gibt es jedoch auch <code>CREATE PROCEDURE</code>, welche dann mit einem <code>CALL</code>-Befehl aufgerufen werden (siehe übernächste Folie). In anderen DBMS werden Prozeduren mit einem <code>EXECUTE</code>-Befehl ausgeführt.</aside>
+                <aside class="notes">In diesem einfachen Beispiel hat unsere Prozedur <code>alles_leeren</code> keine Eingabeparameter (daher die leeren Klammern <code>()</code>), wir definieren keine Variablen und verwenden auch keine Kontrollstrukturen oder Schleifen. Es werden lediglich vier <code>TRUNCATE</code>-Kommandos ausgeführt. In PostgreSQL sind Prozeduren <code>FUNCTION</code>-Objekte mit dem Rückgabetyp <code>void</code>. Man ruft sie in einem <code>SELECT</code>-Kommando ohne <code>FROM</code>-Klausel auf. Seit PostgreSQL 11 gibt es jedoch auch <code>CREATE PROCEDURE</code>, welche dann mit einem <code>CALL</code>-Befehl aufgerufen werden (siehe übernächste Folie). In anderen DBMS werden Prozeduren mit einem <code>EXECUTE</code>-Befehl ausgeführt.<br>Schreibt man <code>CREATE OR REPLACE</code> statt einfach nur <code>CREATE</code>, wird die Funktion überschrieben, falls sie schon existiert.</aside>
                 </section>
             <section>
                 <h3>RAISE NOTICE</h3>
-                <p class="small">RAISE NOTICE gibt einen Infotext auf der Konsole aus.</p>
+                <p class="small"><code>RAISE NOTICE</code> gibt einen Infotext auf der Konsole aus.</p>
                 <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
-CREATE FUNCTION hallo() RETURNS void AS $$
+CREATE OR REPLACE FUNCTION hallo() RETURNS void AS $$
 DECLARE
     x INT := 5;
 BEGIN
@@ -360,7 +360,7 @@ END $$ LANGUAGE plpgsql;</code></pre>
                 <h3>Eingabeparameter</h3>
                 <p class="small">Zugriff über den Namen oder die Position (<code>$1</code>, ...)</p>
 
-<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CREATE PROCEDURE test(i int, s VARCHAR) AS $$
+<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CREATE OR REPLACE PROCEDURE test(i int, s VARCHAR) AS $$
 BEGIN
  RAISE NOTICE 'i ist %', i;     -- i ist 99
  RAISE NOTICE 's ist %', $2;    -- s ist Tomate
@@ -374,7 +374,7 @@ END $$ LANGUAGE plpgsql;</code></pre>
     <h2>Funktionen</h2>
     <p>UDF = User-defined Function</p>
 
-    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE FUNCTION addieren(int, int) RETURNS INT AS
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
 $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
 
     <pre><code class="hlsql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
@@ -386,7 +386,7 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
 
 <section>
     <h2>Tabellenfunktionen</h2>
-    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE FUNCTION produkte_von(VARCHAR) RETURNS TABLE
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION produkte_von(VARCHAR) RETURNS TABLE
 (produktnr INT, bezeichnung VARCHAR(100), 
  preis DECIMAL(9,2), hersteller VARCHAR(50)) AS $$ 
 SELECT produktnr, bezeichnung, preis, hersteller 

@@ -433,6 +433,49 @@ $$ LANGUAGE sql;
         <aside class="notes">Tabellenfunktionen liefert eine Tabelle zurück mit beliebig vielen Zeilen. Die Spalten und deren Typen werden im <code>CREATE FUNCTION</code>-Kommando im <code>RETURNS TABLE</code>-Teil definiert. Genau wie eine View wird eine Tabellenfunktion in der <code>FROM</code>-Klausel einer SELECT-Anfrage aufgerufen. Eine Tabellenfunktion ist quasi eine View mit Parametern.</aside>
 </section>
 
+<section>
+    <h2>Trigger</h2>
+    <p>Wenn ...</p>
+    <div class="columns">
+        <div><ul>
+            <li>BEFORE</li>
+            <li>AFTER</li>
+            <li>INSTEAD OF</li>
+        </ul></div>
+        <div><ul>
+            <li>INSERT</li>
+            <li>UPDATE</li>
+            <li>DELETE</li>
+        </ul></div>
+        <div><ul>
+            <li>ON &lt;tabelle&gt;</li>
+            <li>ON &lt;view&gt;</li>
+        </ul></div>
+    </div>
+
+    <p>dann ...</p>
+
+    <aside class="notes">Mittels Triggern können Aktionen ausgeführt werden, jedesmal wenn das festgelegte Ereignis eintritt. Nach einem INSERT in die Produkttabelle kann automatisch der Hersteller eingefügt werden, falls es ihn noch nicht gibt. Bevor der Preis eines Produkts geändert wird, wird überprüft, ob diese Änderung auch in Ordnung ist. Wenn der Preis um mehr als 20% erhöht wird, soll ein Fehler kommen. Wenn ein INSERT auf einer View gemacht wird, sollen stattdessen INSERTs in gewisse Tabellen gemacht werden. Solche Abläufe können mittels Trigger definiert werden.</aside>
+    
+</section>
+
+    <section>
+        <h3>Trigger in PostgreSQL</h3>
+        <h4>Triggerfunktion</h4>
+        <ul class="small">
+            <li>Definiert die auszuführende Aktion</li>
+            <li><code>CREATE FUNCTION ... RETURNS TRIGGER ...</code></li>
+        </ul>
+        <p/>
+        <h4>Trigger</h4>
+        <ul class="small">
+            <li>Definiert den eigentlichen Trigger (die Wenn-falls-dann-Bedingung)</li>
+            <li><code>CREATE TRIGGER ... {BEFORE | AFTER | INSTEAD OF}<br>{INSERT | UPDATE | DELETE} ON ...<br>FOR EACH {ROW | STATEMENT} [WHEN (...)]<br> EXECUTE PROCEDURE ...();</code></li>
+        </ul>
+        <aside class="notes">In PostgreSQL wird zunächst eine Triggerfunktion definiert. Diese ist ähnlich zu einer FUNCTION mit dem Returns-Type <code>void</code>. In dieser Funktion hat man jedoch Zugriff auf die eingefügte, geänderte bzw. gelöschte Zeile und man kann diese sogar noch modifizieren.<br>
+        Trigger können auch sogenannte ECA-Regel implementieren. ECA steht für Event, Condition, Action. Wenn also ein Ereignis eintritt, soll - falls die Bedingung erfüllt ist - das Ereignis ausgeführt werden. Die Bedingung lässt sich in PostgreSQL mittels einer optionalen <code>WHEN</code>-Bedingung festlegen.</aside>
+    </section>
+
                         </div>
                     </div>
             

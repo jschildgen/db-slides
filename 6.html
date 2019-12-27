@@ -277,8 +277,9 @@ iter.close();</code></pre>
                         <li><b>Tabellenfunktionen</b> liefern eine Tabelle</li>
                         <li><b>Methoden</b> gehören zu einem User-defined Datatype</li>
                     </ul>
-                    <p>Routen haben einen Namen und Eingabeparameter.</p>
-                    <aside class="notes">Die meisten Datenbankmanagementsysteme erlauben die Erstellung von Routinen in einer Programmiersprache. In PostgreSQL heißt diese Sprache PL/pgSQL (Prozedurale Spracherweiterung für PostgreSQL). Neben SQL-Anfragen (SELECT, INSERT, ...) gibt es auch IF-Blöcke, FOR-Schleifen, usw. Methoden werden in dieser Vorlesung nicht behandelt.</aside>
+                    <p class="small">Routen haben einen Namen und Eingabeparameter.</p>
+                    <aside class="notes">Die meisten Datenbankmanagementsysteme erlauben die Erstellung von Routinen in einer Programmiersprache. In PostgreSQL heißt diese Sprache PL/pgSQL (Prozedurale Spracherweiterung für PostgreSQL). Neben SQL-Anfragen (SELECT, INSERT, ...) gibt es auch IF-Blöcke, FOR-Schleifen, usw. Methoden werden in dieser Vorlesung nicht behandelt. Durch in der Datenbank gespeicherte Routinen werden unnötige Anfragen zwischen Client-Anwendung und DB-Server vermieden. Vor allem solche Anfragen, die nur Zwischenergebnisse abrufen, welche in Folgeanfragen verwendet werden.
+                    </aside>
                 </section>
 
                 <section>
@@ -333,6 +334,8 @@ END $$ LANGUAGE plpgsql;</code></pre>
             <aside class="notes">Verwendet man im Notice %-Platzhalter, kann man deren Werte als zusätzliche Parameter übermitteln. Diese Folie zeigt auch, wie man Variablen deklariert. Bei <code>x INT := 5;</code> hat x den Wert 5. Mit <code>x INT</code> würde man lediglich die Variable x ohne Wert definieren, damit man diesen später zuweisen kann.</aside>
             </section>
 
+            
+
             <section>
                 <h2>Stored Procedures</h2>
                 <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
@@ -382,6 +385,37 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
     <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre>
 
     <aside class="notes">Funktionen haben beliebig viele Eingabeparameter und liefern genau einen Rückgabewert zurück. Der Datentyp des Rückgabewerts steht oben hinter <code>RETURNS</code>. Mit einem <code>RETURN</code>-Kommando terminiert die Funktion und erzeugt die Rückgabe. Man kann die Funktion genau wie eingebaute SQL-Funktionen (UPPER, MD5, ...) in SELECT-Anfragen mit und ohne FROM-Klausel verwenden, aber auch in INSERT, UPDATE, etc. Die hier dargestellte Funktion addiert zwei Zahlen. Die Eingabeparameternamen kann man wie hier gezeigt einfach weggelassen, wenn man auf sie lediglich mittels <code>$1</code> etc. zugreift.</aside>
+</section>
+
+<section>
+    <h3>Exceptions werfen und behandeln</h3>
+
+    <pre><code class="sql dont_execute_sql" data-trim contenteditable>
+CREATE FUNCTION dividieren(float, float) RETURNS float AS
+$$ BEGIN 
+RETURN $1/$2; 
+EXCEPTION WHEN OTHERS THEN 
+    RAISE EXCEPTION 'Divisor darf nicht 0 sein!';
+END $$ LANGUAGE plpgsql;</code></pre>
+    
+    <aside class="notes">Hinter <code>EXCEPTION WHEN</code> steht der Name einer Exception, die abgefangen werden soll. <code>OTHERS</code> fängt alle sonstigen Fehler ab. Mit <code>RAISE EXCEPTION</code> wird ein Programm unterbrochen und die entsprechende Fehlermeldung an den Client zurückgegeben.</aside>
+</section>
+
+<section>
+    <h3>Volatilitäts-Kategorien</h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
+$$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql IMMUTABLE;</code></pre>
+    
+        <h4><code>VOLATILE</code> (Standard)</h4>
+        <p class="small" style="margin-top: -7mm;">Funktion darf alles: DB verändern und bei gleichen Parameterwerten unterschiedliche Ergebnisse liefern.</p>
+        
+        <h4 style="margin-top: -4mm;"><code>STABLE</code></h4 style="margin-top: -2mm;">
+        <p class="small" style="margin-top: -7mm;">Funktion darf die DB nicht verändern und muss innerhalb des gleichen Statements bei gleichen Parameterwerten das gleiche Ergebnis liefern.</p>
+        
+        <h4 style="margin-top: -4mm;"><code>IMMUTABLE</code></h4>
+        <p class="small" style="margin-top: -7mm;">Funktion darf die DB nicht verändern und muss bei gleichen Parameterwerten das gleiche Ergebnis liefern.</p>
+    </ul>
+    <aside class="notes">Wenn eine Funktion als <code>STABLE</code> oder <code>IMMUTABLE</code> deklariert wird, kann der Datenbank-Optimierer Ergebnisse der Funktion wiederverwenden, ohne die Funktion nochmals aufzurufen. Eine Funktion <code>get_hersteller_land</code>, die beispielsweise eine <code>SELECT</code>-Anfrage an eine Tabelle schickt, um das Land eines Herstellers zu ermitteln, ist <code>STABLE</code>, da sie innerhalb einer Anfrage, in der sie aufgerufen wird, für den gleichen Hersteller das gleiche Land liefern würde.</aside>
 </section>
 
 <section>

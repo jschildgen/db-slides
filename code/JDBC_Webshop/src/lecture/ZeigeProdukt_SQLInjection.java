@@ -2,8 +2,9 @@ package lecture;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Scanner;
 
-public class ZeigeProdukte {
+public class ZeigeProdukt_SQLInjection {
 
     public static void main(String[] args) {
         final String url = "jdbc:postgresql://localhost/meine_db";
@@ -11,17 +12,16 @@ public class ZeigeProdukte {
         final String password = "test";
         Connection conn = null;
         try {
-            // Verbindung aufbauen
             conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Verbunden mit der PostgreSQL-DB!");
 
             String bezeichnung;
             BigDecimal preis;
+            Scanner scan = new Scanner(System.in);
 
-            // Mit der DB interagieren...
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT bezeichnung, preis" +
-                                           " FROM webshop.produkte");
+            System.out.print("Gib einen Hersteller ein: ");
+            ResultSet rs = st.executeQuery("SELECT bezeichnung, preis FROM" +
+             " webshop.produkte WHERE hersteller = '"+scan.nextLine()+"'");
             while (rs.next()) {
                 bezeichnung = rs.getString(1);
                 preis = rs.getBigDecimal(2);
@@ -30,7 +30,6 @@ public class ZeigeProdukte {
             rs.close();
             st.close();
 
-            // Am Ende Verbindung wieder schließen
             conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

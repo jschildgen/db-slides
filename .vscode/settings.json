@@ -39,10 +39,12 @@
     "Geht's",
     "Generalisierungshierarchien",
     "HAVING",
+    "Hacks",
     "Hausnr",
     "Hierarchical",
     "IDENTITY",
     "IDEs",
+    "Injection",
     "Introduction",
     "Iso'levels",
     "JDBC",
@@ -68,6 +70,7 @@
     "Positionsnr",
     "Postgre",
     "Precompiler",
+    "Preparation",
     "Printing",
     "Produktnr",
     "RDBMS",
@@ -155,6 +158,7 @@
     "höhergradigen",
     "insensitive",
     "joinen",
+    "lecture",
     "leftarrow",
     "lightbulb",
     "liker",
@@ -216,6 +220,7 @@
     "warehouse",
     "where",
     "window",
-    "world's"
+    "world's",
+    "xkcd"
   ]
 }

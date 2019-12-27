@@ -1,4 +1,15 @@
 <!doctype html>
+<!--
+    Database Preparation
+    Schema + Data from http://sqlfiddle.com/#!17/11955/1
+    !!! Change datatype of kunden.kundennummer to SERIAL !!!
+
+    ALTER TABLE webshop.produkte RENAME COLUMN produktnummer TO produktnr;
+
+    update kunden set passwort = md5('geheim');
+
+    alter sequence webshop.kunden_kundennummer_seq restart with 9;
+-->
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -213,13 +224,10 @@ iter.close();</code></pre>
                     <div class="trackinfo"><i class="fas fa-headphones"></i> 100</div>
                     <div style="position: absolute; top: 20px; right:5px; font-size:160px"><i class="fas fa-exclamation-triangle red"></i></div>
                     <p class="small">Vorsicht beim Erzeugen von Query-Strings,<br>die Benutzereingaben beinhalten! (&rightarrow; <a href="https://www.xkcd.com/327/" target="_blank">xkcd.com/327</a>)</p>
-                    <pre><code class="java" data-trim contenteditable>
-ResultSet rs = st.executeQuery("SELECT bezeichnung, preis " +
-                               "FROM webshop.produkte " +
-                               "WHERE produktnr = "+produktnr);</code></pre>
-                    <p class="fragment small"><em>Geben Sie eine Produktnummer ein: </em><input type="text" value="17; DROP TABLE webshop.produkte;" style="font-size: 22pt; width:13cm"></p>
-                    <p class="fragment"><input type="text" value="17 UNION (SELECT email||' '||passwort, NULL FROM webshop.kunden)" style="font-size: 22pt; width:25cm"></p>
-                    <aside class="notes">Mit SQL-Injections lassen sich Sicherheitslücken ausnutzen, die es dem Benutzer ermöglichen Datenbankbefehle einzuschleusen. Die hier gezeigte Anfrage ist gut gemeint. Wenn der Benutzer Produktnummer 17 eingibt, soll <code>SELECT ... WHERE produktnr = 17</code> ausgeführt werden. Dadurch, dass der Benutzerinput ohne Überprüfung und Maskierung von Sonderzeichen einfach so als Teil der Anfrage an den String drangehangen wird, ermöglicht man dem Anwender beliebige Anfragen auf der Datenbank auszuführen. Ersterer Hack würde die Produkte-Tabelle droppen. JDBC verhindert dies jedoch glücklicherweise, da <code>allowMultiQueries</code> standardmäßig <code>false</code> ist. Der zweite Hack würde jedoch funktionieren. Er ermöglicht dem Angreifer die Einsicht der E-Mail-Adressen und Passwörter aller Kunden.</aside>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukt_SQLInjection.java#23-24'></code></pre>
+                    <p class="fragment small"><em>Geben Sie einen Hersteller ein: </em><input type="text" value="'; DROP TABLE webshop.produkte;" style="font-size: 22pt; width:13cm"></p>
+                    <p class="fragment"><input type="text" value="' UNION (SELECT email||' '||passwort, NULL FROM webshop.kunden)" style="font-size: 22pt; width:25cm"></p>
+                    <aside class="notes">Mit SQL-Injections lassen sich Sicherheitslücken ausnutzen, die es dem Benutzer ermöglichen, Datenbankbefehle einzuschleusen. Das hier gezeigte Programm ist gut gemeint, aber unsicher. Wenn der Benutzer Hersteller Calgonte eingibt, soll <code>SELECT ... WHERE hersteller = 'Calgonte'</code> ausgeführt werden. Dadurch, dass der Benutzerinput ohne Überprüfung und Maskierung von Sonderzeichen einfach so als Teil der Anfrage an den String drangehangen wird, ermöglicht man dem Anwender beliebige Anfragen auf der Datenbank auszuführen. Ersterer Hack würde die Produkte-Tabelle droppen. Dies kann man mit der JDBC-Parameter-Einstellung <code>allowMultiQueries=false</code> verhindern. Der zweite Hack würde dennoch funktionieren. Er ermöglicht dem Angreifer die Einsicht der E-Mail-Adressen und Passwörter aller Kunden. Durch die Eingabe von <code>' OR 1=1 --</code> findet man alle Produkte.</aside>
                 </section>
 
                 <section>
@@ -232,14 +240,34 @@ ResultSet rs = st.executeQuery("SELECT bezeichnung, preis " +
                         <tr><td style="border: none;">Passwort:</td style="border: none;"><td style="border: none;"><input style="font-size: 20pt; width: 10cm" value=""></td style="border: none;"></tr>
                         <tr><td colspan="2"><input type="button" style="width:100%; font-size:200%; " value="Einloggen"></td></tr>
                     </table>
-                    <pre><code class="java" data-trim contenteditable>
-ResultSet rs = st.executeQuery("SELECT COUNT(*) " +
-                                "FROM webshop.kunden " +
-                                "WHERE email = '"+email+"' " +
-                                "AND passwort = md5('"+pass+"')";</code></pre>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/Login_SQLInjection.java#26-28'></code></pre>
                     <aside class="notes">Dadurch dass der Hacker hier mit dem Anführungszeichen den String abschließt und mittels <code>--</code> den Rest der Anfrage auskommentiert, ergibt sich eine gültige Anfrage, welche lediglich überprüft, ob es den Benutzer gibt und nicht, ob das Passwort stimmt. Im Endeffekt wird ausgeführt: <code>SELECT COUNT(*) FROM webshop.kunden WHERE email = 'peter@example.com' -- AND passwort = md5('')</code>. Alles ab <code>--</code> wird ignoriert. Andere Hacks sind möglich mit <code>' OR 1=1 --</code> oder Ähnlichem.
                     <br>Die md5-Funktion erzeugt einen Hash aus dem Passwort (z. B. d41d8cd98f00b204e9800998ecf8427e), welcher mit dem gespeicherten Hash verglichen wird. Dies verhindert das Abspeichern von Klartext-Passwörtern. Da md5 jedoch unsicher ist, sollte stattdessen eher sha256 verwendet werden.</aside>
                 </section>
+
+                <section>
+                    <h2>PreparedStatement</h2>
+                    <p class="small">Ein PreparedStatement beinhaltet <code>?</code>-Platzhalter, die vor der Ausführung der Anfrage mit ihren Werten belegt werden.</p>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukt.java#21-26'></code></pre>
+                    <p class="small">Vorteile: Verhindert SQL SQL-Injections, weniger fehleranfällig, Wiederverwenden von Anfragen, Sonderzeichen (z. B. <code>'</code>) werden automatisch maskiert.</p>
+                    <aside class="notes">Bevor ein PreparedStatement mittels <code>executeQuery</code> oder <code>executeUpdate</code> ausgeführt wird, muss jeder <code>?</code>-Platzhalter mit einem Wert belegt werden. Dazu werden Datentyp-spezifische Methoden eingesetzt, z. B. hier <code>setString</code>. Dadurch, dass in diesem gesetzten String Sonderzeichen wie <code>'</code> automatisch maskiert werden (z. B. zu <code>''</code>), sind keine SQL Injections mehr möglich. Ein und dasselbe PreparedStatement kann mehrfach wiederverwendet werden, was auch eine erhöhte Performance zur Folge haben kann. Ein weiterer Vorteil ist, dass man sich unschöne und fehleranfällige Anfrageelemente wie <code>WHERE hersteller = '"+scan.nextLine()+"'"</code> erspart. Hier vergisst man gerne mal ein <code>'</code>.</aside>
+                </section>
+
+                <section>
+                    <h2>executeUpdate</h2>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/NeuerKunde.java#17-27' data-sample-mark=""></code></pre>
+                    <aside class="notes">Anders als <code>executeQuery</code> liefert <code>executeUpdate</code> kein ResultSet zurück, sondern einen Integer: die Anzahl der betroffenen Zeilen. Beim hier gezeigten INSERT ist dies stets eine 1, da nur eine Zeile eingefügt wird. Im Fehlerfall wird eine Exception geworfen. Bei einem UPDATE- oder DELETE-Kommando kann man am Rückgabewert der Methode sehen, wie viele Zeilen geändert oder gelöscht wurden. Neben <code>executeUpdate</code> und <code>executeQuery</code> gibt es auch noch die Methode <code>execute</code>. Diese liefert keinen Rückgabewert. Man verwendet sie z. B. für <code>CREATE TABLE</code> oder andere DDL-Kommandos.</aside>
+                </section>
+
+                <section>
+                    <h3>DB-Metadaten-Zugriff mit JDBC</h3>
+                    <h4>DatabaseMetaData</h4>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/MetadataExample.java#16-21' data-sample-mark=""></code></pre>
+                    <h4>ResultSetMetaData</h4>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/MetadataExample.java#27-33' data-sample-mark=""></code></pre>
+                    <aside class="notes">JDBC stellt Methoden bereit, um auf die Metadaten der Datenbank (z. B. Tabellen, Spalten einer Tabelle, ...) und auf Metadaten eines ResultSets zuzugreifen.</aside>
+                </section>
+
                         </div>
                     </div>
             

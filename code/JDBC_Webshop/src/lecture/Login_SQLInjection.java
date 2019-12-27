@@ -2,8 +2,9 @@ package lecture;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Scanner;
 
-public class ZeigeProdukte {
+public class Login_SQLInjection {
 
     public static void main(String[] args) {
         final String url = "jdbc:postgresql://localhost/meine_db";
@@ -11,26 +12,28 @@ public class ZeigeProdukte {
         final String password = "test";
         Connection conn = null;
         try {
-            // Verbindung aufbauen
             conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Verbunden mit der PostgreSQL-DB!");
 
             String bezeichnung;
             BigDecimal preis;
+            Scanner scan = new Scanner(System.in);
 
-            // Mit der DB interagieren...
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT bezeichnung, preis" +
-                                           " FROM webshop.produkte");
-            while (rs.next()) {
-                bezeichnung = rs.getString(1);
-                preis = rs.getBigDecimal(2);
-                System.out.println(bezeichnung+" kostet "+preis+" EUR");
+            System.out.print("E-Mail: ");
+            String email = scan.nextLine();
+            System.out.print("Passwort: ");
+            String pass = scan.nextLine();
+            ResultSet rs = st.executeQuery("SELECT true FROM" +
+             " webshop.kunden WHERE email = '"+email+"'" +
+             " AND passwort = md5('"+pass+"')");
+            if (rs.next()) {
+                System.out.println("Eingeloggt!");
+            } else {
+                System.out.println("Falsche Login-Daten!");
             }
             rs.close();
             st.close();
 
-            // Am Ende Verbindung wieder schließen
             conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

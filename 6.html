@@ -270,6 +270,7 @@ iter.close();</code></pre>
 
                 <section>
                     <h2>Routinen</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 102</div>
                     <p>Benutzerdefinierte Routinen sind in der DB gespeicherte Datenbankobjekte (wie Tabellen und Views):</p>
                     <ul>
                         <li><b>Prozeduren</b> tun etwas</li>
@@ -304,6 +305,7 @@ iter.close();</code></pre>
 
                 <section>
                     <h2>Stored Procedures</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 103</div>
                     <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
 CREATE OR REPLACE FUNCTION alles_leeren() RETURNS void AS
 $$ BEGIN
@@ -375,6 +377,7 @@ END $$ LANGUAGE plpgsql;</code></pre>
 
 <section>
     <h2>Funktionen</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 103</div>
     <p>UDF = User-defined Function</p>
 
     <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
@@ -435,6 +438,7 @@ $$ LANGUAGE sql;
 
 <section>
     <h2>Trigger</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 104</div>
     <p>Wenn ...</p>
     <div class="columns">
         <div><ul>
@@ -469,12 +473,158 @@ $$ LANGUAGE sql;
         <p/>
         <h4>Trigger</h4>
         <ul class="small">
-            <li>Definiert den eigentlichen Trigger (die Wenn-falls-dann-Bedingung)</li>
+            <li>Definiert den eigentlichen Trigger (die Wenn-Falls-Dann-Bedingung)</li>
             <li><code>CREATE TRIGGER ... {BEFORE | AFTER | INSTEAD OF}<br>{INSERT | UPDATE | DELETE} ON ...<br>FOR EACH {ROW | STATEMENT} [WHEN (...)]<br> EXECUTE PROCEDURE ...();</code></li>
         </ul>
-        <aside class="notes">In PostgreSQL wird zunächst eine Triggerfunktion definiert. Diese ist ähnlich zu einer FUNCTION mit dem Returns-Type <code>void</code>. In dieser Funktion hat man jedoch Zugriff auf die eingefügte, geänderte bzw. gelöschte Zeile und man kann diese sogar noch modifizieren.<br>
+        <aside class="notes">In PostgreSQL wird zunächst eine Triggerfunktion definiert. Diese ist ähnlich zu einer Funktion mit dem Returns-Type <code>void</code>. In dieser Triggerfunktion hat man jedoch Zugriff auf die eingefügte, geänderte, bzw. gelöschte Zeile und man kann diese sogar noch modifizieren oder die Operation noch aufhalten.<br>
         Trigger können auch sogenannte ECA-Regel implementieren. ECA steht für Event, Condition, Action. Wenn also ein Ereignis eintritt, soll - falls die Bedingung erfüllt ist - das Ereignis ausgeführt werden. Die Bedingung lässt sich in PostgreSQL mittels einer optionalen <code>WHEN</code>-Bedingung festlegen.</aside>
     </section>
+
+    <section>
+        <h3>AFTER INSERT</h3>
+        <p class="small">Nachdem das neue Tupel eingefügt wurde, soll noch etwas gemacht werden.</p>
+        <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE FUNCTION produkte_trigger() RETURNS TRIGGER AS
+$$ BEGIN
+IF (NEW.hersteller IS NOT NULL AND NOT EXISTS 
+  (SELECT * FROM hersteller WHERE firma = NEW.hersteller)) THEN
+  INSERT INTO hersteller (firma) VALUES(NEW.hersteller);
+END IF;
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre>
+
+<p class="small"><code>NEW</code> bietet Zugriff auf die neu eingefügte Zeile.</p>
+    
+
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE TRIGGER produkte_trigger AFTER INSERT ON produkte
+FOR EACH ROW EXECUTE PROCEDURE produkte_trigger();</code></pre> 
+
+<aside class="notes">Immer wenn ein INSERT auf die Produkttabelle gemacht wird, feuert der Trigger. Er sorgt dafür, dass der Hersteller in die Herstellertabelle eingefügt, wenn er noch nicht drin ist. Über das Objekt <code>NEW</code> hat man innerhalb des Triggers Zugriff auf die Attributwerte der neu eingefügten Zeile.</aside>
+</section>
+
+<section>
+    <h3>AFTER INSERT</h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+INSERT INTO produkte VALUES(1000, 'Kuchen', 2.00, 'Kuchenpeter');
+    </code></pre> 
+    <p class="fragment small" style="color:red" data-fragment-index="1">[23503]: ERROR: insert or update on table "produkte" violates foreign key constraint "produkte_hersteller_fkey"
+        Detail: Key (hersteller)=(Kuchenpeter) is not present in table "hersteller".</p>
+    
+    <ul class="fragment small" data-fragment-index="2">
+        <li>Entweder Trigger auf <code>BEFORE INSERT</code> ändern</li>
+        <li>oder das Fremdschlüssel-Constraint auf <code>DEFERRED</code> setzen:</li>
+    </ul>
+
+    <pre class="fragment" data-fragment-index="2"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+ALTER TABLE webshop.produkte ADD CONSTRAINT 
+produkte_hersteller_fkey FOREIGN KEY (hersteller) 
+REFERENCES hersteller(firma) ON UPDATE CASCADE 
+INITIALLY DEFERRED;</code></pre>
+
+<aside class="notes">Ändern wir den Trigger auf <code>BEFORE INSERT</code>, wird die Prozedur, die den Hersteller einfügt, ausgeführt, bevor die neue Zeile in die Produkttabelle eingefügt wird. Der Hersteller ist hier der Parent-Record und das Produkt der Child-Record. Der Parent muss vorher existieren, bevor der Child-Record existiert.<br>
+Als Alternative kann die Überprüfung des Fremdschlüssel-Constraints auch auf <code>DEFERRED</code> (verzögert) setzen. Der Standard ist <code>IMMEDIATE</code> - eine sofortige Überprüfung. Bei <code>DEFERRED</code> wird das Constraint erst zum Ende der Transaktion überprüft. In unserem Fall führt dies zum Erfolg, da zum Ende der Transaktion der zuvor nicht existierende Hersteller zwischenzeitlich durch den Trigger eingefügt wurde.</aside>
+</section>
+
+<section>
+    <h3>BEFORE INSERT / UPDATE / DELETE</h3>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 105</div>
+    <p class="small">Mit einem <code>BEFORE</code>-Trigger kann man das einzufügende Tupel modifizieren oder das <code>INSERT</code> / <code>UPDATE</code> / <code>DELETE</code> ablehnen.</p>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE OR REPLACE FUNCTION preis_trigger() RETURNS TRIGGER AS $$ 
+DECLARE anz_gratis_produkte INT;
+BEGIN
+IF (NEW.preis < 0) THEN NEW.preis = 0; END IF;
+SELECT COUNT(*) INTO anz_gratis_produkte 
+FROM produkte WHERE preis = 0;
+IF (NEW.preis = 0 AND anz_gratis_produkte >= 3) THEN
+ RAISE EXCEPTION 'Zu viele kostenlose Produkte!';
+END IF;
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE TRIGGER preis_trigger BEFORE INSERT OR UPDATE ON produkte
+FOR EACH ROW EXECUTE PROCEDURE preis_trigger();</code></pre>
+<aside class="notes">Bei einem <code>BEFORE INSERT</code>-Trigger kann man einzufügende Tupel noch abändern, bevor es tatsächlich in die Tabelle eingefügt wird. Hier wird der Preis auf 0 gesetzt, sollte jemand versuchen, ein Produkt mit negativen Preis einzufügen. Außerdem überwacht der Trigger, dass es nie mehr als drei kostenlose Produkte gibt. Ein INSERT oder UPDATE wird abgelehnt, wenn es dieses Constraint verletzen sollte.</aside>
+</section>
+
+<section>
+    <h3>OLD / NEW</h3>
+    <ul>
+        <li><code>INSERT</code>-Trigger: Zugriff auf <code>NEW</code></li>
+        <li><code>DELETE</code>-Trigger: Zugriff auf <code>OLD</code></li>
+        <li><code>UPDATE</code>-Trigger: Zugriff auf <code>OLD</code> und <code>NEW</code></li>
+    </ul>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE OR REPLACE FUNCTION preiserhoehung_trigger() 
+RETURNS TRIGGER AS $$ 
+BEGIN
+IF (NEW.preis > OLD.preis*1.1) THEN
+ RAISE EXCEPTION 'Preiserhöhung um mehr als 10%% nicht erlaubt!';
+END IF;
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre>
+<aside class="notes">Beim INSERT hat man in der Triggerfunktion Zugriff auf <code>NEW</code> (die eingefügte Zeile), beim DELETE auf <code>OLD</code> (die gelöschte Zeile) und beim UPDATE auf <code>OLD</code> und <code>NEW</code>. <code>OLD</code> bietet Zugriff auf den vorherigen Zustand des Tupels vor der Änderung, <code>NEW</code> auf den Zustand nach der Änderung.<br>
+Hier wurde <code>10%%</code> geschrieben, da <code>%</code> als Platzhalter steht, der durch einen Wert ersetzt wird (siehe Folie zu RAISE NOTICE). <code>%%</code> wird durch <code>%</code> ersetzt.</aside>
+</section>
+
+<section>
+    <h3>FOR EACH ROW / STATEMENT</h3>
+    <h4>FOR EACH ROW</h4>
+    <ul>
+        <li>Triggerfunktion wird für jedes eingefügte / gelöschte / geänderte Tupel einmal aufgerufen</li>
+        <li>Zugriff auf das Tupel mittels <code>NEW</code> bzw. <code>OLD</code></li>
+    </ul>
+    <p/>
+    <h4>FOR EACH STATEMENT</h4>
+    <ul>
+        <li>Triggerfunktion wird für das gesamte INSERT / UPDATE / DELETE-Statement nur einmal aufgerufen</li>
+        <li>Kein direkter Zugriff auf die Tupel</li>
+    </ul>
+    <aside class="notes">Der Trigger, der überprüft, dass es stets nie mehr drei kostenlose Produkte gibt, könnte auch vom Typ <code>FOR EACH STATEMENT</code> sein. Dies würde die Überprüfung bei großen Änderungsmengen deutlich beschleunigen, da sie nur einmal und nicht für jede geänderte Zeile erfolgen muss.</aside>
+</section>
+
+<section>
+    <h3>INSTEAD OF-Trigger</h3>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 106</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>INSERT INTO meine_view VALUES (...)</code></pre>
+    <ul class="small">
+        <li>Nur in simple Views Projektion-Selektion-Views darf ein INSERT/UPDATE/DELETE erfolgen</li>
+        <li>Mittels einer <code>CHECK OPTION</code> kann überprüft werden, dass das Tupel auch das WHERE-Prädikat der View erfüllt.</li>
+        <li><code>INSTEAD OF</code>-Trigger ermöglichen INSERT/UPDATE/DELETE auf jeder View.</li>
+    </ul>
+    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE TRIGGER meine_view_trigger INSTEAD OF INSERT ON meine_view
+FOR EACH ROW EXECUTE PROCEDURE meine_view_trigger();        
+    </code></pre>
+
+    <aside class="notes"><code>INSTEAD OF</code>-Trigger sind nur für Sichten gedacht. Jedes mal, wenn jemand ein INSERT / UPDATE / DELETE auf eine Sicht macht, soll stattdessen die Trigger-Aktion ausgelöst werden.</aside>
+</section>
+
+<section>
+    <h3>INSTEAD OF-Trigger</h3>
+    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE VIEW meine_view AS
+SELECT p.produktnr, p.bezeichnung, p.preis, p.hersteller, h.land
+FROM produkte p JOIN hersteller h ON p.hersteller=h.firma;
+</code></pre>
+
+<pre class="fragment" style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE OR REPLACE FUNCTION meine_view_trigger() 
+RETURNS TRIGGER AS $$ 
+BEGIN
+INSERT INTO hersteller (firma, land)
+ VALUES (NEW.hersteller, NEW.land)
+ ON CONFLICT (firma) DO UPDATE SET land=EXCLUDED.land;
+INSERT INTO produkte (produktnr, bezeichnung, preis, hersteller)
+ VALUES (NEW.produktnr, NEW.bezeichnung, NEW.preis, NEW.hersteller);
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre> 
+
+<aside class="notes">Die gezeigte View führt eine Denormalisierung der beiden Tabellen Produkte und Hersteller aus, also einen Join. Der Trigger sorgt dafür, dass ein INSERT in diese View aufgeteilt wird in zwei INSERT-Kommandos. Zunächst wird der Hersteller eingefügt. Falls es ihn schon gibt, wird sein Land angepasst. Im Anschluss erfolgt das Einfügen des Produktes.</aside>
+</section>
 
                         </div>
                     </div>

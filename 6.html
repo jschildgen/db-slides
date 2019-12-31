@@ -1156,7 +1156,7 @@ SELECT * FROM produkte p JOIN hersteller h
     </ul>
 </section>
 <section>
-    <h3><em>Nested-Loop-Join</em></h3>
+    <h3>Nested-Loop-Join</h3>
     <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
             ON p.hersteller=h.firma;</code></pre>
@@ -1172,7 +1172,7 @@ for each row p in PRODUKTE:
 </section>
 
 <section>
-    <h3><em>Sort-Merge-Join</em></h3>
+    <h3>Sort-Merge-Join</h3>
     <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
             ON p.hersteller=h.firma;</code></pre>
@@ -1189,7 +1189,7 @@ SELECT * FROM produkte p JOIN hersteller h
 </section>
 
 <section>
-    <h3><em>Hash-Join</em></h3>
+    <h3>Hash-Join</h3>
     <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
             ON p.hersteller=h.firma;</code></pre>
@@ -1209,7 +1209,7 @@ for each row p in PRODUKTE:
 </section>
 
 <section>
-    <h3><em>Index-Join</em></h3>
+    <h3>Index-Join</h3>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
     <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 

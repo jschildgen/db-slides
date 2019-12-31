@@ -626,6 +626,606 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <aside class="notes">Die gezeigte View führt eine Denormalisierung der beiden Tabellen Produkte und Hersteller aus, also einen Join. Der Trigger sorgt dafür, dass ein INSERT in diese View aufgeteilt wird in zwei INSERT-Kommandos. Zunächst wird der Hersteller eingefügt. Falls es ihn schon gibt, wird sein Land angepasst. Im Anschluss erfolgt das Einfügen des Produktes.</aside>
 </section>
 
+<section>
+    <h2>Indexe</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 107</div>
+    <p class="small">Motivation: Wir haben $n$ Produkte. Wie teuer ist die folgende Anfrage?</p>
+    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+    <ul class="small">
+        <li class="fragment">Full Table Scan: $O(n)$</li>
+        <li class="fragment">Tabelle intern sortiert nach Produktnummer: $O(log_2(n))$</li>
+        <li class="fragment">B-Baum-Index auf der Produktnummer: $O(log_k(n))$</li>
+        <li class="fragment">Hash-Index auf der Produktnummer: $O(1)$</li>
+    </ul>
+    <aside class="notes">Mit der O-Notation wird der Aufwand in Abhängigkeit der Tabellengröße beschrieben.</aside>
+</section>
+
+
+<section>
+    <h2>Full Table Scan</h2>
+    <p class="small">Linearer Aufwand: $O(n)$</p>
+    <p class="small">Jede einzelne Zeile wird gelesen und für sie wird überprüft, ob das WHERE-Prädikat wahr oder falsch ist.</p>
+    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+    <span data-sql-query="SELECT * FROM produkte ORDER BY (produktnr%13)+(length(bezeichnung)%3)/((100*(preis+1))%11)"></span>
+    <aside class="notes">Bei einem Full Table Scan muss jede einzelne Zeile der Tabelle gelesen werden, um die gewünschte Zeile zu finden. Wäre die Tabelle doppelt so groß, wäre auch der Aufwand doppelt so groß.</aside>
+</section>
+<section>
+    <h2>Clustered Index</h2>
+    <div class="columns">
+        <div><p class="small">Logarithmischer Aufwand: $O(log_2(n))$</p>
+            <p class="small"><em>Binäre Suche</em>: In die Mitte der Tabelle springen. Hat diese Zeile eine größere Produktnummer als die gesuchte? Oberhalb weitersuchen, usw.</p>
+            <pre style="width: 95%; margin-top: -3mm;"><code class="hlsql dont_execute_sql" contenteditable data-trim>CLUSTER produkte USING produkte_pkey</code></pre>
+            <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+            <ul class="fragment small">
+                <li>Es kann nur einen Clustered Index pro Tabelle geben</li>
+                <li>Re-Clustering nötig nach INSERT, UPDATE, DELETE</li>
+            </ul>
+        </div>
+        <div style="width:12cm"><img src="img/6/binary_search.png" alt="Binäre Suche" class="noborder"></div>
+    </div>
+    
+    <aside class="notes">Ein Clustered Index bestimmt die interne Speicherung der Zeilen. Clustert man die Produkttabelle nach der Primärschlüsselspalte <code>produktnr</code>, werden die Datensätze sortiert nach der Produktnummer abgespeichert. In PostgreSQL ist dazu die Ausführung des Kommandos <code>CLUSTER</code> nötig. PostgreSQL macht kein automatisches Reclustering, d. h. nach Änderungen an den Datensätzen muss nochmals <code>CLUSTER</code> ausgeführt werden. Liegen die Daten sortiert, ist eine Suche auf der Index-Spalte, ein GROUP BY und ein Sortieren sehr schnell. Das Re-Clustering ist jedoch eine sehr teure Operation.</aside>
+</section>
+
+<section>
+    <h2>B-Bäume</h2>
+    <p class="small">Logarithmischer Aufwand: $O(log_2(n))$</p>
+    <p class="small">Simulation: <a href="https://www.cs.usfca.edu/~galles/visualization/BTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BTree.html</a></p>
+    <div class="columns" style="margin-top: -2mm;">
+        <div><ul class="small">
+            <li>Jeder Knoten hat maximal den Grad 2k+1,<br>also max. 2k+1 Kindknoten</li>
+            <li>Jeder Knoten speichert zw. k und 2k Einträge</li>
+            <li>Suche startet in der Wurzel,<br>dann wird sich durch den Baum navigiert:<br>kleiner: links; größer: rechts entlang</li>
+        </ul></div>
+        <div style="width: 10cm;"><img class="noborder" src="img/6/btree1.png" alt="B-Baum"><p class="small" style="text-align: center; margin-top: -7mm;">k=1 &Rightarrow; max. Grad = 3</p></div>
+    </div>
+    <aside class="notes">Ein innerer Knoten hat immer einen Kindknoten mehr als Einträge. Ein Eintrag in einem B-Baum kann mit logarithmischem Aufwand gesucht werden. Erst wenn ein Baum k-mal mehr Einträge speichert, erhöhen sich die Suchkosten gerade mal um 1. Im gezeigten Baum können wir jeden Eintrag finden, indem wir höchstens drei Seiten lesen müssen, da die Höhe des Baumes 3 ist. In einem voll besetzten B-Baum der Klasse k=3 und der Höhe h=5 kann man mehr als 3<sup>5</sup>=243 Einträge abspeichern und jeder davon lässt sich mit höchstens 5 Leseoperationen wiederfinden. In der Realität ist z. B. k=1024. Somit lassen sich Milliarden Einträge so organisieren, dass man jeden davon mit nur drei Leseoperationen finden kann.</aside>
+</section>
+<section>
+    <h2>B+-Bäume</h2>
+    <p class="small">Simulation: <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a></p>
+    <ul class="small">
+        <li>Optimierung des B-Baums; in DMBS häufigst eingesetzte Indexstruktur</li>
+        <li>Innere Knoten sind nur Wegweiser (max. 2k Schlüssel, max. 2k+1 Kinder)</li>
+        <li>Blattknoten enthalten die Schlüssel und Pointer zu max. 2k*+1 Datensätzen</li>
+        <li>Blattknoten sind miteinander verkettet &Rightarrow; schnelle sequenzielle Suche</li>
+        <li>Suche startet in der Wurzel, dann links (&lt;) oder rechts (&ge;) weitersuchen</li>
+    </ul>
+    <img class="noborder" src="img/6/bplustree1.png" alt="B+-Baum" style="height: 5cm; margin-top: -1mm;">
+    <p class="small" style="text-align: center; margin-top: -7mm;">k=1, k*=1 &Rightarrow; max. Grad = 3</p>
+    <aside class="notes">Da man in den Bäumen nicht lediglich Zahlen o.ä. sondern natürlich auch den Pointer zum tatsächlichen Datensatz speichern muss, ist es eine Optimierung, diese Pointer nur in die Blattebene zu speichern, sodass innere Knoten bei gleicher Seitengröße einen viel höheren Grad haben können als Blattknoten.</aside>
+</section>
+<section>
+    <h2>Einfügen in B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchen der neue Schlüssel gehört</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Noch Platz? &Rightarrow; einfach einfügen</li>
+        </ol></li>
+    </ol>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert1.png" class="noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">18 einfügen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert2.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Im links gezeigten B+-Baum (k=1, k*=1) soll der Eintrag 18 eingefügt werden. Zuerst wird der Knoten gesucht, in den die 18 gehört. 18 ist kleiner als 29, also gehen wir nach links. Dort ist bisher nur die 17 gespeichert. In jedem Knoten ist Platz für 2k* = 2 Einträge, also ist dort noch Platz, sodass wir die 18 einfach einfügen können.<br>
+    Hat unsere Produkttabelle einen Index auf der Produktnummer-Spalte - die meisten DBMS legen auf Primärschlüsselspalten ohnehin automatisch B+-Baum-Indexe an -, wird in den gezeigten Baum der Wert 18 zusammen mit der Speicheradresse, wo der entsprechende Datensatz auf der Festplatte gespeichert ist, in die Blattebene des B+-Baums eingefügt. Möchte man nun suchen (<code>SELECT * FROM produkte WHERE produktnr=18</code>), kann der Index genutzt werden, um schnell den Datensatz zu finden. Auch bei Bereichsanfragen (<code>WHERE produktnr BETWEEN 18 and 88</code>) hilft der B+-Baum: Man navigiert sich zur Blattebene zur 18, und folgt dann den verketteten Blättern bis zur 88. Im B-Baum wäre dies komplexer.</aside>
+</section>
+<section>
+    <h2>Einfügen in B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchen der neue Schlüssel gehört</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Noch Platz? &Rightarrow; einfach einfügen</li>
+            <li>Kein Platz mehr? &Rightarrow; einfügen und Knoten splitten</li>
+        </ol></li>
+    </ol>
+    <p></p>
+    <h4 data-fragment-index="1" class="fragment" style="margin-top: -2mm;">Split</h4>
+    <ul class="fragment small" data-fragment-index="1" style="margin-top: -5mm;">
+        <li>Knoten wird in zwei Knoten aufgesplittet</li>
+        <li>Mittleres Element wandert zusätzlich als Wegweiser in Vaterknoten</li>
+        <li>Evtl. ist dort ebenfalls ein Split nötig, wenn er voll ist</li>
+    </ul>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert2.png" class="noborder fragment" data-fragment-index="2" alt="B+-Baum"></div>
+        <div><p class="fragment small" data-fragment-index="3" style="text-align: center;">22 einfügen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert3.png" class="fragment noborder" data-fragment-index="4" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Die einzufügende 22 gehört in den Blattknoten links, da sie kleiner als 29 ist. Da dieser Knoten voll ist, erfolgt ein Split. Es gibt nun die 17, 18 und 22. Mittleres Element davon ist die 18. Alles, was kleiner als 18 ist (also die 17) kommt in einen Blattknoten, alles, was größer oder gleich 18 ist (18 und 22) in einen zweiten Blattknoten. Die 18 gelangt als Wegweiser in den bereits vorhandenen Vaterknoten.</aside>
+</section>
+<section>
+    <h2>Einfügen in B+-Baum</h2>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert3.png" class="noborder" alt="B+-Baum" style="width:11cm"></div>
+        <div><p class="small" style="text-align: center;">998 einfügen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert4a.png" class="fragment noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">&rightarrow;</p></div>
+    </div>
+    <div class="columns" style="margin-top: -8mm;">
+        <div><img src="img/6/bplustree_insert4b.png" class="fragment noborder" alt="B+-Baum" style="width:11cm"></div>
+        <div><p class="fragment small" style="text-align: center;">&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert4.png" class="fragment noborder" alt="B+-Baum" style="width:11cm"></div>
+    </div>
+    <aside class="notes">Fügen wir nun die 998 ein, ist ihr Platz im Blatt ganz rechts. Da dieses jedoch voll ist, muss wieder gesplittet werden: Es geht um die 29, 88 und 998. Mittleres Element ist 88, sie wandert in den Vaterknoten. Die beiden neuen Blätter sind [29] und [88, 998]. In deren Vaterknoten wären nun also die Wegweiser 18, 29 und 88. Da dort nur Platz für 2k=2 Wegweiser ist, erfolgt auch hier ein Split. Das mittlere Element (29) wandert in den Vaterknoten (wird neu erstellt), die 18 links, die 88 rechts davon.</aside>
+</section>
+
+<section>
+    <h2>Löschen im B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Danach noch mind. k* Einträge? &Rightarrow; einfach löschen</li>
+        </ol></li>
+    </ol>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert4.png" class="noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">998 löschen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_delete1.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Eine Löschung ist am einfachsten, wenn dabei kein Unterlauf entsteht. Dies ist der Fall, wenn wir in unserem B+-Baum den Schlüssel 998 löschen. In jedem Blatt müssen mindestens k* (=1) Einträge sein. Das ist hier nach der Löschung der 998 im Blattknoten unten rechts der Fall, also muss nichts weiter unternommen werden.</aside>
+</section>
+
+<section>
+    <h2>Löschen im B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Danach noch mind. k* Einträge? &Rightarrow; einfach löschen</li>
+            <li>Unterlauf &Rightarrow; mit dem Nachbarknoten ausgleichen oder mischen</li>
+        </ol></li>
+    </ol>
+    <p></p>
+    <h4 data-fragment-index="1" class="fragment">Ausgleich</h4>
+    <ul class="fragment small" data-fragment-index="1" style="margin-top: -5mm;">
+        <li>Einträge vom Nachbarknoten übernehmen zum Ausgleichen</li>
+        <li>Wegweiser im Vaterknoten entsprechend anpassen</li>
+    </ul>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert4.png" class="fragment noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">29 löschen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_delete1.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Gibt es in einem Nachbarknoten (erst links schauen, dann rechts) mehr als k* Einträge, kann ein Ausgleich mit diesem vorgenommen werden. Löschen wir in unserem B+-Baum die 29, haben wir einen Unterlauf. Da es im rechten Nachbarblatt jedoch genügend Einträge gibt, können wir die 88 einfach nach links verschieben. Der Wegweiser im Vaterknoten muss angepasst werden, weil rechts Einträge &ge; 998 sind.</aside>
+</section>
+
+<section>
+    <h2>Löschen im B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Danach noch mind. k* Einträge? &Rightarrow; einfach löschen</li>
+            <li>Unterlauf &Rightarrow; mit dem linken Nachbarknoten ausgleichen oder mischen</li>
+        </ol></li>
+    </ol>
+    <h4>Mischen (Merge)</h4>
+    <ul class="small" data-fragment-index="1" style="margin-top: -5mm;">
+        <li>Falls Nachbarknoten auch unterlaufen würden &Rightarrow; mischen</li>
+        <li>Wegweiser aus dem Vater entfernen</li>
+        <li>Evtl. ist dort ebenfalls ein Ausgleich / Merge nötig</li>
+    </ul>
+    <div class="columns" style="margin-top: -4mm;">
+        <div><img src="img/6/bplustree_delete1.png" class="noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">998 löschen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_delete2.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Löschen wir die 998, entsteht ein Unterlauf und es ist kein Ausgleich möglich. Daher mischen wir 88 und 998 zu einem neuen Blattnoten und entfernen den Wegweiser 998 aus dem Vaterknoten. Da dieser nun unterläuft, wird hier wieder versucht auszugleichen - ohne Erfolg. Daher erfolgt eine Mischung der Knoten [18], [88], [] zu [18, 88].</aside>
+</section>
+
+<section>
+    <h2>CREATE INDEX</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 108</div>
+    <p class="small"><code>CREATE INDEX</code> erstellt in den meisten DBMS einen B+-Baum-Index.</p>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr);</code></pre>
+    <h4>Kosten</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li>Bei INSERT, UPDATE, DELETE muss der Index entsprechend gepflegt werden</li>
+    </ul>
+    <p></p>
+    <h4>Nutzen</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li>Schnellere exakte Suche (<code>=</code>) und Bereichssuche (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>BETWEEN</code>)</li>
+        <li>Index kann auch bei <code>ORDER BY</code>, <code>GROUP BY</code> und Joins helfen.</li>
+    </ul>
+    <p class="small">Die meisten DBMS legen Indexe auf Primärschlüsselspalten automatisch an.<br>Weitere Indexe müssen manuell angelegt werden.</p>
+    <aside class="notes">Indexe lohnen sich besonders auf Spalten, auf denen oft eine Filterung in einem <code>WHERE</code>-Prädikat erfolgt, z. B. <code>WHERE produktnr=17</code> oder <code>WHERE bestelldatum BETWEEN '2020-01-01' AND '2020-01-31'</code>. Auf DATE- und TIMESTAMP-Spalten erfolgen oft solche Anfragen, zudem tauchen diese Spalten oft im <code>ORDER BY</code> auf, daher sind hier Indexe oft sinnvoll. Auch bei Prefix-Suchen (<code>LIKE 'A%'</code>) hilft ein Index.</aside>
+</section>
+
+<section>
+    <h2>Mehrdimensionale Indexe</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 110</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX ON meine_tabelle(a, b, c);</code></pre>
+    <h4>Kann genutzt werden bei:</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li><code>WHERE a = 5 AND b = 7 AND c = 2</code></li>
+        <li><code>WHERE a = 5 AND b = 7</code></li>
+        <li><code>WHERE a = 5</code></li>
+        <li>Bei B+-Baum-Indexen auch bei <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>BETWEEN</code>, <code>LIKE '...%'</code></li>
+    </ul>
+    <aside class="notes">Ein kombinierter Index, der aus mehreren Spalten besteht, ist günstiger als das Erstellen und die Wartung mehrerer einzelner Indexe. Wichtig ist jedoch die Reihenfolge, in der man die Spalten angibt. Der hier gezeigte Index auf den Spalten a, b und c kann z. B. nicht für eine Anfrage <code>WHERE b=7</code> verwendet werden.</aside>
+</section>
+
+<section>
+    <h2>Hash-Indexe</h2>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr) USING HASH;</code></pre>
+    <h4>Unterschiede zum B+-Baum:</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li>Hilft nur bei exakter Suche (<code>=</code>) und Equi-Joins.</li>
+        <li>Schnellere Suche: $O(1)$ (konstanter Aufwand) vs. $O(log_k(n))$</li>
+    </ul>
+    <p></p>
+    <h4>Hash-Funktion</h4>
+    <p>$h(x) = $ Bucketnummer</p>
+    <p class="small">Beispiel: $h(x) = x\ mod\ 10$</p>
+    <aside class="notes">Wächst die Datenmenge in der Tabelle, erhöht sich trotzdem nicht der Aufwand, eine bestimmte Zeile zu suchen. Eine Hash-Funktion nimmt als Eingabe den Spaltenwert auf der Index-Spalte (z. B. eine Produktnummer). Die Funktion berechnet daraus die Speicheradresse eines sogenannten Buckets, in dem wir die Speicheradresse der jeweiligen Zeile finden. Bei $h(x) = x\ mod\ 10$ würde man den Verweis auf den Müsliriegel (Produktnummer 18) und das Katzenfutter (88) in Bucket 8 speichern, die Spülmaschinentabs (29) in Bucket 9, usw.</aside>
+</section>
+
+<section>
+    <h3>Hash-Indexe: Überlaufbehandlung</h3>
+    <p class="small">$h(88) = 88\ mod\ 10 = 8$<br>Was tun, wenn Bucket 8 voll ist?</p>
+
+    <ul class="small">
+        <li><em>Lineares Sondieren</em>: Einfach im nächsten freien Bucket speichern</li>
+        <li><em>Quadratisches Sondieren</em>: 1 weiter speichern, wenn dort auch voll, dann 4 weiterspeichern, dann 9, dann 16, ...</li>
+        <li><em>Verkettung der Überläufer</em>: Neues Overflow-Bucket erstellen und verlinken</li>
+    </ul>
+    <p class="small">&Rightarrow; Erhöht alles den Aufwand beim Suchen, da oft in mehreren Buckets gesucht werden muss</p>
+</section>
+
+<section>
+    <h3>Lineares Sondieren</h3>
+    <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
+    <p class="small">$h(88) = 88\ mod\ 10 = 8$, Bucket-Kapazität: 1</p>
+    <table style="margin-top: -2mm;">
+        <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+        <tbody>
+            <tr class="fragment"><td>18 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td></td></tr>
+            <tr class="fragment"><td>19 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+            <tr class="fragment"><td>29 einfügen:</td><td>29</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr>
+            <tr class="fragment"><td>88 einfügen:</td><td>29</td><td>88</td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+        </tbody>
+    </table>
+    <aside class="notes">Für die 18 und 19 war in den entsprechenden Buckets 8 und 9 noch Platz, aber für die 29 war in Bucket 9 kein Platz mehr, daher wird der Datensatz 29 in Bucket 0 gespeichert. Bei der 88 muss sogar drei mal sondiert werden, da sowohl Bucket 8 als auch 9, 0 und 1 voll sind. Möchte man nun Produktnummer 88 suchen, sind dafür also vier Seitenzugriffe nötig. Wenn wir das Produkt 78 suchen wollen, erfahren wir erst nach 5 Seitenzugriffen (Bucket 8, 9, 0, 1, 2), dass es dieses Produkt gar nicht gibt.</aside>
+</section>
+
+<section>
+    <h3>Quadratisches Sondieren</h3>
+    <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
+    <p class="small">$h(88) = 88\ mod\ 10 = 8$, Bucket-Kapazität: 1</p>
+    <table style="margin-top: -2mm;">
+        <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+        <tbody>
+            <tr class="fragment"><td>18 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td></td></tr>
+            <tr class="fragment"><td>19 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+            <tr class="fragment"><td>29 einfügen:</td><td>29</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr>
+            <tr class="fragment"><td>88 einfügen:</td><td>29</td><td></td><td>88</td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+        </tbody>
+    </table>
+    <aside class="notes">Wenn wir die 88 einfügen, ist in Bucket 8 kein Platz mehr. Daher versuchen wir es mit Bucket 8+1=9. Auch kein Platz. Bei (8+4) mod 10=2 ist Platz, daher ist dies der Speicherort. Hier entstehen mehr Freiräume und weniger Cluster als bei linearem Sondieren. Würden wir nun noch die 38 einfügen, müssen wir vier Seiten lesen (8, 9, 2, 7). Beim linearen Sondieren wären fünf Zugriffe nötig gewesen (8, 9, 0, 1, 2), bis wir ein Seite gefunden hätten, die Platz hat.</aside>
+</section>
+
+<section>
+    <h3>Verkettung der Überläufer</h3>
+    <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
+    <p class="small">$h(88) = 88\ mod\ 10 = 8$, Bucket-Kapazität: 1</p>
+    <table style="margin-top: -2mm;">
+        <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+        <tbody>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&downarrow;</td><td>&downarrow;</td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>88</td><td>29</td></tr>
+        </tbody>
+    </table>
+    <aside class="notes">Ist ein Bucket voll, wird ein neues Overflow-Bucket angelegt, in welches die nächsten Einträge gespeichert werden. Suchen wir Produkt 78, finden wir einen Bucket mit der 18 und einem Pointer zu einem Overflow-Bucket. In diesem finden wir nur die 88, daher kann die Suche hier beendet werden.</aside>
+</section>
+
+<section>
+    <h3>Erweiterbares Hashing</h3>
+    <div style="width:19cm; margin-left: -1mm;">
+    <p class="small">Die bisher behandelten Hash-Verfahren waren statisch. Die Hash-Funktion und deren Wertebereich waren immer gleich. Erweiterbares Hashing ist ein dynamisches Hash-Verfahren.</p>
+    <ul class="small">
+        <li>Das Dictionary hat eine globale Tiefe $t$ und $2^t$ Einträge.</li>
+        <li>Ein Eintrag besteht aus einer $t$-Bit-Zahl und einem Pointer auf einen Bucket.</li>
+    </ul>
+    </div>
+    <ul class="small">
+        <li>$h(x)$ liefert eine Zahl, von der aber nur die letzten $t$ Bits von Interesse sind (mit dem Dictionary lässt sich das Bucket für den gesuchten Schlüssel finden)</li>
+    </ul>
+    <p class="small">Beispiel: $h(x)=x\ mod \ 2^{32}$, Bucket-Kapazität: 1</p>
+    <p class="small">
+    h(18) = 1001<b>0</b><sub>2</sub><br>
+    h(19) = 1001<b>1</b><sub>2</sub></p>
+
+    <div class="sl-block" data-block-type="text" data-block-id="d0e7f67fab6ce9bc00494c9b4f8adef7" style="height: auto; width: 80px; left: 720px; top: 128.155px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>0</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 185.247px;" data-block-id="9d8542ccb8b463d8638fc139d67a89ef">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>1</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 100.247px;" data-block-id="3e6695fac553f512eaedf881934dd2e9">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>18</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 191.247px;" data-block-id="080f22ea1205493cd48eba1da6ce0b00">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>19</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="line" data-block-id="2c05d2348f0ec11513eb2b997ba32b58" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 128.155px;">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="21.092246913580254" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="21.092246913580254" viewBox="0 0 80 21.092246913580254">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <polygon fill="#000000" transform="translate(72.7478255967655,1.9120581646671102) rotate(75.23)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 194.839px;" data-block-id="89d6ee6cf5f2f52e3f8a0e0865c4c83e">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="20.908000000000015" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="20.908000000000015" viewBox="0 0 80 20.908000000000015">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <polygon fill="#000000" transform="translate(72.7437226798831,19.011571922387464) rotate(104.647)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="text" data-block-id="eaa76fa0d7165df0dfd3508e20f1b4f4" style="height: auto; width: 60px; left: 730px; top: 92.1549px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27;">
+            <p style="font-size: 70%; text-align: center;">t=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 64.2469px;" data-block-id="993945409d75cf90b23b636d8e8d6a11">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 160.655px;" data-block-id="1212cefde362cbd5b291e1363808345e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 30;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <aside class="notes">Auf der linken Seite der Pfeile ist das Dictionary zu sehen. Es besteht initial aus 2 Einträgen. Suchen wir die 18, berechnen wir z. B. $h(18)=18\ mod \ 2^{32}=18$ (binär 10100) und schauen auf die letzten t=1 Bits. Wir schauen also ins Bucket, auf das das Dictionary an der Stelle 0 zeigt.</aside>
+</section>
+
+<section>
+    <h3>Erweiterbares Hashing</h3>
+    <div style="width:19cm; margin-left: -1mm;">
+    <h4>Überlauf-Behandlung</h4>
+    <ul class="small">
+        <li>Läuft ein Bucket über, wird es gesplittet</li>
+        <li>Die lokale Tiefe $t'$ erhöht sich um 1</li>
+        <li>Ist $t'>t$, verdoppelt sich das Dictionary<br>und $t$ erhöht sich um 1</li>
+    </ul>
+    <p></p>
+    <p class="small">Beispiel: $h(x)=x\ mod \ 2^{32}$, Bucket-Kapazität: 1</p>
+    <p class="small">
+    h(18) = 100<b>10</b><sub>2</sub><br>
+    h(19) = 100<b>11</b><sub>2</sub><br>
+    h(28) = 111<b>00</b><sub>2</sub></p>
+    </div>
+
+    <div class="sl-block" data-block-type="text" data-block-id="d0e7f67fab6ce9bc00494c9b4f8adef7" style="height: auto; width: 80px; left: 720px; top: 128.155px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>0</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 185.247px;" data-block-id="9d8542ccb8b463d8638fc139d67a89ef">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>1</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 100.247px;" data-block-id="3e6695fac553f512eaedf881934dd2e9">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>18</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 191.247px;" data-block-id="080f22ea1205493cd48eba1da6ce0b00">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>19</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="line" data-block-id="2c05d2348f0ec11513eb2b997ba32b58" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 128.155px;">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="21.092246913580254" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="21.092246913580254" viewBox="0 0 80 21.092246913580254">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <polygon fill="#000000" transform="translate(72.7478255967655,1.9120581646671102) rotate(75.23)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 194.839px;" data-block-id="89d6ee6cf5f2f52e3f8a0e0865c4c83e">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="20.908000000000015" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="20.908000000000015" viewBox="0 0 80 20.908000000000015">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <polygon fill="#000000" transform="translate(72.7437226798831,19.011571922387464) rotate(104.647)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 554.516px;" data-block-id="f41db546064efc71dc23e3cdb6ca5ec4">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="45.408000000000015" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 21;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="45.408000000000015" viewBox="0 0 80 45.408000000000015">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73.97744644893375" y2="0.20579860441481"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73.97744644893375" y2="0.20579860441481"></line>
+                <polygon fill="#000000" transform="translate(73.47744644893375,0.70579860441481) rotate(90.579)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 495.332px;" data-block-id="375540e9571f626229f44b965a33ce43">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 20;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="1" viewBox="0 0 80 1">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <polygon fill="#000000" transform="translate(72.5,0) rotate(90)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 535.424px;" data-block-id="43b6a29d9ceff5b0b9ecfaa252fd515e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>19</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 446.128px;" data-block-id="5b867fd5da904a6951b099124905d5a4">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>18</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 533.924px;" data-block-id="69c959d78d1a03c2fe35de8f0c9cf6ef">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>11</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 476.832px;" data-block-id="88cdef4b37b2ce5989566b818074394e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>10</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 363.286px;" data-block-id="d948bb9b770d61c8755b9479628bc2be">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>00</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 420.378px;" data-block-id="31b197f47e3d6e46d8ffca8bca92ba73">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 23; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>01</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 363.286px;" data-block-id="16a8a5e7794a6463b0b035f53c2215cb">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 24; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>28</strong></p>
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 389.49px;" data-block-id="adee8bcdb0244d9c44689c9d2c4c6f21">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 25;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="1" viewBox="0 0 80 1">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <polygon fill="#000000" transform="translate(72.5,0) rotate(90)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 428.878px;" data-block-id="37329bb1267fde4caa890f3f63d4969f">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="110.04599999999994" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 26;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="110.04599999999994" viewBox="0 0 80 110.04599999999994">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="76.08991857153035" y2="104.4796022390328"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="76.08991857153035" y2="104.4796022390328"></line>
+                <polygon fill="#000000" transform="translate(75.58991857153035,103.9796022390328) rotate(143.984)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="text" data-block-id="eaa76fa0d7165df0dfd3508e20f1b4f4" style="height: auto; width: 60px; left: 730px; top: 92.1549px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27;">
+            <p style="font-size: 70%; text-align: center;">t=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 64.2469px;" data-block-id="993945409d75cf90b23b636d8e8d6a11">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 160.655px;" data-block-id="1212cefde362cbd5b291e1363808345e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 30;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 327.286px;" data-block-id="21fe1c95d5182df3ba7302ddb3917d07">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 31;">
+            <p style="font-size: 70%; text-align: center;">t'=2</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 415.286px;" data-block-id="26423aa66cfb3d0fe4e70f686f82bca3">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 32;">
+            <p style="font-size: 70%; text-align: center;">t'=2</p>
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 502.924px;" data-block-id="0a829ce292f1e88c9a53ecd7fa2bf82e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 33;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 730px; top: 327.286px;" data-block-id="53fc23fbe44636e536e7125669fdc717">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 34;">
+            <p style="font-size: 70%; text-align: center;">t=2</p>
+        </div>
+    </div>
+    <aside class="notes">Wenn wir die 28 einfügen, läuft es über. Wir müssen das 0-Bucket also splitten in ein 00- und ein 10-Bucket. Alle Einträge, deren Hash-Wert auf 00 enden, kommen in ersteres, die anderen in zweiteres. Die beiden Dictionary-Einträge, die auf 1 enden, zeigen auf das gleiche Bucket, welches die lokale Tiefe 1 hat.</aside>
+</section>
+
+<section>
+    <h2>Join-Algorithmen</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+           ON p.hersteller=h.firma;</code></pre>
+    <p class="small">Es gibt viele Arten, einen Join auszuführen:</p>
+    <ul class="small">
+        <li><em>Nested-Loop-Join</em>: Für jede Zeile der ersten Tabelle wird mit jeder Zeile der zweiten Tabelle überprüft, ob das Join-Prädikat wahr ist.</li>
+        <li><em>Sort-Merge-Join</em>: Beide Tabellen werden nach der Join-Spalte sortiert, dann beide von oben nach unten durchgescannt, um Join-Partner zu suchen.</li>
+        <li><em>Hash-Join</em>: Hash-Tabelle wird für kleinere Tabelle angelegt, dann die größere Tabelle durchlaufen und Join-Partner mittels der Hash-Tabelle gesucht.</li>
+        <li><em>Index-Join</em>: Während eine Tabelle komplett durchlaufen wird, werden für jede Zeile die Join-Partner in der anderen Tabelle mittels eines Indexes gesucht.</li>
+    </ul>
+</section>
+<section>
+    <h3><em>Nested-Loop-Join</em></h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Für jede Zeile der ersten Tabelle $R$ wird mit jeder Zeile der zweiten Tabelle $S$<br>überprüft, ob das Join-Prädikat wahr ist.</p>
+<pre><code class="python" contenteditable data-trim>
+for each row p in PRODUKTE:
+  for each row h in HERSTELLER:
+     if p.hersteller == h.firma:
+        emit(p, h)</code></pre>
+
+<p class="small">Aufwand: $O(|R|\cdot|S|)$</p>
+</section>
+
+<section>
+    <h3><em>Sort-Merge-Join</em></h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Beide Tabellen werden nach der Join-Spalte sortiert, dann beide von oben nach unten durchgescannt, um Join-Partner zu suchen.</p>
+
+<div class="columns">
+    <div><span data-sql-query="SELECT * FROM produkte ORDER BY hersteller nulls last limit 5"></span></div>
+    <div><span data-sql-query="SELECT * FROM hersteller ORDER BY firma"></span></div>
+</div>
+
+<p class="small">Aufwand: $O(|R|\cdot log(|R|) + |S|\cdot log(|S|))$</p>
+<aside class="notes">Der Aufwand beim Sort-Merge-Join ist im Wesentlichen der Aufwand, die beiden Tabellen zu sortieren.</aside>
+</section>
+
+<section>
+    <h3><em>Hash-Join</em></h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Hash-Tabelle wird für kleinere Tabelle angelegt, dann die größere Tabelle durchlaufen und Join-Partner mittels der Hash-Tabelle gesucht.</p>
+<pre><code class="python" contenteditable data-trim>
+hash_tabelle = []
+
+for each row h in HERSTELLER:
+  hash_tabelle.put(hash(h.firma)), h)
+
+for each row p in PRODUKTE:
+  h = hash_tabelle.get(hash(p.hersteller))
+  emit(p, h)</code></pre>
+
+<p class="small">Aufwand: $O(|R|+|S|)$</p>
+</section>
+
+<section>
+    <h3><em>Index-Join</em></h3>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Während eine Tabelle komplett durchlaufen wird, werden für jede Zeile die Join-Partner in der anderen Tabelle mittels eines Indexes gesucht.</p>
+<pre><code class="python" contenteditable data-trim>
+for each row p in PRODUKTE:
+  h = hersteller_firma_idx.get(p.firma)
+  emit(p, h)</code></pre>
+
+<p class="small">Aufwand hängt von den Index-Kosten ab, z. B. $O(|R|\cdot log(|S|))$, wenn es einen B+-Baum-Index auf S gibt, oder $O(|R|)$, wenn ein Hash-Index existiert.</p>
+<aside class="notes">Der Index-Join ist ähnlich zum Hash-Join, bis auf den Fakt, dass hier der Index bereits vorher existieren muss. Man kann einen Hash-Join auch als Index-Join sehen, bei dem der Hash-Index extra für den Join erstellt und danach wieder weggeworfen wird. </aside>
+</section>
+
+
                         </div>
                     </div>
             

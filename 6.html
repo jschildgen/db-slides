@@ -875,7 +875,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <section>
     <h3>Lineares Sondieren</h3>
     <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
-    <p class="small">$h(88) = 88\ mod\ 10 = 8$, Bucket-Kapazität: 1</p>
+    <p class="small">$h(x) = x\ mod\ 10$, Bucket-Kapazität: 1</p>
     <table style="margin-top: -2mm;">
         <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
         <tbody>
@@ -891,7 +891,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <section>
     <h3>Quadratisches Sondieren</h3>
     <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
-    <p class="small">$h(88) = 88\ mod\ 10 = 8$, Bucket-Kapazität: 1</p>
+    <p class="small">$h(x) = x\ mod\ 10$, Bucket-Kapazität: 1</p>
     <table style="margin-top: -2mm;">
         <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
         <tbody>
@@ -907,7 +907,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <section>
     <h3>Verkettung der Überläufer</h3>
     <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
-    <p class="small">$h(88) = 88\ mod\ 10 = 8$, Bucket-Kapazität: 1</p>
+    <p class="small">$h(x) = x\ mod\ 10$, Bucket-Kapazität: 1</p>
     <table style="margin-top: -2mm;">
         <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
         <tbody>

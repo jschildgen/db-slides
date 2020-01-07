@@ -24,5 +24,14 @@ foreach($files as $file) {
   echo "<a href=\"$file\">$file</a><br>";
 }
 ?>
+
+<hr>
+<h1>Exams</h1>
+<?php
+$files = glob('./exams/*.{html}', GLOB_BRACE);
+foreach($files as $file) {
+  echo "<a href=\"$file\">$file</a><br>";
+}
+?>
 </body>
 </html>

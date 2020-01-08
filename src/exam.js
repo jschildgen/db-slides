@@ -18,7 +18,7 @@
           exercise_points += points;
         });
       total_points += exercise_points;
-      e.querySelector("h1").innerHTML += " ("+exercise_points+"P)";
+      e.querySelector("h1").innerHTML = "Aufgabe "+exercise_no+": "+e.querySelector("h1").innerHTML+" ("+exercise_points+"P)";
       points_tbl_head += '<th style="width: 15mm;">'+exercise_no+'</th>';
       points_tbl_body1 += '<td>'+exercise_points+'</td>';
       points_tbl_body2 += '<td></td>';

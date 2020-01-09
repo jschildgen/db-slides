@@ -270,3 +270,5 @@ The following table can be placed on the first page of the exam. The script src/
 
 This work is licensed under a [Creative Commons Attribution 4.0 International
 License](http://creativecommons.org/licenses/by/4.0/legalcode).
+
+Copyright (C) 2020 Johannes Schildgen

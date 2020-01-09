@@ -264,3 +264,13 @@ The following table can be placed on the first page of the exam. The script src/
 |-----------|----|----|----|-------|-------|
 | Max:      | 30 | 50 | 20 | 100   |       |
 | Points:   |    |    |    |       |       |
+
+
+## License
+
+This work is licensed under a [Creative Commons Attribution 4.0 International
+License][cc-by].
+
+[![CC BY 4.0][cc-by-image]][cc-by]
+
+Copyright (C) 2020 Johannes Schildgen

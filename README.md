@@ -223,7 +223,7 @@ Each query in an `<code class="hlsql">` element is actually executed on the SQLi
 
 The result of the query will be shown in a `<span class="sqlresult">` element if it exists on the same slide.
 
-If there are multiple SQL queries and multiple of those spans, `data-sql="some_id"` has to be added to the <code> element and the result will be displayed in the `<span id="some_id">`. 
+If there are multiple SQL queries and multiple of those spans, `data-sql="some_id"` has to be added to the `<code>` element and the result will be displayed in the `<span id="some_id">`. 
 
 As `contenteditable` is used, the queries can be live edited within the presentation. Ctrl+Enter re-executes the query and updates the corresponding result table.
 

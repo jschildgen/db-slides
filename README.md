@@ -69,11 +69,13 @@ A lot of symbols can be added using their HTML code, e.g. `&pi;` or `&rightarrow
 
 ### Math equations ###
 
-The reveal.js plugin math.js allows writing LaTeX formulars within slides using the `$...$` syntax. Example: `$\frac{2}{3}$`
+The reveal.js plugin math.js allows writing LaTeX formulas within slides using the `$...$` syntax. Example: `$\frac{2}{3}$`
 
 ### Icons ###
 
-Font Awesome is a library which offers more than 1500 free icons: <https://fontawesome.com/icons?d=gallery&m=free> Clicking on an item in this gallery shows an HTML code, e.g. `<i class="fas fa-user"></i>`.
+Font Awesome is a library which offers more than 1500 free icons: <https://fontawesome.com/icons?d=gallery&m=free> 
+
+Clicking on an item in the gallery shows its HTML code, e.g. `<i class="fas fa-user"></i>`.
 
 Coloring an icon is possible with `style="color:red"` or using a pre-defined class, e.g. `<i class="fas fa-user green"></i>`. The colors green, yellow, orange, grey, red, and blue are defined in src/layout.css
 
@@ -89,9 +91,9 @@ Some slides reference tracks in an audiobook. When adding for example `<div clas
 
 ### Fragments
 
-A fragment is a hidden element on a slide which will be visible on click. In the hand-outs all fragments are always visible. They can also be used for highlighting or animating elements.
+A fragment is a hidden element on a slide that will be visible on click. In the hand-outs, all fragments are always visible. They can also be used for highlighting or animating elements.
 
-Adding `class="fragment"` to an HTML element (e.g., `p` or `li`) will show the elements with this class in the order as they appear in the section. A custom order and showing multiple fragements at the same time can be controlled with the additional attribute `data-fragment-index`.
+Adding `class="fragment"` to an HTML element (e.g., `p` or `li`) will show the elements with this class in the order as they appear in the section. A custom order and showing multiple fragments at the same time can be controlled with the additional attribute `data-fragment-index`.
 
 All details about using fragments in reveal.js can be found under <https://github.com/hakimel/reveal.js#fragments>
 
@@ -99,7 +101,7 @@ All details about using fragments in reveal.js can be found under <https://githu
 
 To generate PDF slides with notes, the HTML file has to be opened with the `print-pdf` and `showNotes=true` parameters, e.g., `6.html?print-pdf&showNotes=true`
 
-Slide notes are written in an `<aside class="notes">` element. These notes are not visible when presenting the slides, but are displayed in a gray box at the bottom of a page in the exported PDF hand-outs. The loger the text in the slide notes is, the more whitespace at the bottom of a slide is requried, otherwise the box will overlap contents.
+Slide notes are written in an `<aside class="notes">` element. These notes are not visible when presenting the slides, but are displayed in a gray box at the bottom of a page in the exported PDF hand-outs. The longer the text in the slide notes is, the more whitespace at the bottom of a slide is required, otherwise the box will overlap contents.
 
 The slide notes are also shown in Speaker mode (press `s`).
 
@@ -107,7 +109,7 @@ The slide notes are also shown in Speaker mode (press `s`).
 
 - `f` Full screen
 - `esc` Exit full screen
-- `s` Speaker Mode: a separate browser window opens and shows the current slide, the next slide (or fragment), the current time, the time the presentation is running, and the speaker nodes. This window can be moved to a second screen, e. g. a laptop monitor, while the main browser window is visible on a presenter.
+- `s` Speaker Mode: a separate browser window opens and shows the current slide, the next slide (or fragment), the current time, the time the presentation is running, and the speaker notes. This window can be moved to a second screen, e. g. a laptop monitor, while the main browser window is visible on a presenter.
 - `?` shows help (all keyboard shortcuts)
 - `b` screen turns black
 - Number + `Enter` (jump plugin) jumps to the slide with the given number, e.g. `1 Enter` jumps to the first slide.
@@ -116,15 +118,17 @@ Of course, the arrow keys, and thus, all presenter devices, are supported to go 
 
 ## Figures and Diagrams using Slides.com
 
-One way to put shapes, arrows, boxes on slides is to draw these figures in a tool like Visio, PowerPoint, etc. and save a screenshot image of it into the img/ folder. Mind that the original file must not be thrown away, so that it can later be edited.
+One way to put shapes, arrows, boxes on slides is to draw these figures in a tool like Visio, PowerPoint, etc. and save a screenshot image of it into the img/ folder. Mind that the original file must not be thrown away so that it can later be edited.
 
-Another way of putting figures on a slide, is directly writing SVG code in the HTML. The slide editor <https://www.slides.com> can be used to draw elements on the disired position of the slide, and then generate HTML code of it. In the right menu of the slides editor, a `<>` button shows HTML code which can be copy-pasted into the slides. Afterwards, colors, texts, and element positions can be adjusted directly in the HTML/SVG.
+Another way of putting figures on a slide is directly writing SVG code in the HTML. The slide editor <https://www.slides.com> can be used to draw elements on the desired position of the slide, and then generate HTML code of it. In the right menu of the slides editor, a `<>` button shows HTML code which can be copy-pasted into the slides. Afterwards, colors, texts, and element positions can be adjusted directly in the HTML/SVG.
+
+There are a lot of useful plugins for reveal.js for displaying other kinds of digrams, figures, or charts: <https://github.com/hakimel/reveal.js/wiki/Plugins,-Tools-and-Hardware>
 
 ## ER Diagrams
 
 For this project, an ERM plugin for reveal.js was developed (src/erd.js and src/erd.css) to generate ER diagrams using the [joint.js](https://www.jointjs.com) framework.
 
-To put an ER diagram on a slide, a `<div class="erd">` can be used. The content of this element is a JSON string: an array that consists of an array of entites and of another array of relationships. Each entity and relationship is a JSON document. One example: 
+To put an ER diagram on a slide, a `<div class="erd">` can be used. The content of this element is a JSON string: an array that consists of an array of entities and of another array of relationships. Each entity and relationship is a JSON document. One example: 
 
 ```html
 <div>
@@ -178,10 +182,10 @@ To put an ER diagram on a slide, a `<div class="erd">` can be used. The content 
 - `_a` Attribute name
 - `attributes`: sub-attributes as an array of attribute documents
 - `options`
-  - `primary` primary-key attribute (underlined)
-  - `extending-primary` extending the primary key (for weak entities; dotted-underlined)
-  - `multi` multivalued attributes (double border)
-  - `derived` derived attributes (dotted border)
+  - `"primary"` primary-key attribute (underlined)
+  - `"extending-primary"` extending the primary key (for weak entities; dotted-underlined)
+  - `"multi"` multivalued attributes (double border)
+  - `"derived"` derived attributes (dotted border)
 
 Entities, Relationships, and Attributes can be dragged and dropped with the mouse in slide-presentation mode. The browser console (F12) shows the new position of an element (e.g. `, pos: [475, 189]`). This position can then be simply copy-pasted into the JSON.
 
@@ -192,15 +196,17 @@ Within the text, code elements can be written in `<code>` tags. For longer listi
 ```html
 <pre><code class="java" data-trim contenteditable>
 String x = "Hello";
-int y = 5
+int y = 5;
 </code></pre>
-````
+```
 
 The attribute `data-trim` removes spaces and new lines at the beginng and the end, `contenteditable` makes the code editable on the slides.
 
-Using the [sampler](https://github.com/ldionne/reveal-sampler) plugin, code can be imported from other files. This way it is possible to write runnable programs in IntelliJ or another IDE, test and exeute them there, and just reference to the code on the slides to display them:
+Using the [sampler](https://github.com/ldionne/reveal-sampler) plugin, code can be imported from other files. This way it is possible to write runnable programs in IntelliJ or another IDE, test and execute them there, and just reference to the code on the slides to display them:
 
+```html
 <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/SomeClass.java#23-24'></code></pre>
+```
 
 ## SQL
 
@@ -217,7 +223,7 @@ Each query in an `<code class="hlsql">` element is actually executed on the SQLi
 
 The result of the query will be shown in a `<span class="sqlresult">` element if it exists on the same slide.
 
-If there are multiple SQL queries and multiple of those spans, `data-sql="some_id"` has to be added to the <code> element and the result will be displayed in the <span id="some_id">. 
+If there are multiple SQL queries and multiple of those spans, `data-sql="some_id"` has to be added to the <code> element and the result will be displayed in the `<span id="some_id">`. 
 
 As `contenteditable` is used, the queries can be live edited within the presentation. Ctrl+Enter re-executes the query and updates the corresponding result table.
 

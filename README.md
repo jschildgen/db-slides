@@ -235,9 +235,9 @@ It is also possible to show the result of a query without showing the query itse
 
 ## Exercise Sheets
 
-Exercise sheets are stored as exercises/ex1.html etc. They using reveal.js only to support displaying ER diagrams in the same way as in slides. Other reveal.js features and extensions cannot be used in exercise sheets.
+Exercise sheets are stored as exercises/ex1.html etc. They use reveal.js only to support displaying ER diagrams in the same way as in slides. Other reveal.js features and extensions cannot be used in exercise sheets.
 
-The stylesheet exercises/exercises.css defines the print layout. The header is shown on each page. Unfortunately, no page numbers are shown on the exercise sheets. They can be adding by using the print feature in Firefox to generate the PDF. Here, a custom header or footer can be set which contains the page number.
+The stylesheet exercises/exercises.css defines the print layout. The header is shown on each page. Unfortunately, no page numbers are shown on the exercise sheets. They can be added by using the print feature in Firefox to generate the PDF. Here, a custom header or footer can be set which contains the page number.
 
 Each `<section>` element is one exercise. An exercise can be moved to the next page by using `<section style="page-break-before:always; padding-top: 2.5cm">`
 

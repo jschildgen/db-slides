@@ -71,11 +71,11 @@
                     <li>Finden Sie den Darmstädter Hauptbahnhof</li>
                     <li>Fügen Sie in die hbf-Sicht einen neuen Bahnhof ein: &quot;Teststadt Nord&quot; in Hessen mit der ID 9999 und Kategorie 5.</li>
                     <li>Finden Sie mit einer SELECT-Anfrage auf der hbf-Sicht den neu eingefügten Bahnhof?</li>
-                    <li>Löschen Sie den Bahnhof 9999 wieder aus der hbf-Sicht</li>
+                    <li>Löschen Sie den Bahnhof 9999 wieder aus der bahnhoefe-Tabelle</li>
                     <li>Versuchen Sie das INSERT aus b) nun auf der grosser_hbf-Sicht</li>
-                    <li>Passen Sie die Bahnhofskategorie so an, dass das INSERT auf der grosser_hbf-Sicht funktioniert: <code>WITH CASCADED CHECK OPTION</code></li>
+                    <li>Passen Sie die Bahnhofskategorie so an, dass das INSERT auf der grosser_hbf-Sicht funktioniert.</li>
                     <li>Finden Sie mit einer SELECT-Abfrage auf der grosser_hbf-Sicht den neu eingefügten Bahnhof?</li>
-                    <li>Droppen Sie die grosser_hbf-Sicht und erstellen Sie sie erneut, jedoch so, dass wirklich nur Bahnhöfe in diese Sicht eingefügt werden können, die auch in der View sichtbar sind.</li>
+                    <li>Droppen Sie die grosser_hbf-Sicht und erstellen Sie sie erneut, jedoch so, dass wirklich nur Bahnhöfe in diese Sicht eingefügt werden können, die auch in der View sichtbar sind: <code>WITH CASCADED CHECK OPTION</code></li>
                 </ol>
         </li>
         <li>Erstellen Sie eine materialisierte Sicht &quot;Bahnhof_Statistik&quot;, die zu jedem Bundesland die Anzahl der Bahnhöfe zeigt. Wie viele Bahnhöfe zeigt diese Sicht in Hessen an? Löschen Sie Ihren Bahnhof 9999 und schauen Sie wieder in die materialiserte Sicht. Führen Sie ein <code>REFRESH</code> aus.</li>

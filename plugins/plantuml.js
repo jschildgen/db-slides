@@ -58,49 +58,22 @@ var PlantUML = (function(){
         }
         return '?';
     }
+
+    function generate_plantumls(slide_or_document) {
+    slide_or_document.querySelectorAll('img[uml]').forEach(
+        function(img) { 
+            var planttxt = img.getAttribute('uml')
+            var s = unescape(encodeURIComponent(planttxt));
+
+            img.src = "http://www.plantuml.com/plantuml/img/"+encode64(zip_deflate(s, 9));
+            img.style.border = 0;
+            img.style.boxShadow = 'none';
+        })
+    }
     
     
 	return {
 		init: function() {     
-            var generate_plantuml = function(img) {
-                var planttxt = img.getAttribute('uml')
-                s = unescape(encodeURIComponent(planttxt));
-
-                function done_deflating(e) {
-                    img.src = "http://www.plantuml.com/plantuml/img/"+encode64(e.data);
-                    img.style.border = 0;
-                    img.style.boxShadow = 'none';
-                }
-
-                var deflater = window.SharedWorker && new SharedWorker('./lib/rawdeflate.js');
-                if (deflater) {
-                    deflater.port.addEventListener('message', done_deflating, false);
-                    deflater.port.start();
-                } else if (window.Worker) {
-                    deflater = new Worker('./lib/rawdeflate.js');
-                    deflater.onmessage = done_deflating;
-                }
-
-                if (deflater) {
-                    if (deflater.port && deflater.port.postMessage) {
-                        deflater.port.postMessage(s); 
-                    } else {
-                        deflater.postMessage(s);
-                    }
-                } else {
-                    setTimeout(function() {
-                            done_deflating({ data: [deflate(s), plantimg[i]] });
-                    }, 100);
-                }
-            }          
-            
-            var generate_plantumls = function(slide_or_document) {
-                var plantimg = slide_or_document.querySelectorAll('img[uml]');
-                for (i = 0; i < plantimg.length; i++) {  
-                    generate_plantuml(plantimg[i])
-                }
-            }
-
             Reveal.addEventListener( 'ready', function(event) { generate_plantumls(document) } )
 		}
 	}

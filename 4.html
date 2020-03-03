@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Datenbanken 1 - Kapitel 4 - SQL</title>
+		<title>Datenbanken - Kapitel 4 - SQL</title>
 
 		<link rel="stylesheet" href="reveal.js/css/reset.css">
 		<link rel="stylesheet" href="reveal.js/css/reveal.css">
@@ -40,14 +40,14 @@
             <div id="footer"></div>
 			<div class="slides">
                     <section>
-                            <h4 style="text-align:center"><b>Dr.-Ing. Johannes Schildgen</b><br>
-                            <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h4>
-                            <h1>Datenbanken 1</h1>
-                            <h3>Kapitel 4: SQL</h3>
-                            <h4 style="text-align:center">2019-10-28</h4>
-                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
-                            <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
-                        </section>
+                        <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                        <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                        <h1>Datenbanken</h1>
+                        <h3>Kapitel 4: SQL</h3>
+                        <h4 style="text-align:center">2020-XX-XX</h4>
+                        <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                        <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                    </section>
                         <section>
                             <h2>SQL...</h2>
                             <div class="trackinfo"><i class="fas fa-headphones"></i> 33, 36</div>
@@ -153,7 +153,7 @@
                                 <h4 style="font-size: 90%; margin-top: 2mm;">Literale (Werte eines Datentyps)</h4>
                                 <ul class="small">
                                     <li style="margin-top: -3mm;">Groß-/Kleinschreibung nicht egal!</li>
-                                    <li>Beispiele: 'Ute', 'Otto''s Imbiss', 5, 2.99, NULL, '2019-11-18'</li>
+                                    <li>Beispiele: 'Ute', 'Otto''s Imbiss', 5, 2.99, NULL, '2020-11-18'</li>
                                 </ul>
 
                                 <aside class="notes">Merkregel: Bei allem, was man in Anführungszeichen schreibt, kommt es auf die korrekte Groß-/Kleinschreibung an. Bei regulären Identifikatoren sind reservierte SQL-Keywords und Sonderzeichen (außer _) verboten, bei begrenzten Identifikatoren ist dies erlaubt. In MySQL werden begrenzte Identifikatoren in `Apostrophe` geschrieben, bei PostgreSQL in &quot;Anführungszeichen&quot;.</aside>
@@ -197,8 +197,8 @@
                                         <tr><td>DOUBLE</td><td>REAL</td><td>Fließkommazahl (nicht exakt)</td><td>-15.127E-2</td></tr>
                                         <tr><td>CHARACTER(l)</td><td>CHAR</td><td>Zeichenkette mit fixer Länge l</td><td>CHAR(3) 'AB '</td></tr>
                                         <tr><td>CHARACTER VARYING(l)</td><td>VARCHAR</td><td>Zeichenkette mit max. Länge l</td><td>VARCHAR(3) 'AB'</td></tr>
-                                        <tr><td>DATE</td><td></td><td>Datum (Jahr, Monat, Tag)</td><td>'2019-11-18'</td></tr>
-                                        <tr><td>TIMESTAMP</td><td></td><td>Zeitstempel (Datum und Uhrzeit)</td><td>'2019-11-18 14:37:52.681'</td></tr>
+                                        <tr><td>DATE</td><td></td><td>Datum (Jahr, Monat, Tag)</td><td>'2020-11-18'</td></tr>
+                                        <tr><td>TIMESTAMP</td><td></td><td>Zeitstempel (Datum und Uhrzeit)</td><td>'2020-11-18 14:37:52.681'</td></tr>
                                     </tbody>
                                 </table>
                                 <aside class="notes">Diese Liste ist nicht vollständig. Es gibt noch viele weitere Datentypen in SQL und jedes DBMS bringt weitere Typen mit. Die hier dargestellte Fließkommazahl ist $-15$,$127\cdot 10^{-2}$.</aside>
@@ -964,7 +964,7 @@ FROM produkte
 
                                     <div class="fragment">
                                     <p class="small">Wie viele Tage sind noch bis Weihnachten?</p>
-                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT DATE '2019-12-25' - CURRENT_DATE</code></pre>
+                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT DATE '2020-12-25' - CURRENT_DATE</code></pre>
                                     </div>
 
                                     <aside class="notes">PostgreSQL erlaubt SELECT-Anfragen ohne FROM-Klausel. Dies entspricht Anfragen auf der DUAL-Tabelle von der vorherigen Folie. Man kann mit solchen Anfragen leicht Funktionen aufrufen und ausprobieren oder Berechnungen durchführen.</aside>

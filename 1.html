@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Datenbanken 1 - Kapitel 1 - Grundlagen</title>
+		<title>Datenbanken - Kapitel 1 - Grundlagen</title>
 
 		<link rel="stylesheet" href="reveal.js/css/reset.css">
 		<link rel="stylesheet" href="reveal.js/css/reveal.css">
@@ -40,26 +40,25 @@
             <div id="footer"></div>
 			<div class="slides">
                 <section>
-                    <h4 style="text-align:center"><b>Dr.-Ing. Johannes Schildgen</b><br>
-                    <a href="mailto:johannes.schildgen@h-da.de">johannes.schildgen@h-da.de</a></h4>
-                    <h1>Datenbanken 1</h1>
+                    <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                    <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                    <h1>Datenbanken</h1>
                     <h3>Kapitel 1: Grundlagen</h3>
-                    <h4 style="text-align:center">2019-10-14</h4>
+                    <h4 style="text-align:center">2020-XX-XX</h4>
                     <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
-                    <!-- <span style="position: absolute; bottom:-170px; box-shadow:none;"><a href="1.html?print-pdf&showNotes=true"><img src="img/qr.png" height="60px" style="border:0;"></a></span> -->
-                    <img src="img/hda.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                    <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                 </section>
                 <section>
                 <h2>Organisatorisches</h2>
-                <h4>Vorlesung (ab 2019-10-14)</h4>
+                <h4>Vorlesung (ab 2020-03-23)</h4>
                 <ul>
-                    <li>Mo, 14:15 Uhr (D14/404)</li>
-                    <li>Di, 10:15 Uhr (D14/111); 14-täg.</li>
+                    <li>Mo, 13:30 Uhr (D003)</li>
+                    <li>Mi, 10:00 Uhr (U212)</li>
                 </ul>
                 <br/>
-                <h4>Praktikum (ab 2019-10-21)</h4>
+                <h4>Übung (ab 2020-03-30)</h4>
                 <ul>
-                    <li>Alle 2 Wochen ein Übungsblatt; insgesamt 6 Stück</li>
+                    <li>Jede Woche ein Übungsblatt; insgesamt 12 Stück</li>
                     <li>Aufgabe 1 (gibt i.d.R. 10 Punkte):<br>Abgabe online bis Montag 12:00 Uhr</li>
                     <li>Weitere Aufgaben zum Lösen im Praktikum</li>
                 </ul>
@@ -68,10 +67,10 @@
                 <section>
                 <h2>Klausur</h2>
                 <ul>
-					<li>2019-02-14 10:15 - 11:45 Uhr</li>
-                    <li><b>Zulassungsvorraussetzung:<br>mind. 50 Punkte in der Übung</b></li>
+                    <li><b>Zulassungsvorraussetzung:<br>mind. 100 Punkte in der Übung</b></li>
                     <li>Schriftliche Klausur</li>
-                    <li>90 Minuten Zeit</li>
+										<li>90 Minuten Zeit</li>
+										<li>Hilfsmittel: Handschriftlich<br>doppelseitig beschriebenes DIN-A4-Blatt</li>
                 </ul>
                 <div style="position: absolute; top: 120px; right:50px; font-size:250px"><i class="fas fa-edit green"></i><div>
                 </section>
@@ -133,10 +132,10 @@
                 <table style="font-size:0.7em" class="fragment" data-fragment-index="0">
                 <thead>
                     <tr><th><u>Datum</u></th><th><u>Uhrzeit</u></th><th><u>Raum</u></th><th>Dauer</th><th>Bezeichnung</th></tr>
-                    <tr><td>2019-10-14</td><td>14:15</td><td>D14/404</td><td>90</td><td>Vorlesung: Datenbanken 1</td></tr>
-                    <tr><td>2019-10-15</td><td>10:15</td><td>D14/111</td><td>90</td><td>Vorlesung: Datenbanken 1</td></tr>
-                    <tr><td>2019-10-21</td><td>14:15</td><td>D14/404</td><td>90</td><td>Vorlesung: Datenbanken 1</td></tr>
-                    <tr><td>2019-10-21</td><td>16:00</td><td>D14/112</td><td>90</td><td>Praktikum: Datenbanken 1</td></tr>
+                    <tr><td>2020-10-14</td><td>14:15</td><td>17-123</td><td>90</td><td>Dings-Meeting</td></tr>
+                    <tr><td>2020-10-15</td><td>10:15</td><td>17-222</td><td>60</td><td>Treffen mit Jürgen</td></tr>
+                    <tr><td>2020-10-21</td><td>14:15</td><td>17-222</td><td>60</td><td>Treffen mit Frau Becker</td></tr>
+                    <tr><td>2020-10-21</td><td>16:00</td><td>Cafeteria</td><td>45</td><td>Kaffee trinken</td></tr>
                 </table>
                 </section>
                 <section>
@@ -147,7 +146,7 @@
                     <li>Das Relationenmodell</li>
                     <li>Relationale Algebra</li>
                 </ol>
-								<p class="fragment">\[\pi_{Uhrzeit,~Bezeichnung}\sigma_{Datum = '2019-10-14'}(Termine) \]</p>
+								<p class="fragment">\[\pi_{Uhrzeit,~Bezeichnung}\sigma_{Datum = '2020-10-14'}(Termine) \]</p>
                 </section>
                 <section>
                 <h2>Aufbau der Vorlesung</h2>
@@ -161,7 +160,7 @@
                 <br>
                 <pre class="fragment"><code class="hlsql" data-trim contenteditable>
 SELECT uhrzeit, bezeichnung FROM termine
-WHERE datum = '2019-10-14'
+WHERE datum = '2020-10-14'
 					</code></pre>
                 </section>
                 <section>
@@ -470,7 +469,7 @@ commit;</code></pre></div>
 									<div class="trackinfo"><i class="fas fa-headphones"></i> 6</div>
 									<pre data-badge="SQL-Query" data-badge-position="tr"><code class="hlsql" data-trim contenteditable>
 									SELECT uhrzeit, bezeichnung FROM termine
-									WHERE datum = '2019-10-14'
+									WHERE datum = '2020-10-14'
 									</code></pre>
 
 									<ol>
@@ -494,8 +493,8 @@ commit;</code></pre></div>
 	                <table style="font-size:0.7em" data-fragment-index="0">
 	                <thead>
 	                    <tr><th><u>Datum</u></th><th><u>Uhrzeit</u></th><th><u>Raum</u></th><th>Dauer</th><th data-badge="Metadaten" data-badge-position="tr">Bezeichnung</th></tr>
-	                    <tr><td>2019-10-14</td><td>14:15</td><td>D14/404</td><td>90</td><td>Vorlesung: Datenbanken 1</td></tr>
-	                    <tr><td>2019-10-15</td><td>10:15</td><td>D14/111</td><td>90</td><td data-badge="Daten" data-badge-position="tr">Vorlesung: Datenbanken 1</td></tr>
+	                    <tr><td>2020-10-14</td><td>14:15</td><td>17-123</td><td>90</td><td>Dings-Meeting</td></tr>
+	                    <tr><td>2020-10-15</td><td>10:15</td><td>17-222</td><td>60</td><td data-badge="Daten" data-badge-position="tr">Treffen mit Jürgen</td></tr>
 	                </table>
 									<p>Metadaten (Datenbankschema):</p>
 									<ul>
@@ -574,7 +573,7 @@ commit;</code></pre></div>
 									</div>
 									<div class="sl-block" data-block-type="text" data-block-id="4a88991a110fc83e2bb8db0a31664d24" style="height: auto; min-width: 30px; min-height: 30px; width: 692px; left: 80px; top: 539px;">
 										<div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
-											<p><span style="font-size:0.46em">1960&nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; &nbsp; 1970&nbsp; &nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; 1980&nbsp; &nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; 1990&nbsp; &nbsp;</span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em"> &nbsp; &nbsp; 2000&nbsp; &nbsp;</span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em"> &nbsp; &nbsp; 2010&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2019</span></p>
+											<p><span style="font-size:0.46em">1960&nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; &nbsp; 1970&nbsp; &nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; 1980&nbsp; &nbsp; </span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em">&nbsp; &nbsp; 1990&nbsp; &nbsp;</span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em"> &nbsp; &nbsp; 2000&nbsp; &nbsp;</span><span>&nbsp; &nbsp; &nbsp; </span><span style="font-size:0.46em"> &nbsp; &nbsp; 2010&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2020</span></p>
 										</div>
 									</div>
 									<div class="sl-block" data-block-type="text" data-block-id="8395c9e11c4a7e68086aec3d8a72d78f" style="height: auto; min-width: 30px; min-height: 30px; width: 153px; left: 133px; top: 420px;">

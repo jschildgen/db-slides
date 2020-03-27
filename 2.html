@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="src/layout.css">
         <link rel="stylesheet" href="lib/joint.min.css" />
         <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="src/rainbow.css">
@@ -44,7 +45,7 @@
                             <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                             <h1>Datenbanken</h1>
                             <h3>Kapitel 2: ER-Modelle</h3>
-                            <h4 style="text-align:center">2020-XX-XX</h4>
+                            <h4 style="text-align:center">2020-03-30</h4>
                             <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                             <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                         </section>
@@ -161,6 +162,16 @@
                                     <li>Entitäten tauchen nicht im ER-Diagramm auf</li>
                                 </ul>
                                 <aside class="notes">ER-Diagramme stellen Metadaten dar. Sie beschreiben, was in einer Datenbank gespeichert werden kann. Sie beinhalten nicht die Daten selbst.</aside>
+                                <div class="poll fragment" style="bottom:-30px">
+                                    <h1>Was ist ein sinnvoller Entitätstyp?</h1>
+                                      <ul>
+                                        <li>Webshop</li>
+                                        <li data-poll="correct">Kunde</li>
+                                        <li>Login</li>
+                                        <li>Titanik</li>
+                                      </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                             </section>
 
                             <section>
@@ -219,6 +230,16 @@
                          
                         ]]
                                     </div></div>
+                                    <div class="poll fragment" style="left:0px; bottom:-100px">
+                                        <h1>Darf es am gleichen Tag zur gleichen Uhrzeit mehr als ein Termin geben?</h1>
+                                          <ul>
+                                            <li>Ja, sogar im gleichen Raum</li>
+                                            <li>Nein, auf keinen Fall</li>
+                                            <li>Ja, aber nicht im gleichen Raum</li>
+                                            <li>Nein, allein das Datum muss schon eindeutig sein</li>
+                                          </ul>
+                                        <h2>https://frage.space</h2>
+                                    </div>
                                     <aside class="notes">Der Personen-Entitätstyp hat als Primärschlüsselattribut die Personennummer. Dies kann zum Beispiel eine künstlich erzeugte laufende Nummer sein. Termine haben keine solche ID. Hier haben wir einen <em>zusammengesetzten Primärschlüssel</em> aus Datum, Uhrzeit und Raum. Dies bedeutet, dass es am gleichen Tag zur gleichen Zeit im gleichen Raum nur einen einzigen Termin geben darf. Manchmal gibt es mehrere Möglichkeiten, was der Primärschlüssel sein kann (sogenannte <em>Schlüsselkandidaten</em>). Dann muss man sich für einen entscheiden.</aside>
                             </section>
                             <section>
@@ -691,7 +712,7 @@
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
                                     <ul>
                                         <li><em>Existenzabhängig</em> von einem anderen Entitätstypen</li>
-                                        <li>Kein eigener Primärschlüssel, stattdessen wird der Primärschlüssel vererbt und erweitert</li>
+                                        <li>Kein eigener Primärschlüssel, stattdessen wird der Primärschlüssel vererbt und <span style="border-bottom: 2px dashed #000;">erweitert</span></li>
                                         <li>Entitätstyp und Beziehung doppelt umrahmen</li>
                                     </ul>
                                     <div class="stretch erd" style="margin-left: 6cm">
@@ -998,6 +1019,16 @@
                                             [
                                             ]]
                                     </div></div>
+                                    <div class="poll fragment" style="left: 0px; bottom:-180px">
+                                        <h1>Welche Attribute hat ein Privatkunde?</h1>
+                                          <ul>
+                                            <li>Nur Kundennr</li>
+                                            <li>Keine</li>
+                                            <li data-poll="correct">Kundennr, Name, E-Mail</li>
+                                            <li>Kundennr, Name, E-Mail, Type-Tag</li>
+                                          </ul>
+                                        <h2>https://frage.space</h2>
+                                    </div>
                                     <aside class="notes">Der Entitätstyp &quot;Kunden&quot; hat zwei Sub-Typen &quot;Privatkunden&quot; und &quot;Geschäftskunden&quot;. In unserer Datenbank können wir also für jeden Kunden speichern, ob er einfach nur Kunde ist, oder aber auch Geschäftskunde und Privatkunde. Es gibt Notationen, in der Überlappungen (Mehrklassenzugehörigkeit) und abstrakte Typen (nicht instanziierbar) modelliert werden können. In unserer Notation ist eine Entität stets nur eine direkte Instanz von einem Entitätstypen, und damit implizit auch Instanz von dessen Super-Typen. Jeder Privatkunde ist also auch Kunde. Subtypen können auch wieder Subtypen haben, sodass sich komplexe Typhierarchien modellieren lassen.</aside>
                                 </section>
 
@@ -1056,6 +1087,29 @@
                                 </div>
                                 </section>
                                 <section>
+                                    <h2>Krähenfuß-Notation</h2>
+                                    <img style="width:6cm; position: absolute; right:0px" uml="entity Person {
+                                        PersNr
+                                        --
+                                        Name
+                                        Geburtsdatum
+                                      }
+                                      entity Ort {
+                                        Ort
+                                        --
+                                      }
+                                      Person }o..o| Ort : geboren_in"/>
+                                      <p class="small">Die Krähenfuß-Notation kommt in vielen<br>Datenbank-Modellierungs-Tools zum Einsatz.</p>
+                                    <ul>
+                                        <li><img class="noborder" style="height:36px; vertical-align: middle;" border="0" src="img/2/crow_11.png"> Genau eins</li>
+                                        <li><img class="noborder" style="height:36px; vertical-align: middle;" border="0" src="img/2/crow_01.png"> Höchstens eins</li>
+                                        <li><img class="noborder" style="height:36px; vertical-align: middle;" border="0" src="img/2/crow_1n.png"> Mindestens eins</li>
+                                        <li><img class="noborder" style="height:36px; vertical-align: middle;" border="0" src="img/2/crow_0n.png"> Mindestens keins (beliebig viele)</li>
+                                    </ul>
+
+                                    <aside class="notes">In der Krähenfuß-Notation kann erzwungen werden, dass jede Entität eines Entitätstypen mindestens einmal an einer Beziehung teilnehmen muss. Das Diagramm auf dieser Folie sagt, dass jede Person in einem Ort geboren sein muss. Würde man auf der Minimum-Seite statt dem | eine 0 schreiben, kann es Personen ohne Geburtsort geben. Dies entspräche der Chen-Notation N:1 auf der vorherigen Folie oben. Das <img style="height:16px" border="0" src="img/2/crow_0n.png"> im Diagramm bedeutet, dass es Orte mit vielen Personen, aber auch Orte ohne Personen geben kann. In der Chen-Notation gibt es nur 1 und N, was hier <img style="height:16px" src="img/2/crow_01.png"> und <img style="height:16px" border="0" src="img/2/crow_0n.png"> entspricht.</aside>
+                                </section>
+                                <!--<section>
                                     <h2>Modifizierte Chen-Notation</h2>
                                     <div style="margin-left: 220px; height: 150px; overflow: hidden;">
                                                 <div class="erd">
@@ -1151,7 +1205,7 @@
                                                                 </div>
                                                             </div>
                                         <aside class="notes">Kunden können viele Tarife buchen, jeder Tarif kann mehrfach gebucht werden und in einem Fitnessstudio können mehrfach Tarife gebucht werden. In der Chen-Notation konnten wir modellieren, dass ein Kunde in ein und dem selben Fitnessstudio nur einen einzigen Tarif buchen kann. Dies ist in der (Min,Max)-Notation so nicht darstellbar. Hier muss sich lediglich für jeden Entitätstyp gefragt werden: Kann es vorkommen, dass eine Entität dieses Typs nie an der Beziehung teilnimmt und dass sie mehrfach teilnimmt? Gibt es Kunden, die nichts (0) buchen? Ja. Gibt es Kunden die mehrmals (N) buchen? Ja (in einem anderen Fitnessstudio). Daher (0,N).</aside>
-                                </section>
+                                </section>-->
 
                                 <section>
                                     <h2>Kapitelzusammenfassung</h2>
@@ -1162,7 +1216,7 @@
                                         <li>Schwache Entitätstypen</li>
                                         <li>Ternäre Beziehungen</li>
                                         <li>Generalisierung</li>
-                                        <li>Chen-, modifizierte Chen-, Min-Max-Notation</li>
+                                        <li>Krähenfuß-Notation</li>
                                     </ul>
                                 </section>
 
@@ -1290,6 +1344,7 @@
                     <script src="lib/lodash.js"></script>
                     <script src="lib/backbone.js"></script>
                     <script src="lib/joint.min.js"></script>
+                    <script src="lib/deflate.js"></script>
             
                     <script src="src/init_reveal.js"></script>
             

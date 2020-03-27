@@ -1,13 +1,19 @@
 /*
- * Write PlantUML text-diagram description into a <img class="plantuml">...</div>
+ * Write PlantUML text-diagram description into a <img uml="..."/>
  * 
- * Uses https://plantuml.com/de/code-javascript-asynchronous
+ * Uses https://plantuml.com/de/code-javascript-synchronous
  * Uses https://github.com/johan/js-deflate
  *
  * By Johannes Schildgen, 2019
  */
  
 var PlantUML = (function(){
+
+    PLANTUML_HEADER = "skinparam classAttributeIconSize 0\n"
+    PLANTUML_HEADER += "skinparam monochrome true\n"
+    PLANTUML_HEADER += "skinparam componentStyle uml2\n"
+    PLANTUML_HEADER += "skinparam dpi 300\n"
+    PLANTUML_HEADER += "hide circle\n";
 
     function encode64(data) {
         r = "";
@@ -62,7 +68,7 @@ var PlantUML = (function(){
     function generate_plantumls(slide_or_document) {
     slide_or_document.querySelectorAll('img[uml]').forEach(
         function(img) { 
-            var planttxt = img.getAttribute('uml')
+            var planttxt = PLANTUML_HEADER + "\n" + img.getAttribute('uml')
             var s = unescape(encodeURIComponent(planttxt));
 
             img.src = "http://www.plantuml.com/plantuml/img/"+encode64(zip_deflate(s, 9));

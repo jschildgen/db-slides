@@ -166,7 +166,7 @@
                                     <h1>Was ist ein sinnvoller Entitätstyp?</h1>
                                       <ul>
                                         <li>Webshop</li>
-                                        <li data-poll="correct">Kunde</li>
+                                        <li data-poll="correct">Kunden</li>
                                         <li>Login</li>
                                         <li>Titanik</li>
                                       </ul>
@@ -1088,17 +1088,17 @@
                                 </section>
                                 <section>
                                     <h2>Krähenfuß-Notation</h2>
-                                    <img style="width:6cm; position: absolute; right:0px" uml="entity Person {
+                                    <img style="width:6cm; position: absolute; right:0px" uml="entity Personen {
                                         PersNr
                                         --
                                         Name
                                         Geburtsdatum
                                       }
-                                      entity Ort {
+                                      entity Orte {
                                         Ort
                                         --
                                       }
-                                      Person }o..o| Ort : geboren_in"/>
+                                      Personen }o..o| Orte : geboren_in"/>
                                       <p class="small">Die Krähenfuß-Notation kommt in vielen<br>Datenbank-Modellierungs-Tools zum Einsatz.</p>
                                     <ul>
                                         <li><img class="noborder" style="height:36px; vertical-align: middle;" border="0" src="img/2/crow_11.png"> Genau eins</li>

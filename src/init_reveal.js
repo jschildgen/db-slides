@@ -32,6 +32,6 @@ Reveal.initialize({
     { src: 'plugins/jump.js', async: true },
     { src: 'plugins/badges.js' },
     { src: 'plugins/sampler.js' },
-    { src: 'plugins/poll.js', async: true }
+    { src: 'poll/poll.js', async: true }
 ]
 });

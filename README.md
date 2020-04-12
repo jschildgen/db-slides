@@ -85,6 +85,10 @@ A `<div style="position: absolute">` element can be used to place an icon, a tex
 
 Images are stored in the img/ folder and can be displayed via `<img src="img/6/console.png">` The size can be configured with `style="width:7cm"`. Using `class="strech"` will strech the image to remaining space on the slide. The class `noborder` will remove the image border. 
 
+### Cloning Elements ###
+
+Instead of copy-pasting diagrams, code and other elements, it is possible to clone them by putting them in a `<div id="...">`. Then they can be reused somewhere else with `<div data-clone="..."></div>`.
+
 ### Trackinfo ###
 
 Some slides reference tracks in an audiobook. When adding for example `<div class="trackinfo"><i class="fas fa-headphones"></i> 1</div>`, a headphone symbol and the track number 1 will be displayed on the top right.

@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="src/layout.css">
         <link rel="stylesheet" href="lib/joint.min.css" />
         <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="src/rainbow.css">
@@ -44,7 +45,7 @@
                             <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                             <h1>Datenbanken</h1>
                             <h3>Kapitel 3: Das Relationenmodell</h3>
-                            <h4 style="text-align:center">2020-XX-XX</h4>
+                            <h4 style="text-align:center">2020-04-08</h4>
                             <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                             <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                         </section>
@@ -102,13 +103,26 @@
                                         <span  data-sql-query="SELECT produktnr, bezeichnung, preis FROM produkte WHERE produktnr IN (17)
                                         UNION ALL SELECT 88, 'Katzenfutter', null" data-sql-pk="firma" data-sql-tablename="produkte">
                                 </div>
-                                <p class="fragment" data-fragment-index="1">Mögliche Bedeutungen für Preis IS NULL:</p>
-                                <ul class="fragment" style="margin-top: 3mm; font-size:70%" data-fragment-index="1">
+
+                                <p class="fragment" data-fragment-index="2">Mögliche Bedeutungen für Preis IS NULL:</p>
+                                <ul class="fragment" style="margin-top: 3mm; font-size:70%" data-fragment-index="2">
                                     <li>Der Preis ist unbekannt</li>
                                     <li>Das Produkt ist ausverkauft</li>
                                     <li>Produkte dieser Art haben keinen Preis</li>
                                     <li>Preis nur auf Anfrage</li>
                                 </ul>
+
+                                <div class="poll fragment" style="bottom:-30px" data-fragment-index="1">
+                                    <h1>Was könnte PREIS IS NULL bedeuten?</h1>
+                                      <ul>
+                                        <li>Der Preis ist unbekannt</li>
+                                        <li>Das Produkt ist ausverkauft</li>
+                                        <li>Produkte dieser Art haben keinen Preis</li>
+                                        <li>Preis nur auf Anfrage</li>
+                                      </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
+
                                 <aside class="notes">In unseren Beispieltabellen stellen wir NULL-Werte als &quot;-&quot; dar. Wenn der Preis 0 ist, ist das Produkt kostenlos, Preis NULL hat jedoch eine andere Bedeutung.</aside>
                             </section>
 
@@ -283,7 +297,19 @@
                                                  
                                                 ]]
                                         </div>
-                                <div class="fragment" style="margin-top: -1mm;"><p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;Adresse_Strasse,<br>&nbsp;Adresse_PLZ,<br>&nbsp;Adresse_Ort<br>)</p>
+                                <div class="fragment" style="margin-top: -1mm;" data-fragment-index="2"><p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;Adresse_Strasse,<br>&nbsp;Adresse_PLZ,<br>&nbsp;Adresse_Ort<br>)</p>
+                                </div>
+                                <div class="fragment fade-out" data-fragment-index="2">
+                                <div class="poll fragment" style="bottom:100px" data-fragment-index="1">
+                                    <h1>Wie viele Attribute hat die Tabelle Personen?</h1>
+                                      <ul>
+                                        <li>2</li>
+                                        <li>3</li>
+                                        <li data-poll="correct">5</li>
+                                        <li>6</li>
+                                      </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 </div>
                                 <aside class="notes">Die einfachste Möglichkeit, Unterattribute im Relationenmodell abzubilden, ist es die Attributshierarchie flachzuklopfen. Da Attribute im Relationenmodell atomare Werte haben, erstellen wir für jedes Sub-Attribut eine eigene Spalte.</aside>
                         </section>
@@ -376,6 +402,14 @@
 
                                             <p style="font-size:70%">personen.chef ist Fremdschlüssel auf personen.persnr</p>
                                     </div>
+                            </div>
+                            <div class="poll fragment" style="bottom:-240px">
+                                <h1>Darf eine Person sein eigener Chef sein (also Chef=PersNr)?</h1>
+                                  <ul>
+                                    <li data-poll="correct">Ja sicher</li>
+                                    <li>Nee, das geht nicht</li>
+                                  </ul>
+                                <h2>https://frage.space</h2>
                             </div>
                             <aside class="notes">Personen ist nun eine sich selbst referenzierende Tabelle. In der Fremdschlüsselspalte &quot;Chef&quot; ist die ID des Chefs einer Person zu finden. Ute hat keinen Chef, daher ist bei ihr Chef NULL. Es wäre sogar möglich, dort die eigene PersNr einzutragen.</aside>
                         </section>
@@ -498,6 +532,16 @@
                                                 <p style="font-size: 70%;">bewertungen.kundennr ist Fremdschlüssel auf kunden.kundennr<br>
                                                                            bewertungen.produktnr ist Fremdschlüssel auf produkte.produktnr</p>
                                         </div>
+                                        <div class="poll fragment" style="bottom:-150px">
+                                            <h1>Dieses Relationenschema ist das gleiche wie...</h1>
+                                              <ul>
+                                                <li>wenn Bewertungen nicht schwach wäre</li>
+                                                <li data-poll="correct">bei der N:M-Beziehung &quot;bewertet&quot;</li>
+                                                <li>bei einem mehrwertigen Attribut &quot;Bewertung&quot;</li>
+                                                <li>bei einer ternären Beziehung &quot;bewertet&quot;</li>
+                                              </ul>
+                                            <h2>https://frage.space</h2>
+                                        </div>
                                         <aside class="notes">Der schwache Entitätstyp Bewertungen ist von zwei Entitätstypen existenzabhängig: Kunden und Produkte. Die Bewertungen-Relation hat also als Primärschlüssel die Kombination aus den Primärschlüsseln ebendieser beider Tabellen: Kundennr, Produktnr.<br>Das Resultat ist genau das gleiche wie die Relation, die aus der N:M-Beziehung &quot;bewerten&quot; entstanden ist (siehe 2 Folien zurück).</aside>
                             </section>
 
@@ -543,6 +587,17 @@
                                                                     buchung(studio_str, studio_hausnr) ist FK auf fitnessstudios(strasse, hausnummer)</p>
                                         <aside class="notes">Genau wie bei einer binären N:M-Beziehung, wird auch bei einer höhergradigen Beziehung eine separate Relation erstellt. Der Primärschlüssel wird nur aus den Entitätstypen gebildet, an denen keine 1 steht. </aside>
                                 </div>
+
+                                <div class="poll fragment" style="bottom:0px">
+                                        <h1>Wenn bei Tarife keine 1, sondern ein L stünde...</h1>
+                                          <ul>
+                                            <li>hätte das keine Auswirkung auf das Relationenschema</li>
+                                            <li>müsste man eine weitere Relation erstellen</li>
+                                            <li data-poll="correct">gehörte Tarif_Bezeichnung zum Primärschlüssel</li>
+                                            <li>hä? Kommt nach N, M, nicht O?</li>
+                                          </ul>
+                                        <h2>https://frage.space</h2>
+                                    </div>
                             </section>
 
                             <section>
@@ -613,8 +668,18 @@
                                         <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
                                                                    Privatkunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte)<br>
                                                                    Geschäftskunden(<u>Kundennr</u>, Name, E-Mail, USt-ID)<br></p>
-                                                                   <p style="font-size: 70%;">Hier keine Fremdschlüssel.</p>
+                                                                   <p style="font-size: 70%;" class="fragment" data-fragment-index="2">Hier keine Fremdschlüssel.</p>
                                         <div data-clone="er_generalization"></div>
+                                        <div class="poll fragment" style="bottom:-200px" data-fragment-index="1">
+                                                <h1>Woran erkennt man im Relationenschema den Unterschied zwischen dem Hausklassenmodell und der vollen Redundanz?</h1>
+                                                  <ul>
+                                                    <li>Es gibt keinen Unterschied</li>
+                                                    <li>Weniger Spalten beim Hausklassenmodell</li>
+                                                    <li>Mehr Spalten beim Hausklassenmodell</li>
+                                                    <li data-poll="correct">Bei der vollen Redundanz gibt es Fremdschlüssel</li>
+                                                  </ul>
+                                                <h2>https://frage.space</h2>
+                                            </div>
                                         <aside class="notes">Im Hausklassenmodell ist die Suche aufwändig, da diese häufig mehrere Relationen betreffen kann.</aside>
                                 </section>
 
@@ -675,69 +740,71 @@
                                         </section>
                                         <section>
                                             <h3>NOT NULL / UNIQUE</h3>
-                                            <div style="margin-left: 220px; height: 150px; overflow: hidden;">
-                                                    <div class="erd">
-                                                            [[
-                                                                { _e: "Personen", pos: [20, 25],
-                                                                attributes: [
-                                                                ]
-                                                                },
-                                                                { _e: "Orte", pos: [350, 25],
-                                                                attributes: [
-                                                                ]
-                                                                }
-                                                            ],
-                                                            [
-                                                            { _r: "geboren in",
-                                                                _e: ["Personen", "Orte"],
-                                                                card: ["mc", "1"]
-                                                                }
-                                                            ]]
-                                                                        </div>
-                                                                    </div>
-                                                <table>
-                                                    <tbody>
-                                                        <tr><td>c</td><td>mc</td><td>-</td></tr>
-                                                        <tr><td>1</td><td>mc</td><td>NOT NULL</td></tr>
-                                                        <tr><td>c</td><td>c</td><td>UNIQUE</td></tr>
-                                                        <tr><td>1</td><td>c</td><td>UNIQUE NOT NULL</td></tr>
-                                                    </tbody>
-                                                </table>
-                                                <aside class="notes">Wenn im ER-Diagramm die erweiterte Chen-Notation (1, m, c, mc) oder die Min-Max-Notation verwendet wird, können die genaueren Kardinalitätsrestriktionen ins Relationenmodell übernommen werden. Im hier zu sehenden Diagramm sind Personen in genau einem Ort geboren, d. h. die Geburtsort-Spalte muss NOT NULL sein. NOT NULL heißt, es darf keine NULL-Werte in der Spalte geben. UNIQUE heißt, dass keine doppelten Werte vorkommen dürfen.</aside>
+                                            
+                                            <p><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                                PersNr
+                                                --
+                                                Name
+                                                E-Mail
+                                              }
+                                              entity Orte {
+                                                Ort
+                                                --
+                                              }
+                                              Personen }o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist NOT NULL</p>
+
+                                              <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                                PersNr
+                                                --
+                                                Name
+                                                E-Mail
+                                              }
+                                              entity Orte {
+                                                Ort
+                                                --
+                                              }
+                                              Personen |o-right-o| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE</p>
+
+                                              <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                                PersNr
+                                                --
+                                                Name
+                                                E-Mail
+                                              }
+                                              entity Orte {
+                                                Ort
+                                                --
+                                              }
+                                              Personen |o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE NOT NULL</p>
+                                              
+
+                                              
+                                                
+                                                <aside class="notes">Wenn im ER-Diagramm die Krähenfuß-Notation verwendet wird, können die genaueren Kardinalitätsrestriktionen ins Relationenmodell übernommen werden. Im ersten und dritten Diagramm sind Personen in genau einem Ort geboren, d. h. die Geburtsort-Spalte muss NOT NULL sein. NOT NULL heißt, es darf keine NULL-Werte in der Spalte geben. UNIQUE heißt, dass keine doppelten Werte vorkommen dürfen. Das wäre der Fall, wenn in einem Ort nur eine Person geboren sein dürfte.</aside>
                                         </section>
                                         <section>
                                                 <h3>NOT NULL / UNIQUE</h3>
-                                                <div style="margin-left: 220px; height: 290px; overflow: hidden;">
-                                                        <div class="erd">
-                                                                [[
-                                                                    { _e: "Personen", pos: [20, 25],
-                                                                    attributes: [
-                                                                    ]
-                                                                    },
-                                                                    { _e: "Orte", pos: [350, 25],
-                                                                    attributes: [
-                                                                    ]
-                                                                    },
-                                                                    { _e: "Kreditkarten", pos: [350, 150],
-                                                                    attributes: [
-                                                                    ]
-                                                                    }
-                                                                ],
-                                                                [
-                                                                { _r: "geboren in",
-                                                                    _e: ["Personen", "Orte"],
-                                                                    card: ["mc", "1"]
-                                                                    },
-                                                                    { _r: "haben", pos: [217, 138],
-                                                                    _e: ["Personen", "Kreditkarten"],
-                                                                    card: ["1", "c"]
-                                                                    }
-                                                                ]]
-                                                                            </div>
-                                                                        </div>
-                                                    <p>Personen(<u>PersNr</u>, Name, E-Mail,<br>&nbsp;Geburtsort NOT NULL,<br>&nbsp;Kreditkarte UNIQUE)</p>
+                                                <img style="position: absolute; right:1cm; width:9cm; max-height:1000px" uml="entity Personen {
+                                                    PersNr
+                                                    --
+                                                    Name
+                                                    E-Mail
+                                                  }
+                                                  entity Orte {
+                                                    Ort
+                                                    --
+                                                  }
+                                                  entity Kreditkarten {
+                                                    Kreditkartennr
+                                                    --
+                                                    ...
+                                                  }
+                                                  Personen }o-right-|| Orte : Geburtsort
+                                                  Personen ||--o| Kreditkarten : haben"/>
+                                                
+                                                    <p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;E-Mail,<br>&nbsp;Geburtsort NOT NULL,<br>&nbsp;Kreditkarte UNIQUE<br>)</p>
                                                     
-                                                    <aside class="notes">Personen brauchen einen Geburtsort, daher muss die Spalte NOT NULL sein. Da jede Kreditkarte nur einmal verwendet werden darf, ist die Fremdschlüsselspalte &quot;Kreditkarte&quot; UNIQUE. Das &quot;c&quot; bei Kreditkarten gibt an, dass es Personen ohne Kreditkarte geben darf, daher sind NULL-Werte in der Kreditkarten-Spalte erlaubt. </aside>
+                                                    <aside class="notes">Personen brauchen einen Geburtsort, daher muss die Spalte NOT NULL sein. Da jede Kreditkarte nur einmal verwendet werden darf, ist die Fremdschlüsselspalte &quot;Kreditkarte&quot; UNIQUE. Der &quot;o&quot; im ER-Diagramm bei Kreditkarten gibt an, dass es Personen ohne Kreditkarte geben darf, daher sind NULL-Werte in der Kreditkarten-Spalte erlaubt. </aside>
                                             </section>
                                             <section>
                                                 <h2>Relationale Algebra</h2>
@@ -831,6 +898,18 @@
                                                         <div><p style="font-size: 70%;">$\pi_{kundennr, name}(Kunden)$</p>
                                                             <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)"></span></div>
                                                     </div>
+
+                                                    <div class="poll fragment" style="bottom:-100px" data-fragment-index="1">
+                                                            <h1>Wie viele Zeilen kommen bei einer Projektion auf R heraus?</h1>
+                                                              <ul>
+                                                                <li>Genau |R|</li>
+                                                                <li>Zwischen 0 und |R|</li>
+                                                                <li data-poll="correct">Zwischen 1 und |R|</li>
+                                                                <li>Zwischen |R| und &infin;</li>
+                                                              </ul>
+                                                            <h2>https://frage.space</h2>
+                                                        </div>
+
                                                     <aside class="notes">Die Projektion ist ein unärer Operator, das heißt er nimmt nur eine Relation als Eingabe (Vereinigung etc. sind binär). Das Ergebnis ist gleich der Eingaberelation, jedoch nur mit den spezifizierten Spalten. Im Beispiel interessieren wir uns nur für die Kundennummern und Namen von Kunden, nicht für weitere Attribute.</aside>
                                             </section>
                                             <section>
@@ -966,6 +1045,18 @@
                                                 <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
                                                 <div data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90"></div>
                                                 <p>Der Join ist verlustbehaftet.</p>
+
+                                                <div class="poll fragment" style="bottom:-200px" data-fragment-index="1">
+                                                        <h1>Was ist verloren gegangen?</h1>
+                                                          <ul>
+                                                            <li>Produkte mit Hersteller NULL</li>
+                                                            <li>Hersteller, von denen es keine Produkte gibt</li>
+                                                            <li data-poll="correct">beides</li>
+                                                            <li>gar nichts</li>
+                                                          </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
+
                                                 <aside class="notes">Die Ergebnisrelation des Joins zwischen zwei Relationen besitzt alle Spalten beider Relationen. Zu jeder Zeile der beiden Relationen existieren entsprechend viele Zeilen im Ergebnis, je nachdem wie viele Join-Partner zu ihr gefunden werden. Der Hersteller Monsterfood hat sogar zwei Join-Partner gefunden, daher taucht die Hersteller-Zeile (Monsterfood, USA) im Ergebnis zweimal auf. Das Produkt Katzenfutter hat hier keinen Join-Partner gefunden, der Hersteller Holzkopf ebenfalls nicht. Da also beim Join etwas verloren gegangen ist (Katzenfutter und Hersteller Holzkopf), nennt man den Join verlustbehaftet.</aside>
                                             </section>
                                             <section>
@@ -992,24 +1083,24 @@
 
                                             <section>
                                                 <h2>Äußerer Verbund</h2>
-                                                <h4>&bowtie; Innerer Verbund</h4>
+                                                <h4>$\bowtie$ Innerer Verbund</h4>
                                                 <p>Nur die Zeilen, die Join-Partner finden, sind im Ergebnis</p>
-                                                <h4>&#x27D5; Linker äußerer Verbund</h4>
+                                                <h4>$&#x27D5;$ Linker äußerer Verbund</h4>
                                                 <p>Alle Zeilen der linken Relation sind definitiv im Ergebnis</p>
-                                                <h4>&#x27D6; Rechter äußerer Verbund</h4>
+                                                <h4>$&#x27D6;$ Rechter äußerer Verbund</h4>
                                                 <p>Alle Zeilen der rechten Relation sind definitiv im Ergebnis</p>
-                                                <h4>&#x27D7; Voller äußerer Verbund</h4>
+                                                <h4>$&#x27D7;$ Voller äußerer Verbund</h4>
                                                 <p>Alle Zeilen beider Relation sind definitiv im Ergebnis</p>
                                             </section>
                                             <section>
-                                                <h3>&#x27D5; Linker äußerer Verbund</h3>
+                                                <h3>$&#x27D5;$ Linker äußerer Verbund</h3>
                                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 27</div>
                                                 <p>$Produkte &#x27D5;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
                                                 <div data-sql-query="select * from produkte left join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90"></div>
                                                 <aside class="notes">Alle Zeilen der links vom Left-Join-Operator stehenden Relation erscheinen auf jeden Fall im Ergebnis. Wenn sie keinen Join-Partner in der rechten Tabelle finden - das ist hier beim Katzenfutter der Fall -, bleiben die Attribute der rechten Tabelle alle NULL.</aside>
                                             </section>
                                             <section>
-                                                <h3>&#x27D6; Rechter äußerer Verbund</h3>
+                                                <h3>$&#x27D6;$ Rechter äußerer Verbund</h3>
                                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 28</div>
                                                 <p>$Produkte &#x27D6;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
                                                 <div data-sql-query="select produkte.*, hersteller.* from hersteller left join (select * from produkte where produktnr < 90) produkte on produkte.hersteller=hersteller.firma"></div>
@@ -1017,7 +1108,7 @@
                                                 <aside class="notes">Beim right outer Join sind zusätzlich zu den normalen Join-Ergebniszeilen diejenigen Zeilen der rechten Tabelle im Ergebnis wiederzufinden, die keinen Join-Partner in der linken Tabelle finden. Auch hier werden die Spalten der linken Tabelle mit NULL-Werten belegt.</aside>
                                             </section>
                                             <section>
-                                                <h3>&#x27D7; Voller äußerer Verbund</h3>
+                                                <h3>$&#x27D7;$ Voller äußerer Verbund</h3>
                                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 29</div>
                                                 <p>$Produkte &#x27D7;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
                                                 <div data-sql-query="select * from produkte left join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90
@@ -1052,6 +1143,18 @@
                                                     <p>$R \bowtie_P R$</p>
                                                     <h4>Semi-Join</h4>
                                                     <p>$R \ltimes_P S = \pi_{R.*}(R \bowtie_P S)$</p>
+
+                                                    <div class="poll fragment" style="bottom:-50px" data-fragment-index="1">
+                                                            <h1>Welcher Join-Bedingung entspricht ein natürlicher Verbund zwischen A(x,y,z) und B(s,t,x,y)?</h1>
+                                                              <ul>
+                                                                <li>A.x = B.s</li>
+                                                                <li>A.x = B.x</li>
+                                                                <li>A.y = B.y</li>
+                                                                <li data-poll="correct">A.x = B.x &wedge; A.y = B.y</li>
+                                                              </ul>
+                                                            <h2>https://frage.space</h2>
+                                                        </div>
+                                                    
                                             </section>
                                             <section>
                                                 <h3>Beispiel: Natürlicher Verbund</h3>
@@ -1403,8 +1506,7 @@
                                                 <p class="small">$cd\_id \rightarrow album; cd\_id \rightarrow band; band \rightarrow land; cd\_id, tracknr \rightarrow song$</p>
                                                 <p class="small">Ist die Tabelle in 2NF?</p>
                                                 <p class="small fragment">Überprüfe für Nicht-Schlüsselattribut &quot;album&quot;, ob $cd\_id, tracknr \Rightarrow album$ ?</p>
-                                                <p class="small fragment">Nein, weil $cd\_id \rightarrow album$</p>
-                                                <p class="small fragment">Die Relation ist also nicht in 2NF</p>
+                                                <p class="small fragment">Nein, weil $cd\_id \rightarrow album$ &Rightarrow; Die Relation ist also nicht in 2NF</p>
                                                 <p class="small fragment">Überführung in 2NF:</p>
                                                 <ul class="small fragment">
                                                     <li>Tracks(<u>cd_id</u>,<u>tracknr</u>, song)</li>
@@ -1455,6 +1557,7 @@
                     <script src="lib/lodash.js"></script>
                     <script src="lib/backbone.js"></script>
                     <script src="lib/joint.min.js"></script>
+                    <script src="lib/deflate.js"></script>
             
                     <script src="src/init_reveal.js"></script>
             

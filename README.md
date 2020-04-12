@@ -87,7 +87,7 @@ Images are stored in the img/ folder and can be displayed via `<img src="img/6/c
 
 ### Cloning Elements ###
 
-Instead of copy-pasting diagrams, code and other elements, it is possible to clone them by putting them in a `<div id="#...">`. Then they can be reused somewhere else with `<div data-clone="..."></div>`.
+Instead of copy-pasting diagrams, code and other elements, it is possible to clone them by putting them in a `<div id="...">`. Then they can be reused somewhere else with `<div data-clone="..."></div>`.
 
 ### Trackinfo ###
 

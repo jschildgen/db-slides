@@ -421,6 +421,20 @@ function adjustVertices(graph, cell) {
     // the link is interpreted as having no siblings
     if (!sourceId || !targetId) return;
 
+    // BEGIN CORRECTING LABELS
+    glo = cell;
+    var labels = cell.get("labels");
+    if(labels != undefined && labels.length>0) {
+        var txt = labels[0].attrs.text.text.trim();
+        if(Math.abs(graph.getCell(sourceId).position().x - graph.getCell(targetId).position().x) < 50) {
+            // the two cells are below each other => move label text a bit to the right
+            cell.label(0, {attrs: {text: {text: "   " + txt}}});
+        } else {
+            cell.label(0, {attrs: {text: {text: txt+"\n"}}});
+        }
+    }
+    // END CORRECTING LABELS
+
     // identify link siblings
     var siblings = _.filter(graph.getLinks(), function(sibling) {
 

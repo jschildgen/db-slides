@@ -48,6 +48,7 @@
                             <h4 style="text-align:center">2020-04-08</h4>
                             <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                             <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                            
                         </section>
                         <section>
                             <h2>In diesem Kapitel...</h2>
@@ -1160,7 +1161,7 @@
                                                 <h3>Beispiel: Natürlicher Verbund</h3>
                                                 <p>$produkte \bowtie bewertungen$</p>
                                                 <div class="small" data-sql-query="select * from produkte join bewertungen using (produktnr)"></div>
-                                                <p class="fragment small">Entspricht:<br>$\pi_{produkte.produktnummer, bezeichnung, preis, hersteller, kundennr, sterne, bewertungstext}$<br>$(produkte \bowtie_{produkte.kundennr = bewertungen.kundennr} bewertungen)$</p>
+                                                <p class="fragment small">Entspricht:<br>$\pi_{produkte.produktnummer, bezeichnung, preis, hersteller, kundennr, sterne, bewertungstext}$<br>$(produkte \bowtie_{produkte.produktnr = bewertungen.produktnr} bewertungen)$</p>
                                                 <aside class="notes">In den Relationen Produkte und Bewertungen gibt es ein gemeinsames Attribut, die Produktnummer. Daher ist der natürliche Verbund ein Gleichverbund über die Produktnummer. Diese Spalte taucht im Ergebnis dann aber nur einmal auf.</aside>
                                             </section>
                                             <section>
@@ -1194,6 +1195,7 @@
                                                 </div>
                                                 <p>$\pi_{kundennr, produktnr}(bewertungen) \div \pi_{kundennr}(kunden)$</p>
                                                 <div data-sql-query="select 5 as kundennr"></div>
+                                                
                                                 <aside class="notes">Hier gehen wir der Einfachheit halber davon aus, dass es nur die beiden Produkte 17 und 29 gibt. Die Division liefert diejenigen Kunden, die alle diese Produkte bewertet hat.</aside>
                                             </section>
                                             <!--
@@ -1348,6 +1350,16 @@
                                                     </tbody>
                                                 </table>
                                                 </div>
+                                                <div class="poll fragment" style="bottom:-150px">
+                                                    <h1>Was ist an diesem Schema nicht so gut?</h1>
+                                                      <ul>
+                                                        <li>Inkonsistenz</li>
+                                                        <li data-poll="correct">Redundanz</li>
+                                                        <li>Unverständlich</li>
+                                                        <li>Falscher Primärschlüssel</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
                                                 <aside class="notes">Dieses Datenbankschema ist eher schlechter Natur. Es herrschen viele Redundanzen. Dinge, die in unterschiedliche Relationen gehören, wurden in eine Relation zusammengeworfen.</aside>
                                             </section>
                                             <section>
@@ -1383,6 +1395,16 @@
                                                 <div data-clone="table_cd_tracks"></div>
                                                 <p>Es gilt: $cd\_id \rightarrow album; cd\_id \rightarrow band; band \rightarrow land;$<br>
                                                 $cd\_id, tracknr \rightarrow song$</p>
+                                                <div class="poll fragment" style="bottom:150px" data-fragment-index="1">
+                                                    <h1>Welche funktionalen Abhängigkeiten gilt hier NICHT?</h1>
+                                                      <ul>
+                                                        <li>cd_id, tracknr &rightarrow; cd_id</li>
+                                                        <li>cd_id, tracknr &rightarrow; album, tracknr</li>
+                                                        <li>cd_id &rightarrow; land</li>
+                                                        <li data-poll="correct">song &rightarrow; tracknr</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
                                             </section>
                                             <section>
                                                 <h3>Volle funktionale Abhängigkeit</h3>
@@ -1422,6 +1444,18 @@
                                                     <li>tracknr ist kein Superschlüssel (nur $tracknr \rightarrow tracknr$)</li>
                                                 </ul>
                                                 <p class="small fragment">&nbsp;$\Rightarrow cd\_id, tracknr$ ist Schlüsselkandidat</p>
+
+                                                <div class="poll fragment" style="bottom:-25px">
+                                                    <h1>{cd_id, tracknr, song} ist ein...</h1>
+                                                      <ul>
+                                                        <li data-poll="correct">Superschlüssel</li>
+                                                        <li>Schlüsselkandidat</li>
+                                                        <li>beides</li>
+                                                        <li>weder noch</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+
                                                 <aside class="notes">Ein Schlüsselkandidat eignet sich dafür, als Primärschlüssel der Relation eingesetzt zu werden. Wenn es mehrere Schlüsselkandidaten gibt, wählt man einen davon aus, der Primärschlüssel wird.</aside>
                                             </section>
                                             <section>
@@ -1460,7 +1494,7 @@
                                                             <tr><td>1</td><td>Spezial</td><td>Salami</td></tr>
                                                             <tr><td>1</td><td>Spezial</td><td>Schinken</td></tr>
                                                             <tr><td>1</td><td>Spezial</td><td>Pilze</td></tr>
-                                                            <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                                                            <tr><td>...</td><td>...</td><td>...</td></tr>
                                                         </tbody>
                                                     </table>
                                                 <table style="font-size: 70%;">
@@ -1470,10 +1504,21 @@
                                                         <tbody>
                                                             <tr><td>1</td><td>Spezial</td><td>klein</td><td>7.00</td></tr>
                                                             <tr><td>1</td><td>Spezial</td><td>groß</td><td>8.50</td></tr>
-                                                            <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                                                            <tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
                                                         </tbody>
                                                     </table>
                                                     <p class="small fragment">Jetzt ist das Schema in 1NF.</p>
+
+                                                    <div class="poll fragment" style="bottom:25px">
+                                                        <h1>Welche volle funktionale Abhängigkeit gilt in der obigen Tabelle?</h1>
+                                                          <ul>
+                                                            <li data-poll="correct">pizza_id &Rightarrow; bezeichnung</li>
+                                                            <li>pizza_id, zutat &Rightarrow; bezeichnung</li>
+                                                            <li>zutat &Rightarrow; bezeichnung</li>
+                                                            <li>pizza_id, bezeichnung &Rightarrow; zutat</li>
+                                                          </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
                                             </section>
                                             <section>
                                                 <h2>2. Normalform (2NF)</h2>
@@ -1505,6 +1550,20 @@
                                                 </table>
                                                 <p class="small">$cd\_id \rightarrow album; cd\_id \rightarrow band; band \rightarrow land; cd\_id, tracknr \rightarrow song$</p>
                                                 <p class="small">Ist die Tabelle in 2NF?</p>
+
+                                                <div class="fragment fade-out" data-fragment-index="2">
+                                                <div class="poll fragment" style="bottom:-100px" data-fragment-index="1">
+                                                    <h1>Ist die Tabelle in 2NF?</h1>
+                                                      <ul>
+                                                        <li>Ja, weil z. B. {cd_id, tracknr} &Rightarrow; album</li>
+                                                        <li>Nein, weil cd_id &rightarrow; tracknr</li>
+                                                        <li data-poll="correct">Nein, weil cd_id &rightarrow; album</li>
+                                                        <li>Nein, weil tracknr &rightarrow; album</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+                                                </div>
+
                                                 <p class="small fragment">Überprüfe für Nicht-Schlüsselattribut &quot;album&quot;, ob $cd\_id, tracknr \Rightarrow album$ ?</p>
                                                 <p class="small fragment">Nein, weil $cd\_id \rightarrow album$ &Rightarrow; Die Relation ist also nicht in 2NF</p>
                                                 <p class="small fragment">Überführung in 2NF:</p>
@@ -1512,6 +1571,7 @@
                                                     <li>Tracks(<u>cd_id</u>,<u>tracknr</u>, song)</li>
                                                     <li>Alben(<u>cd_id</u>, album, band, land)</li>
                                                 </ul>
+
                                                 <aside class="notes">Bei der Überführung der CD-Track-Tabelle in 2NF wurde diese Tabelle in zwei Tabellen zerlegt. Wir geben ihnen sinnvolle Namen: Alben und Tracks. Lediglich die Spalte &quot;song&quot; ist vom ganzen Schlüssel voll funktional abhängig. Die anderen Nicht-Schlüsselattribute hängen nur von der CD_ID ab und werden daher in die neue Alben-Relation ausgelagert.</aside>
                                             </section>
                                             <section>
@@ -1520,6 +1580,18 @@
                                                 <p>Triviale Abhängigkeit: $A \rightarrow X$ mit $X \subseteq A$</p>
                                                 <p>Transitive Abhängigkeit: $A \rightarrow B; B \rightarrow C$</p>
                                                 <p class="fragment small">Ist Alben(<u>cd_id</u>, album, band, land) in 3NF?</p>
+
+                                                <div class="poll fragment" style="bottom:-70px">
+                                                    <h1>Ist Alben(<u>cd_id</u>, album, band, land) in 3NF?</h1>
+                                                      <ul>
+                                                        <li>Ja, weil es keine transitiven Abhängigkeiten gibt</li>
+                                                        <li data-poll="correct">Nein, weil cd_id &rightarrow; band; band &rightarrow; land</li>
+                                                        <li>Nein, weil cd_id, band &rightarrow; cd_id; cd_id &rightarrow; band</li>
+                                                        <li>Ich weiß es nicht! Ich weiß es einfach nicht!!!</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+
                                                 <p class="fragment small">Nein, weil es folgende transitive Abhängigkeit gibt: $cd\_id \rightarrow band; band \rightarrow land$</p>
                                             </section>
                                             <section>

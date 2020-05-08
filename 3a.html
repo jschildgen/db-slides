@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken - Kapitel 3a - Anfrageoptimierung</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reset.css">
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+
+
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                        <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                            <h1>Datenbanken</h1>
+                            <h3>Kapitel 3a: Anfrageoptimierung</h3>
+                            <h4 style="text-align:center">2020-04-11</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                        </section>
+                        
+                                            <section>
+                                                <h2>Anfrageoptimierung</h2>
+                                                <p class="small">&quot;Wie heißen die Produkte, die Kunde Nr. 5 bewertet hat?&quot;</p>
+                                                <p class="small">Äquivalente Ausdrücke:</p>
+                                                <ol class="small" style="list-style-type: lower-alpha; margin-left: 25px;">
+                                                        <li>$\pi_{bezeichnung}\sigma_{kundennr=5}\sigma_{produkte.produktnr=bewertungen.produktnr}(produkte\times bewertungen)$</li>
+                                                    <li>$\pi_{bezeichnung}(\pi_{produktnr, bezeichnung} produkte\bowtie \pi_{produktnr}\sigma_{kundennr=5}(bewertungen))$</li>
+                                                    <li>$\pi_{bezeichnung}\sigma_{kundennr=5}(produkte\bowtie bewertungen)$</li>
+                                                    <li>$\pi_{bezeichnung}(produkte\bowtie \sigma_{kundennr=5}(bewertungen))$</li>
+                                                </ol>
+                                                <p class="small">Welcher Ausführungsplan ist besser / &quot;billiger&quot;?</p>
+
+                                                <div class="poll fragment fade-in-then-out" style="bottom:-10px">
+                                                    <h1>Welcher Plan ist der beste?</h1>
+                                                      <ul>
+                                                        <li>a.</li>
+                                                        <li data-poll="correct">b.</li>
+                                                        <li>c.</li>
+                                                        <li>d.</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+
+                                                <div class="fragment">
+                                                    <h4>Anfrageoptimierung</h4>
+                                                    <p>Überführung eines Ausdrucks in einen äquivalenten möglichst effizient auszuführenden Ausdruck.</p>
+                                                </div>
+
+                                            </section>
+                                            <section>
+                                                <h2>Kostenbasierte Optimierer</h2>
+                                                <p>Jeder Ausführungsplan erhält Kostenschätzung.<br> Der Plan mit den geringsten Kosten wird gewählt.</p>
+                                                <p>Beispiel: Kosten = Größe der Zwischenergebnisse</p>
+                                                <div class="poll fragment fade-in-then-out" style="bottom:-320px">
+                                                    <h1>100.000 Kunden, 500.000 Bewertungen. Schätzen Sie:&nbsp;<br>|&sigma;&nbsp;kundennr=5&nbsp;(bewertungen)|</h1>
+                                                      <ul>
+                                                        <li>0</li>
+                                                        <li>1</li>
+                                                        <li data-poll="correct">5</li>
+                                                        <li>100.000</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Anfrageoptimierung</h3>
+                                                <p class="small">Annahme: 100.000 Kunden, 500.000 Bewertungen, 300.000 Produkte</p>
+                                                <!-- Query: π bezeichnung σ kundennr = 5 σ produkte.produktnr=bewertungen.produktnr (produkte⨯bewertungen) -->
+                                                <!-- Query: π bezeichnung (π produktnr, bezeichnung produkte⨝ π produktnr σ kundennr = 5 bewertungen)-->
+                                                <img src="img/3/query_opt_ratings.png" alt="Anfrageoptimierung" class="noborder stretch">
+                                                <aside class="notes">Der rechte Plan ist billiger, da die Zwischenergebnisse deutlich kleiner sind: 300.000+300.000+500.000+5+5+5+5=1.100.020; links: 150.001.300.010; Auch haben die Zwischenergebnisse weniger Spalten.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>Heuristiken</h2>
+                                                <ul>
+                                                    <li class="fragment">Frühstmögliche Selektion</li>
+                                                    <li class="fragment">Join statt Kreuzprodukt</li>
+                                                    <li class="fragment">Frühstmögliche Projektion (ohne Duplikateliminierung)</li>
+                                                    <li class="fragment">Join-Reihenfolge so wählen, dass Zwischenergebnisse klein sind</li>
+                                                    <li class="fragment">Folgen von Selektionen und Projektionen zusammenfassen</li>
+                                                    <li class="fragment">Selektionen statt Mengenoperationen</li>
+                                                    <li class="fragment">Nichts doppelt berechnen</li>
+                                                </ul>
+                                                <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-thumbs-up green"></i></div>
+                                            </section>
+                                            <section>
+                                                <h2>Heuristiken</h2>
+                                                <h4>Frühstmögliche Selektion</h4>
+                                                <p class="small">Vorher: $\sigma_{kundennr=5}(produkte \bowtie bewertungen)$<br>
+                                                    Nachher: $produkte \bowtie \sigma_{kundennr=5}(bewertungen)$</p>
+                                                <h4 class="fragment" data-fragment-index="1">Join statt Kreuzprodukt</h4>
+                                                <p class="fragment small" data-fragment-index="1">Vorher: $\sigma_{produkte.produktnr=bewertungen.produktnr}(produkte \times bewertungen)$<br>
+                                                    Nachher: $produkte \bowtie_{produkte.produktnr=bewertungen.produktnr} (bewertungen)$</p>
+                                                <h4 class="fragment" data-fragment-index="2">Frühstmögliche Projektion <small>(ohne Duplikateliminierung)</small></h4>
+                                                <p class="fragment small" data-fragment-index="2">Vorher: $\pi_{bezeichnung}(produkte \bowtie bewertungen)$<br>
+                                                    Nachher: $\pi_{bezeichnung}(\pi_{produktnr, bezeichnung}(produkte) \bowtie bewertungen)$</p>
+                                                
+                                                    <div class="poll fragment fade-in-then-out" style="bottom:200px">
+                                                        <h1>Warum haben wir nach der Optimierung zwei Projektionsoperationen in der Anfrage?</h1>
+                                                          <ul>
+                                                            <li>Wegen der Sicherheit</li>
+                                                            <li>Wegen der Redundanz</li>
+                                                            <li>Wegen der Einfachheit</li>
+                                                            <li data-poll="correct">Wegen des Joins</li>
+                                                          </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
+
+                                                <aside class="notes">Bei der frühestmöglichen Projektion ist darauf zu achten, dass keine Spalten frühzeitig eliminiert werden, die noch für Joins, Selektionen, etc. benötigt werden. Außerdem darf bei der Projektion noch keine Duplikateliminierung erfolgen, da sonst das Ergebnis evtl. nicht mehr äquivalent ist.</aside>
+                                            </section>
+                                            <section>
+                                                    <h2>Heuristiken</h2>
+                                                    <h4>Join-Reihenfolge so wählen,<br>dass Zwischenergebnisse klein sind</h4>
+                                                    <p class="small">Vorher: $(kunden \bowtie bewertungen) \bowtie \sigma_{hersteller='Monsterfood'}(produkte)$<br>
+                                                        Nachher: $(bewertungen \bowtie \sigma_{hersteller='Monsterfood'}(produkte)) \bowtie kunden$</p>
+                                                    <h4 class="fragment" data-fragment-index="1">Folgen von Sel. und Proj. zusammenfassen</h4>
+                                                    <p class="fragment small" data-fragment-index="1">Vorher: $\pi_{bezeichnung}\pi_{produktnr,bezeichnung}\sigma_{preis \le 5}\sigma_{hersteller='Monsterfood'}produkte$<br>
+                                                        Nachher: $\pi_{bezeichnung}\sigma_{preis \le 5 \wedge hersteller='Monsterfood'}produkte$</p>
+                                                    <h4 class="fragment" data-fragment-index="2">Selektionen statt Mengenoperationen</h4>
+                                                    <p class="fragment small" data-fragment-index="2">Vorher: $\sigma_{hersteller='Monsterfood'}(produkte) \cup \sigma_{hersteller='Calgonte'}(produkte)$<br>
+                                                        Nachher: $\sigma_{hersteller='Monsterfood' \vee hersteller='Calgonte'}(produkte)$</p>
+                                                    <aside class="notes">Bei der frühestmöglichen Projektion ist darauf zu achten, dass keine Spalten frühzeitig eliminiert werden, die noch für Joins, Selektionen, etc. benötigt werden. Außerdem darf bei der Projektion noch keine Duplikateliminierung erfolgen, da sonst das Ergebnis evtl. nicht mehr äquivalent ist.</aside>
+                                                </section>
+
+                                            <section>
+                                                <h2>Kardinalitätsschätzung</h2>
+                                                <p>Wie viele Tupel sind im Ergebnis einer Operation zu erwarten?</p>
+                                                <p>Hilfreiche Statistiken:</p>
+                                                <ul>
+                                                    <li class="fragment">Kardinalitäten der Tabellen (Anzahl Zeilen)</li>
+                                                    <li class="fragment">Kardinalitäten der Spalten (Anzahl distinkter Werte)</li>
+                                                    <li class="fragment">Kleinster, größter Wert je Spalte, Median, ...</li>
+                                                    <li class="fragment">Werte-Histogramme (Häufigkeitsverteilung)</li>
+                                                    <li class="fragment">Erfahrungen über Verschätzungen in der Vergangenheit (&rightarrow; lernende Optimierer)</li>
+                                                    <li class="fragment">...</li>
+                                                </ul>
+                                            </section>
+                                            <section>
+                                                <h3>Kardinalitätsschätzung: Selektion</h3>
+                                                
+                                                <p>Annahme: Gleichverteilung</p>
+                                                <p class="small">|R| (Anzahl Zeilen in R)<br>
+                                                     |R.a| (Anzahl distinkter Werte in Spalte R.a)</p>
+                                                <p>$|\sigma_{R.a = x}(R)| = \frac{|R|}{|R.a|}$</p>
+                                                <p class="fragment small" data-fragment-index="1">Beispiel:<br>
+                                                $|\sigma_{geschlecht='weiblich'}(Personen)| = \frac{1}{3} |Personen|$</span></p>
+                                                <div style="position: absolute; top: 120px; right:50px; font-size:150px"><i class="fas fa-balance-scale green"></i><div>
+                                                <aside class="notes">Wird nach einem bestimmten Wert in einer Spalte gesucht und liegen keine weiteren Informationen über Werteverteilungen innerhalb dieser Spalte vor, wird von <em>Gleichverteilung</em> ausgegangen. Im Beispiel auf dieser Folie wird geschätzt, dass ein Drittel aller gespeicherten Personen weiblich sind, weil es drei verschiedene Werte in der Spalte Geschlecht gibt (männlich, weiblich, divers).</aside>
+                                            </section>
+                                            <section>
+                                                    <h3>Kardinalitätsschätzung: Selektion</h3>
+                                                    <div style="position: absolute; top: 120px; right:50px; font-size:150px"><i class="fas fa-balance-scale-left green"></i></div>
+                                                    <p>Selektivitätsfaktor $sf_P$: $|\sigma_P R|=sf_P \cdot |R|$</p>
+                                                    <p>Annahme: Werteunabhängigkeit</p>
+                                                    <p>$sf_{P \wedge Q} = sf_P \cdot sf_Q$</p>
+                                                    <p class="fragment small" data-fragment-index="1">Beispiel:<br>
+                                                    3 verschiedene Geschlechter, 1000 verschiedene Vornamen<br><br>
+                                                    $|\sigma_{geschlecht='weiblich' \wedge vorname='Peter'}(Personen)|$ <span class="fragment" data-fragment-index="3">$ = \frac{1}{3} \cdot \frac{1}{1000} |Personen|$</span></p>
+
+
+                                                    <div class="poll fragment" style="bottom:150px" data-fragment-index="2">
+                                                        <h1>Was kommt raus?</h1>
+                                                            <ul>
+                                                            <li>1/3 Personen</li>
+                                                            <li>1/1000 Personen</li>
+                                                            <li>1/1003 Personen</li>
+                                                            <li data-poll="correct">1/3000 Personen</li>
+                                                            </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
+                                                    
+
+                                                    <p class="fragment small" data-fragment-index="4">$|\sigma_{geschlecht='männlich' \wedge vorname='Peter'}(Personen)| = \frac{1}{3} \cdot \frac{1}{1000} |Personen|$</p>
+                                                    
+                                                        
+                                                    
+
+                                                    <aside class="notes">Da in der Regel die Information nicht vorliegt, dass zwischen bestimmten Spalten eine Werteabhängigkeit besteht, wird von Unabhängigkeit ausgegangen. Wahrscheinlich wird in Wirklichkeit keine Frau in der Personentabelle Peter heißen. In der unteren Anfrage filtert das Geschlechts-Kriterium wahrscheinlich nichts aus.  </aside>
+                                            </section> 
+                                            <section>
+                                                <h3>Kardinalitätsschätzung: &Cross;</h3>
+                                                <p>$|R \times S| = |R| \cdot |S|$</p>
+                                                <p class="fragment small">Beispiel: $|kunden \times kunden| = |kunden|^2$</p>
+                                            </section>
+                                            <section>
+                                                <h3>Kardinalitätsschätzung: &bowtie;</h3>
+                                                <p>$|R \bowtie_{R.a=S.a} S|$</p>
+                                                <p class="fragment">Im Allgemeinen:<br> $0 \le |R \bowtie_{R.a=S.a} S| \le |R| \cdot |S|$</p>
+
+                                                <p class="fragment">Wenn R.a Fremdschlüssel auf S.a ist:<br> $|R \bowtie_{R.a=S.a} S = |R|$</p>
+
+                                                <p class="fragment small">Beispiel: |$produkte \bowtie bewertungen| = |bewertungen|$</p>
+
+                                                <aside class="notes">Haben die Tabellen R und S völlig verschiedene Werte in der Spalte a, ist das Ergebnis des Joins leer. Wenn die Join-Spalten eine Fremdschlüssel-Primärschlüssel-Beziehung darstellen, hat das Ergebnis des Joins so viele Zeilen, wie die Tabelle mit der Fremdschlüsselspalte (abzgl. der Anzahl von NULL-Werten in dieser), da jede solche Zeile genau einen Join-Partner in der anderen Tabelle findet, unabhängig davon, wie groß diese andere Tabelle ist. Gibt es beispielsweise nur ein Produkt, sind alle Bewertungen über dieses eine Produkt. Gibt es deutlich mehr Produkte als Bewertungen, sind einige Produkte nicht bewertet worden. Im Join-Resultat sind in jedem Fall genau so viele Zeilen wie in der Bewertungs-Tabelle. Die Produktnr-Spalte ist dort nie NULL.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>Kapitelzusammenfassung</h2>
+                                                <ul>
+                                                    <li>Anfrageoptimierung:<br>Anfrage in effizientere Anfrage umformen</li>
+                                                    <li>Kostenbasierte Optimierer</li>
+                                                    <li>Heuristiken</li>
+                                                    <li>Kardinalitätsschätzung, Selektivitätsfaktor</li>
+                                                </ul>
+                                            </section>
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/js/reveal.js"></script>
+                    <script src="lib/jquery.js"></script>
+                    <script src="lib/lodash.js"></script>
+                    <script src="lib/backbone.js"></script>
+                    <script src="lib/joint.min.js"></script>
+                    <script src="lib/deflate.js"></script>
+            
+                    <script src="src/init_reveal.js"></script>
+            
+                    <script>
+                    if(window.location.search.match( /print-pdf/gi )) {
+                            document.getElementById('header').style="display:none";
+                            document.getElementById('footer').style="display:none";
+                    }
+                    </script>
+            
+            
+                </body>
+            </html>

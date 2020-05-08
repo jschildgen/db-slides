@@ -1576,7 +1576,7 @@
                                             </section>
                                             <section>
                                                 <h2>3. Normalform (3NF)</h2>
-                                                <p>Eine Relation ist in dritter Normalform, wenn sie in 2NF ist und es keine nicht-trivialen transitiven Abhängigkeiten gibt.</p>
+                                                <p>Eine Relation ist in dritter Normalform, wenn sie in 2NF ist und es keine nicht-trivialen transitiven Abhängigkeiten zwischen Nicht-Schlüsselattributen gibt.</p>
                                                 <p>Triviale Abhängigkeit: $A \rightarrow X$ mit $X \subseteq A$</p>
                                                 <p>Transitive Abhängigkeit: $A \rightarrow B; B \rightarrow C$</p>
                                                 <p class="fragment small">Ist Alben(<u>cd_id</u>, album, band, land) in 3NF?</p>
@@ -1592,7 +1592,8 @@
                                                     <h2>https://frage.space</h2>
                                                 </div>
 
-                                                <p class="fragment small">Nein, weil es folgende transitive Abhängigkeit gibt: $cd\_id \rightarrow band; band \rightarrow land$</p>
+                                                <p class="fragment small">Nein, weil es folgende transitive Abhängigkeit gibt:<br>$cd\_id \rightarrow band; band \rightarrow land$</p>
+                                                <aside class="notes">Ein Nicht-Schlüssel-Attribut (das sind Attribute, die zu keinem Schlüsselkandidaten gehören) darf keine anderen Nicht-Schlüssel-Attribute funktional bestimmen. Ist dies der Fall, ist die Relation in 3NF.</aside>
                                             </section>
                                             <section>
                                                 <h3>Überführung in 3NF</h3>

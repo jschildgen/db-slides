@@ -396,6 +396,16 @@
                                 <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
                      land VARCHAR(100) DEFAULT 'Deutschland');</code></pre>
                                 <p>Wird beim Einfügen in die Tabelle der Wert für eine Spalte nicht gesetzt, wird der DEFAULT-Wert dort eingetragen (standardmäßig NULL).</p>
+                                <div class="poll fragment" style="bottom:-290px">
+                                    <h1>Was ist wenn land keinen DEFAULT-Wert hat und NOT NULL ist und nun versucht wird, beim Einfügen kein Land zu setzen?</h1>
+                                        <ul>
+                                            <li>Land ist NULL</li>
+                                            <li>Land ist '' (leerer String)</li>
+                                            <li>Land ist 0</li>
+                                            <li data-poll="correct">Es kommt ein Fehler</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 <aside class="notes">Später beim <code>INSERT</code>-Kommando wird gezeigt, dass man nicht zwangsweise alle Spaltenwerte beim Einfügen einer neuen Zeile setzen muss. Die DEFAULT-Option legt für solche Fälle den Standardwert fest. Gibt es keinen definierten DEFAULT-Wert und wird der Wert nicht gesetzt, erhält die Zeile in der entsprechenden Spalte den Wert NULL. Ist auf der Spalte ein <code>NOT NULL</code>-Constraint definiert, kommt ein Fehler. Vor solchen Fehlern kann dann ein DEFAULT-Wert schützen. Wird mittels <code>ALTER TABLE ... ADD COLUMN</code> nachträglich eine neue Spalte mit DEFAULT-Wert einer existierenden Tabelle hinzugefügt, erhalten alle bisherigen Zeilen in der neuen Spalte diesen DEFAULT-Wert.</aside>
                             </section>
 
@@ -419,6 +429,20 @@
                      <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE personen (/* ... */,
  geburtsdatum DATE,
  hochzeitsdatum DATE CHECK (hochzeitsdatum > geburtsdatum));</code></pre>
+
+                                <div class="poll fragment" style="bottom:-290px">
+                                    <h1>Was ist kein Constraint?</h1>
+                                        <ul>
+                                            <li>CHECK</li>
+                                            <li>PRIMARY KEY</li>
+                                            <li>FOREING KEY</li>
+                                            <li data-poll="correct">DEFAULT</li>
+                                            <li>UNIQUE</li>
+                                            <li>NOT NULL</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
+
                             <aside class="notes">Mit einem CHECK-Constraint lassen sich benutzerdefinierte Spalten-Constraints definieren. In Klammern hinter dem Stichwort <code>CHECK</code> steht ein beliebiger boolescher Ausdruck, der stets wahr sein muss. Beim Einfügen und Ändern von Zeilen überprüft das DBMS die Bedingung und lehnt die entsprechende Operation ab, wenn das CHECK-Constraint verletzt würde. In den gezeigten Beispielen muss in der E-Mail-Spalte immer ein @-Zeichen vorkommen, der Wertebereich der Sterne-Spalte wird eingeschränkt auf ganze Zahlen zwischen 1 und 5, und das Hochzeitsdatum muss immer echt später sein als das Geburtsdatum einer Person.</aside>
                             </section>
                             
@@ -449,10 +473,10 @@
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 52</div>
 
                                     <p>ALTER: Verändern von Datenbankobjekten</p>
-                                    <pre><code class="hlsql" data-trim contenteditable>ALTER TABLE bewertungen ADD COLUMN zeitstempel TIMESTAMP</code></pre>
+                                    <pre><code class="hlsql" data-trim contenteditable>ALTER TABLE bewertungen ADD COLUMN zeitstempel TIMESTAMP;</code></pre>
     
                                     <p class="fragment" data-fragment-index="1">DROP: Entfernen von Datenbankobjekten</p>
-                                    <pre class="fragment" data-fragment-index="1"><code class="hlsql" data-trim contenteditable>DROP TABLE bewertungen</code></pre>
+                                    <pre class="fragment" data-fragment-index="1"><code class="hlsql" data-trim contenteditable>DROP TABLE bewertungen;</code></pre>
                                     <aside class="notes">Die DDL-Befehle ALTER und DROP wirken sich genau wie CREATE auf den DB-Katalog aus. Das hier gezeigte ALTER TABLE ... ADD COLUMN-Kommando fügt eine neue Spalte namens &quot;zeitstempel&quot; vom Typ TIMESTAMP der Bewertungstabelle hinzu. Das gezeigte DROP-Kommando würde die Bewertungstabelle entfernen. Das heißt, es sind nicht nur alle Daten dieser Tabelle weg, sondern die ganze Tabelle existiert nicht mehr. Das DROP-Kommando hier würde aber abgelehnt werden, da es noch eine Tabelle Bewertungslikes gibt, bei der auf die Bewertungstabelle Fremdschlüsselreferenzen definiert sind. Man müsste also zunächst diese Tabelle oder zumindest die Fremdschlüssel droppen.</aside>
                             </section>
 
@@ -496,6 +520,16 @@
 SET preis = 5.99, bezeichnung = 'Spezial-Katzenfutter' 
 WHERE produktnr = 88</code></pre>
 
+                                <div class="poll fragment fade-in-then-out" style="bottom:-220px">
+                                    <h1>Was wird geändert, wenn man kein WHERE-Prädikat angibt?</h1>
+                                        <ul>
+                                            <li>Nur die erste Zeile</li>
+                                            <li data-poll="correct">Alle Zeilen</li>
+                                            <li>Gar nichts</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
+
                                 <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = preis+1</code></pre>
 
                                 <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = preis * 1.1</code></pre>
@@ -514,6 +548,17 @@ WHERE produktnr = 88</code></pre>
 
                                 <pre class="fragment"><code class="hlsql" data-trim contenteditable>TRUNCATE TABLE produkte</code></pre>
 
+                                <div class="poll fragment" style="bottom:-260px">
+                                    <h1>Was ist der Unterschied zwischen TRUNCATE TABLE und DROP TABLE?</h1>
+                                        <ul>
+                                            <li>TRUNCATE ist schneller</li>
+                                            <li>TRUNCATE löscht die Tabelle aus dem Metadaten-Katalog der Datenbank</li>
+                                            <li data-poll="correct">TRUNCATE löscht nur die Daten, die Tabelle ist noch da</li>
+                                            <li>Es gibt keinen</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
+
                                 <aside class="notes">Auch hier bestimmt die WHERE-Klausel wieder, welche Zeilen gelöscht werden sollen. Lässt man sie weg, löscht das System jede Zeile. Der TRUNCATE TABLE-Befehl ist jedoch meist schneller für solche Zwecke, er leert ebenfalls die komplette Tabelle.</aside>
                             </section>
                             <section>
@@ -525,6 +570,7 @@ GROUP BY h.land
 HAVING COUNT(*) < 5
 ORDER BY COUNT(*)
                                 </code></pre>
+                                
                                 <p class="small">&quot;Zeige mir für jedes Land, in welchem weniger als fünf Produkte, die mehr als 3 EUR kosten, hergestellt wurden, die Anzahl der Produkte sowie die Durchschnittspreise an, aufsteigend sortiert nach der Anzahl.</p>
                             <ul class="small">
                                 <li><code>SELECT</code>: Projektion</li>
@@ -541,6 +587,17 @@ ORDER BY COUNT(*)
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT bezeichnung, preis, round(preis * 1.15, 2) AS preis_usd 
 FROM produkte</code></pre>
                                 <span class="sqlresult fragment"></span>
+
+                                <div class="poll fragment" style="bottom:-40px">
+                                    <h1>Was macht dieses SELECT?</h1>
+                                        <ul>
+                                            <li>Selektion</li>
+                                            <li data-poll="correct">Projektion ohne Duplikateliminierung</li>
+                                            <li>Kreuzprodukt</li>
+                                            <li>Weder noch</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 <aside class="notes">Die SELECT-Klausel wird bei der Anfrageausführung erst sehr spät ausgewertet. In ihr findet die Projektion statt, um festzulegen, welche Spalten man letztendlich im Ergebnis sehen möchte. Man kann mehrere Spalten mit Kommata trennen, mit <code>AS</code> einen Alias definieren - also eine Umbenennung vornehmen - und man kann Funktionen aufrufen. In der FROM-Klausel stehen eine oder mehrere Tabellen, aus der die Daten stammen sollen.</aside>
                             </section>
                             <section>
@@ -585,6 +642,16 @@ FROM produkte</code></pre>
                                 <span id="where_description_like"></span>
                                 <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE '%-%'</code></pre>
                                 <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE 'M_sliriegel'</code></pre>
+                                <div class="poll fragment" style="bottom:150px">
+                                    <h1>Was wird durch die untere Anfrage gefunden?</h1>
+                                        <ul>
+                                            <li data-poll="correct">Masliriegel</li>
+                                            <li>Muesliriegel</li>
+                                            <li>Msliregel</li>
+                                            <li>Keines davon</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 <aside class="notes">Strings müssen stets in 'einfache Anführungszeichen' geschrieben werden. 'Innerhalb eines Strings braucht''s zwei Anführungszeichen', um es zu escapen. Im LIKE-Prädikat wird eine Musterüberprüfung vorgenommen. <code>%</code> steht dabei für beliebige Zeichen und <code>_</code> für genau ein beliebiges Zeichen.</aside>
                             </section>
                             <section>
@@ -592,6 +659,16 @@ FROM produkte</code></pre>
                                 <pre><code class="hlsql" data-trim contenteditable data-sql="where_is_null">SELECT * FROM produkte WHERE hersteller IS NULL</code></pre>
                                 <span id="where_is_null"></span>
                                 <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE hersteller IS NOT NULL</code></pre>
+                                <div class="poll fragment" style="bottom:-100px">
+                                    <h1>hersteller = NULL ist...</h1>
+                                        <ul>
+                                            <li>immer true</li>
+                                            <li data-poll="correct">immer false</li>
+                                            <li>true, wenn hersteller NULL ist</li>
+                                            <li>false, wenn hersteller NULL ist</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 <aside class="notes">Überprüfungen, ob der Wert einer Spalte NULL ist, muss mit <code>IS NULL</code> erfolgen. Das Prädikat <code>IS NOT NULL</code> trifft auf Zeilen zu, die in der entsprechenden Spalte keinen NULL-Wert haben.</aside>
                             </section>
                             <section>
@@ -638,6 +715,16 @@ WHERE produkte.hersteller = hersteller.firma
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT P.*, B.sterne 
  FROM produkte P JOIN bewertungen B USING(produktnr)</code></pre>
                                 <span class="sqlresult"></span>
+                                <div class="poll fragment" style="bottom:-300px">
+                                    <h1>Welche Aussage ist falsch?</h1>
+                                        <ul>
+                                            <li data-poll="correct">Die Anfrage entspricht einem äußeren Verbund</li>
+                                            <li>Die Anfrage entspricht einem natürlichen Verbund</li>
+                                            <li>Die Anfrage entspricht ON P.produktnr = B.produktnummer</li>
+                                            <li>Die Anfrage funktioniert nur, wenn beide Tabellen die Spalte produktnr haben</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 <aside class="notes"><code>USING(produktnr)</code> ist eine verkürzte Schreibweise für den Equi-Join auf der Spalte Produktnummer, also in dem Fall für <code>ON P.produktnr = B.produktnr</code></aside>
                             </section>
                             <section>

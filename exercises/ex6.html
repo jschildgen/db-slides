@@ -1,133 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Datenbanken 1 - Übungsblatt 6</title>
-    <link rel="stylesheet" href="../exercises/exercises.css">
-    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
-    <link href="../src/erd.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/joint.min.css" />
-</head>
-<body>
-    <header>
-        <div>
-        <div>
-            <b>Datenbanken 1 - WS 2019/20</b><br>
-            Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@h-da.de<br>
-            <b>Übungsblatt 6 vom 20.01.2020, 27./28.01.2020</b>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 6</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+    </head>
+    <body>
+        <header>
+            <div>
+            <div>
+                <b>Datenbanken - SS 2020</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 6 vom 03.06.2020</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
-        <div><img src="../img/hda.png" style="border:0; height:80px"></div>
-    </div>
-    <hr>
-    </header>
+        <hr>
+        </header>
 <section style="padding-top: 2.5cm">
-        <h1>Aufgabe 0: SQL (Bonusaufgabe, 10P)</h1>
-        <p>Abgabe-Deadline: 20.01.2020 12:00 im Moodle</p>
-        <p>Im LOTS-Tool der Uni Leipzig (<a href="https://lots.uni-leipzig.de/sql-training" target="_blank">https://lots.uni-leipzig.de/sql-training/)</a> können Sie SQL-Anfragen auf einer Bibliotheksdatenbank ausführen. Dort sind Bücher, Autoren und Verläge gespeichert. Bücher können mit Schlagworten versehen werden. Formulieren Sie die folgende Anfrage mittels SQL. <b>In dieser Aufgabe dürfen Sie keine Subanfragen, CTEs, IN, oder EXISTS verwenden.</b> Für jede Subanfrage etc. gibt es einen Punkt Abzug.</p>
-
-        <p><b>Welche Bücher vom Verlag &quot;Springer&quot; (2P) besitzen das Schlagwort &quot;Künstliche Intelligenz&quot;? (3P) Geben Sie die ISBN, den Titel und die Anzahl der Autoren aus (5P).</b> In Klammern stehen die Teilpunkte, die Sie bekommen, wenn Sie Aufgabe nur teilweise lösen.</p>
+        <h1>Aufgabe 0: SQL Island (Bonusaufgabe, 10P)</h1>
+        <p>Abgabe-Deadline: 03.06.2020 10:00 im Moodle</p>
+        <p>Spielen Sie das Spiel SQL Island (<a href="http://www.sql-island.de" target="_blank">http://www.sql-island.de)</a> und lassen Sie sich zum Ende des Spiels ein Zertifikat generieren. Wenn Sie die darauf befindliche Zertifikat-ID im Moodle eintragen, erhalten Sie 10 Bonuspunkte.</p>
 </section>
 <section>
-    <h1>Aufgabe 1: Rechtemanagement, Transaktionen, JDBC (10P)</h1>
-    <p>Abgabe-Deadline: 20.01.2019 12:00 im Moodle</p>
-    <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
-    <table border="0" style="width: 100%; margin-top: -5mm;">
-    <tr>
-        <td style="width:10mm">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td style="text-align: center; width:15mm">Richtig</td>
-        <td style="text-align: center; width:15mm">Falsch</td>
-    </tr>
-    <tr>
-        <td>1.</td><td>Wenn ich GRANT rolle TO benutzer ausführe, hat der angegebene Benutzer alle Berechtigungen der spezifizierten Rolle.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>2.</td><td>Mit REVOKE ... RESTRICT verbiete ich, ein Recht weiterzugeben.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>3.</td><td>Wenn eine Transaktion Daten schreibt und sie diese selbst wieder liest, nennt man dies ein Dirty Read.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>4.</td><td>Es laufen zwei Transaktionen parallel. Eine schreibt in x und die andere liest x gleichzeitig. Hier kann ein Lost Update auftreten.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>5.</td><td>Das Phantomproblem kann auftreten, wenn zwischen zwei Leseoperationen eine andere Transaktion Datensätze löscht.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>6.</td><td>Es gibt einen Zyklus im Serialisierbarkeitsgraphen der folgenden Historie: w<sub>1</sub>(x), w<sub>2</sub>(x), r<sub>2</sub>(y), r<sub>1</sub>(y), w<sub>3</sub>(y), c<sub>1</sub>, c<sub>2</sub>, c<sub>3</sub></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>7.</td><td>Wird bei der Historie aus der vorherigen Frage das SX-Sperrverfahren eingesetzt, muss TA<sub>2</sub> warten, bevor sie in x schreiben darf.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>8.</td><td>Die Redo-Info im Transaktionslog wird verwendet, um noch nicht auf die Festplatte geschriebene Aktionen von Gewinner-Transaktionen auszuführen.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>9.</td><td>In JDBC enthält ein PreparedStatement Fragezeichen als Platzhalter, die vor der Query-Ausführung mit Werten belegt werden können.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>10.</td><td>In JDBC liefert executeQuery einen Array zurück, der die Ergebnisse der übergebenen Anfrage beinhaltet.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    </table>
+    <h1>Aufgabe 1: SELECT-Anfragen (10P)</h1>
+    <p>Abgabe-Deadline: 03.06.2020 10:00 im Moodle</p>
+        <p>Auf der Webseite des Datenbankmanagementsystems Hyper können Sie SQL-Anfragen gegen das Uni-Schema aus dem Kemper-Datenbanksysteme-Buch stellen: <a href="http://hyper-db.de/interface.html" target="_blank">http://hyper-db.de/interface.html</a></p>
+        <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+            Studenten(<u>MatrNr</u>, Name, Semester)<br>
+            Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+            hoeren(<u>MatrNr, VorlNr</u>)</p>
+         <p>Vorlesungen.gelesen_von ist Fremdschlüssel auf Professoren.PersNr<br>
+            hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+            hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
+
+        <p>Formulieren Sie die folgenden Anfragen mittels SQL. Verwenden Sie bitte nicht das Relax-Tool. Verwenden Sie bei den Fragen 1 bis 4 keine Unteranfragen oder CTEs. Richtige Antworten geben 2 Punkte. Für teilweise richtige Antworten können leider keine Teilpunkte gegeben werden, da ein automatisches Query-Bewertungssystem eingesetzt wird. Achten Sie daher auch darauf, dass keine Tippfehler in Ihren Anfragen sind.</p>
+
+        <table border="0" style="width: 100%">
+        <tr><td>1.</td><td>Wie viele Professoren, die den Rang C4 haben, gibt es?</td></tr>
+        <tr><td>2.</td><td>Geben Sie die Namen der Studierenden aus, die die Vorlesung &quot;Grundzüge&quot; hören, und zwar alphabetisch aufsteigend sortiert.</td></tr>
+        <tr><td>3.</td><td>Geben zu jedem Professor, der mindestens zwei Vorlesungen hält, den Namen sowie die Gesamt-SWS-Zahl der von ihm oder ihr gehaltenen Vorlesungen aus. </td></tr>
+        <tr><td>4.</td><td>Wie sind die Namen der Studierenden, die zusammen mit dem Studenten namens &quot;Feuerbach&quot; zumindest eine gemeinsame Vorlesung hören? Geben Sie keinen Namen doppelt aus.</td></tr>
+        <tr><td>5.</td><td>Welche Professoren haben den Rang C4 und halten keine einzige 4-SWS-Vorlesung.</td></tr>
+        </table>
             
     </section>
-
-    
-
-    <section style="page-break-inside:avoid; padding-top: 3cm">
-    <h1>Aufgabe 2: Anwendungsentwicklung mit JDBC</h1>
-    <!-- https://www.schreiben.net/artikel/chuck-norris-witze-2236/ -->
-    <p>Für diese Aufgabe wurde auf der Hochschul-PostgreSQL-Datenbank <code>postgres.fbi.h-da.de</code> eine Datenbank <code>chucknorris</code> sowie ein Benutzer <code>chucknorris</code> mit dem Passwort <code>chuck555</code> erstellt. Dieser Nutzer hat SELECT-Rechte auf der Tabelle <code>public.witze(witz_id INT, witz VARCHAR(2000), aufrufe INT)</code> sowie ein UPDATE-Recht auf der Aufrufe-Spalte ebendieser Tabelle.</p>
-    <ol>
-        <li>Richten Sie im DBeaver eine Verbindung zur <code>chucknorris</code>-Datenbank unter dem Benutzer <code>chucknorris</code> ein und betrachten Sie die Witze-Tabelle.</li>
-        <li>Schreiben Sie ein Konsolenprogramm in Java und binden Sie den PostgreSQL-JDBC-Treiber ein; entweder indem Sie die Jar-Datei von <a href="https://jdbc.postgresql.org/" target="_blank">https://jdbc.postgresql.org/</a> herunterladen oder mittels Maven.</li>
-        <li>Bauen Sie in Ihrem Java-Programm eine Verbindung zur chucknorris-Datenbank auf.</li>
-        <li>Geben Sie einen zufälligen Witz auf der Konsole aus (Tipp: <code>ORDER BY random()</code>).</li>
-        <li>Implementieren Sie eine Suchfunktion:
-            <ol>
-                <li>Der Benutzer gibt auf der Konsole einen Suchbegriff ein</li>
-                <li>Wird ein leerer Suchbegriff eingegeben, soll wie gehabt ein zufälliger Witz ausgegeben werden.</li>
-                <li>Andernfalls wird ein zufälliger Witz ausgegeben, in dem der eingegebene Suchbegriff vorkommt.</li>
-                <li>Verhindern Sie SQL-Injections!</li>
-            </ol></li>
-        <li>Hinter dem Witz soll in Klammern die Anzahl der Aufrufe stehen.</code></li>
-        <li>Beim Anzeigen eines Witzes soll die Anzahl seiner Aufrufe in der Datenbank um eins erhöht werden.</li>
-    </ol>
-    
-  </section>
-
-  <section>
-    <h1>Aufgabe 2: B+-Bäume</h1>
-    <p>Betrachten Sie folgenden B+-Baum der Klasse (k=1, k*=1):</p>
-    <img src="img/ex6_tree.png" alt="B+-Baum" style="height:3cm">
-    <ol>
-        <li>Lösen Sie mit Stift und Papier:<br>Fügen Sie Leo und anschließend Zoe in den Baum ein. Zeichnen Sie den kompletten Baum, so wie er nach den beiden Einfügungen aussieht.</li>
-        <li>Lösen Sie mit dem B+-Baum-Simulations-Tool auf <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a>:<br>Fügen Sie 20 Zahlen so in einen B+-Baum der Klasse (k=2, k*=2, also Max. Degree=5) ein, sodass dieser die Höhe 2 hat.</li>
-    </ol>
-</section>
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

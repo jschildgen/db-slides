@@ -435,7 +435,7 @@
                                         <ul>
                                             <li>CHECK</li>
                                             <li>PRIMARY KEY</li>
-                                            <li>FOREING KEY</li>
+                                            <li>FOREIGN KEY</li>
                                             <li data-poll="correct">DEFAULT</li>
                                             <li>UNIQUE</li>
                                             <li>NOT NULL</li>
@@ -771,7 +771,17 @@ FROM produkte</code></pre>
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, COUNT(*), AVG(preis)
 FROM produkte
 GROUP BY hersteller</code></pre>
-                                <span class="sqlresult"></span>
+<div class="poll fragment" style="bottom:-250px">
+    <h1>Wie viele Zeilen kommen hier heraus?</h1>
+        <ul>
+            <li>0</li>
+            <li>1</li>
+            <li data-poll="correct">So viele, wie es verschiedene Werte in der hersteller-Spalte gibt</li>
+            <li>So viele, wie es Zeilen in der Produkte-Tabelle gibt</li>
+        </ul>
+    <h2>https://frage.space</h2>
+</div>
+                                <span class="sqlresult fragment"></span>
                                 <aside class="notes">In der GROUP BY-Klausel werden Spalten spezifiziert, nach deren Werten Gruppen gebildet werden. <code>GROUP BY hersteller</code> bedeutet, dass für jeden distinkten Wert in der hersteller-Spalte eine Gruppe gebildet wird. In unserem Beispiel sind dies drei. Für jede Gruppe kann nun der Wert in dieser GROUP BY-Spalte ausgegeben werden. Alle anderen Spalten dürfen nur innerhalb von Aggregatfunktionen in der SELECT-Liste vorkommen. Wir berechnen in dem Beispiel auf dieser Folie für jeden einzelnen Hersteller die Anzahl und Durchschnittspreise seiner Produkte.</aside>
                             </section>
                             <section>
@@ -841,6 +851,16 @@ WHERE preis = (SELECT max(preis) FROM monsterfood_produkte)</code></pre>
                                 </ul>
                                 <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis</code></pre>
                                 <span class="sqlresult"></span>
+                                <div class="poll fragment" style="bottom:120px">
+                                    <h1>Wenn zwei Produkte den gleichen Preis haben, welches kommt dann zuerst?</h1>
+                                        <ul>
+                                            <li>Das mit der kleinsten produktnr</li>
+                                            <li>Das, was zuerst eingefügt wurde</li>
+                                            <li>Das, was zuletzt eingefügt wurde</li>
+                                            <li data-poll="correct">Keine Ahnung</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 <aside class="notes">Hier wird das Ergebnis der Anfrage aufsteigend nach den Werten der Preis-Spalte sortiert.</aside>
                             </section>
 
@@ -920,6 +940,16 @@ UNION
 SELECT land FROM hersteller
                                 </code></pre>
                                 <span class="sqlresult"></span>
+                                <div class="poll fragment" style="bottom:-20px">
+                                    <h1>Was muss für die Spalten (hier: land) der beiden Teilanfragen gelten?</h1>
+                                        <ul>
+                                            <li>Sie müssen gleich heißen</li>
+                                            <li data-poll="correct">Es müssen gleich viele sein</li>
+                                            <li>Beides</li>
+                                            <li>Weder noch</li>
+                                        </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
                                 <p class="small">Bei Mengenoperationen ohne das Stichwort <code>ALL</code> wird nach UNION, INTERSECT und EXCEPT eine Duplikateliminierung vorgenommen.</p>
                         
                                 <aside class="notes">Die Ergebnismengen zweier SELECT-Anfragen lassen sich mit Mengenoperatoren (UNION, UNION ALL, INTERSECT, INTERSECT ALL, EXCEPT, EXCEPT ALL) kombinieren.</aside>
@@ -994,6 +1024,16 @@ WHERE EXISTS
  (SELECT * FROM produkte P WHERE p.hersteller = H.firma)
                             </code></pre>
                             <span class="sqlresult"></span>
+                            <div class="poll fragment" style="bottom:-50px">
+                                <h1>Was liefert diese Anfrage?</h1>
+                                    <ul>
+                                        <li data-poll="correct">Hersteller, von denen es Produkte gibt</li>
+                                        <li>Produkte, die einen Hersteller haben</li>
+                                        <li>Hersteller, von denen es keine Produkte gibt</li>
+                                        <li>Produkte mit Hersteller NULL</li>
+                                    </ul>
+                                <h2>https://frage.space</h2>
+                            </div>
                             <aside class="notes">Die Anfrage hier liefert Hersteller, von denen es Produkte gibt. Dies könnte man auch einfach mit einem (Semi-)Join lösen.</aside>
                         </section>
 
@@ -1106,6 +1146,17 @@ FROM produkte
                                     <div class="fragment">
                                     <p class="small">Wie viele Tage sind noch bis Weihnachten?</p>
                                     <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT DATE '2020-12-25' - CURRENT_DATE</code></pre>
+                                    </div>
+
+                                    <div class="poll fragment" style="bottom:-280px">
+                                        <h1>Wie kann man den Spalten dieser Anfrage sinnvolle Namen geben?</h1>
+                                            <ul>
+                                                <li data-poll="correct">SELECT DATE '2020-12-25' - CURRENT_DATE anzahl_tage</li>
+                                                <li>SELECT DATE '2020-12-25' - CURRENT_DATE : anzahl_tage</li>
+                                                <li data-poll="correct">SELECT DATE '2020-12-25' - CURRENT_DATE AS anzahl_tage</li>
+                                                <li>RENAME column DATE '2020-12-25' - CURRENT_DATE AS anzahl_tage</li>
+                                            </ul>
+                                        <h2>https://frage.space</h2>
                                     </div>
 
                                     <aside class="notes">PostgreSQL erlaubt SELECT-Anfragen ohne FROM-Klausel. Dies entspricht Anfragen auf der DUAL-Tabelle von der vorherigen Folie. Man kann mit solchen Anfragen leicht Funktionen aufrufen und ausprobieren oder Berechnungen durchführen.</aside>

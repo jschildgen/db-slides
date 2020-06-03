@@ -1,5 +1,3 @@
-/** https://github.com/SethosII/reveal.js-jump-plugin **/
-
 'use strict';
 
 var jumpToSlide= "";
@@ -36,16 +34,18 @@ var getSlideIndex= function(slideNumber) {
 
 var keyHandle= function(event) {
 	var isSpecialKey = event.shiftKey || event.ctrlKey || event.altKey || event.metaKey;
-	var isNumberKey = event.which >= 48 && event.which <= 57;
-	var isDashKey = event.which === 45;
+	var isNumberKey = event.key >= "0" && event.key <= "9";
+	var isDashKey = event.key === "-";
 
 	if (isNumberKey || isDashKey && !isSpecialKey) {
-		jumpToSlide += String.fromCharCode(event.charCode);
+		jumpToSlide += event.key;
 	} else {
-		var isEnterKey = event.which === 13;
+		var isEnterKey = event.key === "Enter";
 		var isJumpToSlideEmpty = jumpToSlide === "";
 
-		if (isEnterKey && !isJumpToSlideEmpty && !isSpecialKey) {
+		if(isSpecialKey) { jumpToSlide = ""; /* reset */ }
+
+		if (isEnterKey && !isJumpToSlideEmpty) {
 			// horizontal and vertical slides are separated by a dash
 			jumpToSlide = jumpToSlide.split("-");
 			jumpToSlide[0] = isNaN(jumpToSlide[0]) ? 0 : parseInt(jumpToSlide[0]) - 1;
@@ -61,10 +61,13 @@ var keyHandle= function(event) {
 			// jump to the specified slide
 			Reveal.slide(jumpToSlide[0], jumpToSlide[1]);
 
+			// disable event processing, say, if control is active
+			event.preventDefault();
+
 			// reset jumpToSlide variable
 			jumpToSlide = "";
 		}
 	}
 };
 
-document.onkeypress = keyHandle;
+document.onkeydown = keyHandle;

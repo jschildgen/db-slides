@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 7</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+    </head>
+    <body>
+        <header>
+            <div>
+            <div>
+                <b>Datenbanken - SS 2020</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 7 vom 15.-17.06.2020</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+        </div>
+        <hr>
+        </header>
+
+    <section style="padding-top: 2.5cm">
+    <h1>Aufgabe 1: Daten-Import aus einer CSV-Datei (10P)</h1>
+    <p>Abgabe-Deadline: 15.06.2020 12:00 im Moodle</p>
+        <p>In diesem Übungsblatt geht es darum, die aktuellen Corona-Fallzahlen als CSV-Datei herunterzuladen, diese in eine PostgreSQL-Datenbank zu importieren und Analysen mit SQL darauf auszuführen.</p>
+        
+        <ol>
+          <li>Laden Sie den Datensatz &quot;COVID-19 cases worldwide&quot; von  <a href="https://data.europa.eu/euodp/de/data/dataset/covid-19-coronavirus-data" target="_blank">https://data.europa.eu/euodp/de/data/dataset/covid-19-coronavirus-data</a> als CSV-Datei herunter.</li>
+          <li>Betrachten Sie die Datei in einem Texteditor (nicht mit Excel o. ä.) und schauen Sie sich an, welche Spalten es gibt, was das Spaltentrennzeichen ist, in welchem Format Datumswerte gespeichert werden etc.</li>
+          <li>Verbinden Sie sich mit der PostgreSQL-Datenbank der Hochschule (oder Ihrer eigenen PostgreSQL-Installation) und erstellen Sie die folgende Tabelle:<br>
+            <pre><code>create table corona(datum date, faelle int, tote int, land varchar(50), 
+                    kontinent varchar(50), primary key(land, datum));</code></pre>
+          </li>
+          <li>Klicken Sie im DBeaver mit einem Rechtsklick auf die neue Corona-Tabelle (vorher: Rechtsklick - Aktualisieren) und dann auf Daten importieren und wählen als Datentyp <code>CSV</code>, dann Ihre Quelldatei und konfigurieren Sie das Datumsformat auf <code>dd/MM/YYYY</code>. Alle anderen Einstellungen können Sie so lassen, wie sie sind. Wichtig ist jedoch noch im vorletzten Schritt das Column-Mapping. Wählen Sie dort aus, welche Spalten aus der CSV-Datei mit welchen Spalten aus der soeben erstellten Tabelle korrespondieren.</li>
+          <li>Schauen Sie sich nach erfolgreichem Import die Tabelle an.</li>
+          <li>Wie viele verschiedene Länder tauchen in der Tabelle auf?</li>
+        </ol>
+            
+    </section>
+
+    <section>
+      <h1>Aufgabe 2: SQL-Anfragen</h1>
+      <p>Formulieren Sie SQL-Anfragen für die die folgenden Fragestellungen auf der in Aufgabe 1 importierten Corona-Tabelle:</p>
+      <ol>
+        <li>Wie viele Corona-Fälle gab es insgesamt im Mai 2020?</li>
+        <li>Geben Sie für jedes Land die Gesamtanzahl an Fällen und Toten aus; jedoch nur für Länder mit mind. 100.000 Fällen. Die Ausgabe soll absteigend sortiert sein nach der Anzahl an Fällen.</li>
+        <li>Geben Sie für jeden Kontinent den Namen desjenigen Landes in diesem Kontinent aus, in welchem es bisher die meisten gemeldeten Corona-Fälle gibt.</li>
+        <li>In welchen Ländern gibt es mehr Corona-Tote als in Deutschland?</li>
+        <li>Erstellen Sie eine neue Tabelle mit den Spalten Land und Kontinent mit den entsprechenden Daten. Tipp: Verwenden Sie <code>CREATE TABLE ... AS SELECT ...</code></li>
+      </ol>
+    </section>
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

@@ -44,7 +44,7 @@
                         <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                         <h1>Datenbanken</h1>
                         <h3>Kapitel 5: Mehrbenutzerbetrieb</h3>
-                        <h4 style="text-align:center">2020-XX-XX</h4>
+                        <h4 style="text-align:center">2020-06-15</h4>
                         <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                         <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                     </section>
@@ -420,11 +420,11 @@ CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
                         <h2>Atomarität</h2>
                         <p>Eine TA wird entweder ganz oder gar nicht ausgeführt.</p>
 
-                        <pre class="fragment"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Dogdog', 'England');
+                        <pre class="fragment" style="width: 95%;"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Dogdog', 'England');
 INSERT INTO produkte VALUES (129, 'Hundefutter', 8.95, 'Dogdog');
 COMMIT;</code></pre>
 
-                        <pre class="fragment"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Techbob', 'USA');
+                        <pre class="fragment" style="width: 95%;"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Techbob', 'USA');
 INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
 <p class="fragment small" style="color: red">SQL-Fehler [23505]: ERROR: duplicate key value violates unique constraint "produkte_pkey"
     Detail: Key (produktnummer)=(129) already exists.</p>
@@ -842,6 +842,244 @@ COMMIT;
                               <aside class="notes">Bei einem Systemfehler ist immer die Frage, welche Transaktionen sind Gewinner (haben committed) und welche sind Verlierer (waren noch aktiv). Da das System zu Zeitpunkt 5 zuletzt einen Flush gemacht hat, um DB-Seiten auf die Festplatte zu persistieren, müssen alle davor durchgeführten Aktionen von Verlierern rückgängig gemacht und noch nicht eingebrachte Änderungen von Gewinnern nachgeholt werden.</aside>
                             </section>
   
+
+                            <section>
+                              <h2>Checkpoints</h2>
+                              <p class="small">Regelmäßig legt die Datenbank Sicherungspunkte (Checkpoints) an.</p>
+                              <ul class="small">
+                                <li>Geänderte DB-Seiten im Puffer werden auf die Platte persistiert (Flush)</li>
+                                <li>Vorteil: Recovery beginnt beim letzten Checkpoint</li>
+                              </ul>
+                              <p class="small"></p>
+                              <div class="fragment">
+                              <h4>Varianten:</h4>
+                                <ul class="small">
+                                  <li>Transaktionskonsistente Checkpoints</li>
+                                  <li>Aktionskonsistente Checkpoints</li>
+                                  <li>Unscharfe (Fuzzy) Checkpoints</li>
+                                </ul>
+                              </div>
+                              <aside class="notes">Auf der vorherigen Folie war ein Flush zu sehen. Dieser wird beim Anlegen eines Checkpoints ausgeführt. Ein Flush schreibt alle im DB-Puffer befindlichen Änderungen auf die Festplatte. Wenn die Datenbank nie Checkpoints anlegen würde, wäre der Recovery-Prozess extrem aufwändig, da das komplette Transaktionslog von Anfang bis Ende durchgearbeitet werden muss. Wird in regelmäßigen Abständen ein Checkpoint angelegt, muss die Recovery immer nur beim letzten Checkpoint starten.</aside>
+                            </section>
+
+                            <section>
+                              <h3 style="width: 103%;">Transaktionskonsistente Checkpoints</h3>
+                              <p class="small">Checkpoint wird angelegt, wenn keine Transaktion läuft.</p>
+                              <ol class="small">
+                                <li>Anmeldung, dass nun ein Checkpoint angelegt werden soll</li>
+                                <li>Warten, bis alle laufenden TAs abgeschlossen sind</li>
+                                <li>Neu startende TAs müssen warten</li>
+                                <li>Wenn keine TA mehr läuft, gepufferte DB-Seiten persistieren</li>
+                              </ol>
+                              <div class="sl-block" data-block-type="line" data-name="line-493a7d" data-block-id="38bd1db33ea456f7a3c0811d5c165299" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 263px; top: 456px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 304px; top: 491px;" data-block-id="8176821c27af0e28b1dc80363be2ce67" data-name="line-97e26c">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="128" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="128" height="1" viewBox="0 0 128 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(125.0703125,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 352px; top: 522px;" data-block-id="c4afa20bfbfd5aa3dd4041c2c0afbafd" data-name="line-cdc849">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="200" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="200" height="1" viewBox="0 0 200 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="197.045" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="197.045" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(197.045,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" data-name="shape-345959" data-block-id="e3b82f2d9ce041c2e9392877b780fb45" style="width: 90px; height: 178px; left: 462px; top: 412px;">
+                                <div class="sl-block-style" style="z-index: 10; opacity: 0.33;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 10;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 90 178">
+                                            <rect width="90" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-344848" data-block-id="74353624ff4057204907d12b8281c5fb" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 483.5px; top: 560px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="89.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="none" style="z-index: 14;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="89.5" height="1" viewBox="0 0 89.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="89.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" stroke-dasharray="5.9642857142857135 5.9642857142857135" x1="3" y1="0" x2="89.5" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 573px; top: 560px;" data-block-id="f6348514e90aed02308ff34ad690fc3c" data-name="line-2b33fa">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="square" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 21px; height: 178px; left: 552px; top: 412px;" data-block-id="e31b93621416508b445a57b83442c4ce" data-name="shape-7e5980">
+                                <div class="sl-block-style" style="z-index: 17; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 21 178">
+                                            <rect width="21" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+
+                            <aside class="notes">Die Grafik zeigt zwei bereits abgeschlossene TAs und eine Transaktion, die noch aktiv ist, während der Checkpoint angelegt werden soll. Daher muss zunächst auf deren Ende gewartet werden. Die untere TA darf nicht mehr starten und wartet, bis der Checkpoint erstellt ist. Nachteil: evtl. lange Wartesituationen.</aside>
+                            </section>
+
+                            <section>
+                              <h3>Aktionskonsistente Checkpoints</h3>
+                              <p class="small">Beim Anlegen des Checkpoints werden aktuell laufende TAs pausiert.</p>
+                              <div class="sl-block" data-block-type="line" data-name="line-493a7d" style="width: auto; height: auto; left: 262.875px; top: 314px;" data-block-id="2136a92161f9b08081a2db1caf49a428">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 303.875px; top: 349px;" data-name="line-97e26c" data-block-id="102d9845fda56c6865ef957616146971">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="128" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="128" height="1" viewBox="0 0 128 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(125.0703125,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 497.875px; top: 380px;" data-name="line-cdc849" data-block-id="8fa25e17a78e635ca12567a8360ca056">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="75" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="square" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="75" height="1" viewBox="0 0 75 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="72" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="0" x2="72" y2="0"></line>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(72,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" data-name="shape-345959" style="width: 36px; height: 178px; left: 461.875px; top: 270px;" data-block-id="38c36d65514eb117ce9e8dc03b21224e">
+                                <div class="sl-block-style" style="z-index: 10; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 10;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 36 178">
+                                            <rect width="36" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 498.125px; top: 418px;" data-name="line-2b33fa" data-block-id="e3b501759fe5fdbe65226d15de71e5a7">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="square" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-344848" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 463.375px; top: 418px;" data-block-id="dc7a9df1fe58804a77ac83b5bb49b755">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="69.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="none" style="z-index: 16;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="69.5" height="1" viewBox="0 0 69.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="69.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" stroke-dasharray="5.291666666666667 5.291666666666667" x1="3" y1="0" x2="69.5" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 351.875px; top: 380px;" data-block-id="8d415d116eea0a8aa9dab0047dd515c4" data-name="line-f66441">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="110.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="none" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="110.5" height="1" viewBox="0 0 110.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="110.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="110.5" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-a3dc55" data-block-id="3e1ccd810a5c929bb25baf297b8da2f9" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 463.375px; top: 380px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="34.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 18;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="34.5" height="1" viewBox="0 0 34.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="34.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" stroke-dasharray="4.75 4.75" x1="0" y1="0" x2="34.5" y2="0"></line>
+                                    </svg></div>
+                            </div>
+
+                            <aside class="notes">Auch hier können laufende Transaktionen in lange Wartezustände versetzt werden, wenn die Erstellung des Checkpoints lange dauert. Da nicht auf das Ende aller zu beginn noch laufenden TAs gewartet werden muss, sind diese Warteperioden jedoch kürzer.</aside>
+                            </section>
+
+                            <section>
+                              <h3>Fuzzy Checkpoints</h3>
+                              <ul class="small">
+                                <li>Kein Flush von geänderten Seiten</li>
+                                <li>Checkpoint beinhaltet nur Infos über aktuell laufende TAs und den Puffer-Zustand (welche Seiten sind dirty?)</li>
+                                <li>Recovery beginnt bei Min(DirtyLSN)</li>
+                                <li>Flush von beliebigen Seiten kann asynchron zu beliebiger Zeit erfolgen</li>
+                              </ul>
+                              <div class="sl-block" data-block-type="line" data-name="line-493a7d" style="width: auto; height: auto; left: 271.938px; top: 404px;" data-block-id="0909b2ad42ee870accf44d7deb7b5663">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 312.938px; top: 439px;" data-name="line-97e26c" data-block-id="493fd3295d2b0d026e41479fe8f915c0">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="128" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="128" height="1" viewBox="0 0 128 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(125.0703125,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" data-name="shape-345959" style="width: 9px; height: 178px; left: 470.938px; top: 360px;" data-block-id="d44d5370714ed2267f96911b8845d1a6">
+                                <div class="sl-block-style" style="z-index: 10; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 10;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 489.062px; top: 509px;" data-name="line-2b33fa" data-block-id="890c55d46897abb057d4015dfd979830">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 360.938px; top: 470px;" data-name="line-f66441" data-block-id="3c9c59f790f242c3df517ac20b808cd8">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="139.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="139.5" height="1" viewBox="0 0 139.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3.0000000000000004" y1="0" x2="136.56451612903226" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3.0000000000000004" y1="0" x2="136.56451612903226" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3.0000000000000004" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(136.56451612903226,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 9px; height: 178px; left: 543.938px; top: 360px;" data-block-id="1c586e5fb8d6956ff958e44d6c23e853" data-name="shape-fa09b8">
+                                <div class="sl-block-style" style="z-index: 15; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 9px; height: 178px; left: 400.062px; top: 360px;" data-block-id="966f58629456987037f6ebbdd9e799ad" data-name="shape-95ef84">
+                                <div class="sl-block-style" style="z-index: 16; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 9px; height: 178px; left: 329.062px; top: 360px;" data-block-id="74f3eaadf5c9f249dc49140f44552074" data-name="shape-a2f598">
+                                <div class="sl-block-style" style="z-index: 17; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 8px; height: 178px; left: 607.938px; top: 360px;" data-block-id="82f80143a0bd8a6d1d57e7943f719c6e" data-name="shape-cc1d8b">
+                                <div class="sl-block-style" style="z-index: 18; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 18;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 8 178">
+                                            <rect width="8" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-42f41e" data-block-id="d798e77166942ce54cab07a18c6df309" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 420.938px; top: 340px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 19;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="200" viewBox="0 0 1 200">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="0" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="200" x2="0" y2="0"></line>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="text" data-name="text-c3a9c6" data-block-id="29e4be1be455889ed92ad683876632af" style="height: auto; width: 212.625px; left: 312.938px; top: 300px;">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20;">
+                                    <p><span style="font-size:0.7em">MinDirtyPageLSN</span></p>
+                                </div>
+                            </div>
+                              <aside class="notes">Unscharfe Checkpoints können sehr schnell angelegt werden, da hier kein tatsächliches Persistieren der Seiten im DB-Puffer erfolgt. Dieses kann immer mal wieder nebenbei und unabhängig von der Checkpoint-Erstellung passieren. Der Checkpoint speichert zu jeder Seite im DB-Puffer die LSN, seit wann diese Seite dirty ist, also seit wann ihr Status nicht mehr dem auf der Festplatte entspricht. Der Recovery-Prozess startet dann bei der kleinsten solchen LSN, zu der es eine Dirty Page gibt.</aside>
+                            </section>
+
                             <section>
                               <h2>Kapitelzusammenfassung</h2>
                                   <ul class="small">
@@ -857,6 +1095,7 @@ COMMIT;
                                     <li>Isolationslevels</li>
                                     <li>MVCC</li>
                                     <li>Recovery / Transaktions-Log</li>
+                                    <li>Checkpoint-Recovery</li>
                                   </ul>
                             </section>
 

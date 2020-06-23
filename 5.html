@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="src/layout.css">
         <link rel="stylesheet" href="lib/joint.min.css" />
         <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="src/rainbow.css">
@@ -186,6 +187,16 @@ GROUP BY P.produktnummer, P.bezeichnung, P.preis, P.hersteller
                         <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM (SELECT * FROM produkte WHERE preis > 10)
 WHERE hersteller = 'Monsterfood'
                         </code></pre>
+                        <div class="poll fragment" style="bottom:-260px">
+                          <h1>SELECT * FROM produkte WHERE preis > 10 AND hersteller = 'Monsterfood'</h1>
+                              <ul>
+                                  <li>Liefert etwas komplett anderes</li>
+                                  <li>Gibt das gleiche zurück, ist aber schneller</li>
+                                  <li>Gibt das gleiche zurück, ist aber langsamer</li>
+                                  <li data-poll="correct">Gibt das gleiche zurück und ist gleich schnell</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
                         <aside class="notes">Erfolgt eine Abfrage auf eine View, wird der Name der View durch die Anfrage ersetzt, über die die View definiert ist. Danach erfolgen Optimierungen, sodass die hier dargestellt Anfrage äquivalent ist zu <code>SELECT * FROM produkte WHERE preis > 10 AND hersteller = 'Monsterfood'</code>. Anfragen auf Sichten sind nicht langsamer als die hinter der Sicht stehende Abfrage direkt auszuführen, sie sind aber auch nicht schneller.</aside>
                       </section>
                       <section>
@@ -216,6 +227,16 @@ WHERE hersteller = 'Monsterfood'
                             WHERE preis > 10 WITH CHECK OPTION;</code></pre>
                         <p class="small">Das einzufügende oder zu ändernde Tupel muss das WHERE-Prädikat erfüllen.</p>
                         </div>
+                        <div class="poll fragment" style="bottom:-160px">
+                          <h1>INSERT INTO teure_produkte (produktnr, bezeichnung, preis) VALUES (123, 'X', 5)</h1>
+                              <ul>
+                                  <li>funktioniert nie</li>
+                                  <li>funktioniert in den beiden hier gezeigten Sichten nicht</li>
+                                  <li data-poll="correct">funktioniert in der oberen, aber nicht in der unteren Sicht</li>
+                                  <li>funktioniert in der unteren, aber nicht in der oberen Sicht</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
                         <aside class="notes">Ein <code>INSERT INTO teure_produkte</code> ist hier möglich. Im unteren Fall jedoch nur, wenn das neue Produkt auch einen Preis von mehr als 10 EUR hat. <code>WITH CHECK OPTION</code> ist eine Kurzschreibweise für <code>WITH LOCAL CHECK OPTION</code>. Wenn eine View mit dieser Option eine andere View in der FROM-Klausel hat, wird nicht das Prädikat der anderen View überprüft, außer: Für diese ist ebenfalls eine CHECK OPTION gesetzt, oder wir spezifizieren für die View: <code>WITH CASCADED CHECK OPTION</code>.</aside>
                       </section>
 
@@ -224,12 +245,12 @@ WHERE hersteller = 'Monsterfood'
                         <div class="trackinfo"><i class="fas fa-headphones"></i> 98</div>
                         <p class="small">Views sind nur virtuell, sie speichern nicht wirklich Daten.</p>
                         <p class="small">Materialisierte Sichten jedoch speichern physisch das Ergebnis der dahinterstehenden Anfrage.</p>
-                        <pre><code class="hlsql" data-trim contenteditable>CREATE MATERIALIZED VIEW anz_produkte AS 
+                        <pre style="width: 95%;"><code class="hlsql" data-trim contenteditable>CREATE MATERIALIZED VIEW anz_produkte AS 
 SELECT COUNT(*) as anz FROM produkte;</code></pre>
                         
                         <h4>REFRESH MATERIALIZED VIEW</h4>
 
-                        <pre><code class="sql" data-trim contenteditable>SELECT * FROM anz_produkte; -- zeigt an: 8
+                        <pre style="width: 95%;"><code class="sql" data-trim contenteditable>SELECT * FROM anz_produkte; -- zeigt an: 8
 INSERT INTO produkte (produktnr, bezeichnung) values (123, 'X'); 
 SELECT * FROM anz_produkte; -- zeigt immer noch 8
 REFRESH MATERIALIZED VIEW anz_produkte;
@@ -336,7 +357,7 @@ GRANT finanzen TO big_boss;
                       <section>
                         <h3>GRANT: Berechtigung erteilen</h3>
                         <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
-                        <p class="small">GRANT &lt;Recht&gt; ON &lt;Objekt&gt; TO &lt;Rolle&gt;</p>
+                        <p class="small">GRANT &lt;Recht&gt; ON &lt;Objekt&gt; TO &lt;Benutzer oder Rolle&gt;</p>
 
                         <pre class="fragment"><code class="sql" data-trim>--Mitarbeiter dürfen sich mit der Datenbank verbinden
 GRANT CONNECT ON klinik_db TO mitarbeiter;</code></pre>
@@ -364,9 +385,19 @@ GRANT SELECT, INSERT, UPDATE ON klinik.patienten TO schwester_y;</code></pre>
                         <pre><code class="sql" data-trim>CREATE VIEW klinik.raeume_view AS
 SELECT * FROM klinik.raeume WHERE gebaeude IN (10,12,13,15);
                         </code></pre>
-                        <p class="small">REVOKE &lt;Recht&gt; ON &lt;Objekt&gt; FROM &lt;Rolle&gt;</p>
+                        <p class="small">REVOKE &lt;Recht&gt; ON &lt;Objekt&gt; FROM &lt;Benutzer oder Rolle&gt;</p>
                         <pre><code class="sql" data-trim>REVOKE SELECT ON klinik.raeume FROM PUBLIC;</code></pre>
                         <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume_view TO PUBLIC;</code></pre>
+                        
+                        <div class="poll fragment" style="bottom:-260px">
+                          <h1>Alle Benutzer außer Peter sollen ein SELECT auf T machen dürfen.</h1>
+                              <ul>
+                                  <li>GRANT SELECT ON T TO PUBLIC; REVOKE SELECT ON T FROM Peter;</li>
+                                  <li data-poll="correct">Rolle R erstellen, in der alle außer Peter sind. GRANT SELECT ON T TO R;</li>
+                                  <li>Das geht nicht</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
 
                         <aside class="notes">Wichtig: Man kann nur Rechte entziehen, die man genau so auch erteilt hat. Man kann im gezeigten Beispiel nicht das Recht nur gewissen Benutzern der Rolle PUBLIC entziehen (nur allen). Genau so kann nach einem GRANT ALL PRIVILEGES nicht lediglich das INSERT-Recht o.&nbsp;ä. entzogen werden. REVOKE macht also ein GRANT wieder vollständig rückgängig. Im hier gezeigten Beispiel erstellen wir eine Sicht aus Gründen der <b>Row-Level-Security</b>. Wir möchten den Benutzern der Rolle PUBLIC nicht erlauben, alle Räume zu sehen, sondern lediglich Räume in den Gebäuden 10, 12, 13 und 15. Analog lässt sich auch <b>Column-Level-Security</b> realisieren. Man lässt einfach in der View-Definition Spalten weg, um den Zugriff nur auf bestimmte Spalten zu beschränken.</aside>
                       </section>
@@ -413,6 +444,16 @@ CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
                           <div style="width: 16cm;"><p class="small">DB-Anwendungen setzen Autocommit-Einstellung. Bei SQL-Clients wie dem DBeaver ist Autocommit standardmäßig an.</p></div>
                           <div style="width: 8cm;"><img src="img/5/autocommit.png" alt="DBeaver Autocommit" style="width:8cm" class="noborder"></div>
                         </div>
+                        <div class="poll fragment" style="bottom:-220px">
+                          <h1>Autocommit bedeutet, dass ein Commit automatisch wann ausgeführt wird?</h1>
+                              <ul>
+                                  <li>nach jeder Transaktion</li>
+                                  <li data-poll="correct">nach jeder SQL-Anfrage</li>
+                                  <li>beim Schließen der DB-Verbindung</li>
+                                  <li>alle Paar Sekunden</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
                         <aside class="notes">Autocommit bedeutet, dass jede SQL-Anfrage automatisch committet wird. Stelle man um auf manuelles Commit, muss man selbst eine <code>commit</code>-Operation ausführen, damit Änderungen wirklich in der Datenbank gespeichert werden. Ist Autocommit aus, kann die laufende Transaktion mittels <code>rollback</code> auch komplett zurückgerollt werden.</aside>
                       </section>
 
@@ -488,6 +529,16 @@ COMMIT;
 </code></pre>
                           </div>
                         </div>
+                        <div class="poll fragment" style="bottom:-160px">
+                          <h1>Was ist hier Dirty?</h1>
+                              <ul>
+                                  <li>TA1</li>
+                                  <li>TA2</li>
+                                  <li data-poll="correct">Der Preis von Produkt 17</li>
+                                  <li>Rollback</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
                         <aside class="notes">Es wäre ein Dirty Read, wenn TA<sub>2</sub> die noch nicht freigegebene Preisänderung von TA<sub>1</sub> sehen würde. Das Transaktions-Management-System (TMS) eines DBMS muss gewährleisten, dass Änderungen für andere Transaktionen erst nach dem Commit der Änderung sichtbar werden.</aside>
                       </section>
 
@@ -533,7 +584,22 @@ WHERE produktnr = 17; -- 0.99 EUR
   
 COMMIT;</code></pre>
                               </div>
+
+                              <div class="poll fragment" style="bottom:-160px">
+                                <h1>Was macht TA2?</h1>
+                                    <ul>
+                                        <li>INSERT ...;</li>
+                                        <li>UPDATE ...;</li>
+                                        <li>INSERT ... ; COMMIT;</li>
+                                        <li data-poll="correct">UPDATE ...; COMMIT;</li>
+                                    </ul>
+                                <h2>https://frage.space</h2>
+                            </div>
+
                               <div>TA<sub>2</sub>
+
+                                
+
                                   <pre style="width: 12cm;"><code class="fragment sql">
 
 UPDATE produkte
@@ -591,12 +657,12 @@ COMMIT;
                          <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-random green"></i></div>
                          <p class="small">Jede Transaktion besteht aus Lese- und Schreibaktionen: $r_1(x), r_1(y), w_1(x), c_1$</p>
                          <h4>Serieller Ablauf</h4>
-                         <p class="small">Keine verzahnte Ausführung, z. B. $r_1(x), r_1(y), w_1(x), c_1, r_2(z), r_2(x), c_2, r_3(y), c_3$</p>
+                         <p class="small" style="margin-top: -4mm;">Keine verzahnte Ausführung, z. B. $r_1(x), r_1(y), w_1(x), c_1, r_2(z), r_2(x), c_2, r_3(y), c_3$</p>
                          <h4>Serialisierbarkeit (&quot;Final-State-serialisierbar&quot;)</h4>
-                         <p class="small">Ablauf ist serialisierbar, wenn Anfragen das gleiche Ergebnis liefern und DB im gleichen Zustand hinterlassen wird, wie bei irgendeinem seriellen Ablauf.</p>
+                         <p class="small" style="margin-top: -4mm;">Ablauf ist serialisierbar, wenn Anfragen das gleiche Ergebnis liefern und DB im gleichen Zustand hinterlassen wird, wie bei irgendeinem seriellen Ablauf.</p>
                          <h4>Serialisierbarkeit (&quot;Konflikt-serialisierbar&quot;)</h4>
-                         <p class="small">Ablauf ist serialisierbar, wenn es keine Zyklen im Serialisierbarkeitsgraph gibt.</p>
-                         <aside class="notes">Die Notation $r_1(x)$ bzw. $w_1(x)$ bedeutet, dass eine Transaktion 1 ein Objekt X (z. B. eine Tabelle oder eine Zeile oder einen Spaltenwert) liest bzw. schreibt. $c_1$ ist das Commit von TA<sub>1</sub>. Final-State-Serialisierbarkeit ist schwierig zu überprüfen und außerdem kann auch rein zufällig das gleiche herauskommen wie bei einem seriellen Ablauf. Daher wird in der Regel auf Konflikt-Serialisierbarkeit überprüft.</aside>
+                         <p class="small" style="margin-top: -4mm;">Ablauf ist serialisierbar, wenn es keine Zyklen im Serialisierbarkeitsgraphen gibt.</p>
+                         <aside class="notes">Die Notation $r_1(x)$ bzw. $w_1(x)$ bedeutet, dass eine Transaktion 1 ein Objekt X (z. B. eine Tabelle, eine Zeile oder einen Spaltenwert) liest bzw. schreibt. $c_1$ ist das Commit von TA<sub>1</sub>. Final-State-Serialisierbarkeit ist schwierig zu überprüfen und außerdem kann auch rein zufällig das gleiche herauskommen wie bei einem seriellen Ablauf. Daher wird in der Regel auf Konflikt-Serialisierbarkeit überprüft.</aside>
                         </section>
 
                         <section>
@@ -616,36 +682,96 @@ COMMIT;
                           <p class="small">Beispiel: $r_1(x), w_1(y), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
                           <p class="small">Konfliktoperationen hier:</p>
                           <ul class="fragment small">
+                            <li>$r_1(x) \rightarrow w_3(x)$</li>
                             <li>$w_1(y) \rightarrow w_3(y)$</li>
                             <li>$r_2(x) \rightarrow w_1(x)$</li>
+                            <li>$r_2(x) \rightarrow w_3(x)$</li>
                             <li>$w_1(x) \rightarrow w_3(x)$</li>
                           </ul>
-                          <p class="fragment small">Serialisierbarkeitsgraph: TA<sub>2</sub> &rightarrow; TA<sub>1</sub> &rightarrow; TA<sub>3</sub></p>
-                          <p class="fragment small">Kein Zyklus &Rightarrow; Der Ablauf ist serialisierbar</p>
+                          
+                          <div class="fragment">
+                          <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 722px; top: 170px;" data-block-id="bac83d9b29a51e3a4b046cfc6c3673e1">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 300%;">
+                              <p style="font-size:70%">TA<sub>1</sub></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 735px; top: 388.5px;" data-block-id="efe2b7f915bcb8e4bb9db6028bba6215">
+                            <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="57" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 12;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="57" height="1" viewBox="0 0 57 1">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="51" y2="0"></line>
+                                    <line class="line-element" stroke="#000000" stroke-width="4" x1="0" y1="0" x2="51" y2="0"></line>
+                                    <polygon fill="#000000" transform="translate(51,0) rotate(90)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 838px; top: 279px;" data-block-id="5fb757cb6cb7997bdf02b16fd47328fd">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="152" data-line-y2="135" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 13;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="40" height="72" viewBox="112 63 40 72">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="149.0861424129282" y2="129.75505634327078"></line>
+                                    <line class="line-element" stroke="#000000" stroke-width="4" x1="112" y1="63" x2="149.0861424129282" y2="129.75505634327078"></line>
+                                    <polygon fill="#000000" transform="translate(149.0861424129282,129.75505634327078) rotate(150.945)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 668px; top: 248px;" data-block-id="3dd154d88a733acf2cd62dca57d9d424">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="172" data-line-y2="-40" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="60" height="103" viewBox="112 -40 60 103">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="168.9799040311973" y2="-34.81550192022201"></line>
+                                    <line class="line-element" stroke="#000000" stroke-width="4" x1="112" y1="63" x2="168.9799040311973" y2="-34.81550192022201"></line>
+                                    <polygon fill="#000000" transform="translate(168.9799040311973,-34.81550192022201) rotate(30.222)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 586px; top: 331px;" data-block-id="4f14a7b04309835f86c7c2935f03b455">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 300%;">
+                              <p style="font-size:70%">TA<sub>2</sub></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 796px; top: 331px;" data-block-id="beb8381f9c5769f2463503ffa09bc44f">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; font-size: 300%;">
+                              <p style="font-size:70%">TA<sub>3</sub></p>
+                            </div>
+                        </div>
+                        </div>
+                          <p class="fragment small">Kein Zyklus im Serialisierbarkeitsgraphen &Rightarrow; Der Ablauf ist serialisierbar</p>
                           <p class="fragment small">Äquivalenter serieller Ablauf: TA<sub>2</sub>, TA<sub>1</sub>, TA<sub>3</sub></p>
-                          <aside class="notes">Um den Serialisierbarkeitsgraphen zu erzeugen, geht man wie folgt vor: Für jede Operation prüft man, ob Konfliktoperationen von einer anderen Transaktion auf dem gleichen Objekt zeitlich später folgen. Falls ja, erstellt man, falls noch nicht vorhanden, eine Kante von der ersten zur zweiten Transkation. Manchmal gibt es mehrere äquivalente serielle Abläufpläne. Alle diese würden zum gleichen Ergebnis führen wie der gegebene verzahnte Ablauf.</aside>
+                          <aside class="notes">Um den Serialisierbarkeitsgraphen zu erzeugen, geht man wie folgt vor: Für jede Operation prüft man, ob Konfliktoperationen von einer anderen Transaktion auf dem gleichen Objekt zeitlich später folgen. Falls ja, erstellt man, falls noch nicht vorhanden, eine Kante von der ersten zur zweiten Transaktion. Manchmal gibt es mehrere äquivalente serielle Abläufpläne. Alle diese würden zum gleichen Ergebnis führen wie der gegebene verzahnte Ablauf.</aside>
                         </section>
 
                         <section>
                             <h2>Serialisierbarkeitsgraph</h2>
                             <p class="small">Anderes Beispiel: $r_1(x), w_1(x), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
                             <p class="small">Konfliktoperationen hier:</p>
-                            <ul class="fragment small" data-fragment-index="1">
+
+                            <div class="poll fragment fade-in-then-out" style="bottom:-160px" data-fragment-index="1">
+                              <h1>Welches ist hier eine Konfliktoperation?</h1>
+                                  <ul>
+                                      <li>r1(x) &rightarrow; w1(x)</li>
+                                      <li data-poll="correct">r2(x) &rightarrow; w1(x)</li>
+                                      <li>r1(x) &rightarrow; w3(y)</li>
+                                      <li>r1(x) &rightarrow; r2(x)</li>
+                                  </ul>
+                              <h2>https://frage.space</h2>
+                          </div>
+
+                            <ul class="fragment small" data-fragment-index="2">
+                              <li>$r_1(x) \rightarrow w_3(x)$</li>
                               <li>$w_1(x) \rightarrow r_2(x)$</li>
+                              <li>$w_1(x) \rightarrow w_3(x)$</li>
                               <li>$r_2(x) \rightarrow w_1(x)$</li>
+                              <li>$r_2(x) \rightarrow w_3(x)$</li>
                               <li>$w_1(x) \rightarrow w_3(x)$</li>
                             </ul>
-                            <p class="fragment small" data-fragment-index="2">Serialisierbarkeitsgraph: TA<sub>2</sub> &RightArrowLeftArrow; TA<sub>1</sub> &rightarrow; TA<sub>3</sub></p>
-                            <p class="fragment small" data-fragment-index="3">Zyklus &Rightarrow; Der Ablauf ist nicht serialisierbar</p>
+                            <p class="fragment small" data-fragment-index="4">Zyklus im Serialisierbarkeitsgraphen &Rightarrow; Der Ablauf ist nicht serialisierbar</p>
                             
-                            <div class="fragment" data-fragment-index="2">
+                            <div class="fragment" data-fragment-index="3">
                             <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 722px; top: 170px;" data-block-id="bac83d9b29a51e3a4b046cfc6c3673e1">
                                 <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 300%;">
                                     <p style="font-size:70%">TA<sub>1</sub></p>
                                 </div>
                             </div>
                             
-                            
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 735px; top: 388.5px;" data-block-id="efe2b7f915bcb8e4bb9db6028bba6215">
+                              <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="57" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 12;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="57" height="1" viewBox="0 0 57 1">
+                                      <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="51" y2="0"></line>
+                                      <line class="line-element" stroke="#000000" stroke-width="4" x1="0" y1="0" x2="51" y2="0"></line>
+                                      <polygon fill="#000000" transform="translate(51,0) rotate(90)" points="0,-6 6,6 -6,6"></polygon>
+                                  </svg></div>
+                          </div>
                             
                             <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 712px; top: 273px;" data-block-id="efe2b7f915bcb8e4bb9db6028bba6215">
                                 <div class="sl-block-content" data-line-x1="102" data-line-y1="57" data-line-x2="64" data-line-y2="127" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 12;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="38" height="70" viewBox="64 57 38 70">
@@ -719,9 +845,9 @@ COMMIT;
                               <thead>
                               <tr><th>TA<sub>1</sub></th><th>TA<sub>2</sub></th><th>TA<sub>3</sub></th><th>Gesetzte Sperren</th></tr>
                               </thead>
-                              <tr class="fragment"><td>$r_1(x)$</td><td></td><td></td><td>$S_1(x)$</td></tr>
-                              <tr class="fragment"><td>$w_1(x)$</td><td></td><td></td><td>$X_1(x)$</td></tr>
-                              <tr class="fragment"><td></td><td>warten</td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment" data-fragment-index="1"><td>$r_1(x)$</td><td></td><td></td><td>$S_1(x)$</td></tr>
+                              <tr class="fragment" data-fragment-index="2"><td>$w_1(x)$</td><td></td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment" data-fragment-index="4"><td></td><td>warten</td><td></td><td>$X_1(x)$</td></tr>
                               <tr class="fragment"><td>$w_1(x)$</td><td>warten</td><td></td><td>$X_1(x)$</td></tr>
                               <tr class="fragment"><td></td><td>warten</td><td>$w_3(y)$</td><td>$X_1(x), X_3(y)$</td></tr>
                               <tr class="fragment"><td></td><td>warten</td><td>warten</td><td>$X_1(x), X_3(y)$</td></tr>
@@ -731,6 +857,16 @@ COMMIT;
                               <tr class="fragment"><td></td><td></td><td>$w_3(x)$</td><td>$X_3(x), X_3(y)$</td></tr>
                               <tr class="fragment"><td></td><td></td><td>$c_3$</td><td></td></tr>
                             </table>
+                            <div class="poll fragment" style="bottom:30px" data-fragment-index="3">
+                              <h1>Was kommt als nächstes?</h1>
+                                  <ul>
+                                      <li>TA2 liest x</li>
+                                      <li>TA2 setzt S-Sperre auf x</li>
+                                      <li>TA2 muss warten, bis TA1 x fertig geschrieben hat</li>
+                                      <li data-poll="correct">TA2 muss warten, bis TA1 committed hat</li>
+                                  </ul>
+                              <h2>https://frage.space</h2>
+                          </div>
                           </section>
                           <section>
                             <h2>Deadlocks</h2>
@@ -772,6 +908,16 @@ COMMIT;
                                 <tr><td><b>Serializable</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>nicht mögl.</td></tr>
                             </table>
                             <p class="fragment small">Lost Updates werden stets verhindert, sie sind in allen Iso'levels nicht möglich.</p>
+                            <div class="poll fragment" style="bottom:-40px">
+                              <h1>Was ist der Grund, warum man mal ein lockereres Isolationslevel als Serializable wählen könnte?</h1>
+                                  <ul>
+                                      <li>Sicherheit</li>
+                                      <li data-poll="correct">Performanz</li>
+                                      <li>Bessere Erfüllung von ACID</li>
+                                      <li>Man will alte Werte lesen</li>
+                                  </ul>
+                              <h2>https://frage.space</h2>
+                          </div>
                             <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regel eine bessere Performance möglich.</aside>
                           </section>
 
@@ -839,6 +985,16 @@ COMMIT;
                                     <tr class=""><td>7</td><td>TA<sub>1</sub></td><td>Commit</td><td>-</td><td>-</td><td>6</td></tr>
                                   </tbody>
                                 </table>
+                                <div class="poll fragment" style="bottom:-80px">
+                                  <h1>Was bedeutet der Flush?</h1>
+                                      <ul>
+                                          <li data-poll="correct">Gepufferte Seiten werden auf die Platte geschrieben</li>
+                                          <li>Alle Transaktionen committedn</li>
+                                          <li>Seiten werden von der Festplatte in den DB-Puffer geladen</li>
+                                          <li>Der DB-Puffer wird geleert</li>
+                                      </ul>
+                                  <h2>https://frage.space</h2>
+                              </div>
                               <aside class="notes">Bei einem Systemfehler ist immer die Frage, welche Transaktionen sind Gewinner (haben committed) und welche sind Verlierer (waren noch aktiv). Da das System zu Zeitpunkt 5 zuletzt einen Flush gemacht hat, um DB-Seiten auf die Festplatte zu persistieren, müssen alle davor durchgeführten Aktionen von Verlierern rückgängig gemacht und noch nicht eingebrachte Änderungen von Gewinnern nachgeholt werden.</aside>
                             </section>
   

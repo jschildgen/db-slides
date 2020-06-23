@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 8</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+        <style type="text/css">
+          li {
+            margin-left: -5mm;
+          }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+            <div>
+                <b>Datenbanken - SS 2020</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 8 vom 22.-24.06.2020</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+        </div>
+        <hr>
+        </header>
+
+    <section style="padding-top: 2.5cm">
+      <h1>Aufgabe 1: Sichten in SQL</h1>
+      <p>Auf <a href="https://data.deutschebahn.com/dataset/data-stationsdaten" target="_blank">https://data.deutschebahn.com/dataset/data-stationsdaten</a> finden Sie Datensätze mit deutschen Bahnhöfen.</p>
+      <ol>
+          <li>Laden Sie sich einen Datensatz im CSV-Format herunter.</li>
+          <li>Betrachten Sie die Datei in einem Texteditor, welche Spalten gibt es?</li>
+          <li>Erstellen Sie in Ihrer PostgreSQL-Datenbank eine Tabelle &quot;bahnhoefe&quot; mit den passenden Spalten und wählen Sie sinnvolle Datentypen und Primärschlüssel.</li>
+          <li>Benutzen Sie die Import-Funktion von DBeaver, um die CSV-Datei in Ihre Tabelle zu importieren (Rechtsklick auf die Tabelle - Daten importieren).</li>
+          <li>Erstellen Sie eine View &quot;hbf&quot; mit dem Spalten &quot;bhfnr&quot;, &quot;bundesland&quot;, &quot;station&quot; und &quot;kategorie&quot;, die alle Bahnhöfe enthält, die auf &quot;Hbf&quot; oder &quot;Hauptbahnhof&quot; enden. Die Kategorie ist lediglich eine Umbenennung der Spalte Kat. Vst.</li>
+      </ol>
+    </section>
+
+    <section>
+        <h1>Aufgabe 2: SQL-Anfragen, Materialisierte Sichten</h1>
+      <ol>
+        <li>Erstellen Sie eine weitere View: &quot;grosser_hbf&quot;, die auf der Sicht &quot;hbf&quot; basiert, aber nur die Bahnhöfe der Kategorie 1 enthält. Schreiben Sie am Ende des <code>CREATE VIEW</code>-Kommandos: <code>WITH LOCAL CHECK OPTION</code>. Dadurch wird beim Einfügen in die View das WHERE-Prädikat überprüft.</li>
+          <li>Formulieren Sie nun folgende Anfragen auf den Views:
+                  <ol type="a">
+                      <li>Finden Sie den Regensburger Hauptbahnhof</li>
+                      <li>Fügen Sie in die hbf-Sicht einen neuen Bahnhof ein: &quot;Teststadt Nord&quot; in Hessen mit der ID 9999 und Kategorie 5.</li>
+                      <li>Finden Sie mit einer SELECT-Anfrage auf der hbf-Sicht den neu eingefügten Bahnhof?</li>
+                      <li>Löschen Sie den Bahnhof 9999 wieder aus der bahnhoefe-Tabelle</li>
+                      <li>Versuchen Sie das INSERT aus b) nun auf der grosser_hbf-Sicht</li>
+                      <li>Passen Sie die Bahnhofskategorie so an, dass das INSERT auf der grosser_hbf-Sicht funktioniert.</li>
+                      <li>Finden Sie mit einer SELECT-Abfrage auf der grosser_hbf-Sicht den neu eingefügten Bahnhof?</li>
+                      <li>Droppen Sie die grosser_hbf-Sicht und erstellen Sie sie erneut, jedoch so, dass wirklich nur Bahnhöfe in diese Sicht eingefügt werden können, die auch in der View sichtbar sind: <code>WITH CASCADED CHECK OPTION</code></li>
+                  </ol>
+          </li>
+          <li>Erstellen Sie eine materialisierte Sicht &quot;Bahnhof_Statistik&quot;, die zu jedem Bundesland die Anzahl der Bahnhöfe zeigt. Wie viele Bahnhöfe zeigt diese Sicht in Hessen an? Löschen Sie Ihren Bahnhof 9999 und schauen Sie wieder in die materialiserte Sicht. Führen Sie ein <code>REFRESH</code> aus.</li>
+          <li>Stellen Sie abschließend noch folgende Anfragen auf der Tabelle &quot;bahnhoefe&quot;:
+                  <ol type="a">
+                      <li>Geben Sie alle Bundesländer aus (keine Duplikate).</li>
+                      <li>In welchen Städten gibt es mehr als 10 Bahnhöfe?</li>
+                      <li>Welche Bahnhöfe haben die gleiche Kategorie (Kat. Vst.) wie &quot;Ulm Hbf&quot;?</li>
+                      <li>Geben Sie zu jedem Bundesland aus, wie viele Bahnhöfe die dort befindlichen Städte im Durchschnitt besitzen.</li>
+                  </ol>
+              </li>
+      </ol>
+      
+    </section>
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Datenbanken - Übungsblatt 9</title>
+        <title>Datenbanken - Übungsblatt 10</title>
         <link rel="stylesheet" href="../exercises/exercises.css">
         <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
         <link href="../src/erd.css" rel="stylesheet">
@@ -22,7 +22,7 @@
                 <b>Datenbanken - SS 2020</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 9 vom 29.06., 30.06. und 06.07.2020</b>
+                <b>Übungsblatt 10 vom 06.08.2020</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -30,9 +30,8 @@
         </header>
 
         <section style="padding-top: 2.5cm">
-          <h1>Aufgabe 1: Rechtemanagement, Transaktionen (10P)</h1>
-          <p>Abgabe-Deadline: 29.06.2020 12:00 im Moodle</p>
-          <h4>a) (6P)</h4>
+          <h1>Aufgabe 1: Transaktionen, Logging und Recovery (10P)</h1>
+          <p>Abgabe-Deadline: 06.08.2020 12:00 im Moodle</p>
           <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
           <table border="0" style="width: 100%; margin-top: -5mm;">
           <tr>
@@ -42,75 +41,48 @@
               <td style="text-align: center; width:15mm">Falsch</td>
           </tr>
           <tr>
-              <td>1.</td><td>Wenn ich GRANT rolle TO benutzer ausführe, hat der angegebene Benutzer alle Berechtigungen der spezifizierten Rolle.</td>
+              <td>1.</td><td>Bei jedem Commit müssen die durch die Transaktion geänderten Datenblöcke (Tabellendaten) auf die Festplatte geschrieben werden.</td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
           </tr>
           <tr>
-              <td>2.</td><td>Mit REVOKE ... RESTRICT verbiete ich, ein Recht weiterzugeben.</td>
+              <td>2.</td><td>Flush bedeutet, dass Inhalte im RAM auf die Festplatte geschrieben werden.</td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
           </tr>
           <tr>
-              <td>3.</td><td>Wenn eine Transaktion Daten schreibt und sie diese selbst wieder liest, nennt man dies ein Dirty Read.</td>
+              <td>3.</td><td>Wenn nie ein Flush passieren würde, könnten committete Änderungen verloren gehen.</td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
           </tr>
           <tr>
-              <td>4.</td><td>Es laufen zwei Transaktionen parallel. Eine schreibt in x und die andere liest x gleichzeitig. Hier kann ein Lost Update auftreten.</td>
+              <td>4.</td><td>Bei jeder Neueintragung im Transaktionslog muss diese unbedingt auf die Festplatte geschrieben werden.</td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
           </tr>
           <tr>
-              <td>5.</td><td>Das Phantomproblem kann auftreten, wenn zwischen zwei Leseoperationen eine andere Transaktion Datensätze löscht.</td>
+              <td>5.</td><td>Die Undo-Info im Transaktionslog wird verwendet, um nach dem Crash durchgeführte Änderungen rückgängig zu machen.</td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr><!--
+          </tr>
           <tr>
               <td>6.</td><td>Die Redo-Info im Transaktionslog wird verwendet, um noch nicht auf die Festplatte geschriebene Aktionen von Gewinner-Transaktionen auszuführen.</td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
               <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>-->
-          </table>
-
-          <h4>b) (3P)</h4>
-          <p>Zeichnen Sie den Serialisierbarkeitsgraphen für die folgende Historie:</p>
-          <p style="font-size:larger;">w<sub>1</sub>(x), w<sub>2</sub>(x), r<sub>2</sub>(y), r<sub>1</sub>(y), w<sub>3</sub>(y), c<sub>1</sub>, c<sub>2</sub>, c<sub>3</sub></p>
-
-          <table border="0" style="width: 100%; margin-top: -5mm;">
-            <tr>
-              <td style="width:10mm">&nbsp;</td>
-              <td>&nbsp;</td>
-              <td style="text-align: center; width:15mm">Richtig</td>
-              <td style="text-align: center; width:15mm">Falsch</td>
           </tr>
           <tr>
-            <td>7.</td><td>Es gibt einen Zyklus im Serialisierbarkeitsgraphen.</td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-        </tr>
-          </table>
-
-          <h4>c) (2P)</h4>
-          <p>Skizzieren Sie den Auflauf des SX-Sperrverfahrens für die Historie aus Aufgabenteil b).</p>
-
-          <table border="0" style="width: 100%; margin-top: -5mm;">
-            <tr>
-              <td style="width:10mm">&nbsp;</td>
-              <td>&nbsp;</td>
-              <td style="text-align: center; width:15mm">Richtig</td>
-              <td style="text-align: center; width:15mm">Falsch</td>
+              <td>7.</td><td>Transaktionskonsistente Checkpoints werden angelegt, wenn keine Transaktion mehr läuft.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
           </tr>
-        <tr>
-            <td>8.</td><td>Wird bei der Historie aus der vorherigen Frage das SX-Sperrverfahren eingesetzt, muss TA<sub>2</sub> warten, bevor sie in x schreiben darf.</td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-        </tr>
-      </table>
-
-      <p>Ihre Lösungen zu Teil b) und c) (Serialisierbarkeitsgraph und SX-Sperrverfahren) werden in den Zoom-Sessions am 29.06., 30.06. und 06.07.2020 besprochen.</p>
-                  
-          </section>
+          <tr>
+              <td>8.</td><td>Multi-Version-Concurrency-Control ...</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <!-- noch zwei -->
+          </table>
+        </section>
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

@@ -55,7 +55,7 @@
                             <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                             <h1>Datenbanken</h1>
                             <h3>Kapitel 6: Anwendungsentwicklung</h3>
-                            <h4 style="text-align:center">2020-XX-XX</h4>
+                            <h4 style="text-align:center">2020-07-01</h4>
                             <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                             <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                         </section>
@@ -844,7 +844,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     </ul>
     <aside class="notes">Ein kombinierter Index, der aus mehreren Spalten besteht, ist günstiger als das Erstellen und die Wartung mehrerer einzelner Indexe. Wichtig ist jedoch die Reihenfolge, in der man die Spalten angibt. Der hier gezeigte Index auf den Spalten a, b und c kann z. B. nicht für eine Anfrage <code>WHERE b=7</code> verwendet werden.</aside>
 </section>
-
+<!--
 <section>
     <h2>Hash-Indexe</h2>
     <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr) USING HASH;</code></pre>
@@ -1140,7 +1140,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     </div>
     <aside class="notes">Wenn wir die 28 einfügen, läuft es über. Wir müssen das 0-Bucket also splitten in ein 00- und ein 10-Bucket. Alle Einträge, deren Hash-Wert auf 00 enden, kommen in ersteres, die anderen in zweiteres. Die beiden Dictionary-Einträge, die auf 1 enden, zeigen auf das gleiche Bucket, welches die lokale Tiefe 1 hat.</aside>
 </section>
-
+-->
 <section>
     <h2>Join-Algorithmen</h2>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
@@ -1234,7 +1234,7 @@ for each row p in PRODUKTE:
         <li>Benutzerdefinierte Routinen: Stored Procedures, (Tabellen-)Funktionen</li>
         <li>Trigger: BEFORE / AFTER / INSTEAD OF</li>
         <li>Indexe: Clustered Index, B-Baum, B+-Baum</li>
-        <li>Hash-Verfahren: Lineares / Quadratisches Sondieren, Verkettung der Überläufer, Erweiterbares Hashing</li>
+        <!--<li>Hash-Verfahren: Lineares / Quadratisches Sondieren, Verkettung der Überläufer, Erweiterbares Hashing</li>-->
         <li>Join-Algorithmen: Nested-Loop-Join, Sort-Merge-Join, Hash-Join, Index-Join</li>
     </ul>
 </section>

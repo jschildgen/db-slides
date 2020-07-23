@@ -26,6 +26,7 @@
 		<link rel="stylesheet" href="src/layout.css">
         <link rel="stylesheet" href="lib/joint.min.css" />
         <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="src/rainbow.css">
@@ -383,9 +384,22 @@ END $$ LANGUAGE plpgsql;</code></pre>
     <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
 $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
 
-    <pre><code class="hlsql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
+    <div class="poll fragment fade-in-then-out" style="bottom:-260px">
+        <h1>Wie lässt sich diese UDF aufrufen?</h1>
+            <ul>
+                <li>EXECUTE addieren(5,4);</li>
+                <li data-poll="correct">SELECT addieren(5,4);</li>
+                <li>SELECT * FROM addieren(5,4);</li>
+                <li>CALL addieren(5,4);</li>
+            </ul>
+        <h2>https://frage.space</h2>
+    </div>
+
+    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
 
     <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre>
+
+    
 
     <aside class="notes">Funktionen haben beliebig viele Eingabeparameter und liefern genau einen Rückgabewert zurück. Der Datentyp des Rückgabewerts steht oben hinter <code>RETURNS</code>. Mit einem <code>RETURN</code>-Kommando terminiert die Funktion und erzeugt die Rückgabe. Man kann die Funktion genau wie eingebaute SQL-Funktionen (UPPER, MD5, ...) in SELECT-Anfragen mit und ohne FROM-Klausel verwenden, aber auch in INSERT, UPDATE, etc. Die hier dargestellte Funktion addiert zwei Zahlen. Die Eingabeparameternamen kann man wie hier gezeigt einfach weggelassen, wenn man auf sie lediglich mittels <code>$1</code> etc. zugreift.</aside>
 </section>
@@ -400,6 +414,17 @@ RETURN $1/$2;
 EXCEPTION WHEN OTHERS THEN 
     RAISE EXCEPTION 'Divisor darf nicht 0 sein!';
 END $$ LANGUAGE plpgsql;</code></pre>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-380px">
+    <h1>Wo wird die &quot;Divisor darf nicht 0 sein&quot;-Exception angezeigt?</h1>
+        <ul>
+            <li data-poll="correct">Als Fehlermeldung anstelle des Query-Ergebnisses</li>
+            <li>In der Serverausgabe (wie bei RAISE NOTICE)</li>
+            <li>In der Query-Ergebnistabelle</li>
+            <li>Nirgendwo</li>
+        </ul>
+    <h2>https://frage.space</h2>
+</div>
     
     <aside class="notes">Hinter <code>EXCEPTION WHEN</code> steht der Name einer Exception, die abgefangen werden soll. <code>OTHERS</code> fängt alle sonstigen Fehler ab. Mit <code>RAISE EXCEPTION</code> wird ein Programm unterbrochen und die entsprechende Fehlermeldung an den Client zurückgegeben.</aside>
 </section>
@@ -418,6 +443,18 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql IMMUTABLE;</code></pre>
         <h4 style="margin-top: -4mm;"><code>IMMUTABLE</code></h4>
         <p class="small" style="margin-top: -7mm;">Funktion darf die DB nicht verändern und muss bei gleichen Parameterwerten das gleiche Ergebnis liefern.</p>
     </ul>
+
+    <div class="poll fragment fade-in-then-out" style="bottom:-100px">
+        <h1>Warum ergbit es Sinn, die addieren-UDF als IMMUTABLE zu kenzeichnen?</h1>
+            <ul>
+                <li>Weil die UDF die Datenbank nicht verändert</li>
+                <li>Weil die UDF nichts aus der Datenbank liest</li>
+                <li>Weil die UDF nachträglich nicht mehr verändert wird</li>
+                <li data-poll="correct">Weil 1+1 immer 2 ist und so</li>
+            </ul>
+        <h2>https://frage.space</h2>
+    </div>
+
     <aside class="notes">Wenn eine Funktion als <code>STABLE</code> oder <code>IMMUTABLE</code> deklariert wird, kann der Datenbank-Optimierer Ergebnisse der Funktion wiederverwenden, ohne die Funktion nochmals aufzurufen. Eine Funktion <code>get_hersteller_land</code>, die beispielsweise eine <code>SELECT</code>-Anfrage an eine Tabelle schickt, um das Land eines Herstellers zu ermitteln, ist <code>STABLE</code>, da sie innerhalb einer Anfrage, in der sie aufgerufen wird, für den gleichen Hersteller das gleiche Land liefern würde.</aside>
 </section>
 
@@ -430,8 +467,19 @@ SELECT produktnr, bezeichnung, preis, hersteller
 FROM produkte WHERE hersteller = $1 
 $$ LANGUAGE sql;
 </code></pre>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-280px">
+    <h1>Wie lässt sich diese Tabellenfunktion aufrufen?</h1>
+        <ul>
+            <li>EXECUTE produkte_von('Calgonte');</li>
+            <li>SELECT produkte_von('Calgonte');</li>
+            <li data-poll="correct">SELECT * FROM produkte_von('Calgonte');</li>
+            <li>CALL produkte_von('Calgonte');</li>
+        </ul>
+    <h2>https://frage.space</h2>
+</div>
         
-            <pre><code class="hlsql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
+            <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
         
         <aside class="notes">Tabellenfunktionen liefert eine Tabelle zurück mit beliebig vielen Zeilen. Die Spalten und deren Typen werden im <code>CREATE FUNCTION</code>-Kommando im <code>RETURNS TABLE</code>-Teil definiert. Genau wie eine View wird eine Tabellenfunktion in der <code>FROM</code>-Klausel einer SELECT-Anfrage aufgerufen. Eine Tabellenfunktion ist quasi eine View mit Parametern.</aside>
 </section>
@@ -458,6 +506,17 @@ $$ LANGUAGE sql;
     </div>
 
     <p>dann ...</p>
+
+    <div class="poll fragment fade-in-then-out" style="bottom:-220px">
+        <h1>Wann könnte BEFORE INSERT ON produkte sinnvoll sein (im Vergleich zu AFTER INSERT ON produkte)?</h1>
+            <ul>
+                <li data-poll="correct">Wenn man das INSERT doch noch ablehnen will</li>
+                <li data-poll="correct">Wenn man den nicht-vorhandenen Hersteller in die Hersteller-Tabelle einfügen will</li>
+                <li data-poll="correct">Wenn man die eingefügte Zeile noch modifizieren will</li>
+                <li>Das macht gar keinen Unterschied</li>
+            </ul>
+        <h2>https://frage.space</h2>
+    </div>
 
     <aside class="notes">Mittels Triggern können Aktionen ausgeführt werden, jedesmal wenn das festgelegte Ereignis eintritt. Nach einem INSERT in die Produkttabelle kann automatisch der Hersteller eingefügt werden, falls es ihn noch nicht gibt. Bevor der Preis eines Produkts geändert wird, wird überprüft, ob diese Änderung auch in Ordnung ist. Wenn der Preis um mehr als 20% erhöht wird, soll ein Fehler kommen. Wenn ein INSERT auf einer View gemacht wird, sollen stattdessen INSERTs in gewisse Tabellen gemacht werden. Solche Abläufe können mittels Trigger definiert werden.</aside>
     
@@ -547,6 +606,16 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
 CREATE TRIGGER preis_trigger BEFORE INSERT OR UPDATE ON produkte
 FOR EACH ROW EXECUTE PROCEDURE preis_trigger();</code></pre>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-50px">
+    <h1>Könnte ein AFTER INSERT Trigger das INSERT auch noch ablehnen?</h1>
+        <ul>
+            <li data-poll="correct">Na klar</li>
+            <li>Nein, dafür ist es zu spät</li>
+        </ul>
+    <h2>https://frage.space</h2>
+</div>
+
 <aside class="notes">Bei einem <code>BEFORE INSERT</code>-Trigger kann man einzufügende Tupel noch abändern, bevor es tatsächlich in die Tabelle eingefügt wird. Hier wird der Preis auf 0 gesetzt, sollte jemand versuchen, ein Produkt mit negativen Preis einzufügen. Außerdem überwacht der Trigger, dass es nie mehr als drei kostenlose Produkte gibt. Ein INSERT oder UPDATE wird abgelehnt, wenn es dieses Constraint verletzen sollte.</aside>
 </section>
 

@@ -26,12 +26,14 @@ foreach($files as $file) {
 ?>
 
 <hr>
-<h1>Exams</h1>
+<h1 onClick="javascript:document.querySelector('#exams').style.visibility = document.querySelector('#exams').style.visibility == 'hidden' ? 'visible' : 'hidden';">Exams</h1>
+<div id="exams" style="visibility:hidden">
 <?php
 $files = glob('./exams/*.{html}', GLOB_BRACE);
 foreach($files as $file) {
   echo "<a href=\"$file\">$file</a><br>";
 }
 ?>
+</div>
 </body>
 </html>

@@ -17,7 +17,7 @@ foreach($files as $file) {
 }
 ?>
 <hr>
-<h1>Exercise Sheets</h1>
+<h1 onClick="javascript:document.querySelector('#exams').style.visibility = document.querySelector('#exams').style.visibility == 'hidden' ? 'visible' : 'hidden';">Exercise Sheets</h1>
 <?php
 $files = glob('./exercises/*.{html}', GLOB_BRACE);
 foreach($files as $file) {
@@ -26,8 +26,8 @@ foreach($files as $file) {
 ?>
 
 <hr>
-<h1 onClick="javascript:document.querySelector('#exams').style.visibility = document.querySelector('#exams').style.visibility == 'hidden' ? 'visible' : 'hidden';">Exams</h1>
 <div id="exams" style="visibility:hidden">
+<h1>Exams</h1>
 <?php
 $files = glob('./exams/*.{html}', GLOB_BRACE);
 foreach($files as $file) {

@@ -166,6 +166,7 @@ To put an ER diagram on a slide, a `<div class="erd">` can be used. The content 
 ### Entities
 
 - `_e` Entity name
+- `isa` Name of super entity type
 - `attributes` an array of attribute documents
 - `options`
   - `"weak"` weak entity (double border)

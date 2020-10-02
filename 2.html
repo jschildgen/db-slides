@@ -710,12 +710,12 @@
                                 <section>
                                     <h2>Schwache Entitätstypen</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
-                                    <ul>
-                                        <li><em>Existenzabhängig</em> von einem anderen Entitätstypen</li>
-                                        <li>Kein eigener Primärschlüssel, stattdessen wird der Primärschlüssel vererbt und <span style="border-bottom: 2px dashed #000;">erweitert</span></li>
+                                    <ul class="small">
+                                        <li>Kein eigener Primärschlüssel, stattdessen wird der Primärschlüssel von einer anderen Entität vererbt und <span style="border-bottom: 2px dashed #000;">erweitert</span></li>
+                                        <li>&Rightarrow; Existenzabhängig von einem anderen Entitätstypen</li>
                                         <li>Entitätstyp und Beziehung doppelt umrahmen</li>
                                     </ul>
-                                    <div class="stretch erd" style="margin-left: 6cm">
+                                    <div class="stretch erd" style="margin-left: 6cm; margin-top:5mm; max-height: 4cm;">
                                             [[
                                                 { _e: "Anbieter", pos: [20, 80],
                                                 attributes: [
@@ -723,7 +723,7 @@
                                                 { _a:"Anbietername", pos: [120, 5] }
                                                 ]
                                                 },
-                                                { _e: "Handytarife", pos: [350, 80], options: ["weak"],
+                                                { _e: "Handytarif", pos: [350, 80], options: ["weak"],
                                                 attributes: [
                                                 { _a:"Tarifbezeichn.", options:["extending_primary"], pos: [300, 5] },
                                                 { _a:"Datenvolumen", pos: [417, 5]},
@@ -733,12 +733,13 @@
                                             ],
                                             [
                                             { _r: "hat",
-                                                _e: ["Anbieter", "Handytarife"], options: ["weak"],
+                                                _e: ["Anbieter", "Handytarif"], options: ["weak"],
                                                 card: ["1", "N"]
                                                 }
                                             ]]
                                     </div>
-                                    <aside class="notes">Handytarife sind ein schwacher Entitätstyp (<em>Weak Entity Type</em>). Die Tarife sind existenzabhängig vom jeweiligen Anbieter des Tarifs. Dies ist daran zu erkennen, dass sowohl Entitätstyp als auch die Beziehung zum Anbieter doppelt umrahmt sind. Zu einem Tarif muss es einen Anbieter geben. Ein Anbieter kann nur dann gelöscht werden, wenn ebenfalls alle seine Tarife gelöscht werden. Die Tarifbezeichnung ist ein <em>erweiternder Primärschlüssel</em>. Sie ist eindeutig für einen bestimmten Anbieter. Es kann einen &quot;Data Extreme&quot;-Tarif bei mehreren Anbietern geben, aber bei jedem nur einmal. Die Kombination aus Anbieternummer und Tarifbezeichnung identifiziert einen Tarif eindeutig.</aside>
+                                    <p class="small">Die Kombination aus Anbieternummer und Tarifbezeichnung identifiziert einen Handytarif eindeutig, z. B. Vugafon &quot;Data Extreme&quot;.</p>
+                                    <aside class="notes">Handytarif ist ein schwacher Entitätstyp (<em>Weak Entity Type</em>). Die Tarife sind existenzabhängig vom jeweiligen Anbieter des Tarifs. Dies ist daran zu erkennen, dass sowohl Entitätstyp als auch die Beziehung zum Anbieter doppelt umrahmt sind. Zu einem Tarif muss es einen Anbieter geben. Die Tarifbezeichnung ist ein <em>erweiternder Primärschlüssel</em>. Sie ist eindeutig für einen bestimmten Anbieter. Es kann einen &quot;Data Extreme&quot;-Tarif bei mehreren Anbietern geben, aber bei jedem nur einmal.</aside>
                                 </section>
 
                                 <section>
@@ -1088,17 +1089,17 @@
                                 </section>
                                 <section>
                                     <h2>Krähenfuß-Notation</h2>
-                                    <img style="width:6cm; position: absolute; right:0px" uml="entity Personen {
+                                    <img style="width:6cm; position: absolute; right:0px" uml="entity Person {
                                         PersNr
                                         --
                                         Name
                                         Geburtsdatum
                                       }
-                                      entity Orte {
+                                      entity Ort {
                                         Ort
                                         --
                                       }
-                                      Personen }o--|| Orte : geboren_in"/>
+                                      Person }o--|| Ort : geboren_in"/>
                                       <p class="small">Die Krähenfuß-Notation kommt in vielen<br>Datenbank-Modellierungs-Tools zum Einsatz.</p>
                                     <ul>
                                         <li><img class="noborder" style="height:36px; vertical-align: middle;" border="0" src="img/2/crow_11.png"> Genau eins</li>

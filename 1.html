@@ -44,35 +44,58 @@
                     <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                     <h1>Datenbanken</h1>
                     <h3>Kapitel 1: Grundlagen</h3>
-                    <h4 style="text-align:center">2020-03-23</h4>
+                    <h4 style="text-align:center">2020-10-13</h4>
                     <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                     <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                 </section>
                 <section>
-                <h2>Organisatorisches</h2>
-                <h4>Vorlesung (ab 2020-03-23)</h4>
+								<h2>Vorlesung</h2>
+								<div style="position: absolute; top: 120px; right:50px; font-size:230px"><!--<i class="fas fa-university green">--><i class="fab fa-youtube green"></i></div>
+                <h4>Vorlesung (ab 2020-10-13)</h4>
                 <ul>
-                    <li>Mo, 13:30 Uhr (D003)</li>
-                    <li>Mi, 10:00 Uhr (U212)</li>
+                    <li>Di, 10:00 Uhr (über YouTube Live)</li>
+                    <li>Fr, 11:45 Uhr (über YouTube Live)</li>
                 </ul>
-                <br/>
-                <h4>Übung (ab 2020-04-22)</h4>
+								</section>
+								<section>
+									<h2>Übung</h2>
+                <h4>Übungblätter (ab 2020-10-19)</h4>
                 <ul>
                     <li>Jede Woche ein Übungsblatt; insgesamt 12 Stück</li>
                     <li>Aufgabe 1 (gibt i.d.R. 10 Punkte):<br>Abgabe online bis Montag 12:00 Uhr</li>
-                    <li>Weitere Aufgaben zum Lösen in der Übung</li>
+										<!--<li>Weitere Aufgaben zur Besprechung in Übung</li>-->
+								</ul>
+								<br>
+								<h4>Übung (ab 2020-10-28)</h4>
+								<ul>
+										<li>Besprechung von Aufgabe 2 etc. in 2er-Gruppen </li>
+										<li>Mi, 11:00 - 16:00 Uhr (5-Minuten-Slots über Zoom)</li>
+										<li>Mi, 16:00 (Beispiellösung über YouTube Premiere)</li>
                 </ul>
-                <div style="position: absolute; top: 120px; right:50px; font-size:250px"><i class="fas fa-university green"></i></div>
+								</section>
+								<section>
+									<h2>Übung</h2>
+									<h4>Präsenzübungen (Übung 4, 8, 12)</h4>
+									<ul>
+										<li>Mi 18.11., 16.12., 27.01. (statt Zoom-Slots)
+											<ul>
+										<li>10:00 Uhr (IM_DB_I3I4_1) in K017</li>
+										<li>11:45 Uhr (IM_DB_I3I4_2) in K016</li>
+										<li>13:30 Uhr (IM_DB_I3I4_3) in K018</li>
+										<li>15:15 Uhr (IM_DB_I3I4_4) in K005</li>
+									</ul></li>
+									</ul>
 								</section>
                 <section>
-                <h2>Klausur</h2>
+								<h2>Klausur</h2>
+								<h4>Klausur</h4>
                 <ul>
                     <li><b>Zulassungsvorraussetzung:<br>mind. 100 Punkte in der Übung</b></li>
                     <li>Schriftliche Klausur</li>
 										<li>90 Minuten Zeit</li>
 										<li>Hilfsmittel: Handschriftlich<br>doppelseitig beschriebenes DIN-A4-Blatt</li>
                 </ul>
-                <div style="position: absolute; top: 100px; right:50px; font-size:250px"><i class="fas fa-edit green"></i><div>
+                <div style="position: absolute; top: 100px; right:50px; font-size:230px"><i class="fas fa-edit green"></i><div>
                 </section>
                 <section>
                 <h2>Literatur</h2>
@@ -97,13 +120,13 @@
                 <br>
                 <div class="stretch erd">
                 [[
-                 { _e: "Personen", pos: [150, 100],
+                 { _e: "Person", pos: [150, 100],
                   attributes: [
                    { _a:"PersNr", options:["primary"], pos: [89, 13] },
                    { _a:"Name", pos: [245, 13] }
                   ]
                  },
-                 { _e: "Termine", pos: [530, 100],
+                 { _e: "Termin", pos: [530, 100],
                    attributes: [
                     { _a:"Datum", pos: [475, 25], options:["primary"] },
                     { _a:"Uhrzeit", pos: [634, 25], options:["primary"] },
@@ -114,8 +137,8 @@
                  }
                 ],
                 [
-                 { _r: "nehmen teil",
-                   _e: ["Personen", "Termine"],
+                 { _r: "nimmt teil",
+                   _e: ["Person", "Termin"],
                    card: ["N", "M"]
                  }
                 ]]

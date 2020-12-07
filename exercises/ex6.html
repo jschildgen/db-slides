@@ -14,44 +14,116 @@
         <header>
             <div>
             <div>
-                <b>Datenbanken - SS 2020</b><br>
+                <b>Datenbanken - WS 2020/21</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 6 vom 8.-10.06.2020</b>
+                <b>Übungsblatt 6 vom 02.12.2020</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
-<section style="padding-top: 2.5cm">
-        <h1>Aufgabe 0: SQL Island (Bonusaufgabe, 10P)</h1>
-        <p>Abgabe-Deadline: 08.06.2020 12:00 im Moodle</p>
-        <p>Spielen Sie das Spiel SQL Island (<a href="http://www.sql-island.de" target="_blank">http://www.sql-island.de)</a> und lassen Sie sich zum Ende des Spiels ein Zertifikat generieren. Wenn Sie die darauf befindliche Zertifikat-ID im Moodle eintragen, erhalten Sie 10 Bonuspunkte.</p>
+
+        <section style="padding-top: 2.5cm">
+            <h1>Aufgabe 1: Normalformenlehre (10P)</h1>
+            <p>Abgabe-Deadline: 01.12.2020 12:00 im Moodle</p>
+
+            <p>Betrachten Sie das folgende Relationenschema mit den dazugehörigen funktionalen Abhängigkeiten:</p>
+
+            <p>musikunterricht (wochentag, uhrzeit, instrument, raum, lehrer, schüler)</p>
+            <ul>
+                <li>wochentag, lehrer &rightarrow; raum</li>
+                <li>schüler &rightarrow; instrument</li>
+                <li>wochentag, uhrzeit, raum &rightarrow; lehrer, schüler</li>
+            </ul>
+
+            <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt.</p>
+            <table border="0" style="width: 100%">
+            <tr>
+                <td style="width:10mm">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td style="text-align: center; width:15mm">Richtig</td>
+                <td style="text-align: center; width:15mm">Falsch</td>
+            </tr>
+            <tr>
+                <td>1.</td><td>Ein Schüler kann Unterricht für mehrere verschiedene Instrumente nehmen.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>2.</td><td>Es gilt: lehrer &rightarrow; instrument</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>3.</td><td>Es gilt: schüler, lehrer &Rightarrow; instrument</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>4.</td><td>{wochentag, uhrzeit, instrument, raum} ist ein Superschlüssel</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>5.</td><td>{wochentag, uhrzeit, instrument, raum} ist ein Schlüsselkandidat</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>6.</td><td>{wochentag, uhrzeit, lehrer} ist ein Schlüsselkandidat</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>7.</td><td>In der Tabelle &quot;musikunterricht&quot; gibt es nur einen Schlüsselkandidaten.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>8.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 1NF.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>9.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 2NF.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>10.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 3NF.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            </table>
+        </section>
+
+<section  style="page-break-inside:avoid; padding-top: 0.5cm">
+    <h1>Aufgabe 2: Normalisierung</h1>
+    <p>Überführen Sie die Tabelle aus Aufgabe 1 in die dritte Normalform.</p>
 </section>
-<section>
-    <h1>Aufgabe 1: SELECT-Anfragen (10P)</h1>
-    <p>Abgabe-Deadline: 08.06.2020 12:00 im Moodle</p>
-        <p>Auf der Webseite des Datenbankmanagementsystems Hyper können Sie SQL-Anfragen gegen das Uni-Schema aus dem Kemper-Datenbanksysteme-Buch stellen: <a href="http://hyper-db.de/interface.html" target="_blank">http://hyper-db.de/interface.html</a></p>
-        <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
-            Studenten(<u>MatrNr</u>, Name, Semester)<br>
-            Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
-            hoeren(<u>MatrNr, VorlNr</u>)</p>
-         <p>Vorlesungen.gelesen_von ist Fremdschlüssel auf Professoren.PersNr<br>
-            hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
-            hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
 
-        <p>Formulieren Sie die folgenden Anfragen mittels SQL. Verwenden Sie bitte nicht das Relax-Tool. Verwenden Sie bei den Fragen 1 bis 4 keine Unteranfragen oder CTEs. Richtige Antworten geben 2 Punkte. Für teilweise richtige Antworten können leider keine Teilpunkte gegeben werden, da ein automatisches Query-Bewertungssystem eingesetzt wird. Achten Sie daher auch darauf, dass keine Tippfehler in Ihren Anfragen sind.</p>
-
-        <table border="0" style="width: 100%">
-        <tr><td>1.</td><td>Wie viele Professoren, die den Rang C4 haben, gibt es? (2P)</td></tr>
-        <tr><td>2.</td><td>Geben Sie die Namen der Studierenden aus, die die Vorlesung &quot;Grundzüge&quot; hören, und zwar alphabetisch aufsteigend sortiert. (2P)</td></tr>
-        <tr><td>3.</td><td>Geben zu jedem Professor, der mindestens zwei Vorlesungen hält, den Namen sowie die Gesamt-SWS-Zahl der von ihm oder ihr gehaltenen Vorlesungen aus. (3P)</td></tr>
-        <tr><td>4.</td><td>Wie sind die Namen der Studierenden, die zusammen mit dem Studenten namens &quot;Feuerbach&quot; zumindest eine gemeinsame Vorlesung hören? Geben Sie keinen Namen doppelt aus. (3P)</td></tr>
-        <!--<tr><td>5.</td><td>Welche Professoren haben den Rang C4 und halten keine einzige 4-SWS-Vorlesung.</td></tr>-->
-        </table>
-            
-    </section>
-
+<section  style="page-break-inside:avoid; padding-top: 2.5cm">
+    <h1>Aufgabe 3: Normalisierung</h1>
+    <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
+    <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
+    <p>schauspieler ist ein mengenwertiges Attribut.</p>
+    <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
+    <ul>
+        <li>serie &rightarrow; produzent</li>
+        <li>serie, staffel &rightarrow; regisseur</li>
+        <li>serie, staffel, folge &rightarrow; titel</li>
+        <li>produzent &rightarrow; sprache</li>
+    </ul>
+</section>
+<section  style="page-break-inside:avoid; padding-top: 0.5cm">
+    <h1>Aufgabe 4: Relationale Algebra</h1>
+    <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
+    <table border="0" style="width: 100%">
+        <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
+        <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
+    </table>
+</section>
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>
 <script src="../lib/backbone.js"></script>

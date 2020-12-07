@@ -14,116 +14,78 @@
         <header>
             <div>
             <div>
-                <b>Datenbanken - SS 2020</b><br>
+                <b>Datenbanken - WS 2020/21</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 4 vom 18.-20.05.2020</b>
+                <b>Übungsblatt 4 vom 18.11.2020</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
 
+        
+        
         <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Normalformenlehre (10P)</h1>
-            <p>Abgabe-Deadline: 18.04.2020 12:00 im Moodle</p>
-
-            <p>Betrachten Sie das folgende Relationenschema mit den dazugehörigen funktionalen Abhängigkeiten:</p>
-
-            <p>musikunterricht (wochentag, uhrzeit, instrument, raum, lehrer, schüler)</p>
-            <ul>
-                <li>wochentag, lehrer &rightarrow; raum</li>
-                <li>schüler &rightarrow; instrument</li>
-                <li>wochentag, uhrzeit, raum &rightarrow; lehrer, schüler</li>
-            </ul>
-
-            <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt.</p>
-            <table border="0" style="width: 100%">
-            <tr>
-                <td style="width:10mm">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td style="text-align: center; width:15mm">Richtig</td>
-                <td style="text-align: center; width:15mm">Falsch</td>
-            </tr>
-            <tr>
-                <td>1.</td><td>Ein Schüler kann Unterricht für mehrere verschiedene Instrumente nehmen.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>2.</td><td>Es gilt: lehrer &rightarrow; instrument</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>3.</td><td>Es gilt: schüler, lehrer &Rightarrow; instrument</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>4.</td><td>{wochentag, uhrzeit, instrument, raum} ist ein Superschlüssel</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>5.</td><td>{wochentag, uhrzeit, instrument, raum} ist ein Schlüsselkandidat</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>6.</td><td>{wochentag, uhrzeit, lehrer} ist ein Schlüsselkandidat</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>7.</td><td>In der Tabelle &quot;musikunterricht&quot; gibt es nur einen Schlüsselkandidaten.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>8.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 1NF.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>9.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 2NF.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>10.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 3NF.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
+            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
+            <p>Abgabe-Deadline: 16.11.2020 12:00 im Moodle</p>
+            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
+            <p>Wir verwenden folgende Relationen:</p>
+            <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+               Studenten(<u>MatrNr</u>, Name, Semester)<br>
+               Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+               hoeren(<u>MatrNr, VorlNr</u>)</p>
+            <p>Vorlesungen.gelesenVon ist Fremdschlüssel auf Professoren.PersNr<br>
+               hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+               hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
+            <p>Formulieren Sie die folgenden Anfragen mittels Ausdrücken der relationalen Algebra.</p>
+            
+            <table border="0" style="width: 100%; margin-top: -3mm;">
+                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830? (3P)</td></tr>
+                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen? (4P)</td></tr>
+            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält? (3P)</td></tr>
             </table>
         </section>
+        
+        <section>
+            <h1>Aufgabe 2: Relationale Algebra</h1>
+            <p>Formulieren Sie Ausdrücke der relationalen Algebra für die folgenden Aufgabenstellungen ebenfalls auf dem Relationenschema von Aufgabe 1:</p>
+            <table border="0" style="width: 100%">
+                
+                <tr><td>4.</td><td>Welche Studierenden (Namen) heißen genau gleich wie ein Professor?</td></tr>
+                <tr><td>5.</td><td>Welche Vorlesungen (VorlNr, Titel) werden von Studierenden gehört, die im zweiten Semester sind?</td></tr>
+                <tr><td>6.</td><td>Welche Professoren (PersNr, Name) haben den gleichen Rang wie der Professor mit PersNr 2137? Geben Sie aber nicht den Professor 2137 aus!</td></tr>
+            </table>
+        </section>
+        
+        <section>
+            <h1>Aufgabe 3: Relationenschema &rightarrow; ER-Diagramm</h1>
+            <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
+        </section>
+        
+        <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 3: Normalisierung</h1>
+            <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
+            <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
+            <p>schauspieler ist ein mengenwertiges Attribut.</p>
+            <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
+            <ul>
+                <li>serie &rightarrow; produzent</li>
+                <li>serie, staffel &rightarrow; regisseur</li>
+                <li>serie, staffel, folge &rightarrow; titel</li>
+                <li>produzent &rightarrow; sprache</li>
+            </ul>
+        </section>
+        <section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 4: Relationale Algebra</h1>
+            <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
+            <table border="0" style="width: 100%">
+                <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
+                <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
+            </table>
+        </section>-->
 
-<section  style="page-break-inside:avoid; padding-top: 0.5cm">
-    <h1>Aufgabe 2: Normalisierung</h1>
-    <p>Überführen Sie die Tabelle aus Aufgabe 1 in die dritte Normalform.</p>
-</section>
 
-<section  style="page-break-inside:avoid; padding-top: 2.5cm">
-    <h1>Aufgabe 3: Normalisierung</h1>
-    <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
-    <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
-    <p>schauspieler ist ein mengenwertiges Attribut.</p>
-    <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
-    <ul>
-        <li>serie &rightarrow; produzent</li>
-        <li>serie, staffel &rightarrow; regisseur</li>
-        <li>serie, staffel, folge &rightarrow; titel</li>
-        <li>produzent &rightarrow; sprache</li>
-    </ul>
-</section>
-<section  style="page-break-inside:avoid; padding-top: 0.5cm">
-    <h1>Aufgabe 4: Relationale Algebra</h1>
-    <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
-    <table border="0" style="width: 100%">
-        <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
-        <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
-    </table>
-</section>
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>
 <script src="../lib/backbone.js"></script>

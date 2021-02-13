@@ -1,11 +1,11 @@
 # db-slides
 
-Lecture slides based on the HTML/JavaScript framework [reveal.js](https://github.com/hakimel/reveal.js).
+Lecture slides based on the HTML/JavaScript framework [reveal.js](https://revealjs.com).
 
 This project consists of a custom reveal.js style for interactive lecture slideshows and printable hand-outs with notes, and extensions for code highlighting, jumping to slides with number keys, and more. Custom extensions were added for displaying Entity-Relationship diagrams on slides using JSON input and the live execution of SQL queries on a SQLite database.
 
 ## reveal.js
-A full documentation of using all features of reveal.js can be found on <https://github.com/hakimel/reveal.js>.
+A full documentation of using all features of reveal.js can be found on <https://revealjs.com>.
 
 ## Folder structure
 - **index.php** ** start page to display links to all slides, hand-outs, exercises, and exams (PHP web server required)
@@ -54,14 +54,14 @@ Headings are configured in src/sql.css in the HEADERS section.
 
 Text can be written in paragraph elements `<p>` or lists. `<ul>` uses dots, `<ol>` uses numbered items. `<br>` breaks a line.
 
-- `<p style="margin-left: 1cm">` (also for `<li>`) moves the text 1cm to the right (&Indentation)
+- `<p style="margin-left: 1cm">` (also for `<li>`) moves the text 1cm to the right (indentation)
 - `&nbsp;` is a non-breaking space and can also be used for indentations
 - `T<sub>1</sub>` adds a small index substript, `T<sup>2</sup>` is a superscript (T²)
 - `<p class="small">` uses only 70% of the font size (defined in src/layout.css)
 
 ### Markdown
 
-Instead of writing the content in HTML, markdown can be used. See <https://github.com/hakimel/reveal.js#markdown>
+Instead of writing the content in HTML, markdown can be used. See <https://revealjs.com/markdown/>
 
 ### Special characters and symbols ###
 
@@ -99,7 +99,7 @@ A fragment is a hidden element on a slide that will be visible on click. In the 
 
 Adding `class="fragment"` to an HTML element (e.g., `p` or `li`) will show the elements with this class in the order as they appear in the section. A custom order and showing multiple fragments at the same time can be controlled with the additional attribute `data-fragment-index`.
 
-All details about using fragments in reveal.js can be found under <https://github.com/hakimel/reveal.js#fragments>
+All details about using fragments in reveal.js can be found under <https://revealjs.com/fragments/>
 
 ## Slide Notes for printed Hand-Outs
 

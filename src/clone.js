@@ -12,7 +12,10 @@ var ClonePlugin = (function(){
 	return {
 		init: function() {        
             document.querySelectorAll('[data-clone]').forEach(function(item) {
-                item.innerHTML = document.getElementById(item.getAttribute('data-clone')).innerHTML;
+								var _id = item.getAttribute('data-clone');
+                item.innerHTML = document.getElementById(_id).innerHTML;
+								item.setAttribute('data-id', _id);
+								document.getElementById(_id).setAttribute('data-id', _id);
             })
 		}
 	}

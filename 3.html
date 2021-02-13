@@ -6,8 +6,8 @@
 
 		<title>Datenbanken - Kapitel 3 - Relationenmodell</title>
 
-		<link rel="stylesheet" href="reveal.js/css/reset.css">
-		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
 
         <link rel="stylesheet" href="src/slides.css">
         <link rel="stylesheet" href="src/sql.css">
@@ -23,17 +23,6 @@
         <!--<script defer src="lib/fontawesome.all.min.js"/>-->
         <link href="lib/fontawesome.all.min.css" rel="stylesheet">
         <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
-
-
-
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
 	</head>
 	<body>
 		<div class="reveal">
@@ -602,6 +591,75 @@
                             </section>
 
                             <section>
+                                <h3>NOT NULL / UNIQUE</h3>
+                                
+                                <p><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                    PersNr
+                                    --
+                                    Name
+                                    E-Mail
+                                  }
+                                  entity Orte {
+                                    Ort
+                                    --
+                                  }
+                                  Personen }o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist NOT NULL</p>
+
+                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                    PersNr
+                                    --
+                                    Name
+                                    E-Mail
+                                  }
+                                  entity Orte {
+                                    Ort
+                                    --
+                                  }
+                                  Personen |o-right-o| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE</p>
+
+                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                    PersNr
+                                    --
+                                    Name
+                                    E-Mail
+                                  }
+                                  entity Orte {
+                                    Ort
+                                    --
+                                  }
+                                  Personen |o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE NOT NULL</p>
+                                  
+
+                                  
+                                    
+                                    <aside class="notes">Wenn im ER-Diagramm die Krähenfuß-Notation verwendet wird, können die genaueren Kardinalitätsrestriktionen ins Relationenmodell übernommen werden. Im ersten und dritten Diagramm sind Personen in genau einem Ort geboren, d. h. die Geburtsort-Spalte muss NOT NULL sein. NOT NULL heißt, es darf keine NULL-Werte in der Spalte geben. UNIQUE heißt, dass keine doppelten Werte vorkommen dürfen. Das wäre der Fall, wenn in einem Ort nur eine Person geboren sein dürfte.</aside>
+                            </section>
+                            <section>
+                                    <h3>NOT NULL / UNIQUE</h3>
+                                    <img style="position: absolute; right:1cm; width:9cm; max-height:1000px" uml="entity Personen {
+                                        PersNr
+                                        --
+                                        Name
+                                        E-Mail
+                                      }
+                                      entity Orte {
+                                        Ort
+                                        --
+                                      }
+                                      entity Kreditkarten {
+                                        Kreditkartennr
+                                        --
+                                        ...
+                                      }
+                                      Personen }o-right-|| Orte : Geburtsort
+                                      Personen ||--o| Kreditkarten : haben"/>
+                                    
+                                        <p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;E-Mail,<br>&nbsp;Geburtsort NOT NULL,<br>&nbsp;Kreditkarte UNIQUE<br>)</p>
+                                        
+                                        <aside class="notes">Personen brauchen einen Geburtsort, daher muss die Spalte NOT NULL sein. Da jede Kreditkarte nur einmal verwendet werden darf, ist die Fremdschlüsselspalte &quot;Kreditkarte&quot; UNIQUE. Der &quot;o&quot; im ER-Diagramm bei Kreditkarten gibt an, dass es Personen ohne Kreditkarte geben darf, daher sind NULL-Werte in der Kreditkarten-Spalte erlaubt. </aside>
+                                </section>
+
+                            <section>
                                 <h2>Generalisierung im Relationenmodell</h2>
                                 <p>Mehrere Möglichkeiten<br>der Umsetzung:</p>
                                 <ul>
@@ -739,74 +797,7 @@
                                                     union all SELECT kundennr, name, email, null as bonuspunkte, '555-...' as ust_id, 'Geschäftskunde' as type_tag FROM kunden WHERE kundennr = 8"></span>
                                                 <aside class="notes">In dieser Variante ist sowohl Suchen als auch Einfügen besonders einfach. Bei komplexen Generalisierungshierarchien kann es jedoch sehr viele Spalten mit vielen NULL-Werten geben.</aside>
                                         </section>
-                                        <section>
-                                            <h3>NOT NULL / UNIQUE</h3>
-                                            
-                                            <p><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
-                                                PersNr
-                                                --
-                                                Name
-                                                E-Mail
-                                              }
-                                              entity Orte {
-                                                Ort
-                                                --
-                                              }
-                                              Personen }o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist NOT NULL</p>
-
-                                              <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
-                                                PersNr
-                                                --
-                                                Name
-                                                E-Mail
-                                              }
-                                              entity Orte {
-                                                Ort
-                                                --
-                                              }
-                                              Personen |o-right-o| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE</p>
-
-                                              <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
-                                                PersNr
-                                                --
-                                                Name
-                                                E-Mail
-                                              }
-                                              entity Orte {
-                                                Ort
-                                                --
-                                              }
-                                              Personen |o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE NOT NULL</p>
-                                              
-
-                                              
-                                                
-                                                <aside class="notes">Wenn im ER-Diagramm die Krähenfuß-Notation verwendet wird, können die genaueren Kardinalitätsrestriktionen ins Relationenmodell übernommen werden. Im ersten und dritten Diagramm sind Personen in genau einem Ort geboren, d. h. die Geburtsort-Spalte muss NOT NULL sein. NOT NULL heißt, es darf keine NULL-Werte in der Spalte geben. UNIQUE heißt, dass keine doppelten Werte vorkommen dürfen. Das wäre der Fall, wenn in einem Ort nur eine Person geboren sein dürfte.</aside>
-                                        </section>
-                                        <section>
-                                                <h3>NOT NULL / UNIQUE</h3>
-                                                <img style="position: absolute; right:1cm; width:9cm; max-height:1000px" uml="entity Personen {
-                                                    PersNr
-                                                    --
-                                                    Name
-                                                    E-Mail
-                                                  }
-                                                  entity Orte {
-                                                    Ort
-                                                    --
-                                                  }
-                                                  entity Kreditkarten {
-                                                    Kreditkartennr
-                                                    --
-                                                    ...
-                                                  }
-                                                  Personen }o-right-|| Orte : Geburtsort
-                                                  Personen ||--o| Kreditkarten : haben"/>
-                                                
-                                                    <p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;E-Mail,<br>&nbsp;Geburtsort NOT NULL,<br>&nbsp;Kreditkarte UNIQUE<br>)</p>
-                                                    
-                                                    <aside class="notes">Personen brauchen einen Geburtsort, daher muss die Spalte NOT NULL sein. Da jede Kreditkarte nur einmal verwendet werden darf, ist die Fremdschlüsselspalte &quot;Kreditkarte&quot; UNIQUE. Der &quot;o&quot; im ER-Diagramm bei Kreditkarten gibt an, dass es Personen ohne Kreditkarte geben darf, daher sind NULL-Werte in der Kreditkarten-Spalte erlaubt. </aside>
-                                            </section>
+                                        
                                             <section>
                                                 <h2>Relationale Algebra</h2>
                                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 18</div>
@@ -1683,22 +1674,28 @@
                         </div>
                     </div>
             
-                    <script src="reveal.js/js/reveal.js"></script>
-                    <script src="lib/jquery.js"></script>
-                    <script src="lib/lodash.js"></script>
-                    <script src="lib/backbone.js"></script>
-                    <script src="lib/joint.min.js"></script>
-                    <script src="lib/deflate.js"></script>
-            
-                    <script src="src/init_reveal.js"></script>
-            
-                    <script>
-                    if(window.location.search.match( /print-pdf/gi )) {
-                            document.getElementById('header').style="display:none";
-                            document.getElementById('footer').style="display:none";
-                    }
-                    </script>
-            
-            
-                </body>
-            </html>
+                    <script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+        <script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>

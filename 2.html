@@ -6,8 +6,8 @@
 
 		<title>Datenbanken - Kapitel 2 - ER-Modelle</title>
 
-		<link rel="stylesheet" href="reveal.js/css/reset.css">
-		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
 
         <link rel="stylesheet" href="src/slides.css">
         <link rel="stylesheet" href="src/sql.css">
@@ -23,17 +23,6 @@
         <!--<script defer src="lib/fontawesome.all.min.js"/>-->
         <link href="lib/fontawesome.all.min.css" rel="stylesheet">
         <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
-
-
-
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
 	</head>
 	<body>
 		<div class="reveal">
@@ -304,8 +293,8 @@
                                     </div></div>
                                     <aside class="notes">Eine Person hat eine Personennummer, einen Namen, aber mehrere (beliebig viele) Telefonnummern. Im unteren Beispiel hat eine Person mehrere Telefonnummern, die wiederrum aus Typ (z. B. &quot;mobil&quot;) und der Telefonnummer bestehen. Es sind beliebige Schachtelungen möglich.</aside>
                                 </section>
-                                <section>
-                                    <h2>Beziehungen</h2>
+                                <section data-auto-animate>
+                                    <h2 data-id="h_beziehungen">Beziehungen</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 9-10, 12</div>
                                     <ul>
                                             <li>Beteiligt sind mind. 2 Entity-Typen</li>
@@ -313,7 +302,7 @@
                                             <li>Funktionalitäten: 1:1, 1:N / N:1, N:M</li>
                                         </ul>
                                     <br>
-                                    <div id="er_termin_1_n">
+                                    <div data-id="er_termin_1_n" id="er_termin_1_n">
                                     <div class="stretch erd">
                                             [[
                                              { _e: "Personen", pos: [150, 100],
@@ -342,9 +331,9 @@
                                                     </div>
                                 </section>
 
-                                <section>
-                                    <h2>1:N-Beziehungen</h2>
-                                    <div data-clone="er_termin_1_n"></div>
+                                <section data-auto-animate>
+                                    <h2 data-id="h_beziehungen">1:N-Beziehungen</h2>
+                                    <div data-id="er_termin_1_n" data-clone="er_termin_1_n"></div>
                                     <ul style="position:absolute; top:400px">
                                         <li>Eine Person hat <b>N</b> Termine (beliebig viele)</li>
                                         <li>Ein Termin gehört immer zu <b>einer</b> Person</li>
@@ -886,7 +875,7 @@
                                     <aside class="notes">Gäste bestellen in einer Bar Getränke. Ein Gast kann mehrere Getränke trinken (Kunde Nr. 5 trinkt Rotwein und Mineralwasser) und ein Getränk kann von mehreren Gästen bestellt werden (Kunden 7 und 8 trinken Weißwein). Das Problem hier ist jedoch, dass niemand ein bestimmtes Getränk mehrfach trinken kann. Wir lösen das Problem, indem ein Kunde mehrere Bestellpositionen aufgibt. Jede Position erhält eine für den Kunden eindeutige Nummer und enthält nur ein Getränk. Bestellt ein Kunde 2x Rotwein und 1x Mineralwasser, werden dazu drei Bestellpositionen erfasst.</aside>
                                 </section>
 
-                                <section>
+                                <section data-auto-animate>
                                     <h2>Ternäre Beziehungen</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
                                     <ul>
@@ -928,7 +917,7 @@
                                                                 </div>
                                                             </div>
                                 </section>
-                                <section>
+                                <section data-auto-animate>
                                     <h2>Ternäre Beziehungen</h2>
                                     <div data-clone="er_degree_3"></div>
                                     <ul style="position: absolute; top:500px; font-size: 80%">
@@ -1340,22 +1329,28 @@
                         </div>
                     </div>
             
-                    <script src="reveal.js/js/reveal.js"></script>
-                    <script src="lib/jquery.js"></script>
-                    <script src="lib/lodash.js"></script>
-                    <script src="lib/backbone.js"></script>
-                    <script src="lib/joint.min.js"></script>
-                    <script src="lib/deflate.js"></script>
-            
-                    <script src="src/init_reveal.js"></script>
-            
-                    <script>
-                    if(window.location.search.match( /print-pdf/gi )) {
-                            document.getElementById('header').style="display:none";
-                            document.getElementById('footer').style="display:none";
-                    }
-                    </script>
-            
-            
-                </body>
-            </html>
+                    <script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+        <script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>

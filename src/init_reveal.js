@@ -17,14 +17,8 @@ Reveal.initialize({
  sampler : {
    removeIndentation: true
  },
+ plugins: [ RevealMarkdown, RevealHighlight, RevealZoom, RevealMath, RevealNotes, RevealSearch ],
  dependencies: [
-    { src: 'reveal.js/plugin/markdown/marked.js' },
-    { src: 'reveal.js/plugin/markdown/markdown.js' },
-    { src: 'reveal.js/plugin/notes/notes.js', async: true },
-    { src: 'reveal.js/plugin/highlight/highlight.js', async: true },
-    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
-    { src: 'reveal.js/plugin/math/math.js', async: true },
-    { src: 'reveal.js/plugin/search/search.js', async: true },
     { src: 'src/sql.js', async: true },
     { src: 'src/clone.js', async: true },
     { src: 'src/erd.js' },

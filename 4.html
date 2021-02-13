@@ -6,8 +6,8 @@
 
 		<title>Datenbanken - Kapitel 4 - SQL</title>
 
-		<link rel="stylesheet" href="reveal.js/css/reset.css">
-		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+        <link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
 
         <link rel="stylesheet" href="src/slides.css">
         <link rel="stylesheet" href="src/sql.css">
@@ -23,17 +23,6 @@
         <!--<script defer src="lib/fontawesome.all.min.js"/>-->
         <link href="lib/fontawesome.all.min.css" rel="stylesheet">
         <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
-
-
-
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
 	</head>
 	<body>
 		<div class="reveal">
@@ -1181,21 +1170,28 @@ FROM produkte
                         </div>
                     </div>
             
-                    <script src="reveal.js/js/reveal.js"></script>
-                    <script src="lib/jquery.js"></script>
-                    <script src="lib/lodash.js"></script>
-                    <script src="lib/backbone.js"></script>
-                    <script src="lib/joint.min.js"></script>
-            
-                    <script src="src/init_reveal.js"></script>
-            
-                    <script>
-                    if(window.location.search.match( /print-pdf/gi )) {
-                            document.getElementById('header').style="display:none";
-                            document.getElementById('footer').style="display:none";
-                    }
-                    </script>
-            
-            
-                </body>
-            </html>
+                    <script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+        <script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>

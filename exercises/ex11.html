@@ -22,7 +22,7 @@
                 <b>Datenbanken - SS 2020</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 11 vom 13. - 15.07.2020</b>
+                <b>Übungsblatt 11 vom 20.01.2021</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -30,33 +30,44 @@
         </header>
 
         <section style="padding-top: 2.5cm">
-          <h1>Aufgabe 1: Anwendungsentwicklung mit JDBC (10P)</h1>
-          <p>Abgabe-Deadline: 13.07.2020 12:00 im Moodle</p>
-          <p><em>Da Sie für diese Aufgabe Ihr Datenbank-Passwort im Klartext in Ihren Quellcode schreiben müssen, empfiehlt es sich, dies vorher auf ein zufälliges Passwort zu ändern. Verwenden Sie dazu</em> <code>ALTER USER ihr_benutzername PASSWORD 'neues_passwort';</code> <em>Tragen Sie dieses neue Passwort dann auch in Ihren DBeaver-Verbindungseinstellungen ein.</em></p>
+          <h1>Aufgabe 1: User-Defined Functions (10P)</h1>
+          <p>Abgabe-Deadline: 20.01.2021 11:00 im Moodle</p>
           <ol>
-            <li>Erstellen Sie im DBeaver eine Tabelle &quot;Kontakte&quot; mit den Spalten Name (<code>VARCHAR(200) PRIMARY KEY</code>), handynummer (<code>VARCHAR(20)</code>) und gesucht (<code>INT</code>).</li>
-            <li>Fügen Sie im DBeaver einen neuen Kontakt ein: Peter hat die handynummer 0151-555</li>
-            <li>Schreiben Sie ein Konsolenprogramm in Java und binden Sie den PostgreSQL-JDBC-Treiber ein; entweder indem Sie die Jar-Datei von <a href="https://jdbc.postgresql.org/" target="_blank">https://jdbc.postgresql.org/</a> herunterladen oder mittels Maven.</li>
-            <li>Bauen Sie in Ihrem Java-Programm eine Verbindung zu Ihrer Datenbank auf.</li>
-            <li>Geben Sie alle Kontakte (Name und Handynummer) sortiert nach ihrem Namen aus.</li>
+            <li>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine UDF namens <code>fakultaet(INT)</code>, die eine Integer-Zahl entgegennimmt und einen Integer ausgibt: die Fakultät der übergebenen Zahl.</li>
+            <li>Was ist die größte Zahl, deren Fakultät Sie mit Ihrer Funktion berechnen können?</li>
+        </section>
+
+        <section>
+          <h1>Aufgabe 2: Stored Procedures</h1>
+          <p>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine Prozedur namens <code>kontakte_vorbereiten(anzahl INT)</code>, die eine Tabelle erstellt und diese mit Testdaten füllt.</p>
+          <ol>
+            <li>Die Prozedur soll die Tabelle <code>kontakte</code> droppen, falls Sie schon existiert: <code>DROP TABLE IF EXISTS kontakte;</code></li>
+            <li>Nun soll die Prozedur die <code>kontakte</code>-Tabelle anlegen. Die Spalten sind wie im letzten Übungsblatt <code>name VARCHAR(200) PRIMARY KEY, handynummer VARCHAR(20), gesucht INT NOT NULL DEFAULT 0</code>.</li>
+            <li>Der Parameterwert, der der Prozedur übergeben wird, bestimmt die Anzahl der Zeilen, die eingefügt werden. Erzeugen Sie entsprechend viele Dummy-Datensätze, z. B. ('Peter1', '0151-1'), ('Peter2', '0151-2'), usw.</li>
+            <li>Wenn eine negative Zahl übergeben wird, soll die Prozedur eine Exception &quot;Ungültige Anzahl&quot; werfen.</li>
+            <li>Rufen Sie die Prozedur auf, um hunderttausend Kontakte zu generieren.</li>
+          </ol>
+          <p>Hinweis: Die in einer For-Schleife <code>FOR _variablenname IN _von .. _bis LOOP ... END LOOP;</code> verwendeten Variablen müssen Sie in der <code>DECLARE</code>-Section definieren (oder sie sind Parameter).</p>
+        </section>
+<!--
+          <section>
+          <h1>Aufgabe 2: Trigger</h1>
+          <ol>
+            <li>Erstellen Sie für ein soziales Netzwerk eine Tabelle <code>freundschaften</code> mit den Spalten <code>person1</code> und <code>person2</code>.</li>
+            <li>Erstellen Sie eine Triggerfunktion und einen Trigger, der bewirkt, dass beim Einfügen einer Freundschaft (A, B) auch eine Freundschaft in die umgekehrte Richtung (B, A) eingefügt wird.</li>
+            <li>Testen Sie Ihren Trigger.</li>
           </ol>
         </section>
 
-          <section>
-          <h1>Aufgabe 2: Anwendungsentwicklung mit JDBC (Fortsetzung)</h1>
-          <ol start="6">
-            <li>Implementieren Sie eine Suchfunktion für ihr Programm aus Aufgabe 1:
-                <ol>
-                    <li>Der Benutzer gibt auf der Konsole einen Namen ein</li>
-                    <li>Wird ein leerer Name eingegeben, sollen wie gehabt alle Kontakte ausgegeben werden.</li>
-                    <li>Andernfalls wird nur der Kontakt mit dem eingegeben Namen ausgegeben.</li>
-                    <li>Gibt es keinen Kontakt mit dem eingegebenen Namen, soll eine Meldung &quot;kein Kontakt gefunden&quot; angezeigt werden.</li>
-                    <li>Verhindern Sie SQL-Injections!</li>
-                </ol></li>
-            <li>Hinter dem Kontakt soll in Klammern die Anzahl stehen, wie oft nach ihr oder ihm gesucht wurde (&quot;gesucht&quot;-Spalte).</code></li>
-            <li>Immer wenn nach einem bestimmten Kontakt gesucht wird, soll in der Datenbank die &quot;gesucht&quot;-Zahl für diesen Kontakt um eins erhöht werden.</li>
+        <section>
+          <h1>Aufgabe 3: B+-Bäume</h1>
+          <p>Betrachten Sie folgenden B+-Baum der Klasse (k=1, k*=1):</p>
+          <img src="img/ex6_tree.png" alt="B+-Baum" style="height:3cm">
+          <ol>
+              <li>Lösen Sie mit Stift und Papier:<br>Fügen Sie Leo und anschließend Zoe in den Baum ein. Zeichnen Sie den kompletten Baum, so wie er nach den beiden Einfügungen aussieht.</li>
+              <li>Lösen Sie mit dem B+-Baum-Simulations-Tool auf <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a>:<br>Fügen Sie 20 Zahlen so in einen B+-Baum der Klasse (k=2, k*=2, also Max. Degree=5) ein, sodass dieser die Höhe 2 hat.</li>
           </ol>
-        </section>
+      </section>-->
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

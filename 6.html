@@ -56,7 +56,7 @@
                             <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                             <h1>Datenbanken</h1>
                             <h3>Kapitel 6: Anwendungsentwicklung</h3>
-                            <h4 style="text-align:center">2020-07-01</h4>
+                            <h4 style="text-align:center">2020-12-22</h4>
                             <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                             <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                         </section>
@@ -285,7 +285,7 @@ iter.close();</code></pre>
                 </section>
 
                 <section>
-                    <h2>PG/plSQL</h2>
+                    <h2>PL/pgSQL</h2>
                     <h4>Block:</h4>
                     <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
                         [ DECLARE 
@@ -296,7 +296,7 @@ iter.close();</code></pre>
                     </code></pre>
                     <h4>Kontrollstrukturen:</h4>
                         <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
-                            IF ... THEN ... [ELSE ...] END;
+                            IF ... THEN ... [ELSE ...] END IF;
                             WHILE ... LOOP ... END LOOP;
                             LOOP ... EXIT WHEN ...; END LOOP;
                             FOR ... IN ... .. ... LOOP ... END LOOP;
@@ -738,7 +738,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 
 <section>
     <h2>B-Bäume</h2>
-    <p class="small">Logarithmischer Aufwand: $O(log_2(n))$</p>
+    <p class="small">Logarithmischer Aufwand: $O(log_k(n))$</p>
     <p class="small">Simulation: <a href="https://www.cs.usfca.edu/~galles/visualization/BTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BTree.html</a></p>
     <div class="columns" style="margin-top: -2mm;">
         <div><ul class="small">
@@ -830,7 +830,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <div class="columns">
         <div><img src="img/6/bplustree_insert4.png" class="noborder" alt="B+-Baum"></div>
         <div><p class="fragment small" style="text-align: center;">998 löschen<br>&rightarrow;</p></div>
-        <div><img src="img/6/bplustree_delete1.png" class="fragment noborder" alt="B+-Baum"></div>
+        <div><img src="img/6/bplustree_delete0.png" class="fragment noborder" alt="B+-Baum"></div>
     </div>
     <aside class="notes">Eine Löschung ist am einfachsten, wenn dabei kein Unterlauf entsteht. Dies ist der Fall, wenn wir in unserem B+-Baum den Schlüssel 998 löschen. In jedem Blatt müssen mindestens k* (=1) Einträge sein. Das ist hier nach der Löschung der 998 im Blattknoten unten rechts der Fall, also muss nichts weiter unternommen werden.</aside>
 </section>
@@ -855,7 +855,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
         <div><p class="fragment small" style="text-align: center;">29 löschen<br>&rightarrow;</p></div>
         <div><img src="img/6/bplustree_delete1.png" class="fragment noborder" alt="B+-Baum"></div>
     </div>
-    <aside class="notes">Gibt es in einem Nachbarknoten (erst links schauen, dann rechts) mehr als k* Einträge, kann ein Ausgleich mit diesem vorgenommen werden. Löschen wir in unserem B+-Baum die 29, haben wir einen Unterlauf. Da es im rechten Nachbarblatt jedoch genügend Einträge gibt, können wir die 88 einfach nach links verschieben. Der Wegweiser im Vaterknoten muss angepasst werden, weil rechts Einträge &ge; 998 sind.</aside>
+    <aside class="notes">Gibt es in einem Nachbarknoten (erst links schauen, dann rechts) mehr als k* Einträge, kann ein Ausgleich mit diesem vorgenommen werden. Löschen wir in unserem B+-Baum die 29, haben wir einen Unterlauf. Da es im rechten Nachbarblatt genügend Einträge gibt, können wir die 88 einfach nach links verschieben. Der Wegweiser im Vaterknoten muss angepasst werden, weil rechts Einträge &ge; 998 sind.</aside>
 </section>
 
 <section>

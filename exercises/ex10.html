@@ -18,11 +18,11 @@
     <body>
         <header>
             <div>
-            <div>
-                <b>Datenbanken - SS 2020</b><br>
+              <div>
+                <b>Datenbanken - WS 2020/21</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 10 vom 06.07.2020</b>
+                <b>Übungsblatt 10 vom 13.01.2020</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -30,68 +30,32 @@
         </header>
 
         <section style="padding-top: 2.5cm">
-          <h1>Aufgabe 1: Transaktionen, Logging und Recovery (10P)</h1>
-          <p>Abgabe-Deadline: 06.07.2020 12:00 im Moodle</p>
-          <p><em>Für dieses Übungsblatt finden keine Zoom-Sessions und keine gemeinsame Übung statt.</em></p>
-          <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
-          <table border="0" style="width: 100%; margin-top: -5mm;">
-          <tr>
-              <td style="width:10mm">&nbsp;</td>
-              <td>&nbsp;</td>
-              <td style="text-align: center; width:15mm">Richtig</td>
-              <td style="text-align: center; width:15mm">Falsch</td>
-          </tr>
-          <tr>
-              <td>1.</td><td>Bei jedem Commit müssen die durch die Transaktion geänderten Datenblöcke (Tabellendaten) auf die Festplatte geschrieben werden.</td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-              <td>2.</td><td>Flush bedeutet, dass Inhalte im RAM auf die Festplatte geschrieben werden.</td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-              <td>3.</td><td>Wenn nie ein Flush passieren würde, könnten committete Änderungen verloren gehen.</td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-              <td>4.</td><td>Bei jeder Neueintragung im Transaktionslog muss diese unbedingt auf die Festplatte geschrieben werden.</td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-              <td>5.</td><td>Die Undo-Info im Transaktionslog wird verwendet, um nach dem Crash durchgeführte Änderungen rückgängig zu machen.</td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-              <td>6.</td><td>Die Redo-Info im Transaktionslog wird verwendet, um noch nicht auf die Festplatte geschriebene Aktionen von Gewinner-Transaktionen auszuführen.</td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-              <td>7.</td><td>Transaktionskonsistente Checkpoints werden angelegt, wenn keine Transaktion mehr läuft.</td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-              <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-            <td>8.</td><td>Multi-Version-Concurrency-Control wird eingesetzt, damit stets auf historische Werte zugegriffen werden kann. Z. B. gib mir den Preis der Spülmaschinentabs, wie er letzte Woche Mittwoch um 12:00 Uhr war.</td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-            <td>9.</td><td>Solange eine Transaktion noch nicht committet hat, ist es beim Multi-Version-Concurrency-Control ausreichend, wenn die Daten der neu erstellten Versionen nur im RAM sind und noch nicht auf die Festplatte geschrieben wurden.</td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          <tr>
-            <td>10.</td><td>Bei Multi-Version-Concurrency-Control treten in der Regel weniger Wartesituationen auf als z. B. beim SX-Sperrverfahren.</td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-            <td style="text-align: center"><i class="far fa-square"></i></td>
-          </tr>
-          </table>
+          <h1>Aufgabe 1: Anwendungsentwicklung mit JDBC (10P)</h1>
+          <p>Abgabe-Deadline: 13.01.2021 11:00 im Moodle</p>
+          <p><em>Da Sie für diese Aufgabe Ihr Datenbank-Passwort im Klartext in Ihren Quellcode schreiben müssen, empfiehlt es sich, dies vorher auf ein zufälliges Passwort zu ändern. Verwenden Sie dazu</em> <code>ALTER USER ihr_benutzername PASSWORD 'neues_passwort';</code> <em>Tragen Sie dieses neue Passwort dann auch in Ihren DBeaver-Verbindungseinstellungen ein.</em></p>
+          <ol>
+            <li>Erstellen Sie im DBeaver eine Tabelle &quot;Kontakte&quot; mit den Spalten Name (<code>VARCHAR(200) PRIMARY KEY</code>), handynummer (<code>VARCHAR(20)</code>) und gesucht (<code>INT NOT NULL DEFAULT 0</code>).</li>
+            <li>Fügen Sie im DBeaver einen neuen Kontakt ein: Peter hat die handynummer 0151-555</li>
+            <li>Schreiben Sie ein Konsolenprogramm in Java und binden Sie den PostgreSQL-JDBC-Treiber ein; entweder indem Sie die Jar-Datei von <a href="https://jdbc.postgresql.org/" target="_blank">https://jdbc.postgresql.org/</a> herunterladen oder mittels Maven.</li>
+            <li>Bauen Sie in Ihrem Java-Programm eine Verbindung zu Ihrer Datenbank auf.</li>
+            <li>Geben Sie alle Kontakte (Name und Handynummer) sortiert nach ihrem Namen aus.</li>
+          </ol>
+        </section>
+
+          <section>
+          <h1>Aufgabe 2: Anwendungsentwicklung mit JDBC (Fortsetzung)</h1>
+          <ol start="6">
+            <li>Implementieren Sie eine Suchfunktion für ihr Programm aus Aufgabe 1:
+                <ol>
+                    <li>Der Benutzer gibt auf der Konsole einen Namen ein</li>
+                    <li>Wird ein leerer Name eingegeben, sollen wie gehabt alle Kontakte ausgegeben werden.</li>
+                    <li>Andernfalls wird nur der Kontakt mit dem eingegeben Namen ausgegeben.</li>
+                    <li>Gibt es keinen Kontakt mit dem eingegebenen Namen, soll eine Meldung &quot;kein Kontakt gefunden&quot; angezeigt werden.</li>
+                    <li>Verhindern Sie SQL-Injections!</li>
+                </ol></li>
+            <li>Hinter dem Kontakt soll in Klammern die Anzahl stehen, wie oft nach ihr oder ihm gesucht wurde (&quot;gesucht&quot;-Spalte).</code></li>
+            <li>Immer wenn nach einem bestimmten Kontakt gesucht wird, soll in der Datenbank die &quot;gesucht&quot;-Zahl für diesen Kontakt um eins erhöht werden.</li>
+          </ol>
         </section>
 
 <script src="../lib/jquery.js"></script>

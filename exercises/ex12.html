@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 12</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+        <style type="text/css">
+          li {
+            margin-left: -5mm;
+          }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+            <div>
+                <b>Datenbanken - WS 2020/21</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 12 vom 27.01.2021</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+        </div>
+        <hr>
+        </header>
+
+        <section style="padding-top: 2.5cm">
+          <h1>Aufgabe 0: Bonusaufgabe (7P)</h1>
+          <p>Abgabe-Deadline: 27.01.2021 11:00 im Moodle</p>
+          <li>Betrachten Sie das folgende <b>fehlerhafte</b> Relationenschema.</li>
+            <li>Nennen Sie alle Fehler, die Ihnen auffallen und machen Sie Verbesserungsvorschläge.</li>
+            <li></li>
+
+
+<style type="text/css">
+	table.tableizer-table {
+		font-size: 12px;
+		border: 1px solid #CCC; 
+		font-family: Arial, Helvetica, sans-serif;
+	} 
+	.tableizer-table td {
+		padding: 4px;
+		margin: 3px;
+		border: 1px solid #CCC;
+	}
+	.tableizer-table th {
+		color: #A4A4A4;
+		font-weight: bold;
+                font-style: italic;
+                font-size: 8px;
+	}
+        caption { 
+	        caption-side: top;
+	        font-style: italic;
+                font-size: 15px;
+}
+</style>
+
+
+<table class="tableizer-table" style="float:left;margin-right:40px">
+<caption>
+   kunde
+</caption>
+<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(100)</th><th>VARCHAR(100)<br>NOT NULL</th></tr></thead><tbody>
+ <tr><td><b>kunde_id</b></td><td><b>name</b></td><td><b>email</b></td></tr>
+ <tr><td>117</td><td>Michael</td><td>michael@example.de</td></tr>
+ <tr><td>682</td><td>Elena</td><td>elena@example.de</td></tr>
+</tbody></table>
+
+<table class="tableizer-table">
+<caption>
+   haendler
+</caption>
+<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(100)</th><th>VARCHAR(100)</th></tr></thead><tbody>
+ <tr><td><b>haendler_id</b></td><td><b>name</b></td><td><b>land</b></td></tr>
+ <tr><td>4</td><td>Haushalt AG</td><td>Österreich</td></tr>
+ <tr><td>9</td><td>Alternativ GmbH</td><td>Deutschland</td></tr>
+</tbody></table>
+
+<p></p>
+
+<table class="tableizer-table">
+<caption>
+   produkt
+</caption>
+<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(500)</th><th>INT</th><th>VARCHAR(40)</th><th>VARCHAR(1000)</th><th>INT<br>FK auf haendler.haendler_id</th></tr></thead><tbody>
+ <tr><td><b>produkt_id</b></td><td><b>bezeichnung</b></td><td><b>preis</b></td><td><b>preiskategorie</b></td><td><b>tags</b></td><td><b>haendler</b></td></tr>
+ <tr><td>16</td><td>Kühlschrank</td><td>500</td><td>mittel</td><td>Haushalt, Kühlung, stromsparend</td><td>4</td></tr>
+ <tr><td>23</td><td>Gefrierschrank</td><td>150</td><td>günstig</td><td>Haushalt, Kühlung</td><td>4</td></tr>
+</tbody></table>
+
+<p></p>
+
+<table class="tableizer-table">
+<caption>
+   bewertung
+</caption>
+<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(5)</th><th>VARCHAR(100)</th><th>VARCHAR(100)<br>FK auf kunde.name</th><th>INT<br>FK auf haendler.haendler_id</th><th>INT<br>FK auf produkt.produkt_id</th><th>VARCHAR(40)<br>CHECK(type_tag='Produktbewertung'<br>OR type_tag='Händlerbewertung')</th></tr></thead><tbody>
+ <tr><td><b>bewertung_id</b></td><td><b>sterne</b></td><td><b>text</b></td><td><b>verfasser</b></td><td><b>bewerteter_haendler</b></td><td><b>bewertetes_produkt</b></td><td><b>type_tag</b></td></tr>
+ <tr><td>437</td><td>*****</td><td>Alles super!</td><td>Elena</td><td>&nbsp;</td><td>23</td><td>Produktbewertung</td></tr>
+ <tr><td>265</td><td>**</td><td>Haben stark nachgelassen...</td><td>Michael</td><td>9</td><td>&nbsp;</td><td>Händlerbewertung</td></tr>
+</tbody></table>
+
+</br>
+</section>
+
+<section>
+  <h1>Aufgabe 1: B+-Bäume (10P)</h1>
+  <p>Abgabe-Deadline: 27.01.2021 11:00 im Moodle</p>
+  <p>Betrachten Sie folgenden B+-Baum der Klasse (k=1, k*=1):</p>
+  <img src="img/ex6_tree.png" alt="B+-Baum" style="height:3cm">
+      <p>Lösen Sie mit Stift und Papier:<br>Fügen Sie Leo und anschließend Zoe in den Baum ein. Zeichnen Sie den kompletten Baum, so wie er nach den beiden Einfügungen aussieht.</p>
+      <!--<li>Lösen Sie mit dem B+-Baum-Simulations-Tool auf <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a>:<br>Fügen Sie 20 Zahlen so in einen B+-Baum der Klasse (k=2, k*=2, also Max. Degree=5) ein, sodass dieser die Höhe 2 hat.</li>-->
+  
+</section>
+
+
+        <section style="padding-top: 3.5cm">
+          <h1>Aufgabe 2: Trigger</h1>
+          <ol>
+            <li>Erstellen Sie für ein soziales Netzwerk eine Tabelle <code>freundschaften</code> mit den Spalten <code>person1</code> und <code>person2</code>.</li>
+            <li>Erstellen Sie eine Triggerfunktion und einen Trigger, der bewirkt, dass beim Einfügen einer Freundschaft (A, B) auch eine Freundschaft in die umgekehrte Richtung (B, A) eingefügt wird.</li>
+            <li>Testen Sie Ihren Trigger.</li>
+          </ol>
+        </section>
+
+        
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

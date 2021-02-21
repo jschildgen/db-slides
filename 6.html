@@ -1,0 +1,1328 @@
+<!doctype html>
+<!--
+    Database Preparation
+    Schema + Data from http://sqlfiddle.com/#!17/11955/1
+    !!! Change datatype of kunden.kundennummer to SERIAL !!!
+
+    ALTER TABLE webshop.produkte RENAME COLUMN produktnummer TO produktnr;
+
+    update kunden set passwort = md5('geheim');
+
+    alter sequence webshop.kunden_kundennummer_seq restart with 9;
+-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken - Kapitel 6 - Anwendungsentwicklung</title>
+
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                        <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                            <h1>Datenbanken</h1>
+                            <h3>Kapitel 6: Anwendungsentwicklung</h3>
+                            <h4 style="text-align:center">2020-12-22</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                        </section>
+                        <section>
+                          <h3>In diesem Kapitel erstellen wir...</h3>
+                          <ul class="small">
+                              <li>... Java-Anwendungen, die mit JDBC mit der Datenbank kommunizieren,</li>
+                              <li>... Funktionen und Prozeduren direkt in der Datenbank,</li>
+                              <li>... Trigger,</li>
+                              <li>... Indexe.</li>
+                          </ul>
+                      </section> 
+                      <section>
+                          <h3>Anwendungsentwicklung</h3>
+                          <div class="trackinfo"><i class="fas fa-headphones"></i> 99</div>
+                            <ul class="small">
+                                <li class="fragment">Lauffähige Anwendung in Java, C++, Python, PHP, ...</li>
+                                <li class="fragment">Konsolenprogramm, GUI, App, Serverprozess, ...</li>
+                                <li class="fragment">Komponenten:
+                                    <ul>
+                                        <li>Connection (Aufbau einer Verbindung zur DB)</li>
+                                        <li class="fragment">Statement (Ausführung einer SQL-Anfrage)</li class="fragment">
+                                        <li class="fragment">PreparedStatement (Statement mit Platzhaltern)</li class="fragment">
+                                        <li class="fragment">ResultSet (Ergebnis einer ausgeführten Anfrage)</li class="fragment">
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <aside class="notes">Im ersten Teil dieses Kapitels betrachten wir Anwendungen, die nicht in der Datenbank laufen, sondern eigenständig sind. Sie stellen eine Verbindung zur Datenbank her, um an diese Anfragen zu schicken und die Ergebnisse dieser Anfragen zu verarbeiten.</aside>
+
+                          <div class="sl-block" data-block-type="text" style="height: auto; width: 246px; left: 677px; top: 176.642px;" data-block-id="1953b372e575e378d1427477af8b1697">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; background-color:rgba(66, 169, 170, 0.99); border-style: solid; border-width: 1px; border-color: rgb(34, 34, 34);" data-fragment-index="0">
+                                <p style="text-align:center; color:white">Anwendung</p>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 799px; top: 229.642px;" data-block-id="672bf175b9e8a52980602cc2fc21f817">
+                            <div class="sl-block-content" data-line-x1="181" data-line-y1="247" data-line-x2="180" data-line-y2="142" data-line-color="#000000" data-line-start-type="arrow" data-line-end-type="none" style="z-index: 13;" data-line-width="8px" data-fragment-index="0"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="105" viewBox="180 142 1 105">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="180.88571946838732" y1="235.00054418066827" x2="180" y2="142"></line>
+                                    <line stroke="#000000" stroke-width="8" x1="180.88571946838732" y1="235.00054418066827" x2="180" y2="142"></line>
+                                    <polygon fill="#000000" transform="translate(180.88571946838732,235.00054418066827) rotate(-0.546)" points="0,12 12,-12 -12,-12"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="shape" style="width: 245px; height: 59.5px; left: 678px; top: 351.642px;" data-block-id="c5318ebc130b3ee4af70f0e7f5a66b0b">
+                            <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 60">
+                                    <rect width="245" height="59.5" rx="0" ry="0" class="shape-element" fill="rgb(111, 168, 220)"></rect>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 678px; top: 328.642px;" data-block-id="10bb4dffa7d7c5d1c68a72c2ef8c8568">
+                            <div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(109, 158, 235)" data-shape-stretch="true" style="z-index: 15;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+                                    <defs>
+                                        <clipPath id="shape-mask-3-1577110259178">
+                                            <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10"></ellipse>
+                                        </clipPath>
+                                    </defs>
+                                    <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(109, 158, 235)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-3-1577110259178)"></ellipse>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="shape" style="width: 245px; height: 45px; left: 678px; top: 388.642px;" data-block-id="fb8d8844b750525fc1a245f2849e3c7f">
+                            <div class="sl-block-content" data-shape-type="circle" data-shape-fill-color="rgb(111, 168, 220)" data-shape-stretch="true" style="z-index: 11;" data-shape-stroke-color="#000000" data-shape-stroke-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 245 45">
+                                    <defs>
+                                        <clipPath id="shape-mask-2-1577110259174">
+                                            <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10"></ellipse>
+                                        </clipPath>
+                                    </defs>
+                                    <ellipse rx="122.5" ry="22.5" cx="122.5" cy="22.5" class="shape-element" fill="rgb(111, 168, 220)" stroke="#000000" stroke-width="10" clip-path="url(#shape-mask-2-1577110259174)"></ellipse>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 678px; top: 351.642px;" data-block-id="0942b832f1efe1703b62b47780b11474">
+                            <div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 16;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                    <line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 922px; top: 351.642px;" data-block-id="5287c637c5f2b0817dcaacb255726fe9">
+                            <div class="sl-block-content" data-line-x1="-30" data-line-y1="217" data-line-x2="-30" data-line-y2="158" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 17;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="59" viewBox="-30 158 1 59">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                    <line stroke="#000000" stroke-width="5" x1="-29.5" y1="217.5" x2="-29.5" y2="158.5"></line>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 244px; left: 678px; top: 371.642px;" data-block-id="aa1aed179e2353e33c8a1878f6b5b433">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18;">
+                                <p style="text-align: center;">Datenbank</p>
+                            </div>
+                        </div>
+                      </section>
+
+                      <section>
+                          <h2>Beispielanwendungen</h2>
+                          <div class="columns">
+                              <div>Konsolenprogramm
+                                <img style="margin-top: -1.5cm;" src="img/6/console.png" class="noborder"></div>
+                                <div class="fragment">GUI / App
+                                <img src="img/6/todoapp.png" class="noborder">
+                                <br/><br/><br/></div>
+                          </div>
+                          <aside class="notes">Das Python-Programm links stellt eine Verbindung mit einer Datenbank her, stellt eine SELECT-Anfrage und zeigt die Ergebnisse auf der Konsole an. Die Android-Anwendung rechts ist eine Todo-App (Bildquelle: Antonio Pardo, https://www.flickr.com/photos/apardo/3323321813). Diese Anwendung läuft lokal ohne Internetzugriff und speichert die Daten in eine SQLite-Datenbank, die auf dem Handy gespeichert ist.</aside>
+                      </section>
+                      <section>
+                          <h2>Anwendungsserver</h2>
+                          <p>Java EE, JSP, Java Servlets, .NET, PHP, Django, ...</p>
+                          <p class="small">Endanwendung (z. B. Webbrowser) &rightarrow; Anwendungsserver &rightarrow; Datenbank</p>
+                          <img src="img/6/webapp.png" class="noborder stretch">
+                          <aside class="notes">Das hier gezeigte Tablet stellt keine direkte Verbindung zu einer Datenbank her, um die Daten für die Diagramme zu laden. Ansonsten könnte der Nutzer der App eventuell sogar die DB-Benutzerdaten auslesen. Stattdessen läuft auf einem Webserver eine Anwendung, welche mit der Datenbank interagiert und eine HTML-Seite erzeugt. Diese ruft der Browser des Tablets auf und zeigt sie an. Auch die Todo-App der vorherigen Folie könnte Server-basiert realisiert werden. In dem Fall reicht es, dass der Anwendungsserver die Daten als JSON oder XML bereitstellt, sodass die Smartphone-App diese dann entsprechend darstellen kann.</aside>
+                      </section>
+
+                      <section>
+                          <h2>Embedded SQL</h2>
+                          <p class="small">Ansatz: SQL-Anfragen und Programmcode mischen,<br>
+                             dann erzeugt ein Precompiler das eigentliche lauffähige Programm.</p>
+
+                        <p class="small">Beispiel: SQL Object-Language Bindings (OLB) für Java (vormals SQLJ)</p>
+                        <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>ProdukteIterator iter;
+#sql iter = { SELECT bezeichnung, preis FROM produkte };
+do {
+  #sql { FETCH :iter INTO :bezeichnung, :preis };
+  System.out.println(bezeichnung+" kostet "+preis+" EUR");
+} while (!iter.endFetch());
+iter.close();</code></pre>
+<p class="fragment small">Vorteil: Syntaxüberprüfung der Anfrage und Prüfung auf gültige Tabellen- und Spaltennamen kann bereits bei der Compile-Zeit erfolgen.</p>
+                <aside class="notes">Die Zeilen, die im Beispielcode mit #sql beginnen, werden vom Precompiler in Java-Code übersetzt. Gleichzeitig erfolgt eine Überprüfung, ob die Anfrage syntaktisch korrekt ist. Neben dem Java-Programm wird auch eine Profil-Datei erzeugt, die in die Datenbank gespeichert werden kann. Die Datenbank würde dabei einen Fehler liefern, wenn z. B. ein ungültiger Spaltenname verwendet wurde.</aside>      
+                </section>
+                <section>
+                    <h2>JDBC</h2>
+                    <p class="small">SQL-Anfragen werden API-Methoden als Strings übergeben.</p>
+                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#23-30' data-trim contenteditable>
+                    </code></pre>
+                    <p class="small">Vorteile: Flexibel (Anfragen können dynamisch zur Laufzeit generiert werden), kein Precompiler nötig, kompatibel mit allen Java-IDEs und vielen Frameworks.</p>
+                    <aside class="notes">JDBC (Java Database Connectivity) ist eine universelle API-Schnittstelle für die Programmiersprache Java. </aside>
+                </section> 
+
+                <section>
+                    <h2>Driver</h2>
+                    <div class="columns">
+                    <div>
+                        <p class="small">Jedes DBMS hat seinen eigenen JDBC-Treiber: MySQL, PostgreSQL, Oracle, ...</p>
+                        <p class="small">&Rightarrow; Entsprechende Jar herunterladen und dem Java-Projekt zur Verfügung stellen</p>
+                    </div>
+                    <div>
+                        <img src="img/6/driver_jar.png" alt="Driver Jar" style="width:25cm">
+                    </div>
+                    </div>
+
+                    <p class="small">Nun kann über die Klasse <code>DriverManager</code> eine Verbindung aufgebaut werden.</p>
+                    
+                    <aside class="notes">Bis Java 1.6 war es nötig, den Treiber mittels <code>Class.forName("org.postgresql.Driver");</code> zu laden. Mittlerweile unterstützen die meisten JDBC-Treiber den Java Service Provider-Mechanismus, sodass der Treiber automatisch geladen wird, den die JVM im Classpath findet.</aside>
+                </section>
+
+                <section>
+                    <h2>Connection</h2>
+                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#9-16,21,20,33-37' data-sample-mark="4,7,12" data-trim contenteditable></code></pre>
+                <aside class="notes">Eine JDBC-URL besteht aus <code>jdbc:</code>, dem Treiber-Namen, der Adresse des DB-Servers, dem Datenbanknamen und evtl. weiteren optionalen Properties. <code>DriverManager.getConnection</code> stellt eine Verbindung zur Datenbank her und liefert ein <code>Connection</code>-Objekt zurück. Mittels dieses Objekts kann nun mit der Datenbank gearbeitet werden. Tritt ein Fehler beim Verbinden auf (z. B. falsches Passwort), wird eine <code>SQLException</code> geworfen. Auch andere Methoden, z.&nbsp;B. diejenigen, die Anfragen an die Datenbank schicken, werfen im Fehlerfall ebendiese Exception. </aside>
+                </section>
+
+                <section>
+                    <h2>Statement und ResultSet</h2>
+                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#22-31' data-sample-mark="" data-trim contenteditable></code></pre>
+                
+                <aside class="notes">Um eine Anfrage an die Datenbank zu schicken, kann auf der vorhandenen <code>Connection</code>ein <code>Statement</code>-Objekt erzeugt werden. Eine Anfrage wird mit der <code>executeQuery</code>- oder <code>executeUpdate</code>-Methode an die Datenbank geschickt. Erstere liefert ein <code>ResultSet</code> zurück, zweitere dient zur Ausführung von <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, usw. und liefert die Anzahl der betroffenen Zeilen zurück.<br>
+                Über ein <code>ResultSet</code> kann mittels der <code>next()</code>-Methode iteriert werden. <code>next()</code> liefert <code>false</code>, wenn wir am Ende der Ergebnismenge angekommen sind. Wie im Beispiel gezeigt, kann man mit einer While-Schleife Zeile für Zeile über das Ergebnis einer ausgeführten Anfrage iterieren. In jeder Iteration stehen einem Datentyp-spezifische Methoden bereit, um auf die Spaltenwerte der aktuellen Zeile zuzugreifen; entweder über die Position (beginnend mit 1) oder über das Spaltenlabel: <code>rs.getString(1)</code> und <code>rs.getString("bezeichnung")</code> liefert beides den Wert der Ergebnisspalte &quot;bezeichnung&quot;.</aside>
+                </section>
+
+                <section>
+                    <h2>SQL-Injections</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 100</div>
+                    <div style="position: absolute; top: 20px; right:5px; font-size:160px"><i class="fas fa-exclamation-triangle red"></i></div>
+                    <p class="small">Vorsicht beim Erzeugen von Query-Strings,<br>die Benutzereingaben beinhalten! (&rightarrow; <a href="https://www.xkcd.com/327/" target="_blank">xkcd.com/327</a>)</p>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukt_SQLInjection.java#23-24'></code></pre>
+                    <p class="fragment small"><em>Geben Sie einen Hersteller ein: </em><input type="text" value="'; DROP TABLE webshop.produkte;" style="font-size: 22pt; width:13cm"></p>
+                    <p class="fragment"><input type="text" value="' UNION (SELECT email||' '||passwort, NULL FROM webshop.kunden)" style="font-size: 22pt; width:25cm"></p>
+                    <aside class="notes">Mit SQL-Injections lassen sich Sicherheitslücken ausnutzen, die es dem Benutzer ermöglichen, Datenbankbefehle einzuschleusen. Das hier gezeigte Programm ist gut gemeint, aber unsicher. Wenn der Benutzer Hersteller Calgonte eingibt, soll <code>SELECT ... WHERE hersteller = 'Calgonte'</code> ausgeführt werden. Dadurch, dass der Benutzerinput ohne Überprüfung und Maskierung von Sonderzeichen einfach so als Teil der Anfrage an den String drangehangen wird, ermöglicht man dem Anwender beliebige Anfragen auf der Datenbank auszuführen. Ersterer Hack würde die Produkte-Tabelle droppen. Dies kann man mit der JDBC-Parameter-Einstellung <code>allowMultiQueries=false</code> verhindern. Der zweite Hack würde dennoch funktionieren. Er ermöglicht dem Angreifer die Einsicht der E-Mail-Adressen und Passwörter aller Kunden. Durch die Eingabe von <code>' OR 1=1 --</code> findet man alle Produkte.</aside>
+                </section>
+
+                <section>
+                    <h2>SQL-Injections</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 101</div>
+                    <div style="position: absolute; top: 20px; right:5px; font-size:160px"><i class="fas fa-exclamation-triangle red"></i></div>
+                    <p class="small">Anderes Beispiel: Login-Formular</p>
+                    <table class="small" style="border: none; background-color: gainsboro;">
+                        <tr><td style="border: none;">E-Mail:</td style="border: none;"><td style="border: none;"><input style="font-size: 20pt; width: 10cm" value="peter@example.com' --"></td style="border: none;"></tr>
+                        <tr><td style="border: none;">Passwort:</td style="border: none;"><td style="border: none;"><input style="font-size: 20pt; width: 10cm" value=""></td style="border: none;"></tr>
+                        <tr><td colspan="2"><input type="button" style="width:100%; font-size:200%; " value="Einloggen"></td></tr>
+                    </table>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/Login_SQLInjection.java#26-28'></code></pre>
+                    <aside class="notes">Dadurch dass der Hacker hier mit dem Anführungszeichen den String abschließt und mittels <code>--</code> den Rest der Anfrage auskommentiert, ergibt sich eine gültige Anfrage, welche lediglich überprüft, ob es den Benutzer gibt und nicht, ob das Passwort stimmt. Im Endeffekt wird ausgeführt: <code>SELECT COUNT(*) FROM webshop.kunden WHERE email = 'peter@example.com' -- AND passwort = md5('')</code>. Alles ab <code>--</code> wird ignoriert.
+                    <br>Die md5-Funktion erzeugt einen Hash aus dem Passwort (z. B. d41d8cd98f00b204e9800998ecf8427e), welcher mit dem gespeicherten Hash verglichen wird. Dies verhindert das Abspeichern von Klartext-Passwörtern. Da md5 jedoch unsicher ist, sollte stattdessen eher sha256 verwendet werden.</aside>
+                </section>
+
+                <section>
+                    <h2>PreparedStatement</h2>
+                    <p class="small">Ein PreparedStatement beinhaltet <code>?</code>-Platzhalter, die vor der Ausführung der Anfrage mit ihren Werten belegt werden.</p>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukt.java#21-26'></code></pre>
+                    <p class="small">Vorteile: Verhindert SQL SQL-Injections, weniger fehleranfällig, Wiederverwenden von Anfragen, Sonderzeichen (z. B. <code>'</code>) werden automatisch maskiert.</p>
+                    <aside class="notes">Bevor ein PreparedStatement mittels <code>executeQuery</code> oder <code>executeUpdate</code> ausgeführt wird, muss jeder <code>?</code>-Platzhalter mit einem Wert belegt werden. Dazu werden Datentyp-spezifische Methoden eingesetzt, z. B. hier <code>setString</code>. Dadurch, dass in diesem gesetzten String Sonderzeichen wie <code>'</code> automatisch maskiert werden (z. B. zu <code>''</code>), sind keine SQL Injections mehr möglich. Ein und dasselbe PreparedStatement kann mehrfach wiederverwendet werden, was auch eine erhöhte Performance zur Folge haben kann. Ein weiterer Vorteil ist, dass man sich unschöne und fehleranfällige Anfrageelemente wie <code>WHERE hersteller = '"+scan.nextLine()+"'"</code> erspart. Hier vergisst man gerne mal ein <code>'</code>.</aside>
+                </section>
+
+                <section>
+                    <h2>executeUpdate</h2>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/NeuerKunde.java#17-27' data-sample-mark=""></code></pre>
+                    <aside class="notes">Anders als <code>executeQuery</code> liefert <code>executeUpdate</code> kein ResultSet zurück, sondern einen Integer: die Anzahl der betroffenen Zeilen. Beim hier gezeigten INSERT ist dies stets eine 1, da nur eine Zeile eingefügt wird. Im Fehlerfall wird eine Exception geworfen. Bei einem UPDATE- oder DELETE-Kommando kann man am Rückgabewert der Methode sehen, wie viele Zeilen geändert oder gelöscht wurden. Neben <code>executeUpdate</code> und <code>executeQuery</code> gibt es auch noch die Methode <code>execute</code>. Diese liefert keinen Rückgabewert. Man verwendet sie z. B. für <code>CREATE TABLE</code> oder andere DDL-Kommandos.</aside>
+                </section>
+
+                <section>
+                    <h3>DB-Metadaten-Zugriff mit JDBC</h3>
+                    <h4>DatabaseMetaData</h4>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/MetadataExample.java#16-21' data-sample-mark=""></code></pre>
+                    <h4>ResultSetMetaData</h4>
+                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/MetadataExample.java#27-33' data-sample-mark=""></code></pre>
+                    <aside class="notes">JDBC stellt Methoden bereit, um auf die Metadaten der Datenbank (z. B. Tabellen, Spalten einer Tabelle, ...) und auf Metadaten eines ResultSets zuzugreifen.</aside>
+                </section>
+
+                <section>
+                    <h2>Routinen</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 102</div>
+                    <p>Benutzerdefinierte Routinen sind in der DB gespeicherte Datenbankobjekte (wie Tabellen und Views):</p>
+                    <ul>
+                        <li><b>Prozeduren</b> tun etwas</li>
+                        <li><b>Funktionen (UDF)</b> liefern einen Ergebniswert</li>
+                        <li><b>Tabellenfunktionen</b> liefern eine Tabelle</li>
+                        <li><b>Methoden</b> gehören zu einem User-defined Datatype</li>
+                    </ul>
+                    <p class="small">Routen haben einen Namen und Eingabeparameter.</p>
+                    <aside class="notes">Die meisten Datenbankmanagementsysteme erlauben die Erstellung von Routinen in einer Programmiersprache. In PostgreSQL heißt diese Sprache PL/pgSQL (Prozedurale Spracherweiterung für PostgreSQL). Neben SQL-Anfragen (SELECT, INSERT, ...) gibt es auch IF-Blöcke, FOR-Schleifen, usw. Methoden werden in dieser Vorlesung nicht behandelt. Durch in der Datenbank gespeicherte Routinen werden unnötige Anfragen zwischen Client-Anwendung und DB-Server vermieden. Vor allem solche Anfragen, die nur Zwischenergebnisse abrufen, welche in Folgeanfragen verwendet werden.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>PL/pgSQL</h2>
+                    <h4>Block:</h4>
+                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                        [ DECLARE 
+                        -- hier können Variablen definiert werden ]
+                        BEGIN
+                        -- Anweisungen ...
+                        END
+                    </code></pre>
+                    <h4>Kontrollstrukturen:</h4>
+                        <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                            IF ... THEN ... [ELSE ...] END IF;
+                            WHILE ... LOOP ... END LOOP;
+                            LOOP ... EXIT WHEN ...; END LOOP;
+                            FOR ... IN ... .. ... LOOP ... END LOOP;
+                            FOR ... IN 'SELECT ...' LOOP ... END LOOP;
+                        </code></pre>
+                </section>
+
+                <section>
+                    <h2>Stored Procedures</h2>
+                    <div class="trackinfo"><i class="fas fa-headphones"></i> 103</div>
+                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+CREATE OR REPLACE FUNCTION alles_leeren() RETURNS void AS
+$$ BEGIN
+ TRUNCATE bewertungen CASCADE;
+ TRUNCATE produkte CASCADE;
+ TRUNCATE hersteller CASCADE;
+ TRUNCATE kunden CASCADE;
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable>SELECT alles_leeren();</code></pre>
+
+                <aside class="notes">In diesem einfachen Beispiel hat unsere Prozedur <code>alles_leeren</code> keine Eingabeparameter (daher die leeren Klammern <code>()</code>), wir definieren keine Variablen und verwenden auch keine Kontrollstrukturen oder Schleifen. Es werden lediglich vier <code>TRUNCATE</code>-Kommandos ausgeführt. In PostgreSQL sind Prozeduren <code>FUNCTION</code>-Objekte mit dem Rückgabetyp <code>void</code>. Man ruft sie in einem <code>SELECT</code>-Kommando ohne <code>FROM</code>-Klausel auf. Seit PostgreSQL 11 gibt es jedoch auch <code>CREATE PROCEDURE</code>, welche dann mit einem <code>CALL</code>-Befehl aufgerufen werden (siehe übernächste Folie). In anderen DBMS werden Prozeduren mit einem <code>EXECUTE</code>-Befehl ausgeführt.<br>Schreibt man <code>CREATE OR REPLACE</code> statt einfach nur <code>CREATE</code>, wird die Funktion überschrieben, falls sie schon existiert.</aside>
+                </section>
+            <section>
+                <h3>RAISE NOTICE</h3>
+                <p class="small"><code>RAISE NOTICE</code> gibt einen Infotext auf der Konsole aus.</p>
+                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+CREATE OR REPLACE FUNCTION hallo() RETURNS void AS $$
+DECLARE
+    x INT := 5;
+BEGIN
+    RAISE NOTICE 'Hallo!!!';
+    RAISE NOTICE 'x ist %', x;
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable>SELECT hallo();</code></pre>
+            <img src="img/6/dbeaver_notice.png" alt="DBeaver Serverausgabe anzeigen" style="width:12cm">
+            <aside class="notes">Verwendet man im Notice %-Platzhalter, kann man deren Werte als zusätzliche Parameter übermitteln. Diese Folie zeigt auch, wie man Variablen deklariert. Bei <code>x INT := 5;</code> hat x den Wert 5. Mit <code>x INT</code> würde man lediglich die Variable x ohne Wert definieren, damit man diesen später zuweisen kann.</aside>
+            </section>
+
+            
+
+            <section>
+                <h2>Stored Procedures</h2>
+                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+CREATE PROCEDURE bestelle_produkt(_kundennr INT, 
+                                  _produktnr INT) AS $$
+DECLARE
+   _bestellnr INT;
+BEGIN
+  SELECT MAX(bestellnummer)+1 INTO _bestellnr FROM bestellungen;
+  RAISE NOTICE 'Bestellnummer: %', _bestellnr;
+  INSERT INTO bestellungen(bestellnummer, kundennummer, zeit, 
+    preis) VALUES (_bestellnr, _kundennr, current_timestamp,
+    (SELECT preis FROM produkte WHERE produktnr=_produktnr));
+  INSERT INTO bestellungen_positionen (bestellnummer, 
+    produktnummer, anzahl) VALUES (_bestellnr, _produktnr, 1);
+  COMMIT;
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CALL bestelle_produkt(5, 17);</code></pre>
+                    
+            <aside class="notes">Anders als bei <code>CREATE FUNCTION</code> werden bei PostgreSQL im <code>CREATE PROCEDURE</code> auch Transaktionen (<code>COMMIT</code> / <code>ROLLBACK</code>) unterstützt. Damit wird garantiert, dass beide hier dargestellten <code>INSERT</code>s ausgeführt werden (oder keines) und dass die mit MAX ermittelte neue Bestellnummer auch in jedem Fall gültig ist, auch wenn andere Transaktionen parallel Bestellungen einfügen (&rightarrow; Phantomproblem).</aside>
+            </section>
+            
+            <section>
+                <h3>Eingabeparameter</h3>
+                <p class="small">Zugriff über den Namen oder die Position (<code>$1</code>, ...)</p>
+
+<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CREATE OR REPLACE PROCEDURE test(i int, s VARCHAR) AS $$
+BEGIN
+ RAISE NOTICE 'i ist %', i;     -- i ist 99
+ RAISE NOTICE 's ist %', $2;    -- s ist Tomate
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable>CALL test(99, 'Tomate');</code></pre>
+<aside class="notes"><code>$2</code> steht hier für den zweiten Parameter, also für <code>s</code>. Wir verwenden in den Beispielen aber auch oft Variablennamen, die mit einem Unterstrich beginnen (z. B. <code>_produktnr</code>), damit man sie nicht mit Spaltennamen oder ähnlichem verwechselt.</aside>
+</section>
+
+<section>
+    <h2>Funktionen</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 103</div>
+    <p>UDF = User-defined Function</p>
+
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
+$$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
+
+    <div class="poll fragment fade-in-then-out" style="bottom:-260px">
+        <h1>Wie lässt sich diese UDF aufrufen?</h1>
+            <ul>
+                <li>EXECUTE addieren(5,4);</li>
+                <li data-poll="correct">SELECT addieren(5,4);</li>
+                <li>SELECT * FROM addieren(5,4);</li>
+                <li>CALL addieren(5,4);</li>
+            </ul>
+        <h2>https://frage.space</h2>
+    </div>
+
+    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
+
+    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre>
+
+    
+
+    <aside class="notes">Funktionen haben beliebig viele Eingabeparameter und liefern genau einen Rückgabewert zurück. Der Datentyp des Rückgabewerts steht oben hinter <code>RETURNS</code>. Mit einem <code>RETURN</code>-Kommando terminiert die Funktion und erzeugt die Rückgabe. Man kann die Funktion genau wie eingebaute SQL-Funktionen (UPPER, MD5, ...) in SELECT-Anfragen mit und ohne FROM-Klausel verwenden, aber auch in INSERT, UPDATE, etc. Die hier dargestellte Funktion addiert zwei Zahlen. Die Eingabeparameternamen kann man wie hier gezeigt einfach weggelassen, wenn man auf sie lediglich mittels <code>$1</code> etc. zugreift.</aside>
+</section>
+
+<section>
+    <h3>Exceptions werfen und behandeln</h3>
+
+    <pre><code class="sql dont_execute_sql" data-trim contenteditable>
+CREATE FUNCTION dividieren(float, float) RETURNS float AS
+$$ BEGIN 
+RETURN $1/$2; 
+EXCEPTION WHEN OTHERS THEN 
+    RAISE EXCEPTION 'Divisor darf nicht 0 sein!';
+END $$ LANGUAGE plpgsql;</code></pre>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-380px">
+    <h1>Wo wird die &quot;Divisor darf nicht 0 sein&quot;-Exception angezeigt?</h1>
+        <ul>
+            <li data-poll="correct">Als Fehlermeldung anstelle des Query-Ergebnisses</li>
+            <li>In der Serverausgabe (wie bei RAISE NOTICE)</li>
+            <li>In der Query-Ergebnistabelle</li>
+            <li>Nirgendwo</li>
+        </ul>
+    <h2>https://frage.space</h2>
+</div>
+    
+    <aside class="notes">Hinter <code>EXCEPTION WHEN</code> steht der Name einer Exception, die abgefangen werden soll. <code>OTHERS</code> fängt alle sonstigen Fehler ab. Mit <code>RAISE EXCEPTION</code> wird ein Programm unterbrochen und die entsprechende Fehlermeldung an den Client zurückgegeben.</aside>
+</section>
+
+<section>
+    <h3>Volatilitäts-Kategorien</h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
+$$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql IMMUTABLE;</code></pre>
+    
+        <h4><code>VOLATILE</code> (Standard)</h4>
+        <p class="small" style="margin-top: -7mm;">Funktion darf alles: DB verändern und bei gleichen Parameterwerten unterschiedliche Ergebnisse liefern.</p>
+        
+        <h4 style="margin-top: -4mm;"><code>STABLE</code></h4 style="margin-top: -2mm;">
+        <p class="small" style="margin-top: -7mm;">Funktion darf die DB nicht verändern und muss innerhalb des gleichen Statements bei gleichen Parameterwerten das gleiche Ergebnis liefern.</p>
+        
+        <h4 style="margin-top: -4mm;"><code>IMMUTABLE</code></h4>
+        <p class="small" style="margin-top: -7mm;">Funktion darf die DB nicht verändern und muss bei gleichen Parameterwerten das gleiche Ergebnis liefern.</p>
+    </ul>
+
+    <div class="poll fragment fade-in-then-out" style="bottom:-100px">
+        <h1>Warum ergbit es Sinn, die addieren-UDF als IMMUTABLE zu kenzeichnen?</h1>
+            <ul>
+                <li>Weil die UDF die Datenbank nicht verändert</li>
+                <li>Weil die UDF nichts aus der Datenbank liest</li>
+                <li>Weil die UDF nachträglich nicht mehr verändert wird</li>
+                <li data-poll="correct">Weil 1+1 immer 2 ist und so</li>
+            </ul>
+        <h2>https://frage.space</h2>
+    </div>
+
+    <aside class="notes">Wenn eine Funktion als <code>STABLE</code> oder <code>IMMUTABLE</code> deklariert wird, kann der Datenbank-Optimierer Ergebnisse der Funktion wiederverwenden, ohne die Funktion nochmals aufzurufen. Eine Funktion <code>get_hersteller_land</code>, die beispielsweise eine <code>SELECT</code>-Anfrage an eine Tabelle schickt, um das Land eines Herstellers zu ermitteln, ist <code>STABLE</code>, da sie innerhalb einer Anfrage, in der sie aufgerufen wird, für den gleichen Hersteller das gleiche Land liefern würde.</aside>
+</section>
+
+<section>
+    <h2>Tabellenfunktionen</h2>
+    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION produkte_von(VARCHAR) RETURNS TABLE
+(produktnr INT, bezeichnung VARCHAR(100), 
+ preis DECIMAL(9,2), hersteller VARCHAR(50)) AS $$ 
+SELECT produktnr, bezeichnung, preis, hersteller 
+FROM produkte WHERE hersteller = $1 
+$$ LANGUAGE sql;
+</code></pre>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-280px">
+    <h1>Wie lässt sich diese Tabellenfunktion aufrufen?</h1>
+        <ul>
+            <li>EXECUTE produkte_von('Calgonte');</li>
+            <li>SELECT produkte_von('Calgonte');</li>
+            <li data-poll="correct">SELECT * FROM produkte_von('Calgonte');</li>
+            <li>CALL produkte_von('Calgonte');</li>
+        </ul>
+    <h2>https://frage.space</h2>
+</div>
+        
+            <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
+        
+        <aside class="notes">Tabellenfunktionen liefert eine Tabelle zurück mit beliebig vielen Zeilen. Die Spalten und deren Typen werden im <code>CREATE FUNCTION</code>-Kommando im <code>RETURNS TABLE</code>-Teil definiert. Genau wie eine View wird eine Tabellenfunktion in der <code>FROM</code>-Klausel einer SELECT-Anfrage aufgerufen. Eine Tabellenfunktion ist quasi eine View mit Parametern.</aside>
+</section>
+
+<section>
+    <h2>Trigger</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 104</div>
+    <p>Wenn ...</p>
+    <div class="columns">
+        <div><ul>
+            <li>BEFORE</li>
+            <li>AFTER</li>
+            <li>INSTEAD OF</li>
+        </ul></div>
+        <div><ul>
+            <li>INSERT</li>
+            <li>UPDATE</li>
+            <li>DELETE</li>
+        </ul></div>
+        <div><ul>
+            <li>ON &lt;tabelle&gt;</li>
+            <li>ON &lt;view&gt;</li>
+        </ul></div>
+    </div>
+
+    <p>dann ...</p>
+
+    <div class="poll fragment fade-in-then-out" style="bottom:-220px">
+        <h1>Wann könnte BEFORE INSERT ON produkte sinnvoll sein (im Vergleich zu AFTER INSERT ON produkte)?</h1>
+            <ul>
+                <li data-poll="correct">Wenn man das INSERT doch noch ablehnen will</li>
+                <li data-poll="correct">Wenn man den nicht-vorhandenen Hersteller in die Hersteller-Tabelle einfügen will</li>
+                <li data-poll="correct">Wenn man die eingefügte Zeile noch modifizieren will</li>
+                <li>Das macht gar keinen Unterschied</li>
+            </ul>
+        <h2>https://frage.space</h2>
+    </div>
+
+    <aside class="notes">Mittels Triggern können Aktionen ausgeführt werden, jedesmal wenn das festgelegte Ereignis eintritt. Nach einem INSERT in die Produkttabelle kann automatisch der Hersteller eingefügt werden, falls es ihn noch nicht gibt. Bevor der Preis eines Produkts geändert wird, wird überprüft, ob diese Änderung auch in Ordnung ist. Wenn der Preis um mehr als 20% erhöht wird, soll ein Fehler kommen. Wenn ein INSERT auf einer View gemacht wird, sollen stattdessen INSERTs in gewisse Tabellen gemacht werden. Solche Abläufe können mittels Trigger definiert werden.</aside>
+    
+</section>
+
+    <section>
+        <h3>Trigger in PostgreSQL</h3>
+        <h4>Triggerfunktion</h4>
+        <ul class="small">
+            <li>Definiert die auszuführende Aktion</li>
+            <li><code>CREATE FUNCTION ... RETURNS TRIGGER ...</code></li>
+        </ul>
+        <p/>
+        <h4>Trigger</h4>
+        <ul class="small">
+            <li>Definiert den eigentlichen Trigger (die Wenn-Falls-Dann-Bedingung)</li>
+            <li><code>CREATE TRIGGER ... {BEFORE | AFTER | INSTEAD OF}<br>{INSERT | UPDATE | DELETE} ON ...<br>FOR EACH {ROW | STATEMENT} [WHEN (...)]<br> EXECUTE PROCEDURE ...();</code></li>
+        </ul>
+        <aside class="notes">In PostgreSQL wird zunächst eine Triggerfunktion definiert. Diese ist ähnlich zu einer Funktion mit dem Returns-Type <code>void</code>. In dieser Triggerfunktion hat man jedoch Zugriff auf die eingefügte, geänderte, bzw. gelöschte Zeile und man kann diese sogar noch modifizieren oder die Operation noch aufhalten.<br>
+        Trigger können auch sogenannte ECA-Regel implementieren. ECA steht für Event, Condition, Action. Wenn also ein Ereignis eintritt, soll - falls die Bedingung erfüllt ist - das Ereignis ausgeführt werden. Die Bedingung lässt sich in PostgreSQL mittels einer optionalen <code>WHEN</code>-Bedingung festlegen.</aside>
+    </section>
+
+    <section>
+        <h3>AFTER INSERT</h3>
+        <p class="small">Nachdem das neue Tupel eingefügt wurde, soll noch etwas gemacht werden.</p>
+        <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE FUNCTION produkte_trigger() RETURNS TRIGGER AS
+$$ BEGIN
+IF (NEW.hersteller IS NOT NULL AND NOT EXISTS 
+  (SELECT * FROM hersteller WHERE firma = NEW.hersteller)) THEN
+  INSERT INTO hersteller (firma) VALUES(NEW.hersteller);
+END IF;
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre>
+
+<p class="small"><code>NEW</code> bietet Zugriff auf die neu eingefügte Zeile.</p>
+    
+
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE TRIGGER produkte_trigger AFTER INSERT ON produkte
+FOR EACH ROW EXECUTE PROCEDURE produkte_trigger();</code></pre> 
+
+<aside class="notes">Immer wenn ein INSERT auf die Produkttabelle gemacht wird, feuert der Trigger. Er sorgt dafür, dass der Hersteller in die Herstellertabelle eingefügt, wenn er noch nicht drin ist. Über das Objekt <code>NEW</code> hat man innerhalb des Triggers Zugriff auf die Attributwerte der neu eingefügten Zeile.</aside>
+</section>
+
+<section>
+    <h3>AFTER INSERT</h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+INSERT INTO produkte VALUES(1000, 'Kuchen', 2.00, 'Kuchenpeter');
+    </code></pre> 
+    <p class="fragment small" style="color:red" data-fragment-index="1">[23503]: ERROR: insert or update on table "produkte" violates foreign key constraint "produkte_hersteller_fkey"
+        Detail: Key (hersteller)=(Kuchenpeter) is not present in table "hersteller".</p>
+    
+    <ul class="fragment small" data-fragment-index="2">
+        <li>Entweder Trigger auf <code>BEFORE INSERT</code> ändern</li>
+        <li>oder das Fremdschlüssel-Constraint auf <code>DEFERRED</code> setzen:</li>
+    </ul>
+
+    <pre class="fragment" data-fragment-index="2"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+ALTER TABLE webshop.produkte ADD CONSTRAINT 
+produkte_hersteller_fkey FOREIGN KEY (hersteller) 
+REFERENCES hersteller(firma) ON UPDATE CASCADE 
+INITIALLY DEFERRED;</code></pre>
+
+<aside class="notes">Ändern wir den Trigger auf <code>BEFORE INSERT</code>, wird die Prozedur, die den Hersteller einfügt, ausgeführt, bevor die neue Zeile in die Produkttabelle eingefügt wird. Der Hersteller ist hier der Parent-Record und das Produkt der Child-Record. Der Parent muss vorher existieren, bevor der Child-Record existiert.<br>
+Als Alternative kann die Überprüfung des Fremdschlüssel-Constraints auch auf <code>DEFERRED</code> (verzögert) setzen. Der Standard ist <code>IMMEDIATE</code> - eine sofortige Überprüfung. Bei <code>DEFERRED</code> wird das Constraint erst zum Ende der Transaktion überprüft. In unserem Fall führt dies zum Erfolg, da zum Ende der Transaktion der zuvor nicht existierende Hersteller zwischenzeitlich durch den Trigger eingefügt wurde.</aside>
+</section>
+
+<section>
+    <h3>BEFORE INSERT / UPDATE / DELETE</h3>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 105</div>
+    <p class="small">Mit einem <code>BEFORE</code>-Trigger kann man das einzufügende Tupel modifizieren oder das <code>INSERT</code> / <code>UPDATE</code> / <code>DELETE</code> ablehnen.</p>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE OR REPLACE FUNCTION preis_trigger() RETURNS TRIGGER AS $$ 
+DECLARE anz_gratis_produkte INT;
+BEGIN
+IF (NEW.preis < 0) THEN NEW.preis = 0; END IF;
+SELECT COUNT(*) INTO anz_gratis_produkte 
+FROM produkte WHERE preis = 0;
+IF (NEW.preis = 0 AND anz_gratis_produkte >= 3) THEN
+ RAISE EXCEPTION 'Zu viele kostenlose Produkte!';
+END IF;
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre>
+
+<pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE TRIGGER preis_trigger BEFORE INSERT OR UPDATE ON produkte
+FOR EACH ROW EXECUTE PROCEDURE preis_trigger();</code></pre>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-50px">
+    <h1>Könnte ein AFTER INSERT Trigger das INSERT auch noch ablehnen?</h1>
+        <ul>
+            <li data-poll="correct">Na klar</li>
+            <li>Nein, dafür ist es zu spät</li>
+        </ul>
+    <h2>https://frage.space</h2>
+</div>
+
+<aside class="notes">Bei einem <code>BEFORE INSERT</code>-Trigger kann man einzufügende Tupel noch abändern, bevor es tatsächlich in die Tabelle eingefügt wird. Hier wird der Preis auf 0 gesetzt, sollte jemand versuchen, ein Produkt mit negativen Preis einzufügen. Außerdem überwacht der Trigger, dass es nie mehr als drei kostenlose Produkte gibt. Ein INSERT oder UPDATE wird abgelehnt, wenn es dieses Constraint verletzen sollte.</aside>
+</section>
+
+<section>
+    <h3>OLD / NEW</h3>
+    <ul>
+        <li><code>INSERT</code>-Trigger: Zugriff auf <code>NEW</code></li>
+        <li><code>DELETE</code>-Trigger: Zugriff auf <code>OLD</code></li>
+        <li><code>UPDATE</code>-Trigger: Zugriff auf <code>OLD</code> und <code>NEW</code></li>
+    </ul>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE OR REPLACE FUNCTION preiserhoehung_trigger() 
+RETURNS TRIGGER AS $$ 
+BEGIN
+IF (NEW.preis > OLD.preis*1.1) THEN
+ RAISE EXCEPTION 'Preiserhöhung um mehr als 10%% nicht erlaubt!';
+END IF;
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre>
+<aside class="notes">Beim INSERT hat man in der Triggerfunktion Zugriff auf <code>NEW</code> (die eingefügte Zeile), beim DELETE auf <code>OLD</code> (die gelöschte Zeile) und beim UPDATE auf <code>OLD</code> und <code>NEW</code>. <code>OLD</code> bietet Zugriff auf den vorherigen Zustand des Tupels vor der Änderung, <code>NEW</code> auf den Zustand nach der Änderung.<br>
+Hier wurde <code>10%%</code> geschrieben, da <code>%</code> als Platzhalter steht, der durch einen Wert ersetzt wird (siehe Folie zu RAISE NOTICE). <code>%%</code> wird durch <code>%</code> ersetzt.</aside>
+</section>
+
+<section>
+    <h3>FOR EACH ROW / STATEMENT</h3>
+    <h4>FOR EACH ROW</h4>
+    <ul>
+        <li>Triggerfunktion wird für jedes eingefügte / gelöschte / geänderte Tupel einmal aufgerufen</li>
+        <li>Zugriff auf das Tupel mittels <code>NEW</code> bzw. <code>OLD</code></li>
+    </ul>
+    <p/>
+    <h4>FOR EACH STATEMENT</h4>
+    <ul>
+        <li>Triggerfunktion wird für das gesamte INSERT / UPDATE / DELETE-Statement nur einmal aufgerufen</li>
+        <li>Kein direkter Zugriff auf die Tupel</li>
+    </ul>
+    <aside class="notes">Der Trigger, der überprüft, dass es stets nie mehr drei kostenlose Produkte gibt, könnte auch vom Typ <code>FOR EACH STATEMENT</code> sein. Dies würde die Überprüfung bei großen Änderungsmengen deutlich beschleunigen, da sie nur einmal und nicht für jede geänderte Zeile erfolgen muss.</aside>
+</section>
+
+<section>
+    <h3>INSTEAD OF-Trigger</h3>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 106</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>INSERT INTO meine_view VALUES (...)</code></pre>
+    <ul class="small">
+        <li>Nur in simple Views Projektion-Selektion-Views darf ein INSERT/UPDATE/DELETE erfolgen</li>
+        <li>Mittels einer <code>CHECK OPTION</code> kann überprüft werden, dass das Tupel auch das WHERE-Prädikat der View erfüllt.</li>
+        <li><code>INSTEAD OF</code>-Trigger ermöglichen INSERT/UPDATE/DELETE auf jeder View.</li>
+    </ul>
+    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE TRIGGER meine_view_trigger INSTEAD OF INSERT ON meine_view
+FOR EACH ROW EXECUTE PROCEDURE meine_view_trigger();        
+    </code></pre>
+
+    <aside class="notes"><code>INSTEAD OF</code>-Trigger sind nur für Sichten gedacht. Jedes mal, wenn jemand ein INSERT / UPDATE / DELETE auf eine Sicht macht, soll stattdessen die Trigger-Aktion ausgelöst werden.</aside>
+</section>
+
+<section>
+    <h3>INSTEAD OF-Trigger</h3>
+    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE VIEW meine_view AS
+SELECT p.produktnr, p.bezeichnung, p.preis, p.hersteller, h.land
+FROM produkte p JOIN hersteller h ON p.hersteller=h.firma;
+</code></pre>
+
+<pre class="fragment" style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+CREATE OR REPLACE FUNCTION meine_view_trigger() 
+RETURNS TRIGGER AS $$ 
+BEGIN
+INSERT INTO hersteller (firma, land)
+ VALUES (NEW.hersteller, NEW.land)
+ ON CONFLICT (firma) DO UPDATE SET land=EXCLUDED.land;
+INSERT INTO produkte (produktnr, bezeichnung, preis, hersteller)
+ VALUES (NEW.produktnr, NEW.bezeichnung, NEW.preis, NEW.hersteller);
+RETURN NEW;
+END; $$ LANGUAGE plpgsql;</code></pre> 
+
+<aside class="notes">Die gezeigte View führt eine Denormalisierung der beiden Tabellen Produkte und Hersteller aus, also einen Join. Der Trigger sorgt dafür, dass ein INSERT in diese View aufgeteilt wird in zwei INSERT-Kommandos. Zunächst wird der Hersteller eingefügt. Falls es ihn schon gibt, wird sein Land angepasst. Im Anschluss erfolgt das Einfügen des Produktes.</aside>
+</section>
+
+<section>
+    <h2>Indexe</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 107</div>
+    <p class="small">Motivation: Wir haben $n$ Produkte. Wie teuer ist die folgende Anfrage?</p>
+    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+    <ul class="small">
+        <li class="fragment">Full Table Scan: $O(n)$</li>
+        <li class="fragment">Tabelle intern sortiert nach Produktnummer: $O(log_2(n))$</li>
+        <li class="fragment">B-Baum-Index auf der Produktnummer: $O(log_k(n))$</li>
+        <li class="fragment">Hash-Index auf der Produktnummer: $O(1)$</li>
+    </ul>
+    <aside class="notes">Mit der O-Notation wird der Aufwand in Abhängigkeit der Tabellengröße beschrieben.</aside>
+</section>
+
+
+<section>
+    <h2>Full Table Scan</h2>
+    <p class="small">Linearer Aufwand: $O(n)$</p>
+    <p class="small">Jede einzelne Zeile wird gelesen und für sie wird überprüft, ob das WHERE-Prädikat wahr oder falsch ist.</p>
+    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+    <span data-sql-query="SELECT * FROM produkte ORDER BY (produktnr%13)+(length(bezeichnung)%3)/((100*(preis+1))%11)"></span>
+    <aside class="notes">Bei einem Full Table Scan muss jede einzelne Zeile der Tabelle gelesen werden, um die gewünschte Zeile zu finden. Wäre die Tabelle doppelt so groß, wäre auch der Aufwand doppelt so groß.</aside>
+</section>
+<section>
+    <h2>Clustered Index</h2>
+    <div class="columns">
+        <div><p class="small">Logarithmischer Aufwand: $O(log_2(n))$</p>
+            <p class="small"><em>Binäre Suche</em>: In die Mitte der Tabelle springen. Hat diese Zeile eine größere Produktnummer als die gesuchte? Oberhalb weitersuchen, usw.</p>
+            <pre style="width: 95%; margin-top: -3mm;"><code class="hlsql dont_execute_sql" contenteditable data-trim>CLUSTER produkte USING produkte_pkey</code></pre>
+            <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+            <ul class="fragment small">
+                <li>Es kann nur einen Clustered Index pro Tabelle geben</li>
+                <li>Re-Clustering nötig nach INSERT, UPDATE, DELETE</li>
+            </ul>
+        </div>
+        <div style="width:12cm"><img src="img/6/binary_search.png" alt="Binäre Suche" class="noborder"></div>
+    </div>
+    
+    <aside class="notes">Ein Clustered Index bestimmt die interne Speicherung der Zeilen. Clustert man die Produkttabelle nach der Primärschlüsselspalte <code>produktnr</code>, werden die Datensätze sortiert nach der Produktnummer abgespeichert. In PostgreSQL ist dazu die Ausführung des Kommandos <code>CLUSTER</code> nötig. PostgreSQL macht kein automatisches Reclustering, d. h. nach Änderungen an den Datensätzen muss nochmals <code>CLUSTER</code> ausgeführt werden. Liegen die Daten sortiert, ist eine Suche auf der Index-Spalte, ein GROUP BY und ein Sortieren sehr schnell. Das Re-Clustering ist jedoch eine sehr teure Operation.</aside>
+</section>
+
+<section>
+    <h2>B-Bäume</h2>
+    <p class="small">Logarithmischer Aufwand: $O(log_k(n))$</p>
+    <p class="small">Simulation: <a href="https://www.cs.usfca.edu/~galles/visualization/BTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BTree.html</a></p>
+    <div class="columns" style="margin-top: -2mm;">
+        <div><ul class="small">
+            <li>Jeder Knoten hat maximal den Grad 2k+1,<br>also max. 2k+1 Kindknoten</li>
+            <li>Jeder Knoten speichert zw. k und 2k Einträge</li>
+            <li>Suche startet in der Wurzel,<br>dann wird sich durch den Baum navigiert:<br>kleiner: links; größer: rechts entlang</li>
+        </ul></div>
+        <div style="width: 10cm;"><img class="noborder" src="img/6/btree1.png" alt="B-Baum"><p class="small" style="text-align: center; margin-top: -7mm;">k=1 &Rightarrow; max. Grad = 3</p></div>
+    </div>
+    <aside class="notes">Ein innerer Knoten hat immer einen Kindknoten mehr als Einträge. Ein Eintrag in einem B-Baum kann mit logarithmischem Aufwand gesucht werden. Erst wenn ein Baum k-mal mehr Einträge speichert, erhöhen sich die Suchkosten gerade mal um 1. Im gezeigten Baum können wir jeden Eintrag finden, indem wir höchstens drei Seiten lesen müssen, da die Höhe des Baumes 3 ist. In einem voll besetzten B-Baum der Klasse k=3 und der Höhe h=5 kann man mehr als 3<sup>5</sup>=243 Einträge abspeichern und jeder davon lässt sich mit höchstens 5 Leseoperationen wiederfinden. In der Realität ist z. B. k=1024. Somit lassen sich Milliarden Einträge so organisieren, dass man jeden davon mit nur drei Leseoperationen finden kann.</aside>
+</section>
+<section>
+    <h2>B+-Bäume</h2>
+    <p class="small">Simulation: <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a></p>
+    <ul class="small">
+        <li>Optimierung des B-Baums; in DMBS häufigst eingesetzte Indexstruktur</li>
+        <li>Innere Knoten sind nur Wegweiser (max. 2k Schlüssel, max. 2k+1 Kinder)</li>
+        <li>Blattknoten enthalten die Schlüssel und Pointer zu max. 2k*+1 Datensätzen</li>
+        <li>Blattknoten sind miteinander verkettet &Rightarrow; schnelle sequenzielle Suche</li>
+        <li>Suche startet in der Wurzel, dann links (&lt;) oder rechts (&ge;) weitersuchen</li>
+    </ul>
+    <img class="noborder" src="img/6/bplustree1.png" alt="B+-Baum" style="height: 5cm; margin-top: -1mm;">
+    <p class="small" style="text-align: center; margin-top: -7mm;">k=1, k*=1 &Rightarrow; max. Grad = 3</p>
+    <aside class="notes">Da man in den Bäumen nicht lediglich Zahlen o.ä. sondern natürlich auch den Pointer zum tatsächlichen Datensatz speichern muss, ist es eine Optimierung, diese Pointer nur in die Blattebene zu speichern, sodass innere Knoten bei gleicher Seitengröße einen viel höheren Grad haben können als Blattknoten.</aside>
+</section>
+<section>
+    <h2>Einfügen in B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchen der neue Schlüssel gehört</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Noch Platz? &Rightarrow; einfach einfügen</li>
+        </ol></li>
+    </ol>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert1.png" class="noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">18 einfügen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert2.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Im links gezeigten B+-Baum (k=1, k*=1) soll der Eintrag 18 eingefügt werden. Zuerst wird der Knoten gesucht, in den die 18 gehört. 18 ist kleiner als 29, also gehen wir nach links. Dort ist bisher nur die 17 gespeichert. In jedem Knoten ist Platz für 2k* = 2 Einträge, also ist dort noch Platz, sodass wir die 18 einfach einfügen können.<br>
+    Hat unsere Produkttabelle einen Index auf der Produktnummer-Spalte - die meisten DBMS legen auf Primärschlüsselspalten ohnehin automatisch B+-Baum-Indexe an -, wird in den gezeigten Baum der Wert 18 zusammen mit der Speicheradresse, wo der entsprechende Datensatz auf der Festplatte gespeichert ist, in die Blattebene des B+-Baums eingefügt. Möchte man nun suchen (<code>SELECT * FROM produkte WHERE produktnr=18</code>), kann der Index genutzt werden, um schnell den Datensatz zu finden. Auch bei Bereichsanfragen (<code>WHERE produktnr BETWEEN 18 and 88</code>) hilft der B+-Baum: Man navigiert sich zur Blattebene zur 18, und folgt dann den verketteten Blättern bis zur 88. Im B-Baum wäre dies komplexer.</aside>
+</section>
+<section>
+    <h2>Einfügen in B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchen der neue Schlüssel gehört</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Noch Platz? &Rightarrow; einfach einfügen</li>
+            <li>Kein Platz mehr? &Rightarrow; einfügen und Knoten splitten</li>
+        </ol></li>
+    </ol>
+    <p></p>
+    <h4 data-fragment-index="1" class="fragment" style="margin-top: -2mm;">Split</h4>
+    <ul class="fragment small" data-fragment-index="1" style="margin-top: -5mm;">
+        <li>Knoten wird in zwei Knoten aufgesplittet</li>
+        <li>Mittleres Element wandert zusätzlich als Wegweiser in Vaterknoten</li>
+        <li>Evtl. ist dort ebenfalls ein Split nötig, wenn er voll ist</li>
+    </ul>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert2.png" class="noborder fragment" data-fragment-index="2" alt="B+-Baum"></div>
+        <div><p class="fragment small" data-fragment-index="3" style="text-align: center;">22 einfügen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert3.png" class="fragment noborder" data-fragment-index="4" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Die einzufügende 22 gehört in den Blattknoten links, da sie kleiner als 29 ist. Da dieser Knoten voll ist, erfolgt ein Split. Es gibt nun die 17, 18 und 22. Mittleres Element davon ist die 18. Alles, was kleiner als 18 ist (also die 17) kommt in einen Blattknoten, alles, was größer oder gleich 18 ist (18 und 22) in einen zweiten Blattknoten. Die 18 gelangt als Wegweiser in den bereits vorhandenen Vaterknoten.</aside>
+</section>
+<section>
+    <h2>Einfügen in B+-Baum</h2>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert3.png" class="noborder" alt="B+-Baum" style="width:11cm"></div>
+        <div><p class="small" style="text-align: center;">998 einfügen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert4a.png" class="fragment noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">&rightarrow;</p></div>
+    </div>
+    <div class="columns" style="margin-top: -8mm;">
+        <div><img src="img/6/bplustree_insert4b.png" class="fragment noborder" alt="B+-Baum" style="width:11cm"></div>
+        <div><p class="fragment small" style="text-align: center;">&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_insert4.png" class="fragment noborder" alt="B+-Baum" style="width:11cm"></div>
+    </div>
+    <aside class="notes">Fügen wir nun die 998 ein, ist ihr Platz im Blatt ganz rechts. Da dieses jedoch voll ist, muss wieder gesplittet werden: Es geht um die 29, 88 und 998. Mittleres Element ist 88, sie wandert in den Vaterknoten. Die beiden neuen Blätter sind [29] und [88, 998]. In deren Vaterknoten wären nun also die Wegweiser 18, 29 und 88. Da dort nur Platz für 2k=2 Wegweiser ist, erfolgt auch hier ein Split. Das mittlere Element (29) wandert in den Vaterknoten (wird neu erstellt), die 18 links, die 88 rechts davon.</aside>
+</section>
+
+<section>
+    <h2>Löschen im B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Danach noch mind. k* Einträge? &Rightarrow; einfach löschen</li>
+        </ol></li>
+    </ol>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert4.png" class="noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">998 löschen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_delete0.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Eine Löschung ist am einfachsten, wenn dabei kein Unterlauf entsteht. Dies ist der Fall, wenn wir in unserem B+-Baum den Schlüssel 998 löschen. In jedem Blatt müssen mindestens k* (=1) Einträge sein. Das ist hier nach der Löschung der 998 im Blattknoten unten rechts der Fall, also muss nichts weiter unternommen werden.</aside>
+</section>
+
+<section>
+    <h2>Löschen im B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Danach noch mind. k* Einträge? &Rightarrow; einfach löschen</li>
+            <li>Unterlauf &Rightarrow; mit dem Nachbarknoten ausgleichen oder mischen</li>
+        </ol></li>
+    </ol>
+    <p></p>
+    <h4 data-fragment-index="1" class="fragment">Ausgleich</h4>
+    <ul class="fragment small" data-fragment-index="1" style="margin-top: -5mm;">
+        <li>Einträge vom Nachbarknoten übernehmen zum Ausgleichen</li>
+        <li>Wegweiser im Vaterknoten entsprechend anpassen</li>
+    </ul>
+    <div class="columns">
+        <div><img src="img/6/bplustree_insert4.png" class="fragment noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">29 löschen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_delete1.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Gibt es in einem Nachbarknoten (erst links schauen, dann rechts) mehr als k* Einträge, kann ein Ausgleich mit diesem vorgenommen werden. Löschen wir in unserem B+-Baum die 29, haben wir einen Unterlauf. Da es im rechten Nachbarblatt genügend Einträge gibt, können wir die 88 einfach nach links verschieben. Der Wegweiser im Vaterknoten muss angepasst werden, weil rechts Einträge &ge; 998 sind.</aside>
+</section>
+
+<section>
+    <h2>Löschen im B+-Baum</h2>
+    <ol class="small">
+        <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
+        <li><ol style="list-style-type:lower-alpha">
+            <li>Danach noch mind. k* Einträge? &Rightarrow; einfach löschen</li>
+            <li>Unterlauf &Rightarrow; mit dem linken Nachbarknoten ausgleichen oder mischen</li>
+        </ol></li>
+    </ol>
+    <h4>Mischen (Merge)</h4>
+    <ul class="small" data-fragment-index="1" style="margin-top: -5mm;">
+        <li>Falls Nachbarknoten auch unterlaufen würden &Rightarrow; mischen</li>
+        <li>Wegweiser aus dem Vater entfernen</li>
+        <li>Evtl. ist dort ebenfalls ein Ausgleich / Merge nötig</li>
+    </ul>
+    <div class="columns" style="margin-top: -4mm;">
+        <div><img src="img/6/bplustree_delete1.png" class="noborder" alt="B+-Baum"></div>
+        <div><p class="fragment small" style="text-align: center;">998 löschen<br>&rightarrow;</p></div>
+        <div><img src="img/6/bplustree_delete2.png" class="fragment noborder" alt="B+-Baum"></div>
+    </div>
+    <aside class="notes">Löschen wir die 998, entsteht ein Unterlauf und es ist kein Ausgleich möglich. Daher mischen wir 88 und 998 zu einem neuen Blattnoten und entfernen den Wegweiser 998 aus dem Vaterknoten. Da dieser nun unterläuft, wird hier wieder versucht auszugleichen - ohne Erfolg. Daher erfolgt eine Mischung der Knoten [18], [88], [] zu [18, 88].</aside>
+</section>
+
+<section>
+    <h2>CREATE INDEX</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 108</div>
+    <p class="small"><code>CREATE INDEX</code> erstellt in den meisten DBMS einen B+-Baum-Index.</p>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr);</code></pre>
+    <h4>Kosten</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li>Bei INSERT, UPDATE, DELETE muss der Index entsprechend gepflegt werden</li>
+    </ul>
+    <p></p>
+    <h4>Nutzen</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li>Schnellere exakte Suche (<code>=</code>) und Bereichssuche (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>BETWEEN</code>)</li>
+        <li>Index kann auch bei <code>ORDER BY</code>, <code>GROUP BY</code> und Joins helfen.</li>
+    </ul>
+    <p class="small">Die meisten DBMS legen Indexe auf Primärschlüsselspalten automatisch an.<br>Weitere Indexe müssen manuell angelegt werden.</p>
+    <aside class="notes">Indexe lohnen sich besonders auf Spalten, auf denen oft eine Filterung in einem <code>WHERE</code>-Prädikat erfolgt, z. B. <code>WHERE produktnr=17</code> oder <code>WHERE bestelldatum BETWEEN '2020-01-01' AND '2020-01-31'</code>. Auf DATE- und TIMESTAMP-Spalten erfolgen oft solche Anfragen, zudem tauchen diese Spalten oft im <code>ORDER BY</code> auf, daher sind hier Indexe oft sinnvoll. Auch bei Prefix-Suchen (<code>LIKE 'A%'</code>) hilft ein Index.</aside>
+</section>
+
+<section>
+    <h2>Mehrdimensionale Indexe</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 110</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX ON meine_tabelle(a, b, c);</code></pre>
+    <h4>Kann genutzt werden bei:</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li><code>WHERE a = 5 AND b = 7 AND c = 2</code></li>
+        <li><code>WHERE a = 5 AND b = 7</code></li>
+        <li><code>WHERE a = 5</code></li>
+        <li>Bei B+-Baum-Indexen auch bei <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>BETWEEN</code>, <code>LIKE '...%'</code></li>
+    </ul>
+    <aside class="notes">Ein kombinierter Index, der aus mehreren Spalten besteht, ist günstiger als das Erstellen und die Wartung mehrerer einzelner Indexe. Wichtig ist jedoch die Reihenfolge, in der man die Spalten angibt. Der hier gezeigte Index auf den Spalten a, b und c kann z. B. nicht für eine Anfrage <code>WHERE b=7</code> verwendet werden.</aside>
+</section>
+<!--
+<section>
+    <h2>Hash-Indexe</h2>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr) USING HASH;</code></pre>
+    <h4>Unterschiede zum B+-Baum:</h4>
+    <ul class="small" style="margin-top: -4mm;">
+        <li>Hilft nur bei exakter Suche (<code>=</code>) und Equi-Joins.</li>
+        <li>Schnellere Suche: $O(1)$ (konstanter Aufwand) vs. $O(log_k(n))$</li>
+    </ul>
+    <p></p>
+    <h4>Hash-Funktion</h4>
+    <p>$h(x) = $ Bucketnummer</p>
+    <p class="small">Beispiel: $h(x) = x\ mod\ 10$</p>
+    <aside class="notes">Wächst die Datenmenge in der Tabelle, erhöht sich trotzdem nicht der Aufwand, eine bestimmte Zeile zu suchen. Eine Hash-Funktion nimmt als Eingabe den Spaltenwert auf der Index-Spalte (z. B. eine Produktnummer). Die Funktion berechnet daraus die Speicheradresse eines sogenannten Buckets, in dem wir die Speicheradresse der jeweiligen Zeile finden. Bei $h(x) = x\ mod\ 10$ würde man den Verweis auf den Müsliriegel (Produktnummer 18) und das Katzenfutter (88) in Bucket 8 speichern, die Spülmaschinentabs (29) in Bucket 9, usw.</aside>
+</section>
+
+<section>
+    <h3>Hash-Indexe: Überlaufbehandlung</h3>
+    <p class="small">$h(88) = 88\ mod\ 10 = 8$<br>Was tun, wenn Bucket 8 voll ist?</p>
+
+    <ul class="small">
+        <li><em>Lineares Sondieren</em>: Einfach im nächsten freien Bucket speichern</li>
+        <li><em>Quadratisches Sondieren</em>: 1 weiter speichern, wenn dort auch voll, dann 4 weiterspeichern, dann 9, dann 16, ...</li>
+        <li><em>Verkettung der Überläufer</em>: Neues Overflow-Bucket erstellen und verlinken</li>
+    </ul>
+    <p class="small">&Rightarrow; Erhöht alles den Aufwand beim Suchen, da oft in mehreren Buckets gesucht werden muss</p>
+</section>
+
+<section>
+    <h3>Lineares Sondieren</h3>
+    <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
+    <p class="small">$h(x) = x\ mod\ 10$, Bucket-Kapazität: 1</p>
+    <table style="margin-top: -2mm;">
+        <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+        <tbody>
+            <tr class="fragment"><td>18 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td></td></tr>
+            <tr class="fragment"><td>19 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+            <tr class="fragment"><td>29 einfügen:</td><td>29</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr>
+            <tr class="fragment"><td>88 einfügen:</td><td>29</td><td>88</td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+        </tbody>
+    </table>
+    <aside class="notes">Für die 18 und 19 war in den entsprechenden Buckets 8 und 9 noch Platz, aber für die 29 war in Bucket 9 kein Platz mehr, daher wird der Datensatz 29 in Bucket 0 gespeichert. Bei der 88 muss sogar drei mal sondiert werden, da sowohl Bucket 8 als auch 9, 0 und 1 voll sind. Möchte man nun Produktnummer 88 suchen, sind dafür also vier Seitenzugriffe nötig. Wenn wir das Produkt 78 suchen wollen, erfahren wir erst nach 5 Seitenzugriffen (Bucket 8, 9, 0, 1, 2), dass es dieses Produkt gar nicht gibt.</aside>
+</section>
+
+<section>
+    <h3>Quadratisches Sondieren</h3>
+    <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
+    <p class="small">$h(x) = x\ mod\ 10$, Bucket-Kapazität: 1</p>
+    <table style="margin-top: -2mm;">
+        <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+        <tbody>
+            <tr class="fragment"><td>18 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td></td></tr>
+            <tr class="fragment"><td>19 einfügen:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+            <tr class="fragment"><td>29 einfügen:</td><td>29</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr>
+            <tr class="fragment"><td>88 einfügen:</td><td>29</td><td></td><td>88</td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr class="fragment">
+        </tbody>
+    </table>
+    <aside class="notes">Wenn wir die 88 einfügen, ist in Bucket 8 kein Platz mehr. Daher versuchen wir es mit Bucket 8+1=9. Auch kein Platz. Bei (8+4) mod 10=2 ist Platz, daher ist dies der Speicherort. Hier entstehen mehr Freiräume und weniger Cluster als bei linearem Sondieren. Würden wir nun noch die 38 einfügen, müssen wir vier Seiten lesen (8, 9, 2, 7). Beim linearen Sondieren wären fünf Zugriffe nötig gewesen (8, 9, 0, 1, 2), bis wir ein Seite gefunden hätten, die Platz hat.</aside>
+</section>
+
+<section>
+    <h3>Verkettung der Überläufer</h3>
+    <p class="small">Wir fügen Produkte ein und pflegen den Hash-Index auf Produktnr: 18, 19, 29, 88</p>
+    <p class="small">$h(x) = x\ mod\ 10$, Bucket-Kapazität: 1</p>
+    <table style="margin-top: -2mm;">
+        <thead><tr><th>&nbsp;</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead>
+        <tbody>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>18</td><td>19</td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>&downarrow;</td><td>&downarrow;</td></tr>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>88</td><td>29</td></tr>
+        </tbody>
+    </table>
+    <aside class="notes">Ist ein Bucket voll, wird ein neues Overflow-Bucket angelegt, in welches die nächsten Einträge gespeichert werden. Suchen wir Produkt 78, finden wir einen Bucket mit der 18 und einem Pointer zu einem Overflow-Bucket. In diesem finden wir nur die 88, daher kann die Suche hier beendet werden.</aside>
+</section>
+
+<section>
+    <h3>Erweiterbares Hashing</h3>
+    <div style="width:19cm; margin-left: -1mm;">
+    <p class="small">Die bisher behandelten Hash-Verfahren waren statisch. Die Hash-Funktion und deren Wertebereich waren immer gleich. Erweiterbares Hashing ist ein dynamisches Hash-Verfahren.</p>
+    <ul class="small">
+        <li>Das Dictionary hat eine globale Tiefe $t$ und $2^t$ Einträge.</li>
+        <li>Ein Eintrag besteht aus einer $t$-Bit-Zahl und einem Pointer auf einen Bucket.</li>
+    </ul>
+    </div>
+    <ul class="small">
+        <li>$h(x)$ liefert eine Zahl, von der aber nur die letzten $t$ Bits von Interesse sind (mit dem Dictionary lässt sich das Bucket für den gesuchten Schlüssel finden)</li>
+    </ul>
+    <p class="small">Beispiel: $h(x)=x\ mod \ 2^{32}$, Bucket-Kapazität: 1</p>
+    <p class="small">
+    h(18) = 1001<b>0</b><sub>2</sub><br>
+    h(19) = 1001<b>1</b><sub>2</sub></p>
+
+    <div class="sl-block" data-block-type="text" data-block-id="d0e7f67fab6ce9bc00494c9b4f8adef7" style="height: auto; width: 80px; left: 720px; top: 128.155px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>0</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 185.247px;" data-block-id="9d8542ccb8b463d8638fc139d67a89ef">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>1</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 100.247px;" data-block-id="3e6695fac553f512eaedf881934dd2e9">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>18</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 191.247px;" data-block-id="080f22ea1205493cd48eba1da6ce0b00">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>19</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="line" data-block-id="2c05d2348f0ec11513eb2b997ba32b58" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 128.155px;">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="21.092246913580254" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="21.092246913580254" viewBox="0 0 80 21.092246913580254">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <polygon fill="#000000" transform="translate(72.7478255967655,1.9120581646671102) rotate(75.23)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 194.839px;" data-block-id="89d6ee6cf5f2f52e3f8a0e0865c4c83e">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="20.908000000000015" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="20.908000000000015" viewBox="0 0 80 20.908000000000015">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <polygon fill="#000000" transform="translate(72.7437226798831,19.011571922387464) rotate(104.647)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="text" data-block-id="eaa76fa0d7165df0dfd3508e20f1b4f4" style="height: auto; width: 60px; left: 730px; top: 92.1549px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27;">
+            <p style="font-size: 70%; text-align: center;">t=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 64.2469px;" data-block-id="993945409d75cf90b23b636d8e8d6a11">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 160.655px;" data-block-id="1212cefde362cbd5b291e1363808345e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 30;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <aside class="notes">Auf der linken Seite der Pfeile ist das Dictionary zu sehen. Es besteht initial aus 2 Einträgen. Suchen wir die 18, berechnen wir z. B. $h(18)=18\ mod \ 2^{32}=18$ (binär 10100) und schauen auf die letzten t=1 Bits. Wir schauen also ins Bucket, auf das das Dictionary an der Stelle 0 zeigt.</aside>
+</section>
+
+<section>
+    <h3>Erweiterbares Hashing</h3>
+    <div style="width:19cm; margin-left: -1mm;">
+    <h4>Überlauf-Behandlung</h4>
+    <ul class="small">
+        <li>Läuft ein Bucket über, wird es gesplittet</li>
+        <li>Die lokale Tiefe $t'$ erhöht sich um 1</li>
+        <li>Ist $t'>t$, verdoppelt sich das Dictionary<br>und $t$ erhöht sich um 1</li>
+    </ul>
+    <p></p>
+    <p class="small">Beispiel: $h(x)=x\ mod \ 2^{32}$, Bucket-Kapazität: 1</p>
+    <p class="small">
+    h(18) = 100<b>10</b><sub>2</sub><br>
+    h(19) = 100<b>11</b><sub>2</sub><br>
+    h(28) = 111<b>00</b><sub>2</sub></p>
+    </div>
+
+    <div class="sl-block" data-block-type="text" data-block-id="d0e7f67fab6ce9bc00494c9b4f8adef7" style="height: auto; width: 80px; left: 720px; top: 128.155px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>0</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 185.247px;" data-block-id="9d8542ccb8b463d8638fc139d67a89ef">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>1</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 100.247px;" data-block-id="3e6695fac553f512eaedf881934dd2e9">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>18</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 191.247px;" data-block-id="080f22ea1205493cd48eba1da6ce0b00">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>19</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="line" data-block-id="2c05d2348f0ec11513eb2b997ba32b58" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 128.155px;">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="21.092246913580254" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="21.092246913580254" viewBox="0 0 80 21.092246913580254">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="21.592246913580254" x2="73.2478255967655" y2="2.41205816466711"></line>
+                <polygon fill="#000000" transform="translate(72.7478255967655,1.9120581646671102) rotate(75.23)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 194.839px;" data-block-id="89d6ee6cf5f2f52e3f8a0e0865c4c83e">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="20.908000000000015" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="20.908000000000015" viewBox="0 0 80 20.908000000000015">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73.2437226798831" y2="19.511571922387464"></line>
+                <polygon fill="#000000" transform="translate(72.7437226798831,19.011571922387464) rotate(104.647)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 554.516px;" data-block-id="f41db546064efc71dc23e3cdb6ca5ec4">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="45.408000000000015" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 21;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="45.408000000000015" viewBox="0 0 80 45.408000000000015">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73.97744644893375" y2="0.20579860441481"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73.97744644893375" y2="0.20579860441481"></line>
+                <polygon fill="#000000" transform="translate(73.47744644893375,0.70579860441481) rotate(90.579)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 495.332px;" data-block-id="375540e9571f626229f44b965a33ce43">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 20;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="1" viewBox="0 0 80 1">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <polygon fill="#000000" transform="translate(72.5,0) rotate(90)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 535.424px;" data-block-id="43b6a29d9ceff5b0b9ecfaa252fd515e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 19; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>19</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 446.128px;" data-block-id="5b867fd5da904a6951b099124905d5a4">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>18</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 533.924px;" data-block-id="69c959d78d1a03c2fe35de8f0c9cf6ef">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 17; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>11</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 476.832px;" data-block-id="88cdef4b37b2ce5989566b818074394e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>10</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 363.286px;" data-block-id="d948bb9b770d61c8755b9479628bc2be">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>00</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 720px; top: 420.378px;" data-block-id="31b197f47e3d6e46d8ffca8bca92ba73">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 23; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>01</strong></p style="text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 80px; left: 880px; top: 363.286px;" data-block-id="16a8a5e7794a6463b0b035f53c2215cb">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 24; border-style: solid; border-width: 5px;">
+            <p style="text-align: center;"><strong>28</strong></p>
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 389.49px;" data-block-id="adee8bcdb0244d9c44689c9d2c4c6f21">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 25;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="1" viewBox="0 0 80 1">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="73" y2="0.5"></line>
+                <polygon fill="#000000" transform="translate(72.5,0) rotate(90)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 800px; top: 428.878px;" data-block-id="37329bb1267fde4caa890f3f63d4969f">
+        <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="80" data-line-y2="110.04599999999994" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 26;" data-line-width="5px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="80" height="110.04599999999994" viewBox="0 0 80 110.04599999999994">
+                <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="0.5" x2="76.08991857153035" y2="104.4796022390328"></line>
+                <line stroke="#000000" stroke-width="5" x1="0.5" y1="0.5" x2="76.08991857153035" y2="104.4796022390328"></line>
+                <polygon fill="#000000" transform="translate(75.58991857153035,103.9796022390328) rotate(143.984)" points="0,-7.5 7.5,7.5 -7.5,7.5"></polygon>
+            </svg></div>
+    </div>
+    <div class="sl-block" data-block-type="text" data-block-id="eaa76fa0d7165df0dfd3508e20f1b4f4" style="height: auto; width: 60px; left: 730px; top: 92.1549px;">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 27;">
+            <p style="font-size: 70%; text-align: center;">t=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 64.2469px;" data-block-id="993945409d75cf90b23b636d8e8d6a11">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 28;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 160.655px;" data-block-id="1212cefde362cbd5b291e1363808345e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 30;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 327.286px;" data-block-id="21fe1c95d5182df3ba7302ddb3917d07">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 31;">
+            <p style="font-size: 70%; text-align: center;">t'=2</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 415.286px;" data-block-id="26423aa66cfb3d0fe4e70f686f82bca3">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 32;">
+            <p style="font-size: 70%; text-align: center;">t'=2</p>
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 890px; top: 502.924px;" data-block-id="0a829ce292f1e88c9a53ecd7fa2bf82e">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 33;">
+            <p style="font-size: 70%; text-align: center;">t'=1</p style="font-size: 80%; text-align: center;">
+        </div>
+    </div>
+    <div class="sl-block" data-block-type="text" style="height: auto; width: 60px; left: 730px; top: 327.286px;" data-block-id="53fc23fbe44636e536e7125669fdc717">
+        <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 34;">
+            <p style="font-size: 70%; text-align: center;">t=2</p>
+        </div>
+    </div>
+    <aside class="notes">Wenn wir die 28 einfügen, läuft es über. Wir müssen das 0-Bucket also splitten in ein 00- und ein 10-Bucket. Alle Einträge, deren Hash-Wert auf 00 enden, kommen in ersteres, die anderen in zweiteres. Die beiden Dictionary-Einträge, die auf 1 enden, zeigen auf das gleiche Bucket, welches die lokale Tiefe 1 hat.</aside>
+</section>
+-->
+<section>
+    <h2>Join-Algorithmen</h2>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+           ON p.hersteller=h.firma;</code></pre>
+    <p class="small">Es gibt viele Arten, einen Join auszuführen:</p>
+    <ul class="small">
+        <li><em>Nested-Loop-Join</em>: Für jede Zeile der ersten Tabelle wird mit jeder Zeile der zweiten Tabelle überprüft, ob das Join-Prädikat wahr ist.</li>
+        <li><em>Sort-Merge-Join</em>: Beide Tabellen werden nach der Join-Spalte sortiert, dann beide von oben nach unten durchgescannt, um Join-Partner zu suchen.</li>
+        <li><em>Hash-Join</em>: Hash-Tabelle wird für kleinere Tabelle angelegt, dann die größere Tabelle durchlaufen und Join-Partner mittels der Hash-Tabelle gesucht.</li>
+        <li><em>Index-Join</em>: Während eine Tabelle komplett durchlaufen wird, werden für jede Zeile die Join-Partner in der anderen Tabelle mittels eines Indexes gesucht.</li>
+    </ul>
+</section>
+<section>
+    <h3>Nested-Loop-Join</h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Für jede Zeile der ersten Tabelle $R$ wird mit jeder Zeile der zweiten Tabelle $S$<br>überprüft, ob das Join-Prädikat wahr ist.</p>
+<pre><code class="python" contenteditable data-trim>
+for each row p in PRODUKTE:
+  for each row h in HERSTELLER:
+     if p.hersteller == h.firma:
+        emit(p, h)</code></pre>
+
+<p class="small">Aufwand: $O(|R|\cdot|S|)$</p>
+</section>
+
+<section>
+    <h3>Sort-Merge-Join</h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Beide Tabellen werden nach der Join-Spalte sortiert, dann beide von oben nach unten durchgescannt, um Join-Partner zu suchen.</p>
+
+<div class="columns">
+    <div><span data-sql-query="SELECT * FROM produkte ORDER BY hersteller nulls last limit 5"></span></div>
+    <div><span data-sql-query="SELECT * FROM hersteller ORDER BY firma"></span></div>
+</div>
+
+<p class="small">Aufwand: $O(|R|\cdot log(|R|) + |S|\cdot log(|S|))$</p>
+<aside class="notes">Der Aufwand beim Sort-Merge-Join ist im Wesentlichen der Aufwand, die beiden Tabellen zu sortieren.</aside>
+</section>
+
+<section>
+    <h3>Hash-Join</h3>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Hash-Tabelle wird für kleinere Tabelle angelegt, dann die größere Tabelle durchlaufen und Join-Partner mittels der Hash-Tabelle gesucht.</p>
+<pre><code class="python" contenteditable data-trim>
+hash_tabelle = []
+
+for each row h in HERSTELLER:
+  hash_tabelle.put(hash(h.firma)), h)
+
+for each row p in PRODUKTE:
+  h = hash_tabelle.get(hash(p.hersteller))
+  emit(p, h)</code></pre>
+
+<p class="small">Aufwand: $O(|R|+|S|)$</p>
+</section>
+
+<section>
+    <h3>Index-Join</h3>
+    <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
+    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+SELECT * FROM produkte p JOIN hersteller h 
+            ON p.hersteller=h.firma;</code></pre>
+
+<p class="small">Während eine Tabelle komplett durchlaufen wird, werden für jede Zeile die Join-Partner in der anderen Tabelle mittels eines Indexes gesucht.</p>
+<pre><code class="python" contenteditable data-trim>
+for each row p in PRODUKTE:
+  h = hersteller_firma_idx.get(p.firma)
+  emit(p, h)</code></pre>
+
+<p class="small">Aufwand hängt von den Index-Kosten ab, z. B. $O(|R|\cdot log(|S|))$, wenn es einen B+-Baum-Index auf S gibt, oder $O(|R|)$, wenn ein Hash-Index existiert.</p>
+<aside class="notes">Der Index-Join ist ähnlich zum Hash-Join, bis auf den Fakt, dass hier der Index bereits vorher existieren muss. Man kann einen Hash-Join auch als Index-Join sehen, bei dem der Hash-Index extra für den Join erstellt und danach wieder weggeworfen wird. </aside>
+</section>
+
+<section>
+    <h2>Kapitelzusammenfassung</h2>
+    <ul class="small">
+        <li>DB-Anwendungen: Embedded SQL, JDBC</li>
+        <li>JDBC: DriverManager, Connection, Statement, PreparedStatement, ResultSet</li>
+        <li>SQL-Injections</li>
+        <li>Benutzerdefinierte Routinen: Stored Procedures, (Tabellen-)Funktionen</li>
+        <li>Trigger: BEFORE / AFTER / INSTEAD OF</li>
+        <li>Indexe: Clustered Index, B-Baum, B+-Baum</li>
+        <!--<li>Hash-Verfahren: Lineares / Quadratisches Sondieren, Verkettung der Überläufer, Erweiterbares Hashing</li>-->
+        <li>Join-Algorithmen: Nested-Loop-Join, Sort-Merge-Join, Hash-Join, Index-Join</li>
+    </ul>
+</section>
+
+
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+        <script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>

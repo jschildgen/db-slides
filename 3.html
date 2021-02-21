@@ -1,0 +1,1701 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken - Kapitel 3 - Relationenmodell</title>
+
+		<link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                        <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                            <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                            <h1>Datenbanken</h1>
+                            <h3>Kapitel 3: Das Relationenmodell</h3>
+                            <h4 style="text-align:center">2020-10-30</h4>
+                            <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                            <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                            
+                        </section>
+                        <section data-visibility="hidden">
+                            <h2>In diesem Kapitel...</h2>
+                            <ul>
+                                <li>... lernen wir, dass eine Relation eine Tabelle ist,</li>
+                                <li>... überführen wir ER-Diagr. in ein Relationenschema,</li>
+                                <li>... wenden wir relationale Algebra an,</li>
+                                <li>... schauen wir uns drei Normalformen an.</li>
+                            </ul>
+                            <p></p>
+                            <span data-sql-query="SELECT * FROM produkte LIMIT 3" data-sql-pk="produktnummer"></span>
+                        </section> 
+                        <section>
+                            <h2>Relation (= Tabelle)</h2>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 14</div>
+                            <h4>Metadaten</h4>
+                            <ul>
+                                <li>Name der Relation (= Tabellennname)</li>
+                                <li>Attribute (= Spalten)</li>
+                                <li>Datentypen und Eigenschaften der Attribute<br>(Primärschlüssel, Fremdschlüssel, ...)</li>
+                            </ul>
+                            <h4>Daten</h4>
+                            <ul>
+                                <li>Menge von Tupeln (= Zeilen)</li>
+                                <li>Tupel besitzt einen Wert in jedem Attribut</li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h2>Relation: Produkte</h2>
+                            <h4>Metadaten</h4>
+                            <p>PRODUKTE(<u>produktnummer</u>,bezeichnung,preis,hersteller)</p>
+                            <p>W(produktnummer) = integer,</p>
+                            <p>W(bezeichnung) = string, usw. </p>
+                            <h4>Daten</h4>
+                            <p>PRODUKTE = {(17, Schokoriegel, 0.89, Monsterfood), ...}</p>
+                            <aside class="notes">Der Primärschlüssel (Produktname) wird unterstrichen. W(A) ist der Wertetyp des Attributs A.</aside>
+                        </section>
+                        <section>
+                            <h3>Relation = Menge von Tupeln</h3>
+                            <p>R(A1,A2,...) &SubsetEqual; W(A1) &Cross; W(A2) &Cross; ...</p>
+                            <ul>
+                                <li>Mengen haben keine Duplikate</li>
+                                <li>Mengen haben keine Ordnung</li>
+                                <li>Ordnung der Attribute spielt keine Rolle</li>
+                            </ul>
+                            <aside class="notes">Die in einer Relation befindlichen Tupel sind eine Teilmenge aus dem kartesischen Produkts der Datentypen ihrer Attribute. Mengen haben keine Ordnung, d. h. es gibt keine erste, zweite, etc. Zeile. Auch auf Attributen besteht keine Ordnung. Es gibt kein erstes Attribut. Attribute werden über ihren Attributsnamen identifiziert. Mengen sind frei von Duplikaten, d. h. jede Zeile ist eindeutig.</aside>
+                        </section>
+
+                        <section>
+                                <h3>NULL-Werte</h3>
+                                <p>NULL = nicht vorhandener Wert</p>
+                                <div>
+                                        <span  data-sql-query="SELECT produktnr, bezeichnung, preis FROM produkte WHERE produktnr IN (17)
+                                        UNION ALL SELECT 88, 'Katzenfutter', null" data-sql-pk="firma" data-sql-tablename="produkte">
+                                </div>
+
+                                <p class="fragment" data-fragment-index="2">Mögliche Bedeutungen für Preis IS NULL:</p>
+                                <ul class="fragment" style="margin-top: 3mm; font-size:70%" data-fragment-index="2">
+                                    <li>Der Preis ist unbekannt</li>
+                                    <li>Das Produkt ist ausverkauft</li>
+                                    <li>Produkte dieser Art haben keinen Preis</li>
+                                    <li>Preis nur auf Anfrage</li>
+                                </ul>
+
+                                <div class="poll fragment" style="bottom:-30px" data-fragment-index="1">
+                                    <h1>Was könnte PREIS IS NULL bedeuten?</h1>
+                                      <ul>
+                                        <li>Der Preis ist unbekannt</li>
+                                        <li>Das Produkt ist ausverkauft</li>
+                                        <li>Produkte dieser Art haben keinen Preis</li>
+                                        <li>Preis nur auf Anfrage</li>
+                                      </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
+
+                                <aside class="notes">In unseren Beispieltabellen stellen wir NULL-Werte als &quot;-&quot; dar. Wenn der Preis 0 ist, ist das Produkt kostenlos, Preis NULL hat jedoch eine andere Bedeutung.</aside>
+                            </section>
+
+                        <section>
+                            <h2>Primärschlüssel</h2>
+                            <p>PK &SubsetEqual; {A1, A2, ...}</p>
+                            <ul>
+                                <li>Primärschlüssel identifiziert Tupel eindeutig</li>
+                                <li>Es darf Relationen ohne Primärschlüssel geben</li>
+                                <li>Primärschlüssel ist eindeutig: <br>Es darf keine zwei verschiedene   Tupel in der Relation geben, die in den Primärschlüsselattributen die gleichen Werte haben.</li>
+                                <li>Primärschlüssel dürfen keine NULL-Werte enthalten</li>
+                            </ul>
+                            <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-key green"></i></div>
+                            <aside class="notes">Der Primärschlüssel einer Relation ist eine Teilmenge ihrer Attribute.</aside>
+                        </section>
+                        
+                            <section>
+                                    <h3>Beispiel: hersteller</h3>
+                                    <div>
+                                            <span  data-sql-query="SELECT * FROM hersteller WHERE firma IN (
+                                                SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
+                                            ) UNION ALL SELECT 'Sonstige', NULL" data-sql-pk="firma" data-sql-tablename="hersteller">
+                                    </div>
+                                    <ul style="margin-top: 3mm;">
+                                        <li>Der Firmenname eines Herstellers ist eindeutig</li>
+                                        <li>Der Firmenname darf nicht NULL sein</li>
+                                        <li>Das Land darf NULL sein</li>
+                                    </ul>
+                                    <aside class="notes">Hier wird die Beziehung &quot;Produkte sind von Hersteller&quot; mittels einer Fremdschlüsselbeziehung modelliert. Die Attributmenge {hersteller} referenziert die Attributmenge {firma} der Herstellertabelle. Die Datentypen von den Spaten &quot;hersteller&quot; und &quot;firma&quot; müssen übereinstimmen. In die Spalte &quot;hersteller&quot; dürfen nur Werte stehen, die auch tatsächlich in der Firma-Spalte der Hersteller-Relation existieren.</aside>
+                                </section>
+                        <section>
+                            <h2>Fremdschlüssel</h2>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 15</div>
+                            <ul>
+                                <li class="fragment">Mit Fremdschlüsseln werden Beziehungen<br>Wert-basiert modelliert</li>
+                                <li class="fragment">Fremdschlüssel referenziert Attributmenge</li>
+                                <li class="fragment">Fremdschlüsselattribute haben die gleichen Datentypen wie die referenzierten Attribute</li>
+                                <li class="fragment">In Fremdschlüsselattributen dürfen nur Werte stehen, die auch tatsächlich in der referenzierten Relation in den referenzierten Attributen existieren; NULL ist aber auch erlaubt</li>
+                            </ul>
+                            <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-share green"></i></div>
+                        </section>
+                        <section>
+                            <h3>Beispiel: produkte und hersteller</h3>
+                            <div class="trackinfo"><i class="fas fa-headphones"></i> 16</div>
+                            <div class="columns">
+                             <div style="margin-top:0px; margin-right: 8mm;">
+                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,29)" data-sql-pk="produktnr" data-sql-tablename="produkte">
+                            </div>
+                            <div style="margin-top:0px;">
+                                    <span  data-sql-query="SELECT * FROM hersteller WHERE firma IN (
+                                        SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
+                                    )" data-sql-pk="firma" data-sql-tablename="hersteller">
+
+                                
+                            </div>
+                            </div>
+                            <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
+                        </section>
+                        <section>
+                                <h3>Zusammengesetzte Schlüssel</h3>
+                                        <div>
+                                                <span data-sql-query="SELECT * FROM hersteller WHERE firma IN (
+                                                    SELECT hersteller FROM produkte WHERE produktnr IN (17,29)
+                                                ) UNION ALL SELECT 'Monsterfood', 'China'" data-sql-pk="firma,land" data-sql-tablename="hersteller"/>
+                                        </div>
+                                        <div>
+                                           <div data-sql-query="SELECT produktnr, bezeichnung, preis, hersteller, land FROM produkte join hersteller on produkte.hersteller=hersteller.firma WHERE produktnr IN (17,29)"
+                                            data-sql-pk="produktnr" data-sql-tablename="produkte"/>
+                                        </div>
+                                        <p style="font-size:70%">produkte(hersteller,land) ist Fremdschlüssel auf hersteller(firma,land)</p>
+                                            
+                                        <aside class="notes">In diesem Beispiel haben wir als Primärschlüssel der Herstellerrelation die Kombination aus den Spalten Firma und Land gewählt. Nun darf es also zwei Hersteller mit dem gleichen Firmennamen geben, vorausgesetzt sie sind von einem unterschiedlichen Land. Alle Relationen, die die Hersteller-Relation referenzieren (hier: Produkte) müssen dementsprechend zusammengesetzte Fremdschlüssel verwenden.</aside>
+                                           
+                        </section>
+                        <section>
+                        <h3>Zusammengesetzte Schlüssel</h3>
+                        <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">termine</p>
+                        <table style="font-size:0.7em">
+                                <thead>
+                                    <tr><th><u>Datum</u></th><th><u>Uhrzeit</u></th><th><u>Raum</u></th><th>Dauer</th><th>Bezeichnung</th></tr>
+                                    <tr><td>2020-10-14</td><td>14:15</td><td>17-123</td><td>90</td><td>Dings-Meeting</td></tr>
+                                    <tr><td>2020-10-21</td><td>16:00</td><td>17-222</td><td>60</td><td>Treffen mit Jürgen</td></tr>
+                        </table>
+                        <div class="columns">
+                                <div style="margin-top:0px; margin-right: 8mm;">
+                                        <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">personen</p>
+                                        <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span>
+                                </div>
+                                <div style="margin-top:0px;">
+                                        <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">nehmen_teil</p>
+                                        <table style="font-size:0.7em">
+                                                <thead>
+                                                    <tr><th><u>PersNr</u></th><th><u>Datum</u></th><th><u>Uhrzeit</u></th><th><u>Raum</u></th></tr>
+                                                    <tr><td>5</td><td>2020-10-14</td><td>14:15</td><td>17-123</td></tr>
+                                                    <tr><td>8</td><td>2020-10-14</td><td>14:15</td><td>17-123</td></tr>
+                                                    <tr><td>5</td><td>2020-10-21</td><td>16:00</td><td>17-222</td></tr>
+                                        </table> 
+    
+                                    
+                                </div>
+                        </div>
+                                       <p style="font-size:70%">nehmen_teil.persnr ist Fremdschlüssel auf personen.persnr</p>
+                                       <p style="font-size:70%; margin-right: -10mm;">nehmen_teil(datum,uhrzeit,raum) ist Fremdschl. auf termine(datum,uhrzeit,raum)</p>
+                            <aside class="notes">Hier wird eine N:M-Beziehung &quot;Personen nehmen an Terminen teil&quot; mittels einer nehmen_teil-Relation modelliert. Peter nimmt an der Vorlesung und am Praktikum teil. </aside>
+                        </section>
+                        <section>
+                            <h3>Transformation<br>ER-Diagramm &rightarrow; Relationenmodell</h3>
+                        
+                        <table style="font-size: 70%">
+                            <thead><th>ER-Diagramm</th><th>&nbsp;</th><th>Relationenmodell</th></thead>
+                            <tbody>
+                                <tr><td>Entitätstyp</td><td>&rightarrow;</td><td>Relation (=Tabelle)</td></tr>
+                                <tr><td>Attribut</td><td>&rightarrow;</td><td>Attribut (=Spalte)</td></tr>
+                                <tr><td>Primärschlüssel</td><td>&rightarrow;</td><td>Primärschlüssel</td></tr>
+                                <tr><td>Sub-Attribute</td><td>&rightarrow;</td><td>Einzelne Attribute</td></tr>
+                                <tr><td>Mehrwertiges Attribut</td><td>&rightarrow;</td><td>Relation</td></tr>
+                                <tr><td>1:N-Beziehung</td><td>&rightarrow;</td><td>Fremdschlüssel</td></tr>
+                                <tr><td>N:M-Beziehung</td><td>&rightarrow;</td><td>Relation</td></tr>
+                                <tr><td>Schwache Entitätstypen</td><td>&rightarrow;</td><td>Relation</td></tr>
+                                <tr><td>Generalisierung</td><td>&rightarrow;</td><td>Relation(en)</td></tr>
+                            </tbody>
+                        </table>
+                        </section>
+
+                        <section>
+                            <h3>Entitätstyp &rightarrow; Relation</h3>
+                            <table style="font-size: 70%;">
+                                    <tbody>
+                                        <tr><td>Entitätstyp</td><td>&rightarrow;</td><td>Relation (=Tabelle)</td></tr>
+                                        <tr><td>Attribut</td><td>&rightarrow;</td><td>Attribut (=Spalte)</td></tr>
+                                        <tr><td>Primärschlüssel</td><td>&rightarrow;</td><td>Primärschlüssel</td></tr>
+                                    </tbody>
+                                </table>
+                            <div class="columns">
+                            <div class="erd" style="margin-top:15mm; width: 400px;">
+                                    [[
+                                     { _e: "Personen", pos: [130, 100],
+                                      attributes: [
+                                        { _a:"PersNr", options:["primary"], pos: [69, 13] },
+                                        { _a:"Name", pos: [225, 13] }
+                                      ]
+                                     }
+                                    ],
+                                    [
+                                    ]]
+                            </div>
+                            <div class="fragment" style="margin-top: -1mm;">
+                                <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr" data-sql-tablename="personen"></span></div>
+                            </div>
+                            <aside class="notes">Jeder Entitätstyp des ER-Diagramms wird in eine Relation überführt, die den gleichen Namen trägt. Für jedes Attribut gibt es eine Spalte in der Relation, Primärschlüsselattribute sind genau wie im ER-Diagramm unterstrichen.</aside>
+                        </section>
+                        <section>
+                                <h3>Sub-Attribute &rightarrow; Einzelne Attribute</h3>
+                                
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:15mm; width: 450px;">
+                                                [[
+                                                 { _e: "Personen", pos: [150, 100],
+                                                  attributes: [
+                                                   { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                                   { _a:"Name", pos: [245, 13] },
+                                                   { _a:"Adresse", pos: [172, 182], 
+                                                        attributes: [
+                                                        { _a: "Straße", pos: [102, 240] },
+                                                        { _a: "PLZ", pos: [217, 240] }, 
+                                                        { _a: "Ort", pos: [329, 240] }
+                                                        ] }
+                                                  ]
+                                                 }
+                                                ],
+                                                [
+                                                 
+                                                ]]
+                                        </div>
+                                <div class="fragment" style="margin-top: -1mm;" data-fragment-index="2"><p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;Adresse_Strasse,<br>&nbsp;Adresse_PLZ,<br>&nbsp;Adresse_Ort<br>)</p>
+                                </div>
+                                <div class="fragment fade-out" data-fragment-index="2">
+                                <div class="poll fragment" style="bottom:100px" data-fragment-index="1">
+                                    <h1>Wie viele Attribute hat die Tabelle Personen?</h1>
+                                      <ul>
+                                        <li>2</li>
+                                        <li>3</li>
+                                        <li data-poll="correct">5</li>
+                                        <li>6</li>
+                                      </ul>
+                                    <h2>https://frage.space</h2>
+                                </div>
+                                </div>
+                                <aside class="notes">Die einfachste Möglichkeit, Unterattribute im Relationenmodell abzubilden, ist es die Attributshierarchie flachzuklopfen. Da Attribute im Relationenmodell atomare Werte haben, erstellen wir für jedes Sub-Attribut eine eigene Spalte.</aside>
+                        </section>
+                        <section>
+                                <h3>Mehrwertiges Attribut &rightarrow; Relation</h3>
+                                
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:5mm; width: 350px;">
+                                                [[
+                                             { _e: "Personen", pos: [150, 100],
+                                              attributes: [
+                                               { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                                               { _a:"Name", pos: [245, 13] },
+                                               { _a:"Telefon", pos: [172, 182], options:["multi"] }
+                                              ]
+                                             }
+                                            ],
+                                            [
+                                             
+                                            ]]
+                                        </div>
+                                <div class="fragment" data-fragment-index="1" style="margin-top: -1mm;">
+                                    
+                                    <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Personen</p>
+                                    <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr"></span>
+                                </div><div class="fragment" data-fragment-index="1" style="margin-top: -1mm; width:8cm">
+                                    <p style="margin-bottom:-3mm; text-align: center; font-size: 70%;">Telefonnummern</p>
+                                    <table style="font-size:0.7em">
+                                        <thead>
+                                            <tr><th><u>PersNr</u></th><th><u>Telefon</u></th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>4</td><td>0151-1</td></tr>
+                                            <tr><td>4</td><td>0151-2</td></tr>
+                                            <tr><td>5</td><td>0151-3</td></tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="small">telefonnummern.persnr ist Fremdschlüssel auf personen.persnr</p>
+                                </div>
+                                </div>
+
+                                
+                                <aside class="notes">Ute hat zwei Telefonnummer, Peter nur eine und Anna gar keine.</aside>
+                        </section>
+                        <section>
+                            <h3>1:N-Beziehung &rightarrow; Fremdschlüssel</h3>
+
+                            <div class="columns">
+                                    <div class="erd" style="margin-top:5mm; width: 350px;">
+                                            [[
+                                             { _e: "Produkte", pos: [30, 100],
+                                               attributes: [
+                                                { _a:"Produktnr", pos: [15, 25], options:["primary"] },
+                                                { _a:"Bezeichnung", pos: [134, 25] },
+                                                { _a:"Preis", pos: [200, 106] }
+                                               ]
+                                             },
+                                             { _e: "Hersteller", pos: [30, 304],
+                                               attributes: [
+                                                { _a:"Firma", pos: [200, 280], options:["primary"] },
+                                                { _a:"Land", pos: [200, 345] }
+                                               ]
+                                             }
+                                            ],
+                                            [
+                                             { _r: "sind von",
+                                               _e: ["Produkte", "Hersteller"],
+                                               card: ["N", "1"]      }
+                                            ]]
+                                                        </div>
+
+                                                        <div class="fragment" style="margin-top: -10mm;">
+                                    
+                                                                <span data-sql-query="SELECT * FROM produkte WHERE produktnr IN (17,18,88) " data-sql-pk="produktnr" data-sql-tablename="produkte"></span>
+                                                            
+                                                                <span data-sql-query="SELECT * FROM hersteller WHERE firma IN ('Monsterfood', 'Holzkopf')" data-sql-pk="firma" data-sql-tablename="hersteller"></span>
+
+                                                                <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
+                                                            </div>
+                                                    </div>
+                                        <aside class="notes">An die Relation, die im ER-Diagramm an der gegenüberliegenden Seite von der 1 steht, wird ein Fremdschlüssel hinzugefügt. Und zwar hat dieser die gleichen Spaltentypen wie der referenzierte Primärschlüssel. Der Fremdschlüssel-Spaltenname ist hier der Name der referenzierten Tabelle, man kann aber auch den Namen der referenzierten Spalte (Firma) oder den Beziehungsnamen (sind_von) nehmen.</aside>
+                        </section>
+                        <section>
+                            <h3>Rekursive Beziehung &rightarrow; Fremdschl.</h3>
+                            <div class="columns">
+                            
+                                <div><img src="img/2/er_rekursiv.jpg" style="border:0; box-shadow:none; width:300px"></div>
+                                <div class="fragment">
+                                            <span data-sql-query="SELECT kundennr as PersNr, name as Name, geworben_von AS Chef FROM kunden" data-sql-pk="PersNr" data-sql-tablename="personen"></span>
+
+                                            <p style="font-size:70%">personen.chef ist Fremdschlüssel auf personen.persnr</p>
+                                    </div>
+                            </div>
+                            <div class="poll fragment" style="bottom:-240px">
+                                <h1>Darf eine Person sein eigener Chef sein (also Chef=PersNr)?</h1>
+                                  <ul>
+                                    <li data-poll="correct">Ja sicher</li>
+                                    <li>Nee, das geht nicht</li>
+                                  </ul>
+                                <h2>https://frage.space</h2>
+                            </div>
+                            <aside class="notes">Personen ist nun eine sich selbst referenzierende Tabelle. In der Fremdschlüsselspalte &quot;Chef&quot; ist die ID des Chefs einer Person zu finden. Ute hat keinen Chef, daher ist bei ihr Chef NULL. Es wäre sogar möglich, dort die eigene PersNr einzutragen.</aside>
+                        </section>
+
+                        <section>
+                                <h3>N:M-Beziehung &rightarrow; Relation</h3>
+                                <div class="trackinfo"><i class="fas fa-headphones"></i> 17</div>
+    
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:-9mm; width: 350px;">
+                                                [[
+                                                 { _e: "Kunden", pos: [30, 100],
+                                                   attributes: [
+                                                    { _a:"Kundennr", pos: [12, 30], options:["primary"] },
+                                                    { _a:"Name", pos: [124, 23] },
+                                                    { _a:"E-Mail", pos: [204, 71]}
+                                                   ]
+                                                 },
+                                                 { _e: "Produkte", pos: [30, 304],
+                                                   attributes: [
+                                                   { _a:"Produktnr", pos: [15, 400], options:["primary"] },
+                                                   { _a:"Bezeichnung", pos: [134, 400] },
+                                                   { _a:"Preis", pos: [200, 340] }
+                                                   ]
+                                                 }
+                                                ],
+                                                [
+                                                 { _r: "bewerten",
+                                                   _e: ["Kunden", "Produkte"],
+                                                   attributes: [ {_a:"Sterne", pos: [150, 175] }, {_a:"Text", pos: [150, 240] } ],
+                                                   card: ["N", "M"]      }
+                                                ]]
+                                                            </div>
+    
+                                                            <div class="fragment" style="margin-top: -1mm;">
+                                        
+                                                                    <span data-sql-query="SELECT kundennr, produktnr, sterne, substr(bewertungstext, 0,19) as text FROM bewertungen WHERE produktnr IN (17,18,88) " data-sql-pk="kundennr,produktnr" data-sql-tablename="kunden_bewerten_produkte"></span>
+                                                                
+                                                                    
+                                                                    <p style="font-size:70%">kunden_bewerten_produkte.kundennr<br>ist Fremdschlüssel auf kunden.kundennr</p>
+                                                                    <p style="font-size:70%">kunden_bewerten_produkte.produktnr<br>ist Fremdschlüssel auf produkte.produktnr</p>
+                                                                </div>
+                                                        </div>
+                                            <aside class="notes">Aus einer N:M-Beziehung wird eine eigene Relation. Diese trägt als Namen z. B. den Beziehungsnamen (bewerten) oder etwas anderes, was verständlich ist (kunden_bewerten_produkte, bewertungen, ...). Die neue Relation besitzt Fremdschlüsselspalten, welche die Primärschlüssel der an der Beziehung teilnehmenden Entities referenzieren. Die Kombination all dieser Fremdschlüsselspalten bilden den Primärschlüssel der Beziehungstabelle. Als weitere Nicht-Schlüssel-Attribute werden die Beziehungsattribute - sofern vorhanden - hinzugefügt. </aside>
+                            </section>
+
+                            <section>
+                                <h3>Schwache Entitätstypen &rightarrow; Relation</h3>
+                                <div class="columns">
+                                        <div class="erd" style="margin-top:5mm; width: 350px;">
+                                                [[
+                                                 { _e: "Anbieter", pos: [30, 100],
+                                                   attributes: [
+                                                    { _a:"Anbieternr", pos: [15, 25], options:["primary"] },
+                                                    { _a:"Anbietername", pos: [134, 25] }
+                                                   ]
+                                                 },
+                                                 { _e: "Handytarif", pos: [30, 304], options: ["weak"],
+                                                   attributes: [
+                                                    { _a:"Tarifbezeichn.", pos: [200, 280], options:["extending_primary"] },
+                                                    { _a:"Datenvolumen", pos: [200, 345] },
+                                                    { _a:"Preis", pos: [120, 400] }
+                                                   ]
+                                                 }
+                                                ],
+                                                [
+                                                 { _r: "haben", options: ["weak"],
+                                                   _e: ["Anbieter", "Handytarif"],
+                                                   card: ["1", "N"]      }
+                                                ]]
+                                                            </div>
+    
+                                                            <div class="fragment" style="margin-top: -1mm;">
+                                                                <p style="font-size: 70%;">Anbieter(<br>&nbsp;<u>Anbieternr</u>,<br>&nbsp;Anbietername<br>)</p>
+                                                                <p style="font-size: 70%;">Handytarife(<br>&nbsp;<u>Anbieternr</u>,<br>&nbsp;<u>Tarifbezeichnung</u>,<br>&nbsp;Datenvolumen,<br>&nbsp;Preis<br>)</p>
+                                                                <p style="font-size:70%">handytarife.anbieternr ist<br>Fremdschlüssel auf anbieter.anbieternr</p>
+                                                            </div>
+                                            </div>
+                                            <aside class="notes">Der schwache Entitätstyp erbt den Primärschlüssel von anderen Entitätstypen. Hier erbt Handytarife den Primärschlüssel von Anbieter, zusätzlich wird er erweitert um die Tarifbezeichnung.
+                                            </aside>
+                            </section>
+                            <section>
+                                <h3>Schwache Entitätstypen &rightarrow; Relation</h3>
+                                <div id="er_ratings" style="height: 4.5cm; overflow: hidden;">    
+                                        <div class="stretch erd">
+                                            [[
+                                            { _e: "Kunden", pos: [50, 10],
+                                             attributes: [
+                                                { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
+                                                   { _a:"...", pos: [140, 85] }
+                                             ]
+                                            },
+                                            { _e: "Produkte", pos: [730, 10],
+                                              attributes: [
+                                                { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
+                                                   { _a:"...", pos: [810, 85] }
+                                              ]
+                                            },
+                                            { _e: "Bewertungen", pos: [390, 10], options: ["weak"],
+                                            attributes: [ 
+                                                {_a:"Sterne", pos: [340, 100] }, 
+                                                {_a:"Text", pos: [480, 100] } ]
+                                            }
+                                           ],
+                                           [
+                                            { _r: "schreiben",
+                                              _e: ["Kunden", "Bewertungen"], options: ["weak"],
+                                              card: ["1", "N"]
+                                            },
+                                            { _r: "für",
+                                              _e: ["Bewertungen", "Produkte"], options: ["weak"],
+                                              card: ["N", "1"]
+                                            }
+                                           ]]
+                                        </div></div>
+                                        <div class="fragment">
+                                                <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, ...)<br>
+                                                                           Produkte(<u>Produktnr</u>, ...)<br>
+                                                                           Bewertungen(<u>Kundennr, Produktnummer</u>, Sterne, Text)</p>
+                                                <p style="font-size: 70%;">bewertungen.kundennr ist Fremdschlüssel auf kunden.kundennr<br>
+                                                                           bewertungen.produktnr ist Fremdschlüssel auf produkte.produktnr</p>
+                                        </div>
+                                        <div class="poll fragment" style="bottom:-150px">
+                                            <h1>Dieses Relationenschema ist das gleiche wie...</h1>
+                                              <ul>
+                                                <li>wenn Bewertungen nicht schwach wäre</li>
+                                                <li data-poll="correct">bei der N:M-Beziehung &quot;bewertet&quot;</li>
+                                                <li>bei einem mehrwertigen Attribut &quot;Bewertung&quot;</li>
+                                                <li>bei einer ternären Beziehung &quot;bewertet&quot;</li>
+                                              </ul>
+                                            <h2>https://frage.space</h2>
+                                        </div>
+                                        <aside class="notes">Der schwache Entitätstyp Bewertungen ist von zwei Entitätstypen existenzabhängig: Kunden und Produkte. Die Bewertungen-Relation hat also als Primärschlüssel die Kombination aus den Primärschlüsseln ebendieser beider Tabellen: Kundennr, Produktnr.<br>Das Resultat ist genau das gleiche wie die Relation, die aus der N:M-Beziehung &quot;bewerten&quot; entstanden ist (siehe 2 Folien zurück).</aside>
+                            </section>
+
+                            <section>
+                                <h3>Ternäre Beziehung &rightarrow; Relation</h3>
+                                <div id="er_degree_3" style="height: 9cm; overflow: hidden;">
+                                        <div class="stretch erd">
+                                                [[
+                                                 { _e: "Kunden", pos: [150, 100],
+                                                  attributes: [
+                                                   { _a:"Kundennr", options:["primary"], pos: [89, 13] },
+                                                   { _a:"Name", pos: [245, 13] }
+                                                  ]
+                                                 },
+                                                 { _e: "Tarife", pos: [530, 100],
+                                                   attributes: [
+                                                    { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
+                                                    { _a:"Mindestlaufzeit", pos: [599, 25]},
+                                                    { _a:"Preis", pos: [698, 71]}
+                                                   ]
+                                                 },
+                                                 { _e: "Fitnessstudios", pos: [334, 277],
+                                                   attributes: [
+                                                    { _a:"Strasse", pos: [205, 212], options:["primary"] },
+                                                    { _a:"Hausnummer", pos: [205, 275], options:["primary"] }
+                                                   ]
+                                                 }
+                                                ],
+                                                [
+                                                 { _r: "buchen",
+                                                   _e: ["Kunden", "Tarife", "Fitnessstudios"],
+                                                   card: ["N", "1", "M"],
+                                                   attributes: [{_a:"Datum", pos: [462, 195]}]
+                                                 }
+                                                ]]
+                                                            </div>
+                                                        </div>
+
+                                <div class="fragment">
+                                        <p style="font-size: 70%;">Buchung(<u>Kundennr, Studio_Str, Studio_Hausnr</u>, Tarif_Bezeichnung, Datum)</p>
+                                        <p style="font-size: 70%; margin-right: -5mm;">buchung.kundennr ist Fremdschlüssel auf kunden.kundennr<br>
+                                                                    buchung.tarif_bezeichnung ist Fremdschlüssel auf tarife.bezeichnung<br>
+                                                                    buchung(studio_str, studio_hausnr) ist FK auf fitnessstudios(strasse, hausnummer)</p>
+                                        <aside class="notes">Genau wie bei einer binären N:M-Beziehung, wird auch bei einer höhergradigen Beziehung eine separate Relation erstellt. Der Primärschlüssel wird nur aus den Entitätstypen gebildet, an denen keine 1 steht. </aside>
+                                </div>
+
+                                <div class="poll fragment" style="bottom:0px">
+                                        <h1>Wenn bei Tarife keine 1, sondern ein L stünde...</h1>
+                                          <ul>
+                                            <li>hätte das keine Auswirkung auf das Relationenschema</li>
+                                            <li>müsste man eine weitere Relation erstellen</li>
+                                            <li data-poll="correct">gehörte Tarif_Bezeichnung zum Primärschlüssel</li>
+                                            <li>hä? Kommt nach N, M, nicht O?</li>
+                                          </ul>
+                                        <h2>https://frage.space</h2>
+                                    </div>
+                            </section>
+
+                            <section>
+                                <h3>NOT NULL / UNIQUE</h3>
+                                
+                                <p><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                    PersNr
+                                    --
+                                    Name
+                                    E-Mail
+                                  }
+                                  entity Orte {
+                                    Ort
+                                    --
+                                  }
+                                  Personen }o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist NOT NULL</p>
+
+                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                    PersNr
+                                    --
+                                    Name
+                                    E-Mail
+                                  }
+                                  entity Orte {
+                                    Ort
+                                    --
+                                  }
+                                  Personen |o-right-o| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE</p>
+
+                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                    PersNr
+                                    --
+                                    Name
+                                    E-Mail
+                                  }
+                                  entity Orte {
+                                    Ort
+                                    --
+                                  }
+                                  Personen |o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE NOT NULL</p>
+                                  
+
+                                  
+                                    
+                                    <aside class="notes">Wenn im ER-Diagramm die Krähenfuß-Notation verwendet wird, können die genaueren Kardinalitätsrestriktionen ins Relationenmodell übernommen werden. Im ersten und dritten Diagramm sind Personen in genau einem Ort geboren, d. h. die Geburtsort-Spalte muss NOT NULL sein. NOT NULL heißt, es darf keine NULL-Werte in der Spalte geben. UNIQUE heißt, dass keine doppelten Werte vorkommen dürfen. Das wäre der Fall, wenn in einem Ort nur eine Person geboren sein dürfte.</aside>
+                            </section>
+                            <section>
+                                    <h3>NOT NULL / UNIQUE</h3>
+                                    <img style="position: absolute; right:1cm; width:9cm; max-height:1000px" uml="entity Personen {
+                                        PersNr
+                                        --
+                                        Name
+                                        E-Mail
+                                      }
+                                      entity Orte {
+                                        Ort
+                                        --
+                                      }
+                                      entity Kreditkarten {
+                                        Kreditkartennr
+                                        --
+                                        ...
+                                      }
+                                      Personen }o-right-|| Orte : Geburtsort
+                                      Personen ||--o| Kreditkarten : haben"/>
+                                    
+                                        <p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;E-Mail,<br>&nbsp;Geburtsort NOT NULL,<br>&nbsp;Kreditkarte UNIQUE<br>)</p>
+                                        
+                                        <aside class="notes">Personen brauchen einen Geburtsort, daher muss die Spalte NOT NULL sein. Da jede Kreditkarte nur einmal verwendet werden darf, ist die Fremdschlüsselspalte &quot;Kreditkarte&quot; UNIQUE. Der &quot;o&quot; im ER-Diagramm bei Kreditkarten gibt an, dass es Personen ohne Kreditkarte geben darf, daher sind NULL-Werte in der Kreditkarten-Spalte erlaubt. </aside>
+                                </section>
+
+                            <section>
+                                <h2>Generalisierung im Relationenmodell</h2>
+                                <p>Mehrere Möglichkeiten<br>der Umsetzung:</p>
+                                <ul>
+                                    <li>Volle Redundanz</li>
+                                    <li>Hausklassenmodell</li>
+                                    <li>Vertikale Partitionierung</li>
+                                    <li>Hierarchierelation</li>
+                                </ul>
+                                <div id="er_generalization">
+                                <div style="position:absolute; left: 625px; top: 220px; height: 400px; overflow:hidden;">
+                                        <div class="erd" style="width: 400px;">
+                                                [[
+                                                 { _e: "Kunden", pos: [110, 100],
+                                                  attributes: [
+                                                    { _a:"Kundennr", options:["primary"], pos: [15, 10] },
+                                                    { _a:"Name", pos: [130, 10] },
+                                                    { _a:"E-Mail", pos: [250, 10] }
+                                                  ]
+                                                 },
+                                                 { _e: "Privatkunden", pos: [10, 230], isa: {_e:"Kunden"},
+                                                 attributes: [ {_a:"Bonuspunke", pos: [35, 310]} ]},
+                                                 { _e: "Geschäftskunden", pos: [200, 230], isa: {_e:"Kunden"}, 
+                                                 attributes: [ { _a:"USt-IdNr.", pos: [225, 310]} ]},
+                                                ],
+                                                [
+                                                ]]
+                                        </div></div>
+                                </div>
+                            </section>
+                            <section>
+                                    <h3>Volle Redundanz</h3>
+                                    <ul style="width:12cm">
+                                        <li style="font-size: 70%;">Jeder Entitätstyp wird zur eigenständigen Relation (alle Spalten)</li>
+                                        <li style="font-size: 70%;">Beim Einfügen in Sub-Relationen wird redundante Information in die entsprechenden Super-Relationen eingefügt.</li>
+                                    </ul>
+                                    <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
+                                                               Privatkunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte)<br>
+                                                               Geschäftskunden(<u>Kundennr</u>, Name, E-Mail, USt-ID)<br></p>
+                                    <p style="font-size: 70%;">Privatkunden.Kundennr und<br>Geschäftskunden.Kundennr sind Fremdschlüssel<br>auf Kunden.Kundennr.</p>
+                                    <div data-clone="er_generalization"></div>
+                                    <aside class="notes">Durch die Fremdschlüsselbeziehungen wird garantiert, dass die Zeile auch in der Über-Relation existiert.</aside>
+                                </section>
+
+                                <section>
+                                        <h3>Volle Redundanz</h3>
+                                        <div class="columns">
+                                            
+                                        <div>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden" data-sql-tablename="kunden"></span>
+
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5" data-sql-tablename="privatkunden"></span>
+
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8" data-sql-tablename="geschaeftskunden"></span>
+                                        </div>
+                                    </div>
+                                    <aside class="notes">Peter ist Privatkunde, Anna ist Geschäftskunde und Ute einfach nur Kunde. Beim Einfügen, Ändern und Löschen von Kunden muss sorgfältig darauf geachtet werden, dass diese Operationen konsistent auf allen betreffenden Tabellen erfolgen. Daher ist diese Variante in der Regel nicht empfehlenswert.</aside>
+                                    </section>
+                                
+                                <section>
+                                    <h3>Hausklassenmodell</h3>
+                                    <ul style="width:12cm">
+                                            <li style="font-size: 70%;">Jeder Entitätstyp wird zur eigenständigen Relation (alle Spalten)</li>
+                                            <li style="font-size: 70%;">Es wird nur in die speziellste Relation eingefügt.</li>
+                                        </ul>
+                                        <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
+                                                                   Privatkunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte)<br>
+                                                                   Geschäftskunden(<u>Kundennr</u>, Name, E-Mail, USt-ID)<br></p>
+                                                                   <p style="font-size: 70%;" class="fragment" data-fragment-index="2">Hier keine Fremdschlüssel.</p>
+                                        <div data-clone="er_generalization"></div>
+                                        <div class="poll fragment" style="bottom:-200px" data-fragment-index="1">
+                                                <h1>Woran erkennt man im Relationenschema den Unterschied zwischen dem Hausklassenmodell und der vollen Redundanz?</h1>
+                                                  <ul>
+                                                    <li>Es gibt keinen Unterschied</li>
+                                                    <li>Weniger Spalten beim Hausklassenmodell</li>
+                                                    <li>Mehr Spalten beim Hausklassenmodell</li>
+                                                    <li data-poll="correct">Bei der vollen Redundanz gibt es Fremdschlüssel</li>
+                                                  </ul>
+                                                <h2>https://frage.space</h2>
+                                            </div>
+                                        <aside class="notes">Im Hausklassenmodell ist die Suche aufwändig, da diese häufig mehrere Relationen betreffen kann.</aside>
+                                </section>
+
+                                <section>
+                                        <h3>Hausklassenmodell</h3>
+                                        <div class="columns">
+                                            
+                                        <div>
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr NOT IN (5,8)" data-sql-tablename="kunden"></span>
+
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,7)||'...' as email, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5" data-sql-tablename="privatkunden"></span>
+
+                                            <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, substr(email,0,6)||'...' as email, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8" data-sql-tablename="geschaeftskunden"></span>
+                                        </div>
+                                    </div>
+                                    <aside class="notes">Peter ist Privatkunde, Anna ist Geschäftskunde und Ute einfach nur Kunde. Wollen wir nun alle Kunden finden, muss eine Vereinigung der drei Relationen gebildet werden.</aside>
+                                    </section>
+                            
+                                    <section>
+                                            <h3>Vertikale Partitionierung</h3>
+                                            <ul style="width:12cm">
+                                                    <li style="font-size: 70%;">Jeder Entitätstyp wird zur eigenständigen Relation<br>(PK + spezielle Spalten)</li>
+                                                </ul>
+                                                <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
+                                                                           Privatkunden(<u>Kundennr</u>, Bonuspunkte)<br>
+                                                                           Geschäftskunden(<u>Kundennr</u>, USt-ID)<br></p>
+                                                                           <p style="font-size: 70%;">Privatkunden.Kundennr und<br>Geschäftskunden.Kundennr sind Fremdschlüssel<br>auf Kunden.Kundennr.</p>
+                                                <div data-clone="er_generalization"></div>
+                                                <aside class="notes">Lediglich die Primärschlüsselwerte sind in dieser Variante redundant. Alles andere wird in den speziellen Relationen gespeichert. Zur Suche sind oft Verbundoperationen nötig, da Daten ein und derselben Entität über mehrere Relationen verteilt (partitioniert) gespeichert werden.</aside>
+                                        </section>
+
+                                        <section>
+                                                <h3>Vertikale Partitionierung</h3>
+                                                <div class="columns">
+                                                    
+                                                <div>
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, name, email FROM kunden WHERE kundennr" data-sql-tablename="kunden"></span>
+        
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, 2811 as bonuspunkte FROM kunden WHERE kundennr = 5" data-sql-tablename="privatkunden"></span>
+        
+                                                    <span data-sql-pk="kundennr" data-sql-query="SELECT kundennr, '555-12-3-456789' as ust_id FROM kunden WHERE kundennr = 8" data-sql-tablename="geschaeftskunden"></span>
+                                                </div>
+                                            </div>
+                                            <aside class="notes">Möchte man hier den Namen und die Umsatzsteuer-ID aller Geschäftskunden wissen, muss man in zwei Tabellen (Kunden und Geschäftskunden) schauen.</aside>
+                                            </section>
+
+                                        <section>
+                                            <h3>Hierarchierelation</h3>
+                                            <ul>
+                                                    <li style="font-size: 70%;">Nur eine einzige Relation mit ALLEN Spalten.</li>
+                                                    <li style="font-size: 70%;">Type_Tag gibt den Entitätstypen an</li>
+                                                </ul>
+                                                <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte, USt-ID, Type_Tag)</p>
+                                                    <span class="fragment" data-fragment-index="1" data-sql-pk="kundennr" data-sql-tablename="kunden" data-sql-query="SELECT kundennr, name, email, null as bonuspunkte, null as ust_id, 'Kunde' as type_tag FROM kunden WHERE kundennr NOT IN (5,8)
+                                                    union all SELECT kundennr, name, email, 2811 as bonuspunkte, null as ust_id, 'Privatkunde' as type_tag FROM kunden WHERE kundennr = 5
+                                                    union all SELECT kundennr, name, email, null as bonuspunkte, '555-...' as ust_id, 'Geschäftskunde' as type_tag FROM kunden WHERE kundennr = 8"></span>
+                                                <aside class="notes">In dieser Variante ist sowohl Suchen als auch Einfügen besonders einfach. Bei komplexen Generalisierungshierarchien kann es jedoch sehr viele Spalten mit vielen NULL-Werten geben.</aside>
+                                        </section>
+                                        
+                                            <section>
+                                                <h2>Relationale Algebra</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 18</div>
+                                                <p>Die Relationale Algebra besteht aus Operationen, die auf ein oder mehreren Relationen angewendet werden können. Das Ergebnis einer solchen Operation ist wieder eine Relation.</p>
+                                                <p>Beispiel: Vereinigung</p>
+                                                <div class="columns" style="margin-top: -10mm;">
+                                                    <div><span data-sql-query="select kundennr, name from kunden where kundennr = 4" data-sql-tablename="kunden"></span></div>
+                                                    <div><span data-sql-query="select kundennr, name from kunden where kundennr = 5" data-sql-tablename="privatkunden"></span></div>
+                                                    <div>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden &Union; privatk."></span></div>
+                                                </div>
+                                                <aside class="notes">Der Vereinigungsoperation &Union; wird auf zwei Relationen angewandt und liefert wieder eine Relation zurück.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>RelaX - relational algebra calculator</h3>
+                                                <p><a href="https://dbis-uibk.github.io/relax/">https://dbis-uibk.github.io/relax/</a></p>
+                                                <p class="small">Gist-ID unseres Webshop-Schemas: d67f16874b528abc6e6c88d07a50b2dc</p>
+                                                <img src="img/3/relax.png" alt="RelaX" class="noborder stretch" style="margin-top:-3mm">
+                                                <aside class="notes">Mit dem webbasierten Tool RelaX kann man Ausdrücke der relationalen Algebra formulieren und ausführen. Oben links im Tool wähnt man aus verschiedenen Beispielschemas, man kann auch ein eigenes Schema erstellen oder ein vorgefertigtes mittels einer Gist-ID importieren. Die Gist-ID des Webshop-Beispiels aus dieser Vorlesung steht auf dieser Folie und kann zum Üben von Anfragen auf diesem Schema verwendet werden.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>Mengenoperationen</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 19</div>
+                                                <ul>
+                                                    <li>Relationen sind Mengen von Tupeln</li>
+                                                    <li>Mengen können vereinigt, geschnitten und voneinander subtrahiert werden</li>
+                                                    <li>Das geht aber nur, wenn die Mengen vereinigungsverträglich sind</li>
+                                                </ul>
+                                                <p></p>
+                                                <h4>Vereinigungsverträglichkeit</h4>
+                                                <ul>
+                                                    <li>Gleiche Anzahl von Spalten</li>
+                                                    <li>Kompatible Datentypen</li>
+                                                </ul>
+                                            </section>
+                                            <section>
+                                                <h2>&Intersection; Schnittmenge</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 19</div>
+                                                <p>Diejenigen Zeilen, die in beiden Relationen vorkommen.</p>
+                                                <p></p>
+                                                <div class="columns" style="margin-top: -1mm;">
+                                                        <div>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden"></span></div>
+                                                        <div>
+                                                        <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)" data-sql-tablename="privatkunden"></span></div>
+                                                        <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr = 5" data-sql-tablename="kunden &Intersection; privatk."></span></div>
+                                                    </div>
+                                                <aside class="notes">Die Zeile muss exakt gleich aussehen, sodass sie im Ergebnis zu sehen ist. Die Operation &Intersection; würde nicht funktionieren, wenn die beiden Tabellen eine unterschiedliche Anzahl an Spalten haben. Auch, wenn Datentypen nicht kompatibel wären (z. B. erste Spalte keine Zahl sondern ein Datum), sind die Mengen nicht vereinigungsverträglich und daher kann auch keine Schnittmenge gebildet werden. Auf Englisch heißt die Schnittmenge Intersection.</aside>
+                                            </section>
+                                            <section>
+                                                    <h2>\ Mengensubtraktion</h2>
+                                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 19</div>
+                                                    <p>Die Zeilen der ersten ohne die der zweiten Relation.</p>
+                                                    <p></p>
+                                                    <div class="columns" style="margin-top: -1mm;">
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden"></span></div>
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)" data-sql-tablename="privatkunden"></span></div>
+                                                            <div>
+                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4)" data-sql-tablename="kunden \ privatk."></span></div>
+                                                        </div>
+                                                    <aside class="notes">Der Minus-Operator \ ist anders als die Vereinigung und Schnittmenge nicht symmetrisch. Die Zeilen der zweiten Relation werden von denen der ersten abgezogen. Im gezeigten Beispiel werden von {Ute, Peter} die Personen {Peter, Anna} abgezogen. Wenn man etwas abzieht, was nicht in der Menge ist (Anna), passiert nichts. Aber Peter wird abgezogen, sodass im Ergebnis lediglich Ute ist.</aside>
+                                                </section>
+                                            <section>
+                                                    <h2>&Union; Vereinigung</h2>
+                                                    <div class="trackinfo"><i class="fas fa-headphones"></i> 20</div>
+                                                    <p>Alle Zeilen aus beiden Relationen.</p>
+                                                    <p></p>
+                                                    <div class="columns" style="margin-top: -1mm;">
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (4,5)" data-sql-tablename="kunden"></span></div>
+                                                            <div>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr IN (5,8)" data-sql-tablename="privatkunden"></span></div>
+                                                            <div>
+                                                                <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)" data-sql-tablename="kunden &Union; privatk."></span></div>
+                                                        </div>
+                                                    <aside class="notes">Relationen sind Mengen von Tupeln und in Mengen gibt es keine Duplikate. Daher erscheint hier im Ergebnis der Kunde Peter nur einmal, obwohl er in beiden Relationen jeweils einmal vorkommt. Auf Englisch heißt Vereinigung Union.</aside>
+                                                </section>
+                                            <section>
+                                                <h2>&pi; Projektion</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 21</div>
+                                                <p>$\pi_{A_1, A_2, \dots, A_n}(R)$</p>
+                                                <p>Beschränkung der Relation $R$ auf die Spalten $A_1, A_2, \dots, A_n$</p>
+                                                <div class="columns" style="margin-top: -6mm;">
+                                                        <div>
+                                                        <span data-sql-query="select kundennr, name, email from kunden where kundennr IN (4,5,8)" data-sql-tablename="kunden"></span></div>
+                                                        
+                                                        <div><p style="font-size: 70%;">$\pi_{kundennr, name}(Kunden)$</p>
+                                                            <span data-sql-query="select kundennr, name from kunden where kundennr in (4,5,8)"></span></div>
+                                                    </div>
+
+                                                    <div class="poll fragment" style="bottom:-100px" data-fragment-index="1">
+                                                            <h1>Wie viele Zeilen kommen bei einer Projektion auf einer nicht leeren Relation R heraus?</h1>
+                                                              <ul>
+                                                                <li>Genau |R|</li>
+                                                                <li>Zwischen 0 und |R|</li>
+                                                                <li data-poll="correct">Zwischen 1 und |R|</li>
+                                                                <li>Zwischen |R| und &infin;</li>
+                                                              </ul>
+                                                            <h2>https://frage.space</h2>
+                                                        </div>
+
+                                                    <aside class="notes">Die Projektion ist ein unärer Operator, das heißt er nimmt nur eine Relation als Eingabe (Vereinigung etc. sind binär). Das Ergebnis ist gleich der Eingaberelation, jedoch nur mit den spezifizierten Spalten. Im Beispiel interessieren wir uns nur für die Kundennummern und Namen von Kunden, nicht für weitere Attribute.</aside>
+                                            </section>
+                                            <section>
+                                                    <h2>&pi; Projektion</h2>
+                                                    <p>Achtung: Duplikateliminierung!</p>
+                                                    <div class="columns" style="margin-top: -6mm;">
+                                                            <div>
+                                                            <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)" data-sql-tablename="produkte"></span></div>
+                                                            
+                                                            <div><p style="font-size: 70%;">$\pi_{hersteller}(Produkte)$</p>
+                                                                <span data-sql-query="select distinct hersteller from produkte where produktnr IN (17,18,29,88,999)"></span></div>
+                                                        </div>
+                                                        <aside class="notes">Relationen sind Mengen von Tupeln und Mengen beinhalten keine Duplikate. Daher kann es vorkommen, dass das Ergebnis einer Projektion weniger Zeilen als die Eingaberelation hat.</aside>
+                                                </section>
+                                            <section>
+                                                <h2>&sigma; Selektion</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 22</div>
+                                                <p>$\sigma_{P}(R)$</p>
+                                                <p>Auswahl derjenigen Zeilen der Relation $R$, die das Kriterium $P$ erfüllen.</p>
+                                                <div class="columns" style="margin-top: -6mm;">
+                                                        <div>
+                                                        <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where produktnr IN (17,18,29,88,999)" data-sql-tablename="produkte"></span></div>
+                                                        <div>&nbsp;</div>
+                                                        <div><p style="font-size: 70%;">$\sigma_{hersteller='Monsterfood'}(Produkte)$</p>
+                                                            <span data-sql-query="select produktnr, bezeichnung, hersteller from produkte where hersteller  = 'Monsterfood'"></span></div>
+                                                    </div>
+                                            </section>
+                                            <section>
+                                                <h2>Selektion</h2>
+                                                <p class="small">$\sigma_{preis>1}(\sigma_{hersteller='Monsterfood'}(Produkte))$</p>
+                                                <p class="fragment small">Klammern weglassen:<br>
+                                                    $\sigma_{preis>1}\sigma_{hersteller='Monsterfood'}(Produkte)$</p>
+                                                <p class="fragment small">Selektionen mit AND verbinden:<br>
+                                                        $\sigma_{preis>1 \wedge hersteller='Monsterfood'}(Produkte)$</p>
+                                                <p class="fragment small">OR geht so:<br>
+                                                        $\sigma_{preis>1 \vee hersteller='Monsterfood'}(Produkte)$</p>
+                                                <p class="fragment small">Das entspricht:<br>
+                                                    $\sigma_{preis>1}(Produkte) \cup \sigma_{hersteller='Monsterfood'}(Produkte)$</p>
+                                                
+                                                <aside class="notes">Welche Produkte vom Hersteller Monsterfood kosten mehr als 1 EUR? Die unteren beiden Ausdrücke liefern Produkte, die von Monsterfood sind oder mehr als einen Euro kosten (oder beides ist der Fall).</aside>
+                                            </section>
+
+                                            <section>
+                                                <h3>Operatorabfolgen</h3>
+                                                <p>&quot;Von welchen Herstellern aus Österreich gibt es keine Produkte?&quot;</p>
+                                                <div class="columns">
+                                                <div>
+                                                <ol class="small">
+                                                    <li class="fragment" data-fragment-index="1">Welche Hersteller sind aus Österreich?<br>$\sigma_{land='Österreich'}(Hersteller)$</li>
+                                                    <li class="fragment" data-fragment-index="3">Wie heißen diese Hersteller?<br>$\pi_{firma}\sigma_{land='Österreich'}(Hersteller)$</li>
+                                                    <li class="fragment" data-fragment-index="5">Vor welchen Herstellern sind unsere Produkte?<br>$\pi_{hersteller}(Produkte)$</li>
+                                                    <li class="fragment" data-fragment-index="7">Subtraktion von 2. und 3.:<br>$\pi_{firma}\sigma_{land='Österreich'}(Hersteller) \setminus \pi_{hersteller}(Produkte)$</li>
+                                                </ol>
+                                                <span class="fragment" data-fragment-index="8" data-sql-query="select firma from hersteller where land = 'Österreich' except select hersteller from produkte "></span>
+                                                </div>
+                                                <div><span class="fragment" data-fragment-index="2" data-sql-query="select * from hersteller where land = 'Österreich'"></span>
+                                                    <span class="fragment" data-fragment-index="4" data-sql-query="select firma from hersteller where land = 'Österreich'"></span>
+                                                    <span class="fragment" data-fragment-index="6" data-sql-query="select distinct hersteller from produkte"></span></div>
+                                                    
+                                                </div>
+                                                
+                                            </section>
+                                            <section>
+                                                <h2>Operatorbäume</h2>
+                                                <!-- created with https://dbis-uibk.github.io/relax/calc.htm -->
+                                                <!-- gist: d67f16874b528abc6e6c88d07a50b2dc -->
+                                                <!-- query: π firma ( σ land='Österreich' (hersteller) ) \ π hersteller (produkte) -->
+                                                <img src="img/3/op_tree_manufacturers.png" alt="Operatorbaum" class="noborder">
+                                                <aside class="notes">Ein Operatorbaum stellt ein Ausdruck der relationalen Algebra in Baum-Form dar. Die Wurzel (ganz oben) liefert das Ergebnis, in den Blättern (ganz unten) befinden sich die verwendeten Relationen. Dazwischen bilden unäre und binäre Operationen die Knoten des Baumes.</aside>
+                                            </section>
+                            
+                                            <section>
+                                                <h2>&Cross; Kartesisches Produkt</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 25</div>
+                                                <p>&quot;Jedes mit jedem&quot;</p>
+                                                <p class="small">$Produkte \times Bewertungen$</p>
+                                                <span style="font-size: 84%;" data-sql-query="select produkte.produktnr, bezeichnung, preis, hersteller, kundennr, bewertungen.produktnr as &quot;produktnr &quot;, sterne, '...' as text from produkte, bewertungen where produkte.produktnr in (17,18,29)
+                                                                                              union all select '...','...','...','...','...','...','...','...'"></span>
+                                                <aside class="notes">Das kartesische Produkt aus zwei Relationen hat alle Attribute beider Relationen und besteht aus jedem Tupel der einen verknüpft mit jedem Tupel der anderen Relation.</aside>
+                                            </section>
+
+                                            <section>
+                                                    <h3>Tabellenprefix</h3>
+                                                    <p>Der Name der Relation kann bei Attributen als Prefix angegeben werden.</p>
+                                                    <p class="small">$\sigma_{Produkte.Produktnr=Bewertungen.Produktnr}(Produkte \times Bewertungen)$</p>
+                                                    <span style="font-size: 84%;" data-sql-query="select produktnr, bezeichnung, preis, hersteller, kundennr, produktnr as &quot;produktnr &quot;, sterne, '...' as text from produkte join bewertungen using(produktnr)"></span>
+                                                    <aside class="notes">In dieser Anfrage werden alle Produkte mit allen Bewertungen verbunden und im Anschluss eine Selektion darüber gemacht, sodass die Produktnummer des Produktes und der Bewertung übereinstimmt. Alles andere wären unsinnige Zeilen (Bewertung eines anderen Produkts). Da das Attribut Produktnr in beiden Relationen vorkommen, verwenden wir den Relationennamen als Prefix, z. B. produkte.produktnr, um die Attribute voneinander zu unterscheiden</aside>
+                                            </section>
+
+                                            <section>
+                                                <h2>&rho; Umbenennungsoperator</h2>
+                                                <div class="columns">
+                                                <div>
+                                                <h4>Relation umbenennen</h4>
+                                                <p>$\rho_{P1}(Produkte)$</p>
+                                                </div>
+                                                <div>
+                                                <h4>Attribut umbenennen</h4>
+                                                <p>$\rho_{bez\leftarrow bezeichnung}(Produkte)$</p>
+                                                </div>
+                                                </div>
+                                                <div class="fragment columns">
+                                                    <div><p class="small">Welche Produkte kosten mehr als die Spülmaschinentabs?</p></div>
+                                                    <!--<p class="small fragment">$\pi_{P.*}\sigma_{P.preis>S.preis}((\sigma_{bezeichnung='Spülmaschinentabs'}(\rho_{S}(Produkte))) \times \rho_{P}(Produkte))$</p>-->
+                                                    <!-- relax query: π P.produktnr, P.bezeichnung, P.preis, P.hersteller (σ P.preis > S.preis ((σ bezeichnung='Spülmaschinentabs' (ρ S (produkte))) ⨯ ρ P (produkte))) -->
+                                                    <div class="fragment"><img src="img/3/op_tree_products_more_expensive.png" alt="Operatorbaum" class="noborder" style="height:9cm"></div>
+                                                </div>
+                                                <aside class="notes">Spätestens wenn man ein und dieselbe Relation mehrfach innerhalb einer Anfrage braucht, ist es hilfreich Relationen oder Attribute einen Alias zu geben. </aside>
+                                            </section>
+                                            <section>
+                                                <h2>&bowtie; Join (Verbund)</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 24</div>
+                                                <p>Ein Join ist ein Kreuzprodukt mit anschließender Selektion, welche die Spaltenwerte der beiden Relationen vergleicht</p>
+                                                <h4>Gleichverbund (Equi-Join)</h4>
+                                                <p>$R \bowtie_{P}S = \sigma_{P}(R \times S)$</p>
+                                                <p class="small fragment">Welche Produkte sind von einem Hersteller aus den USA?</p>
+                                                <p class="small fragment">$\pi_{Bezeichnung}\sigma_{Land='USA'}(Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller)$</p>
+                                                <p class="fragment">Es gilt: $R &bowtie; S = S &bowtie; R$</p>
+                                                <aside class="notes">$R \bowtie_{P}S$ bedeutet, dass die beiden Relationen R und S anhand des Join-Prädikats P verbunden werden.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Suche nach Join-Partnern</h3>
+                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div class="columns">
+                                                    <div data-sql-query="select * from produkte where produktnr < 90" data-sql-tablename="produkte"></div>
+                                                    <div>&nbsp;&nbsp;&nbsp;</div>
+                                                    <div data-sql-query="select * from hersteller" data-sql-tablename="hersteller"></div>
+                                                </div>
+                                                <aside class="notes">Man kann sich die Ausführung eines Joins auch so vorstellen, dass eine Relation von oben nach unten durchscannt wird - z. B. hier die Produkttabelle - und für jede Zeile ein (oder kein oder mehrere) Join-Partner in der anderen Relation - hier: Hersteller - gesucht wird. Die Attributwerte der gefundenen Zeile wird an die Ergebniszeile drangehangen. Wird kein Join-Partner gefunden - hier beim Katzenfutter der Fall -, taucht die Zeile nicht im Ergebnis auf. Würde eine Zeile mehrere Joinpartner finden, taucht sie mehrfach im Ergebnis auf. Jeweils einmal mit dem entsprechenden Join-Partner.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Ergebnis des Joins</h3>
+                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90"></div>
+                                                <p>Der Join ist verlustbehaftet.</p>
+
+                                                <div class="poll fragment" style="bottom:-200px" data-fragment-index="1">
+                                                        <h1>Was ist verloren gegangen?</h1>
+                                                          <ul>
+                                                            <li>Produkte mit Hersteller NULL</li>
+                                                            <li>Hersteller, von denen es keine Produkte gibt</li>
+                                                            <li data-poll="correct">beides</li>
+                                                            <li>gar nichts</li>
+                                                          </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
+
+                                                <aside class="notes">Die Ergebnisrelation des Joins zwischen zwei Relationen besitzt alle Spalten beider Relationen. Zu jeder Zeile der beiden Relationen existieren entsprechend viele Zeilen im Ergebnis, je nachdem wie viele Join-Partner zu ihr gefunden werden. Der Hersteller Monsterfood hat sogar zwei Join-Partner gefunden, daher taucht die Hersteller-Zeile (Monsterfood, USA) im Ergebnis zweimal auf. Das Produkt Katzenfutter hat hier keinen Join-Partner gefunden, der Hersteller Holzkopf ebenfalls nicht. Da also beim Join etwas verloren gegangen ist (Katzenfutter und Hersteller Holzkopf), nennt man den Join verlustbehaftet.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Verlustfreier Join</h3>
+                                                
+                                                <div class="columns">
+                                                    <div data-sql-query="select * from produkte where produktnr in (17,18,29)" data-sql-tablename="produkte"></div>
+                                                    <div>&nbsp;&nbsp;&nbsp;</div>
+                                                    <div data-sql-query="select * from hersteller where firma in ('Calgonte', 'Monsterfood')" data-sql-tablename="hersteller"></div>
+                                                </div>
+                                                <p>$Produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr in (17,18,29)"></div>
+                                                <aside class="notes">Hier taucht jedes Tupel aus beiden Relationen im Join-Ergebnis auf. Der Join ist verlustfrei.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Rekonstruktion der Tabellen</h3>
+                                                <div data-sql-tablename="V" data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr in (17,18,29)"></div>
+                                            
+                                                <p>&nbsp;</p>
+                                                <p>$produkte = \pi_{produktnr, bezeichnung, preis, hersteller}(V)$</p>
+                                                <p>$hersteller = \pi_{firma, land}(V)$</p>
+                                                <aside class="notes">Aus dem Join-Ergebnis V lassen sich die beiden ursprünglichen Relationen wieder mittels Projektionen rekonstruieren. Das funktioniert allerdings nur, wenn der Verbund verlustfrei ist.</aside>
+                                            </section>
+
+                                            <section>
+                                                <h2>Äußerer Verbund</h2>
+                                                <h4>$\bowtie$ Innerer Verbund</h4>
+                                                <p>Nur die Zeilen, die Join-Partner finden, sind im Ergebnis</p>
+                                                <h4>$&#x27D5;$ Linker äußerer Verbund</h4>
+                                                <p>Alle Zeilen der linken Relation sind definitiv im Ergebnis</p>
+                                                <h4>$&#x27D6;$ Rechter äußerer Verbund</h4>
+                                                <p>Alle Zeilen der rechten Relation sind definitiv im Ergebnis</p>
+                                                <h4>$&#x27D7;$ Voller äußerer Verbund</h4>
+                                                <p>Alle Zeilen beider Relation sind definitiv im Ergebnis</p>
+                                            </section>
+                                            <section>
+                                                <h3>$&#x27D5;$ Linker äußerer Verbund</h3>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 27</div>
+                                                <p>$Produkte &#x27D5;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte left join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90"></div>
+                                                <aside class="notes">Alle Zeilen der links vom Left-Join-Operator stehenden Relation erscheinen auf jeden Fall im Ergebnis. Wenn sie keinen Join-Partner in der rechten Tabelle finden - das ist hier beim Katzenfutter der Fall -, bleiben die Attribute der rechten Tabelle alle NULL.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>$&#x27D6;$ Rechter äußerer Verbund</h3>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 28</div>
+                                                <p>$Produkte &#x27D6;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select produkte.*, hersteller.* from hersteller left join (select * from produkte where produktnr < 90) produkte on produkte.hersteller=hersteller.firma"></div>
+                                                <p>Es gilt: $R &#x27D6; S = S &#x27D5; R$</p>
+                                                <aside class="notes">Beim right outer Join sind zusätzlich zu den normalen Join-Ergebniszeilen diejenigen Zeilen der rechten Tabelle im Ergebnis wiederzufinden, die keinen Join-Partner in der linken Tabelle finden. Auch hier werden die Spalten der linken Tabelle mit NULL-Werten belegt.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>$&#x27D7;$ Voller äußerer Verbund</h3>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 29</div>
+                                                <p>$Produkte &#x27D7;_{Produkte.Hersteller=Hersteller.Firma}Hersteller$</p>
+                                                <div data-sql-query="select * from produkte left join hersteller on produkte.hersteller=hersteller.firma where produktnr < 90
+                                                union all select null,null,null,null, hersteller.* from hersteller where firma = 'Holzkopf'"></div>
+                                                <p>Es gilt: $R &#x27D7; S = S &#x27D7; R$</p>
+                                                <aside class="notes">Jede Zeile der linken Relation und jede Zeile der rechten Relation tauchen stets im Ergebnis des full outer Joins auf. Der volle äußere Verbund ist damit immer verlustfrei.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Join-Varianten</h3>
+                                                    <h4>Innerer / linker / rechter / voller äußerer Join</h4>
+                                                    <p>$R \bowtie_{P} S$ &nbsp;&nbsp; $R &#x27D5;_{P} S$ &nbsp;&nbsp; $R &#x27D6;_{P} S$ &nbsp;&nbsp; $R &#x27D7;_{P} S$</p>
+                                                    <h4>Gleichverbund (Equi-Join)</h4>
+                                                    <p>$R \bowtie_{R.a = S.x \wedge R.b = S.y \wedge \dots} S$ </p>
+                                                    <h4>Theta-Join</h4>
+                                                    <p>$R \bowtie_{R.a \theta S.x \wedge \dots} S$ &nbsp; mit $\theta \in \{&lt;,&le;,=,&ne;,&ge;,&gt;\}$</p>
+                                            </section>
+
+                                            <section>
+                                                <h3>Beispiele: Equi-/Theta-Joins</h3>
+                                                <p>Finde zu jedem Produkt seinen Hersteller:</p>
+                                                <p>$produkte \bowtie_{Produkte.Hersteller=Hersteller.Firma}hersteller$</p>
+                                                <p>Finde zu jedem Produkt teurere Produkte als es selbst:</p>
+                                                <p>$\rho_{P1}(produkte) \bowtie_{P1.preis &lt; P2.preis} \rho_{P2}(produkte)$</p>
+                                                <div data-sql-query="select p1.produktnr, p1.bezeichnung, p1.preis, p1.hersteller, p2.produktnr as &quot;produktnr &quot;, ' ' as '...' from produkte p1, produkte p2 where p1.preis < p2.preis and p1.produktnr=18"></div>
+                                            </section>
+
+                                            <section>      
+                                                <h3>Join-Varianten</h3> 
+                                                    <h4>Natürlicher Verbund (natural Join)</h4>
+                                                    <p>$R \bowtie S$<br>Gleichverbund über die gleich heißenden Attribute. Im Ergebnis sind solche Attribute nur einmal vorhanden.</p>
+                                                    <h4>Self-Join</h4>
+                                                    <p>$R \bowtie_P R$</p>
+                                                    <h4>Semi-Join</h4>
+                                                    <p>$R \ltimes_P S = \pi_{R.*}(R \bowtie_P S)$</p>
+
+                                                    <div class="poll fragment" style="bottom:-50px" data-fragment-index="1">
+                                                            <h1>Welcher Join-Bedingung entspricht ein natürlicher Verbund zwischen A(x,y,z) und B(s,t,x,y)?</h1>
+                                                              <ul>
+                                                                <li>A.x = B.s</li>
+                                                                <li>A.x = B.x</li>
+                                                                <li>A.y = B.y</li>
+                                                                <li data-poll="correct">A.x = B.x &wedge; A.y = B.y</li>
+                                                              </ul>
+                                                            <h2>https://frage.space</h2>
+                                                        </div>
+                                                    
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Natürlicher Verbund</h3>
+                                                <p>$produkte \bowtie bewertungen$</p>
+                                                <div class="small" data-sql-query="select * from produkte join bewertungen using (produktnr)"></div>
+                                                <p class="fragment small">Entspricht:<br>$\pi_{produkte.produktnummer, bezeichnung, preis, hersteller, kundennr, sterne, bewertungstext}$<br>$(produkte \bowtie_{produkte.produktnr = bewertungen.produktnr} bewertungen)$</p>
+                                                <aside class="notes">In den Relationen Produkte und Bewertungen gibt es ein gemeinsames Attribut, die Produktnummer. Daher ist der natürliche Verbund ein Gleichverbund über die Produktnummer. Diese Spalte taucht im Ergebnis dann aber nur einmal auf.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Self-Join</h3>
+                                                <div data-sql-tablename="personen" data-sql-query="select kundennr as persnr, name, geworben_von as chef from kunden"></div>
+                                                <p>$\rho_{K1}(personen) \bowtie_{K1.chef = K2.persnr} \rho_{K2}(personen)$</p>
+                                                <div data-sql-query="select k1.kundennr as persnr, k1.name, k1.geworben_von as chef, k2.kundennr as &quot;persnr &quot;, k2.name as &quot;name &quot;, k2.geworben_von as &quot;chef &quot; from kunden k1 join kunden k2 on k1.geworben_von=K2.kundennr"></div>
+                                                <aside class="notes">Wir joinen die Personentabelle mit sich selbst anhand der Fremdschlüsselbeziehung zwischen Chef und Kundennr. Im Ergebnis sehen wir zu jeder Person, die einen Chef hat, die Details zur Person und zum jeweiligen Chef. Würden wir den Join &bowtie; durch einen Left-Join &#x27D5; ersetzen, so erschienen auch Personen ohne Chef im Ergebnis. Dann mit NULL-Werten in den hinteren drei Spalten.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Semi-Join</h3>
+                                                <p style="font-size: 90%;">$produkte \ltimes_{produkte.produktnr=bewertungen.produktnr} bewertungen $</p>
+                                                <div data-sql-query="select produkte.* from produkte join bewertungen using (produktnr)"></div>
+                                                <p class="fragment small">Alle Produkte, die schon einmal bewertet wurden.</p>
+                                                <aside class="notes">Der Semi-Join unterscheidet sich vom inneren Verbund dadurch, dass im Ergebnis nur die Spalten der linken Relation zu sehen ist. Der Semi-Join hat also die gleichen Attribute wie die linke Relation, aber nur diejenigen Zeilen, die einen Join-Partner in der rechten Relation finden würden. Im Beispiel hier interessiert man sich also nicht dafür, wer ein Produkt wie bewertet hat, sondern lediglich <em>dass</em> es bewertet wurde. Verwendet wurde hier der linke Semi-Join &ltimes;. Beim rechten Semi-Join &rtimes; wird sich auf die Attribute der rechten Relation beschränkt.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>&divide; Division</h2>
+                                                <p>$R \div S$</p>
+                                                <p>Diejenigen Tupel aus R (ohne die Spalten von S), die in jeder Kombination mit allen Tupeln aus S vorkommen.</p>
+                                                <p>Es gilt: $(R \times S) \div S = R$</p>
+                                                <aside class="notes">Die Division ist hilfreich bei Fragen der Art &quot;Wer hat alle...&quot; oder &quot;Wer hat jedes...&quot;. Der Operator kann auch mit den bisher vorgestellten Operationen dargestellt werden: $R \div S = \pi_{R.* \setminus S.*}(R) \setminus \pi_{R.* \setminus S.*}((\pi_{R.* \setminus S.*}(R)\times S) \setminus R)$ (Formel nicht klausurrelevant)</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Division</h3>
+                                                <p class="small">Welche Kunden haben alle Produkte bewertet?</p>
+                                                <div class="columns">
+                                                    <div><p>$\pi_{kundennr, produktnr}(bewertungen)$</p><div data-sql-query="select kundennr, produktnr from bewertungen union all select 4, 29"></div></div>
+                                                    <div>&nbsp;&nbsp;&nbsp;</div>
+                                                    <div><p>$\pi_{produktnr}(produkte)$</p><div data-sql-query="select produktnr from produkte where produktnr in (17,29)"></div></div>
+                                                </div>
+                                                <p>$\pi_{kundennr, produktnr}(bewertungen) \div \pi_{kundennr}(kunden)$</p>
+                                                <div data-sql-query="select 5 as kundennr"></div>
+                                                
+                                                <aside class="notes">Hier gehen wir der Einfachheit halber davon aus, dass es nur die beiden Produkte 17 und 29 gibt. Die Division liefert diejenigen Kunden, die alle diese Produkte bewertet hat.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>Anfrageoptimierung</h2>
+                                                <p class="small">&quot;Wie heißen die Produkte, die Kunde Nr. 5 bewertet hat?&quot;</p>
+                                                <p class="small">Äquivalente Ausdrücke:</p>
+                                                <ol class="small" style="list-style-type: lower-alpha; margin-left: 25px;">
+                                                        <li>$\pi_{bezeichnung}\sigma_{kundennr=5}\sigma_{produkte.produktnr=bewertungen.produktnr}(produkte\times bewertungen)$</li>
+                                                    <li>$\pi_{bezeichnung}(\pi_{produktnr, bezeichnung} produkte\bowtie \pi_{produktnr}\sigma_{kundennr=5}(bewertungen))$</li>
+                                                    <li>$\pi_{bezeichnung}\sigma_{kundennr=5}(produkte\bowtie bewertungen)$</li>
+                                                    <li>$\pi_{bezeichnung}(produkte\bowtie \sigma_{kundennr=5}(bewertungen))$</li>
+                                                </ol>
+                                                <p class="small">Welcher Ausführungsplan ist besser / &quot;billiger&quot;?</p>
+
+                                                <div class="poll fragment fade-in-then-out" style="bottom:-10px">
+                                                    <h1>Welcher Plan ist der beste?</h1>
+                                                      <ul>
+                                                        <li>a.</li>
+                                                        <li data-poll="correct">b.</li>
+                                                        <li>c.</li>
+                                                        <li>d.</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+
+                                                <div class="fragment">
+                                                    <h4>Anfrageoptimierung</h4>
+                                                    <p>Überführung eines Ausdrucks in einen äquivalenten möglichst effizient auszuführenden Ausdruck.</p>
+                                                </div>
+
+                                            </section>
+                                            <section>
+                                                <h2>Kostenbasierte Optimierer</h2>
+                                                <p>Jeder Ausführungsplan erhält Kostenschätzung.<br> Der Plan mit den geringsten Kosten wird gewählt.</p>
+                                                <p>Beispiel: Kosten = Größe der Zwischenergebnisse</p>
+                                                <div class="poll fragment fade-in-then-out" style="bottom:-320px">
+                                                    <h1>100.000 Kunden, 500.000 Bewertungen. Schätzen Sie:&nbsp;<br>|&sigma;&nbsp;kundennr=5&nbsp;(bewertungen)|</h1>
+                                                      <ul>
+                                                        <li>0</li>
+                                                        <li>1</li>
+                                                        <li data-poll="correct">5</li>
+                                                        <li>100.000</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+                                            </section>
+                                            <section>
+                                                <h3>Beispiel: Anfrageoptimierung</h3>
+                                                <p class="small">Annahme: 100.000 Kunden, 500.000 Bewertungen, 300.000 Produkte</p>
+                                                <!-- Query: π bezeichnung σ kundennr = 5 σ produkte.produktnr=bewertungen.produktnr (produkte⨯bewertungen) -->
+                                                <!-- Query: π bezeichnung (π produktnr, bezeichnung produkte⨝ π produktnr σ kundennr = 5 bewertungen)-->
+                                                <img src="img/3/query_opt_ratings.png" alt="Anfrageoptimierung" class="noborder stretch">
+                                                <aside class="notes">Der rechte Plan ist billiger, da die Zwischenergebnisse deutlich kleiner sind: 300.000+300.000+500.000+5+5+5+5=1.100.020; links: 150.001.300.010; Auch haben die Zwischenergebnisse weniger Spalten.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>Heuristiken</h2>
+                                                <ul>
+                                                    <li class="fragment">Frühstmögliche Selektion</li>
+                                                    <li class="fragment">Join statt Kreuzprodukt</li>
+                                                    <li class="fragment">Frühstmögliche Projektion (ohne Duplikateliminierung)</li>
+                                                    <li class="fragment">Join-Reihenfolge so wählen, dass Zwischenergebnisse klein sind</li>
+                                                    <li class="fragment">Folgen von Selektionen und Projektionen zusammenfassen</li>
+                                                    <li class="fragment">Selektionen statt Mengenoperationen</li>
+                                                    <li class="fragment">Nichts doppelt berechnen</li>
+                                                </ul>
+                                                <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-thumbs-up green"></i></div>
+                                            </section>
+                                            <section>
+                                                <h2>Heuristiken</h2>
+                                                <h4>Frühstmögliche Selektion</h4>
+                                                <p class="small">Vorher: $\sigma_{kundennr=5}(produkte \bowtie bewertungen)$<br>
+                                                    Nachher: $produkte \bowtie \sigma_{kundennr=5}(bewertungen)$</p>
+                                                <h4 class="fragment" data-fragment-index="1">Join statt Kreuzprodukt</h4>
+                                                <p class="fragment small" data-fragment-index="1">Vorher: $\sigma_{produkte.produktnr=bewertungen.produktnr}(produkte \times bewertungen)$<br>
+                                                    Nachher: $produkte \bowtie_{produkte.produktnr=bewertungen.produktnr} (bewertungen)$</p>
+                                                <h4 class="fragment" data-fragment-index="2">Frühstmögliche Projektion <small>(ohne Duplikateliminierung)</small></h4>
+                                                <p class="fragment small" data-fragment-index="2">Vorher: $\pi_{bezeichnung}(produkte \bowtie bewertungen)$<br>
+                                                    Nachher: $\pi_{bezeichnung}(\pi_{produktnr, bezeichnung}(produkte) \bowtie bewertungen)$</p>
+                                                
+                                                    <div class="poll fragment fade-in-then-out" style="bottom:200px">
+                                                        <h1>Warum haben wir nach der Optimierung zwei Projektionsoperationen in der Anfrage?</h1>
+                                                          <ul>
+                                                            <li>Wegen der Sicherheit</li>
+                                                            <li>Wegen der Redundanz</li>
+                                                            <li>Wegen der Einfachheit</li>
+                                                            <li data-poll="correct">Wegen des Joins</li>
+                                                          </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
+
+                                                <aside class="notes">Bei der frühestmöglichen Projektion ist darauf zu achten, dass keine Spalten frühzeitig eliminiert werden, die noch für Joins, Selektionen, etc. benötigt werden. Außerdem darf bei der Projektion noch keine Duplikateliminierung erfolgen, da sonst das Ergebnis evtl. nicht mehr äquivalent ist.</aside>
+                                            </section>
+                                            <section>
+                                                    <h2>Heuristiken</h2>
+                                                    <h4>Join-Reihenfolge so wählen,<br>dass Zwischenergebnisse klein sind</h4>
+                                                    <p class="small">Vorher: $(kunden \bowtie bewertungen) \bowtie \sigma_{hersteller='Monsterfood'}(produkte)$<br>
+                                                        Nachher: $(bewertungen \bowtie \sigma_{hersteller='Monsterfood'}(produkte)) \bowtie kunden$</p>
+                                                    <h4 class="fragment" data-fragment-index="1">Folgen von Sel. und Proj. zusammenfassen</h4>
+                                                    <p class="fragment small" data-fragment-index="1">Vorher: $\pi_{bezeichnung}\pi_{produktnr,bezeichnung}\sigma_{preis \le 5}\sigma_{hersteller='Monsterfood'}produkte$<br>
+                                                        Nachher: $\pi_{bezeichnung}\sigma_{preis \le 5 \wedge hersteller='Monsterfood'}produkte$</p>
+                                                    <h4 class="fragment" data-fragment-index="2">Selektionen statt Mengenoperationen</h4>
+                                                    <p class="fragment small" data-fragment-index="2">Vorher: $\sigma_{hersteller='Monsterfood'}(produkte) \cup \sigma_{hersteller='Calgonte'}(produkte)$<br>
+                                                        Nachher: $\sigma_{hersteller='Monsterfood' \vee hersteller='Calgonte'}(produkte)$</p>
+                                                    <aside class="notes">Bei der frühestmöglichen Projektion ist darauf zu achten, dass keine Spalten frühzeitig eliminiert werden, die noch für Joins, Selektionen, etc. benötigt werden. Außerdem darf bei der Projektion noch keine Duplikateliminierung erfolgen, da sonst das Ergebnis evtl. nicht mehr äquivalent ist.</aside>
+                                                </section>
+
+                                            <section>
+                                                <h2>Kardinalitätsschätzung</h2>
+                                                <p>Wie viele Tupel sind im Ergebnis einer Operation zu erwarten?</p>
+                                                <p>Hilfreiche Statistiken:</p>
+                                                <ul>
+                                                    <li class="fragment">Kardinalitäten der Tabellen (Anzahl Zeilen)</li>
+                                                    <li class="fragment">Kardinalitäten der Spalten (Anzahl distinkter Werte)</li>
+                                                    <li class="fragment">Kleinster, größter Wert je Spalte, Median, ...</li>
+                                                    <li class="fragment">Werte-Histogramme (Häufigkeitsverteilung)</li>
+                                                    <li class="fragment">Erfahrungen über Verschätzungen in der Vergangenheit (&rightarrow; lernende Optimierer)</li>
+                                                    <li class="fragment">...</li>
+                                                </ul>
+                                            </section>
+                                            <section>
+                                                <h3>Kardinalitätsschätzung: Selektion</h3>
+                                                
+                                                <p>Annahme: Gleichverteilung</p>
+                                                <p class="small">|R| (Anzahl Zeilen in R)<br>
+                                                     |R.a| (Anzahl distinkter Werte in Spalte R.a)</p>
+                                                <p>$|\sigma_{R.a = x}(R)| = \frac{|R|}{|R.a|}$</p>
+                                                <p class="fragment small" data-fragment-index="1">Beispiel:<br>
+                                                $|\sigma_{geschlecht='weiblich'}(Personen)| = \frac{1}{3} |Personen|$</span></p>
+                                                <div style="position: absolute; top: 120px; right:50px; font-size:150px"><i class="fas fa-balance-scale green"></i><div>
+                                                <aside class="notes">Wird nach einem bestimmten Wert in einer Spalte gesucht und liegen keine weiteren Informationen über Werteverteilungen innerhalb dieser Spalte vor, wird von <em>Gleichverteilung</em> ausgegangen. Im Beispiel auf dieser Folie wird geschätzt, dass ein Drittel aller gespeicherten Personen weiblich sind, weil es drei verschiedene Werte in der Spalte Geschlecht gibt (männlich, weiblich, divers).</aside>
+                                            </section>
+                                            <section>
+                                                    <h3>Kardinalitätsschätzung: Selektion</h3>
+                                                    <div style="position: absolute; top: 120px; right:50px; font-size:150px"><i class="fas fa-balance-scale-left green"></i></div>
+                                                    <p>Selektivitätsfaktor $sf_P$: $|\sigma_P R|=sf_P \cdot |R|$</p>
+                                                    <p>Annahme: Werteunabhängigkeit</p>
+                                                    <p>$sf_{P \wedge Q} = sf_P \cdot sf_Q$</p>
+                                                    <p class="fragment small" data-fragment-index="1">Beispiel:<br>
+                                                    3 verschiedene Geschlechter, 1000 verschiedene Vornamen<br><br>
+                                                    $|\sigma_{geschlecht='weiblich' \wedge vorname='Peter'}(Personen)|$ <span class="fragment" data-fragment-index="3">$ = \frac{1}{3} \cdot \frac{1}{1000} |Personen|$</span></p>
+
+
+                                                    <div class="poll fragment" style="bottom:150px" data-fragment-index="2">
+                                                        <h1>Was kommt raus?</h1>
+                                                            <ul>
+                                                            <li>1/3 Personen</li>
+                                                            <li>1/1000 Personen</li>
+                                                            <li>1/1003 Personen</li>
+                                                            <li data-poll="correct">1/3000 Personen</li>
+                                                            </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
+                                                    
+
+                                                    <p class="fragment small" data-fragment-index="4">$|\sigma_{geschlecht='männlich' \wedge vorname='Peter'}(Personen)| = \frac{1}{3} \cdot \frac{1}{1000} |Personen|$</p>
+                                                    
+                                                        
+                                                    
+
+                                                    <aside class="notes">Da in der Regel die Information nicht vorliegt, dass zwischen bestimmten Spalten eine Werteabhängigkeit besteht, wird von Unabhängigkeit ausgegangen. Wahrscheinlich wird in Wirklichkeit keine Frau in der Personentabelle Peter heißen. In der unteren Anfrage filtert das Geschlechts-Kriterium wahrscheinlich nichts aus.  </aside>
+                                            </section> 
+                                            <section>
+                                                <h3>Kardinalitätsschätzung: &Cross;</h3>
+                                                <p>$|R \times S| = |R| \cdot |S|$</p>
+                                                <p class="fragment small">Beispiel: $|kunden \times kunden| = |kunden|^2$</p>
+                                            </section>
+                                            <section>
+                                                <h3>Kardinalitätsschätzung: &bowtie;</h3>
+                                                <p>$|R \bowtie_{R.a=S.a} S|$</p>
+                                                <p class="fragment">Im Allgemeinen:<br> $0 \le |R \bowtie_{R.a=S.a} S| \le |R| \cdot |S|$</p>
+
+                                                <p class="fragment">Wenn R.a Fremdschlüssel auf S.a ist:<br> $|R \bowtie_{R.a=S.a} S = |R|$</p>
+
+                                                <p class="fragment small">Beispiel: |$produkte \bowtie bewertungen| = |bewertungen|$</p>
+
+                                                <aside class="notes">Haben die Tabellen R und S völlig verschiedene Werte in der Spalte a, ist das Ergebnis des Joins leer. Wenn die Join-Spalten eine Fremdschlüssel-Primärschlüssel-Beziehung darstellen, hat das Ergebnis des Joins so viele Zeilen, wie die Tabelle mit der Fremdschlüsselspalte (abzgl. der Anzahl von NULL-Werten in dieser), da jede solche Zeile genau einen Join-Partner in der anderen Tabelle findet, unabhängig davon, wie groß diese andere Tabelle ist. Gibt es beispielsweise nur ein Produkt, sind alle Bewertungen über dieses eine Produkt. Gibt es deutlich mehr Produkte als Bewertungen, sind einige Produkte nicht bewertet worden. Im Join-Resultat sind in jedem Fall genau so viele Zeilen wie in der Bewertungs-Tabelle. Die Produktnr-Spalte ist dort nie NULL.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>Normalformenlehre</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 30</div>
+                                                <ul>
+                                                    <li>Was ist ein gutes DB-Schema?</li>
+                                                    <li>Funktionale Abhängigkeiten</li>
+                                                    <li>Superschlüssel, Schlüsselkandidaten</li>
+                                                    <li>Normalformen: 1NF, 2NF, 3NF</li>
+                                                </ul>
+                                            </section>
+                                            <section>
+                                                <h3>Ist dies ein gutes DB-Schema?</h3>
+                                                <div id="table_cd_tracks">
+                                                <table>
+                                                    <thead><tr>
+                                                    <th><u>cd_id</u></th>
+                                                    <th><u>tracknr</u></th>
+                                                    <th>album</th>
+                                                    <th>band</th>
+                                                    <th>land</th>
+                                                    <th>song</th>
+                                                    </tr></thead>
+                                                    <tbody>
+                                                        <tr><td>101</td><td>1</td><td>Jupiter</td><td>Eddy&nbsp;G.</td><td>DE</td><td>All ducks</td></tr>
+                                                        <tr><td>101</td><td>2</td><td>Jupiter</td><td>Eddy&nbsp;G.</td><td>DE</td><td>Far away</td></tr>
+                                                        <tr><td>202</td><td>1</td><td>Mars</td><td>Eddy&nbsp;G.</td><td>DE</td><td>Meersalz</td></tr>
+                                                        <tr><td>202</td><td>2</td><td>Mars</td><td>Eddy&nbsp;G.</td><td>DE</td><td>Mehr Salz</td></tr>
+                                                        <tr><td>303</td><td>1</td><td>Stone</td><td>Bob 88</td><td>EN</td><td>I'm 88</td></tr>
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                                <div class="poll fragment" style="bottom:-150px">
+                                                    <h1>Was ist an diesem Schema nicht so gut?</h1>
+                                                      <ul>
+                                                        <li>Inkonsistenz</li>
+                                                        <li data-poll="correct">Redundanz</li>
+                                                        <li>Unverständlich</li>
+                                                        <li>Falscher Primärschlüssel</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+                                                <aside class="notes">Dieses Datenbankschema ist eher schlechter Natur. Es herrschen viele Redundanzen. Dinge, die in unterschiedliche Relationen gehören, wurden in eine Relation zusammengeworfen.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Anomalien bei Redundanzen</h3>
+                                                <table>
+                                                        <thead><tr>
+                                                        <th><u>cd_id</u></th>
+                                                        <th><u>tracknr</u></th>
+                                                        <th>album</th>
+                                                        <th>band</th>
+                                                        <th>land</th>
+                                                        <th>song</th>
+                                                        </tr></thead>
+                                                    </table><br>
+                                                <h4 class="fragment" data-fragment-index="1">Einfügeanomalie</h4>
+                                                <p class="fragment small" data-fragment-index="1">Wir können keine neue Band hinzufügen, wenn sie noch kein Album herausgebracht hat.</p>
+                                                <h4 class="fragment" data-fragment-index="2">Änderungsanomalie</h4>
+                                                <p class="fragment small" data-fragment-index="2">Wenn wir das Land einer Band ändern, muss diese Änderung an vielen Stellen erfolgen.</p>
+                                                <h4 class="fragment" data-fragment-index="3">Löschanomalie</h4>
+                                                <p class="fragment small" data-fragment-index="3">Wenn wir das letzte Album einer Band löschen, verlieren wir die Band-Infos.</p>
+                                            </section>
+                                            <section>
+                                                <h2>Funktionale Abhängigkeit</h2>
+                                                <p>$A$ und $B$ sind Attributmengen aus der Relation $R$</p>
+                                                <p>$A \rightarrow B$ &nbsp;&nbsp;&nbsp;(lies: A bestimmt B)</p>
+                                                <p>Immer wenn zwei Zeilen in $R$ die gleichen Werte in den <br>$A$-Attributen haben, dann sind auch die Werte in den<br>$B$-Attributen gleich.</p>
+                                                <p class="small fragment">Beispiel: $band \rightarrow land$</p>
+                                                <aside class="notes">Immer wenn zwei Zeilen in unserer CD-Track-Tabelle in der Spalte &quot;band&quot; das gleiche stehen haben, so muss auch der Wert in &quot;land&quot; gleich sein. Bei der Band Eddy G. ist das Land immer DE.<br>
+                                                Funktionale Abhängigkeiten ergeben sich aus der Semantik der Anwendung. Sie herrschen in einem DB-Schema. Man kann sie nicht von den aktuell gespeicherten Daten ableiten. Funktionale Abhängigkeiten sind Bedingungen, die in jedem DB-Zustand stets gelten.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Funktionale Abhängigkeiten</h3>
+                                                <div data-clone="table_cd_tracks"></div>
+                                                <p>Es gilt: $cd\_id \rightarrow album; cd\_id \rightarrow band; band \rightarrow land;$<br>
+                                                $cd\_id, tracknr \rightarrow song$</p>
+                                                <div class="poll fragment" style="bottom:150px" data-fragment-index="1">
+                                                    <h1>Welche funktionalen Abhängigkeiten gilt hier NICHT?</h1>
+                                                      <ul>
+                                                        <li>cd_id, tracknr &rightarrow; cd_id</li>
+                                                        <li>cd_id, tracknr &rightarrow; album, tracknr</li>
+                                                        <li>cd_id &rightarrow; land</li>
+                                                        <li data-poll="correct">song &rightarrow; tracknr</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+                                            </section>
+                                            <section>
+                                                <h3>Volle funktionale Abhängigkeit</h3>
+                                                <p>$A \Rightarrow B$ &nbsp;&nbsp;&nbsp;(lies: A bestimmt B voll-funktional)</p>
+                                                <p>Dies ist der Fall wenn</p>
+                                                <ul>
+                                                    <li>$A \rightarrow B$ und</li>
+                                                    <li>$\not \exists X \subset A: X \rightarrow B$</li>
+                                                </ul>
+                                                <p class="fragment small">Beispiel: $cd\_id, tracknr \rightarrow land$<br>
+                                                Aber nicht: $cd\_id, tracknr \Rightarrow land$, weil bereits $cd\_id \rightarrow land$</p>
+                                            </section>
+                                            <section>
+                                                <h2>Superschlüssel</h2>
+                                                <p>Die Attributmenge $A$ ist Superschlüssel der Relation R, genau dann wenn $A \rightarrow R$ (sie bestimmt alle Attribute)</p>
+                                                <p class="small fragment">Ist cd_id Superschlüssel?</p>
+                                                <p class="small fragment">&nbsp;$cd\_id \rightarrow album; cd\_id \rightarrow band; band \rightarrow land;$</p>
+                                                <p class="small fragment">&nbsp;$\Rightarrow cd\_id \rightarrow cd\_id, album, band, land$</p>
+                                                <p class="small fragment">&nbsp;$\Rightarrow cd\_id$ ist kein Superschlüssel (z. B. $cd\_id \not\rightarrow tracknr$)</p>
+                                                <p class="small fragment">Ist cd_id, tracknr Superschlüssel?</p>
+                                                <p class="small fragment">&nbsp;$cd\_id \rightarrow album; cd\_id \rightarrow band; band \rightarrow land; cd\_id, tracknr \rightarrow song$</p>
+                                                <p class="small fragment">&nbsp;$\Rightarrow cd\_id, tracknr \rightarrow cd\_id, tracknr, album, band, land, song = R$</p>
+                                                <p class="small fragment">&nbsp;$\Rightarrow cd\_id, tracknr$ ist Superschlüssel</p>
+                                            </section>
+                                            <section>
+                                                <h2>Schlüsselkandidat</h2>
+                                                <p>Die Attributmenge $A$ ist Schlüsselkandidat von R, wenn</p>
+                                                <ol>
+                                                    <li>$A$ Superschlüssel ist und</li>
+                                                    <li>keine echte Teilmenge von $A$ Superschlüssel ist.</li>
+                                                </ol>
+                                                <p>Ein Schlüsselkandidat ist ein minimaler Superschlüssel.</p>
+                                                <p class="small fragment">Ist cd_id, tracknr Schlüsselkandidat?</p>
+                                                <ul class="small fragment">
+                                                    <li>cd_id, tracknr ist Superschlüssel (siehe vorherige Folie)</li>
+                                                    <li>cd_id ist kein Superschlüssel (siehe vorherige Folie)</li>
+                                                    <li>tracknr ist kein Superschlüssel (nur $tracknr \rightarrow tracknr$)</li>
+                                                </ul>
+                                                <p class="small fragment">&nbsp;$\Rightarrow cd\_id, tracknr$ ist Schlüsselkandidat</p>
+
+                                                <div class="poll fragment" style="bottom:-25px">
+                                                    <h1>{cd_id, tracknr, song} ist ein...</h1>
+                                                      <ul>
+                                                        <li data-poll="correct">Superschlüssel</li>
+                                                        <li>Schlüsselkandidat</li>
+                                                        <li>beides</li>
+                                                        <li>weder noch</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+
+                                                <aside class="notes">Ein Schlüsselkandidat eignet sich dafür, als Primärschlüssel der Relation eingesetzt zu werden. Wenn es mehrere Schlüsselkandidaten gibt, wählt man einen davon aus, der Primärschlüssel wird.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>1. Normalform (1NF)</h2>
+                                                <div class="trackinfo"><i class="fas fa-headphones"></i> 31</div>
+                                                <p>Eine Relation ist in erster Normalform, wenn alle ihre Attribute weder zusammengesetzt noch mengenwertig noch relationenwertig sind.</p>
+                                                <div data-clone="table_cd_tracks" class="small"></div>
+                                                <p class="fragment small">=> Ist hier der Fall! Die Relation ist in 1NF.</p>
+                                            </section>
+                                            <section>
+                                                <h3>(NF)<small>2</small> = Non First Normal Form</h3>
+                                                <table style="font-size: 70%;">
+                                                    <thead><tr>
+                                                        <th><u>pizza_id</u></th><th>bezeichnung</th><th>zutaten</th><th>preis</th>
+                                                    </tr></thead>
+                                                    <tbody>
+                                                        <tr><td>1</td><td>Spezial</td><td>Salami, Schinken, Pilze</td>
+                                                        <td><table><thead><tr><th>größe</th><th>preis</th></tr></thead>
+                                                        <tbody><tr><td>klein</td><td>7.00</td></tr><tr><td>groß</td><td>8.50</td></tr></tbody></table></td></tr>
+                                                        <tr><td>2</td><td>Hawaii</td><td>Ananas, Schinken</td>
+                                                            <td><table><thead><tr><th>größe</th><th>preis</th></tr></thead>
+                                                            <tbody><tr><td>klein</td><td>6.50</td></tr><tr><td>groß</td><td>7.50</td></tr></tbody></table></td></tr>
+                                                    </tbody>
+                                                </table>
+                                                <p class="fragment small">Zutaten ist ein mengenwertiges Attribut, Preis ist ein relationenwertiges Attribut.</p>
+                                                <p class="fragment small">=> Nicht in 1NF.</p>
+                                            </section>
+                                            <section>
+                                                <h3>Überführung in 1NF</h3>
+                                                <p>Attribute flachklopfen.</p>
+                                                <table style="font-size: 70%;">
+                                                        <thead><tr>
+                                                            <th><u>pizza_id</u></th><th>bezeichnung</th><th><u>zutat</u></th>
+                                                        </tr></thead>
+                                                        <tbody>
+                                                            <tr><td>1</td><td>Spezial</td><td>Salami</td></tr>
+                                                            <tr><td>1</td><td>Spezial</td><td>Schinken</td></tr>
+                                                            <tr><td>1</td><td>Spezial</td><td>Pilze</td></tr>
+                                                            <tr><td>...</td><td>...</td><td>...</td></tr>
+                                                        </tbody>
+                                                    </table>
+                                                <table style="font-size: 70%;">
+                                                        <thead><tr>
+                                                            <th><u>pizza_id</u></th><th>bezeichnung</th><th><u>größe</u></th><th>preis</th>
+                                                        </tr></thead>
+                                                        <tbody>
+                                                            <tr><td>1</td><td>Spezial</td><td>klein</td><td>7.00</td></tr>
+                                                            <tr><td>1</td><td>Spezial</td><td>groß</td><td>8.50</td></tr>
+                                                            <tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <p class="small fragment">Jetzt ist das Schema in 1NF.</p>
+
+                                                    <div class="poll fragment" style="bottom:25px">
+                                                        <h1>Welche volle funktionale Abhängigkeit gilt in der obigen Tabelle?</h1>
+                                                          <ul>
+                                                            <li data-poll="correct">pizza_id &Rightarrow; bezeichnung</li>
+                                                            <li>pizza_id, zutat &Rightarrow; bezeichnung</li>
+                                                            <li>zutat &Rightarrow; bezeichnung</li>
+                                                            <li>pizza_id, bezeichnung &Rightarrow; zutat</li>
+                                                          </ul>
+                                                        <h2>https://frage.space</h2>
+                                                    </div>
+                                            </section>
+                                            <section>
+                                                <h2>2. Normalform (2NF)</h2>
+                                                <p>Eine Relation ist in zweiter Normalform, wenn sie in 1NF ist und jedes Nicht-Schlüsselattribut voll vom ganzen Schlüssel abhängt.</p>
+                                                <p class="fragment small">Ist Pizza1(<u>pizza_id</u>, bezeichnung, <u>zutat</u>) in 2NF?</p>
+                                                <p class="fragment small">Überprüfe für Nicht-Schlüsselattribut &quot;bezeichnung&quot;: $pizza\_id, zutat \Rightarrow bezeichnung$ ?</p>
+                                                <p class="fragment small">Nicht der Fall, weil bereits $pizza\_id \rightarrow bezeichnung$</p>
+                                                <p class="fragment small">Damit ist die Relation nicht in 2NF.</p>
+                                            </section>
+                                            <section>
+                                                <h3>Überführung in 2NF</h3>
+                                                <p>Zerlegung in Relationen, die den Teil der Schlüsselattribute besitzen, von dem die jeweiligen Nicht-Schlüssel-Attribute voll funktional abhängen.</p>
+                                                <p class="fragment small">Gegeben: Pizza1(<u>pizza_id</u>, bezeichnung, <u>zutat</u>)<br>
+                                                    $pizza\_id \rightarrow bezeichnung$</p>
+                                                <p class="fragment small">Resultat in 2NF: Pizza1a(<u>pizza_id</u>, <u>zutat</u>) und Pizza1b(<u>pizza_id</u>, bezeichnung)</p>
+                                                <p class="fragment">Wichtig bei Zerlegungen: Zerlegung muss verlustfrei erfolgen und ein Join der neuen Tabellen muss wieder die ursprüngliche Tabelle ergeben.</p>
+                                            </section>
+                                            <section>
+                                                <h3>CD-Track-Beispieltabelle</h3>
+                                                <table>
+                                                    <thead><tr>
+                                                    <th><u>cd_id</u></th>
+                                                    <th><u>tracknr</u></th>
+                                                    <th>album</th>
+                                                    <th>band</th>
+                                                    <th>land</th>
+                                                    <th>song</th>
+                                                    </tr></thead>
+                                                </table>
+                                                <p class="small">$cd\_id \rightarrow album; cd\_id \rightarrow band; band \rightarrow land; cd\_id, tracknr \rightarrow song$</p>
+                                                <p class="small">Ist die Tabelle in 2NF?</p>
+
+                                                <div class="fragment fade-out" data-fragment-index="2">
+                                                <div class="poll fragment" style="bottom:-100px" data-fragment-index="1">
+                                                    <h1>Ist die Tabelle in 2NF?</h1>
+                                                      <ul>
+                                                        <li>Ja, weil z. B. {cd_id, tracknr} &Rightarrow; album</li>
+                                                        <li>Nein, weil cd_id &rightarrow; tracknr</li>
+                                                        <li data-poll="correct">Nein, weil cd_id &rightarrow; album</li>
+                                                        <li>Nein, weil tracknr &rightarrow; album</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+                                                </div>
+
+                                                <p class="small fragment">Überprüfe für Nicht-Schlüsselattribut &quot;album&quot;, ob $cd\_id, tracknr \Rightarrow album$ ?</p>
+                                                <p class="small fragment">Nein, weil $cd\_id \rightarrow album$ &Rightarrow; Die Relation ist also nicht in 2NF</p>
+                                                <p class="small fragment">Überführung in 2NF:</p>
+                                                <ul class="small fragment">
+                                                    <li>Tracks(<u>cd_id</u>,<u>tracknr</u>, song)</li>
+                                                    <li>Alben(<u>cd_id</u>, album, band, land)</li>
+                                                </ul>
+
+                                                <aside class="notes">Bei der Überführung der CD-Track-Tabelle in 2NF wurde diese Tabelle in zwei Tabellen zerlegt. Wir geben ihnen sinnvolle Namen: Alben und Tracks. Lediglich die Spalte &quot;song&quot; ist vom ganzen Schlüssel voll funktional abhängig. Die anderen Nicht-Schlüsselattribute hängen nur von der CD_ID ab und werden daher in die neue Alben-Relation ausgelagert.</aside>
+                                            </section>
+                                            <section>
+                                                <h2>3. Normalform (3NF)</h2>
+                                                <p>Eine Relation ist in dritter Normalform, wenn sie in 2NF ist und es keine nicht-trivialen transitiven Abhängigkeiten zwischen Nicht-Schlüsselattributen gibt.</p>
+                                                <p>Triviale Abhängigkeit: $A \rightarrow X$ mit $X \subseteq A$</p>
+                                                <p>Transitive Abhängigkeit: $A \rightarrow B; B \rightarrow C$</p>
+                                                <p class="fragment small">Ist Alben(<u>cd_id</u>, album, band, land) in 3NF?</p>
+
+                                                <div class="poll fragment" style="bottom:-70px">
+                                                    <h1>Ist Alben(<u>cd_id</u>, album, band, land) in 3NF?</h1>
+                                                      <ul>
+                                                        <li>Ja, weil es keine transitiven Abhängigkeiten gibt</li>
+                                                        <li data-poll="correct">Nein, weil cd_id &rightarrow; band; band &rightarrow; land</li>
+                                                        <li>Nein, weil cd_id, band &rightarrow; cd_id; cd_id &rightarrow; band</li>
+                                                        <li>Ich weiß es nicht! Ich weiß es einfach nicht!!!</li>
+                                                      </ul>
+                                                    <h2>https://frage.space</h2>
+                                                </div>
+
+                                                <p class="fragment small">Nein, weil es folgende transitive Abhängigkeit gibt:<br>$cd\_id \rightarrow band; band \rightarrow land$</p>
+                                                <aside class="notes">Ein Nicht-Schlüssel-Attribut (das sind Attribute, die zu keinem Schlüsselkandidaten gehören) darf keine anderen Nicht-Schlüssel-Attribute funktional bestimmen. Ist dies der Fall, ist die Relation in 3NF.</aside>
+                                            </section>
+                                            <section>
+                                                <h3>Überführung in 3NF</h3>
+                                                <p>Transitive Abhängigkeit: $A \rightarrow B; B \rightarrow C$</p>
+                                                <p>Entfernen von C aus der Relation</p>
+                                                <p>Neue Relation hat Attribute B (Primärschlüssel) und C</p>
+                                                <p class="fragment small" data-fragment-index="1">Gegeben: Alben(<u>cd_id</u>, album, band, land)<br>
+                                                    $cd\_id \rightarrow band; band \rightarrow land$</p>
+                                                <p class="fragment small" data-fragment-index="2">Resultat in 3NF:</p>
+                                                <ul class="fragment small" data-fragment-index="2">
+                                                    <li>Alben(<u>cd_id</u>, album, band)</li>
+                                                    <li>Bands(<u>band</u>, land)</li>
+                                                </ul>
+                                            </section>
+
+                                            
+
+                                            <section>
+                                                <h2>Kapitelzusammenfassung</h2>
+                                                <ul>
+                                                    <li>Relation/Tabelle = Menge von Tupeln</li>
+                                                    <li>Primärschlüssel, Fremdschlüssel, NULL-Werte</li>
+                                                    <li>Überführung ER &rightarrow; Relationenschema</li>
+                                                    <li>Relationale Algebra: $\pi, \sigma, \bowtie, \times, \cup, \div, \dots$</li>
+                                                    <li>Join: Inner, Left/Right/Full Outer, ...</li>
+                                                    <li>Anfrageoptimierung / Heuristiken</li>
+                                                    <li>Funktionale Abhängigkeiten</li>
+                                                    <li>Superschlüssel, Schlüsselkandidaten</li>
+                                                    <li>Normalformen: 1NF, 2NF, 3NF</li>
+                                                    
+                                                </ul>
+                                            </section>
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+        <script src="lib/deflate.js"></script>
+
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>

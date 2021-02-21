@@ -1,0 +1,76 @@
+.infobox {
+    position: absolute;
+    width: 40%;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2);
+    background-color:  rgba(66, 169, 170, 0.99);
+    color: #fff;
+    padding: 20px;
+    font-size: 20px;
+    text-align: left;
+}
+.infobox.small {
+    width:20%;
+}
+.infobox > h1, .infobox > h2, .infobox > h3, .infobox > h4, .infobox > h5, .infobox > h6 {
+    color: #fff;
+}
+.infobox.right {
+     right: 0;
+}
+.infobox.left {
+     left: 0;
+}
+
+.trackinfo {
+  position: absolute;
+  display: block;
+  right:0px;
+  top: 0px;
+  z-index: 31;
+  font-family: Helvetica, sans-serif;
+  font-size: 20px;
+  line-height: 1;
+  color: rgba(66, 169, 170, 0.99);
+  padding: 5px;
+}
+
+.nohighlight {
+  background:#474949;
+  color:#d1d9e1;
+}
+
+.columns {
+    display: flex;
+    justify-content: space-around;
+}
+
+p.small,div.small,li.small,ul.small,ol.small,span.small,table.small {
+  font-size: 70%;
+}
+
+img.noborder {
+  box-shadow:none !important;
+  border: 0 !important;
+}
+
+/* colors: http://paletton.com/#uid=73i0u0kjAAl9uSqf1JJn-uIsLrg */
+div.green, i.green { color:rgba(66, 169, 170, 0.99) }
+div.yellow, i.yellow { color:#ffcb63 }
+div.orange, i.orange { color:#ffaa63 }
+div.gray, i.gray { color: #797d9a }
+div.red, i.red { color: #ff6363 }
+div.blue, i.blue { color: #5473b9 }
+
+.sl-block-content.green { background-color:rgba(66, 169, 170, 0.99); color:#ffffff }
+.sl-block-content.yellow { background-color:#ffcb63 }
+.sl-block-content.orange { background-color:#ffaa63 }
+.sl-block-content.gray { background-color: #797d9a; color:#ffffff }
+.sl-block-content.red { background-color: #ff6363; color:#ffffff }
+.sl-block-content.blue { background-color: #5473b9; color:#ffffff }
+
+.shape-element.green { fill:rgba(66, 169, 170, 0.99) }
+.shape-element.yellow { fill:#ffcb63 }
+.shape-element.orange { fill:#ffaa63 }
+.shape-element.gray { fill: #797d9a }
+.shape-element.red { fill: #ff6363 }
+.shape-element.blue { fill: #5473b9 }

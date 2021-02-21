@@ -1,0 +1,1274 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Datenbanken - Kapitel 5 - Mehrbenutzerbetrieb</title>
+
+    <link rel="stylesheet" href="reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="reveal.js/dist/reveal.css">
+
+        <link rel="stylesheet" href="src/slides.css">
+        <link rel="stylesheet" href="src/sql.css">
+
+		<link rel="stylesheet" href="src/layout.css">
+        <link rel="stylesheet" href="lib/joint.min.css" />
+        <link rel="stylesheet" href="src/erd.css" />
+        <link rel="stylesheet" href="src/poll.css" />
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="src/rainbow.css">
+
+        <!--<script defer src="lib/fontawesome.all.min.js"/>-->
+        <link href="lib/fontawesome.all.min.css" rel="stylesheet">
+        <style> .reveal i.fa { font-family:FontAwesome; font-style: normal; } </style>
+	</head>
+	<body>
+		<div class="reveal">
+            <div id="header"></div>
+            <div id="footer"></div>
+			<div class="slides">
+                    <section>
+                      <h4 style="text-align:center"><b>Prof. Dr.-Ing. Johannes Schildgen</b><br>
+                        <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
+                        <h1>Datenbanken</h1>
+                        <h3>Kapitel 5: Mehrbenutzerbetrieb</h3>
+                        <h4 style="text-align:center">2020-12-11</h4>
+                        <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
+                        <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
+                    </section>
+                        <section>
+                          <h2>In diesem Kapitel...</h2>
+                          <ul class="small">
+                              <li>... definieren wir Sichten,</li>
+                              <li>... lernen, wie man DB-Benutzer und Rollen verwaltet,</li>
+                              <li>... schauen wir uns das Transaktionenkonzept genauer an,</li>
+                              <li>... erfahren wir, wie man Mehrbenutzeranomalien vermeidet</li>
+                              <li>... und wie Recovery-Mechanismen funktionieren.</li>
+                          </ul>
+                      </section> 
+                      <section>
+                        <h2>Datenabstraktion</h2>
+                        <h4>Externe Ebene (Sichten / Views)</h4>
+                        <p style="margin-left: 50px">Sicht auf eine Teilmenge des<br>logischen Schemas für eine<br>bestimmte Benutzergruppe</p>
+                        <h4>Logische Ebene</h4>
+                        <p style="margin-left: 50px">DB-Gesamt-Schema</p>
+                        <h4>Physische Ebene</h4>
+                        <p style="margin-left: 50px">Internes Schema / Speicherung der Daten</p>
+                        
+                        <div id="svg_data_abstraction">
+                        <div class="sl-block" data-block-type="text" data-block-id="f950b0fdfdb807f255affb1a7b9083e0" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 720px; top: 171px;">
+                          <div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">Sicht</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 847px; top: 171px;" data-block-id="0784202251b42d7e07e357b78f9b8366">
+                          <div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">Sicht</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 113px; left: 593px; top: 171px;" data-block-id="e9cc541a3e41d442b19ca7c018ea9df7">
+                          <div class="sl-block-content yellow" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">Sicht</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 657px; top: 321px;" data-block-id="dd81c5662240a66c3473d3fcda17e1ea">
+                          <div class="sl-block-content green" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center">log. Schema</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 240px; left: 657px; top: 449px;" data-block-id="fd7cb8aab0729402c95ce463dbdde65a">
+                          <div class="sl-block-content orange" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; border-style: solid; border-width: 1px;">
+                            <p style="text-align: center; color: black;">int. Schema</p>
+                          </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" data-block-id="97ebbb519a4283ff5083d5f69defcf07" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 777px; top: 372px;">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="0" data-line-y2="113" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="87" viewBox="0 113 1 87">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="190" x2="0" y2="117"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="190" x2="0" y2="117"></line>
+                              <polygon fill="#000000" transform="translate(0,117) rotate(0)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 657px; top: 222px;" data-block-id="f476360cc7585a7a646a5bfb96f8ebb6">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="-119" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="119" height="99" viewBox="-119 101 119 99">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="-116" y2="104"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="-116" y2="104"></line>
+                              <polygon fill="#000000" transform="translate(-116,104) rotate(-50.242)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 776px; top: 222px;" data-block-id="f7a3327b02cacd25d26952306df608a9">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="1" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="99" viewBox="0 101 1 99">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="1" y2="105"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="1" y2="105"></line>
+                              <polygon fill="#000000" transform="translate(1,105) rotate(0.579)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 1px; min-height: 1px; left: 777px; top: 222px;" data-block-id="0770aeffdb19bbad6e1b058c7b08b2aa">
+                          <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="124" data-line-y2="101" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 19;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="124" height="99" viewBox="0 101 124 99">
+                              <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="121" y2="103"></line>
+                              <line stroke="#000000" stroke-width="2" x1="0" y1="200" x2="121" y2="103"></line>
+                              <polygon fill="#000000" transform="translate(121,103) rotate(51.397)" points="0,-4 4,4 -4,4"></polygon>
+                            </svg></div>
+                        </div>
+                      </div>
+                      </section>
+      
+                      <section>
+                        <h2>Datenabstraktion (Bsp.)</h2>
+                        <h4>Externe Ebene (View für Webshop-Anwendung)</h4>
+                          <table style="font-size:0.7em" data-fragment-index="0">
+                            <thead>
+                              <tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th><th>Bewertung</th></tr>
+                              <tr><td>17</td><td>Schokoriegel</td><td>0.89</td><td>4.5</td></tr>
+                              <tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td><td>2.0</td></tr>
+                          </table>
+                        <h4>Logische Ebene</h4>
+                          <div class="columns stretch">
+                            <div style="margin-top:0px;">
+                          <table style="font-size:0.7em" data-fragment-index="0">
+                            <thead>
+                              <tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th></tr>
+                              <tr><td>17</td><td>Schokoriegel</td><td>0.89</td></tr>
+                              <tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td></tr>
+                          </table>
+                        </div>
+                        <div style="margin-top:0px;">
+                            <table style="font-size:0.7em" data-fragment-index="0">
+                            <thead>
+                              <tr><th><u>Kundennr</u></th><th><u>Produktnr</u></th><th>Bew</th></tr>
+                              <tr><td>5</td><td>17</td><td>4</td></tr>
+                              <tr><td>8</td><td>17</td><td>5</td></tr>
+                              <tr><td>5</td><td>29</td><td>2</td></tr>
+                          </table>
+      
+                          
+                        </div>
+                        </div>
+                        <p><b>Physische Ebene: </b>0010110000000100101111010101...</p>
+                      </section>
+                      <section>
+                        <h2>Sichten / Views in SQL</h2>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 94-96</div>
+                        <table style="font-size:0.7em" data-fragment-index="0">
+                          <thead>
+                            <tr><th><u>Produktnr</u></th><th>Bezeichnung</th><th>Preis</th><th>Hersteller</th><th>Bewertung</th></tr>
+                            <tr><td>17</td><td>Schokoriegel</td><td>0.89</td><td>Monsterfood</td><td>4.5</td></tr>
+                            <tr><td>18</td><td>Müsliriegel</td><td>1.19</td><td>Monsterfood</td><td>-</td></tr>
+                            <tr><td>29</td><td>Spülmaschinentabs</td><td>3.99</td><td>Calgonte</td><td>2.0</td></tr>
+                        </table>
+                        <pre><code class="sql" data-trim>CREATE VIEW produkte_view AS
+SELECT P.produktnummer, P.bezeichnung, P.preis, P.hersteller, 
+       AVG(B.sterne) AS bewertung
+FROM produkte P LEFT JOIN bewertungen B 
+     ON P.produktnummer = B.produktnummer
+GROUP BY P.produktnummer, P.bezeichnung, P.preis, P.hersteller
+                        </code></pre>
+                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte_view</code></pre>
+                        <aside class="notes">Eine View ist eine Art virtuelle Tabelle. Sie wird definiert über einen Namen und eine SELECT-Anfrage. Sie kann genau wie Tabellen in der FROM-Klausel in SELECT-Anfragen abgefragt werden. In der hier dargestellten Anfrage wird ein Left-Join verwendet, damit auch Produkte, die nie bewertet wurden, im Ergebnis auftauchen.</aside>
+                      </section>
+                      <section>
+                        <h2>Views / Sichten in SQL</h2>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teure_produkte AS SELECT * FROM produkte 
+                               WHERE preis > 10;</code></pre>
+                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM teure_produkte WHERE hersteller = 'Monsterfood'</code></pre>
+                        <p class="small" style="margin-left: 2cm;">wird ausgeführt als:</p>
+                        <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM (SELECT * FROM produkte WHERE preis > 10)
+WHERE hersteller = 'Monsterfood'
+                        </code></pre>
+                        <div class="poll fragment" style="bottom:-260px">
+                          <h1>SELECT * FROM produkte WHERE preis > 10 AND hersteller = 'Monsterfood'</h1>
+                              <ul>
+                                  <li>Liefert etwas komplett anderes</li>
+                                  <li>Gibt das gleiche zurück, ist aber schneller</li>
+                                  <li>Gibt das gleiche zurück, ist aber langsamer</li>
+                                  <li data-poll="correct">Gibt das gleiche zurück und ist gleich schnell</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
+                        <aside class="notes">Erfolgt eine Abfrage auf eine View, wird der Name der View durch die Anfrage ersetzt, über die die View definiert ist. Danach erfolgen Optimierungen, sodass die hier dargestellt Anfrage äquivalent ist zu <code>SELECT * FROM produkte WHERE preis > 10 AND hersteller = 'Monsterfood'</code>. Anfragen auf Sichten sind nicht langsamer als die hinter der Sicht stehende Abfrage direkt auszuführen, sie sind aber auch nicht schneller.</aside>
+                      </section>
+                      <section>
+                        <h2>Einsatzszenarios von Views</h2>
+                        <h4>Vereinfachung / Speicherung von Anfragen</h4>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW produkte_view AS ... </code></pre>
+
+                        <h4>Datenunabhängigkeit</h4>
+                        <p class="small">Anwendungen greifen über View auf Daten zu; unabhängig, wie die tatsächlichen Tabelle aussehen.</p>
+
+                        <h4>Datenschutz</h4>
+                        <p class="small">Benutzern wird nur der Zugriff auf die View gewährt, nicht auf die zugrundeliegenden Tabellen.</p>
+
+                        <aside class="notes">Wenn Operationen wie Joins oder Aggregationen immer wieder in Anfragen vorkommen, kann man diese in eine View platzieren und damit den Zugriff vereinfachen. So sind auch Denormalisierungen von normalisierten Tabellen mittels Sichten möglich.</aside>
+                      </section>
+
+                      <section>
+                        <h3>CHECK OPTION</h3>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 106</div>
+                        <p class="small">INSERT, UPDATE und DELETE sind auf simplen Projektion/Selektion-Views erlaubt.</p>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teure_produkte AS SELECT * FROM produkte 
+                            WHERE preis > 10;</code></pre>
+                        <p class="small">INSERT / UPDATE funktioniert ohne Überprüfung des WHERE-Prädikats.</p>
+                        
+                        <div class="fragment">
+                        <h4>WITH CHECK OPTION</h4>
+                        <pre><code class="hlsql" data-trim contenteditable>CREATE VIEW teure_produkte AS SELECT * FROM produkte 
+                            WHERE preis > 10 WITH CHECK OPTION;</code></pre>
+                        <p class="small">Das einzufügende oder zu ändernde Tupel muss das WHERE-Prädikat erfüllen.</p>
+                        </div>
+                        <div class="poll fragment" style="bottom:-160px">
+                          <h1>INSERT INTO teure_produkte (produktnr, bezeichnung, preis) VALUES (123, 'X', 5)</h1>
+                              <ul>
+                                  <li>funktioniert nie</li>
+                                  <li>funktioniert in den beiden hier gezeigten Sichten nicht</li>
+                                  <li data-poll="correct">funktioniert in der oberen, aber nicht in der unteren Sicht</li>
+                                  <li>funktioniert in der unteren, aber nicht in der oberen Sicht</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
+                        <aside class="notes">Ein <code>INSERT INTO teure_produkte</code> ist hier möglich. Im unteren Fall jedoch nur, wenn das neue Produkt auch einen Preis von mehr als 10 EUR hat. <code>WITH CHECK OPTION</code> ist eine Kurzschreibweise für <code>WITH LOCAL CHECK OPTION</code>. Wenn eine View mit dieser Option eine andere View in der FROM-Klausel hat, wird nicht das Prädikat der anderen View überprüft, außer: Für diese ist ebenfalls eine CHECK OPTION gesetzt, oder wir spezifizieren für die View: <code>WITH CASCADED CHECK OPTION</code>.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Materialisierte Sichten</h2>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 98</div>
+                        <p class="small">Views sind nur virtuell, sie speichern nicht wirklich Daten.</p>
+                        <p class="small">Materialisierte Sichten jedoch speichern physisch das Ergebnis der dahinterstehenden Anfrage.</p>
+                        <pre style="width: 95%;"><code class="hlsql" data-trim contenteditable>CREATE MATERIALIZED VIEW anz_produkte AS 
+SELECT COUNT(*) as anz FROM produkte;</code></pre>
+                        
+                        <h4>REFRESH MATERIALIZED VIEW</h4>
+
+                        <pre style="width: 95%;"><code class="sql" data-trim contenteditable>SELECT * FROM anz_produkte; -- zeigt an: 8
+INSERT INTO produkte (produktnr, bezeichnung) values (123, 'X'); 
+SELECT * FROM anz_produkte; -- zeigt immer noch 8
+REFRESH MATERIALIZED VIEW anz_produkte;
+SELECT * FROM anz_produkte; -- zeigt nun 9</code></pre>
+
+                      <aside class="notes">Beim Erstellen einer materialisierten Sicht, wird diese initial mit dem Anfrageergebnis befüllt. Es gibt Datenbankmanagementsysteme, die ein automatisches Auffrischen unterstützen. Dies erfolgt, wenn sich die Daten in den Basistabellen ändern. In PostgreSQL ist beinhaltet die materialisierte Sich in diesen Fällen veraltete Daten. Mit <code>REFRESH MATERIALIZED VIEW</code> kann ein Auffrischen angestoßen werden.</aside>
+                      </section>
+
+                      <section>
+                        <h3><b style="color: rgba(66, 169, 170, 0.99);">Benutzer</b> und <span style="color:#5473b9;">Rollen</span></h3>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
+                        <pre style="margin-top: -3mm;"><code class="hlsql" data-trim contenteditable>CREATE USER doktor_x WITH PASSWORD 'geheimespasswort1';
+CREATE USER schwester_y WITH PASSWORD 'geheimespasswort2';
+CREATE USER big_boss WITH PASSWORD 'geheimespasswort3';
+CREATE USER ninja WITH PASSWORD 'geheimespasswort4';
+                        </code></pre>
+
+                        <div id="users_roles"><div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 303px; top: 361px;" data-block-id="cf0f9578dc297f96836c8564b5ee566d">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; font-size: 300%;">
+                                <p style="text-align: center; font-size: 60%;"><i class="blue fas fa-stethoscope"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 199px; top: 454px;" data-block-id="f9d18d57b18081851467dffc45b2713a">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-md"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 400px; top: 454px;" data-block-id="a1f37fc54654159aec65123df5729ca5">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-nurse"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 567px; top: 454px;" data-block-id="2096fb78d3154bc4825082e05048e841">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-tie"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 257px; top: 440px;" data-block-id="dc95b17d39fdb0bf373a87986b8142de">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="173" data-line-y2="24" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="61" height="39" viewBox="112 24 61 39">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="168" y2="27"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="168" y2="27"></line>
+                                    <polygon fill="#000000" transform="translate(168,27) rotate(57.407)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 385px; top: 440px;" data-block-id="a6e4eebbfe1d3ad0e621959f6bb7eed1">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="50" data-line-y2="25" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 15;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="62" height="38" viewBox="50 25 62 38">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="55" y2="28"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="55" y2="28"></line>
+                                    <polygon fill="#000000" transform="translate(55,28) rotate(-58.496)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 400px; top: 269px;" data-block-id="3fc974d55082bec3a6fd9516fc656719">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18; font-size: 300%;">
+                                <p style="text-align: center; font-size: 60%;"><i class="blue fas fa-hospital-alt"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 486px; top: 361px;" data-block-id="19a16e8abf0bb71e1df1967b213964d5">
+                            <div class="sl-block-content" data-line-x1="131" data-line-y1="157" data-line-x2="18" data-line-y2="39" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 19;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="113" height="118" viewBox="18 39 113 118">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="131" y1="157" x2="22" y2="43"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="131" y1="157" x2="22" y2="43"></line>
+                                    <polygon fill="#000000" transform="translate(22,43) rotate(-43.76)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 720px; top: 454px;" data-block-id="4dbb3a72b70e356a0db2b01ecf525821">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20; font-size: 300%;">
+                                <p style="text-align: center; margin-top: 5mm; font-size: 80%;"><i class="green fas fa-user-ninja"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 373px; top: 351px;" data-block-id="eb7867c7a8ba6d26d4a6cc2c885ef175">
+                            <div class="sl-block-content" data-line-x1="131" data-line-y1="157" data-line-x2="174" data-line-y2="125" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 21;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="43" height="32" viewBox="131 125 43 32">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="131" y1="157" x2="169" y2="129"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="131" y1="157" x2="169" y2="129"></line>
+                                    <polygon fill="#000000" transform="translate(169,129) rotate(53.344)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 97px; left: 574px; top: 269px;" data-block-id="54652319d1bd580533b32344f2b28fba">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 22; font-size: 300%;">
+                                <p style="text-align: center; font-size: 60%;"><i class="blue fas fa-money-bill-alt"></i></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 622px; top: 367px;" data-block-id="dbc6be64b1113df5fdb6e55634282c31">
+                            <div class="sl-block-content" data-line-x1="102" data-line-y1="63" data-line-x2="103" data-line-y2="-44" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 23;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="107" viewBox="102 -44 1 107">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="102" y1="63" x2="103" y2="-38"></line>
+                                    <line stroke="#000000" stroke-width="4" x1="102" y1="63" x2="103" y2="-38"></line>
+                                    <polygon fill="#000000" transform="translate(103,-38) rotate(0.535)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div></div>
+
+                        <aside class="notes">Die Data Control Language (DCL) wird genutzt, um Benutzer und Rollen anzulegen. Hier legen wir vier Benutzer an. Diese können sich mit dem angegebenen Nutzernamen und Passwort mit der Datenbank verbinden. In PostgreSQL sind Benutzer und Rollen übrigens das gleiche. <code>CREATE USER</code> ist lediglich ein Alias für <code>CREATE ROLE</code>.</aside>
+
+                      </section>
+                      <section>
+                          <h3><span style="color: rgba(66, 169, 170, 0.99);">Benutzer</span> und <b style="color:#5473b9;">Rollen</b></h3>
+                          <pre style="margin-top: -3mm;"><code class="hlsql" data-trim contenteditable>CREATE ROLE klinikpersonal;
+GRANT klinikpersonal TO doktor_x, schwester_y;
+CREATE ROLE mitarbeiter;
+GRANT mitarbeiter TO big_boss, klinikpersonal;
+CREATE ROLE finanzen;
+GRANT finanzen TO big_boss;
+                          </code></pre>
+                          <div data-clone="users_roles"></div>
+                      </section>
+
+                      <section>
+                        <h3>GRANT: Berechtigung erteilen</h3>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
+                        <p class="small">GRANT &lt;Recht&gt; ON &lt;Objekt&gt; TO &lt;Benutzer oder Rolle&gt;</p>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Mitarbeiter dürfen sich mit der Datenbank verbinden
+GRANT CONNECT ON klinik_db TO mitarbeiter;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Die Finanzabteilung darf die Tabelle Reisekosten lesen
+GRANT SELECT ON klinik.reisekosten TO finanzen;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Doktor X darf alles auf der Patienten-Tabelle machen
+GRANT ALL PRIVILEGES ON klinik.patienten TO doktor_x;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>--Schwester Y darf Patienten einsehen, erstellen und ändern
+GRANT SELECT, INSERT, UPDATE ON klinik.patienten TO schwester_y;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>GRANT SELECT ON klinik.raeume TO PUBLIC; -- Das darf jeder</code></pre>
+
+                        <aside class="notes">Mit dem GRANT-Befehl wird festgelegt, <b>wer</b> auf <b>welchem</b> Objekt <b>was</b> machen darf. Hinter dem Stichwort <code>ON</code> steht das Objekt. Für das CONNECT-Recht ist dies eine Datenbank. Bei den anderen hier angegeben Privilegien steht hinter dem Stichwort <code>ON</code> eine oder mehrere Tabellen, oder alle Tabellen eines Schemas. In der Rolle PUBLIC sind alle Benutzer.</aside>
+                      </section>
+
+                      <section>
+                        <h3>REVOKE: Berechtigung entziehen</h3>
+                        
+                        <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume TO PUBLIC;</code></pre>
+                        <pre><code class="sql" data-trim>CREATE VIEW klinik.raeume_view AS
+SELECT * FROM klinik.raeume WHERE gebaeude IN (10,12,13,15);
+                        </code></pre>
+                        <p class="small">REVOKE &lt;Recht&gt; ON &lt;Objekt&gt; FROM &lt;Benutzer oder Rolle&gt;</p>
+                        <pre><code class="sql" data-trim>REVOKE SELECT ON klinik.raeume FROM PUBLIC;</code></pre>
+                        <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume_view TO PUBLIC;</code></pre>
+                        
+                        <div class="poll fragment" style="bottom:-260px">
+                          <h1>Alle Benutzer außer Peter sollen ein SELECT auf T machen dürfen.</h1>
+                              <ul>
+                                  <li>GRANT SELECT ON T TO PUBLIC; REVOKE SELECT ON T FROM Peter;</li>
+                                  <li data-poll="correct">Rolle R erstellen, in der alle außer Peter sind. GRANT SELECT ON T TO R;</li>
+                                  <li>Das geht nicht</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
+
+                        <aside class="notes">Wichtig: Man kann nur Rechte entziehen, die man genau so auch erteilt hat. Man kann im gezeigten Beispiel nicht das Recht nur gewissen Benutzern der Rolle PUBLIC entziehen (nur allen). Genau so kann nach einem GRANT ALL PRIVILEGES nicht lediglich das INSERT-Recht o.&nbsp;ä. entzogen werden. REVOKE macht also ein GRANT wieder vollständig rückgängig. Im hier gezeigten Beispiel erstellen wir eine Sicht aus Gründen der <b>Row-Level-Security</b>. Wir möchten den Benutzern der Rolle PUBLIC nicht erlauben, alle Räume zu sehen, sondern lediglich Räume in den Gebäuden 10, 12, 13 und 15. Analog lässt sich auch <b>Column-Level-Security</b> realisieren. Man lässt einfach in der View-Definition Spalten weg, um den Zugriff nur auf bestimmte Spalten zu beschränken.</aside>
+                      </section>
+
+                      <section>
+                        <h3>GRANT OPTION</h3>
+                        <p>Das Privileg, ein Privileg weiterzugeben.</p>
+                        <pre><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss
+WITH GRANT OPTION;</code></pre>
+
+                        <pre class="fragment"><code class="sql" data-trim>REVOKE GRANT OPTION FOR SELECT ON ALL TABLES IN SCHEMA klinik 
+FROM big_boss; -- nur GRANT OPTION entziehen, nicht das Recht</code></pre>
+
+<h4 class="fragment">REVOKE ... RESTRICT | CASCADE</h4>
+<pre class="fragment"><code class="sql" data-trim>REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss 
+RESTRICT; -- nur, wenn es nicht weitergegeben wurde</code></pre>
+
+<pre class="fragment"><code class="sql" data-trim>REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss
+CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
+                        <aside class="notes">Der Benutzer big_boss hat das Recht, SELECT-Anfragen auf allen Tabellen und Views im Klinik-Schema auszuführen. Außerdem hat er das Recht, dieses Recht auch anderen Benutzern und Rollen zu geben. Intern wird gespeichert, wer wann wem welches Recht gegeben hat. Mit diesen Infos können dann z.&nbsp;B. Rechte wieder kaskadiert entzogen werden.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Transaktionen</h2>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 111</div>
+                        <h4>ACID</h4>
+                        <ul>
+                            <li>Atomarität</li>
+                            <li>Konsistenz</li>
+                            <li>Isolation</li>
+                            <li>Dauerhaftigkeit</li>
+                        </ul>
+                        <aside class="notes">Eine ACID-Transaktion erfüllt die Eigenschaften Atomarität (sie wird vollständig oder gar nicht ausgeführt), Konsistenz (sie hinterlässt die Datenbank in einem konsistenten Zustand), Isolation (sie wird von keinen anderen parallel laufenden Transaktionen beeinflusst) und Dauerhaftigkeit (sie speichert Änderungen persistent).</aside>
+                      </section>
+
+                      <section>
+                        <h3>Commit / Rollback</h3>
+                        <div class="trackinfo"><i class="fas fa-headphones"></i> 112-113</div>
+
+                        <p class="small">Mit einer <code>commit</code>-Operation beendet man eine Transkation.<br><code>rollback</code> beendet ebenfalls die Transkation, sie führt jedoch zum Abort, sodass alle Änderungen rückgängig gemacht werden.</p>
+
+                        <h4>Autocommit</h4>
+                        <div class="columns">
+                          <div style="width: 16cm;"><p class="small">DB-Anwendungen setzen Autocommit-Einstellung. Bei SQL-Clients wie dem DBeaver ist Autocommit standardmäßig an.</p></div>
+                          <div style="width: 8cm;"><img src="img/5/autocommit.png" alt="DBeaver Autocommit" style="width:8cm" class="noborder"></div>
+                        </div>
+                        <div class="poll fragment" style="bottom:-220px">
+                          <h1>Autocommit bedeutet, dass ein Commit automatisch wann ausgeführt wird?</h1>
+                              <ul>
+                                  <li>nach jeder Transaktion</li>
+                                  <li data-poll="correct">nach jeder SQL-Anfrage</li>
+                                  <li>beim Schließen der DB-Verbindung</li>
+                                  <li>alle Paar Sekunden</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
+                        <aside class="notes">Autocommit bedeutet, dass jede SQL-Anfrage automatisch committet wird. Stelle man um auf manuelles Commit, muss man selbst eine <code>commit</code>-Operation ausführen, damit Änderungen wirklich in der Datenbank gespeichert werden. Ist Autocommit aus, kann die laufende Transaktion mittels <code>rollback</code> auch komplett zurückgerollt werden.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Atomarität</h2>
+                        <p>Eine TA wird entweder ganz oder gar nicht ausgeführt.</p>
+
+                        <pre class="fragment" style="width: 95%;"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Dogdog', 'England');
+INSERT INTO produkte VALUES (129, 'Hundefutter', 8.95, 'Dogdog');
+COMMIT;</code></pre>
+
+                        <pre class="fragment" style="width: 95%;"><code class="sql" data-trim>INSERT INTO hersteller VALUES ('Techbob', 'USA');
+INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
+<p class="fragment small" style="color: red">SQL-Fehler [23505]: ERROR: duplicate key value violates unique constraint "produkte_pkey"
+    Detail: Key (produktnummer)=(129) already exists.</p>
+    <p class="fragment small">&Rightarrow; Die TA kann komplett zurückgerollt werden, sodass der Hersteller Techbob auch nicht eingefügt wird.</p>
+
+    <aside class="notes">In diesen und in den nun folgenden Beispielen ist Autocommit ausgestellt. Zunächst wird ein Hersteller und ein Produkt eingefügt und diese Transaktion erfolgreich mit einem Commit beendet. Dann folgen zwei INSERTs, wobei das zweite davon fehlschlängt. Nun lässt sich die Transaktion abbrechen, sodass nichts aus der Transaktion ausgeführt wurde.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Konsistenz</h2>
+                        <p>Eine TA führt die Datenbank von einem konsistenten Zustand in wieder einen konsistenten Zustand.</p>
+
+                        <pre class=""><code class="sql" data-trim>INSERT INTO produkte VALUES (129, 'Laptop', 999.99, 'Techbob');</code></pre>
+                            <p class="small" style="color: red">SQL-Fehler [23505]: ERROR: duplicate key value violates unique constraint "produkte_pkey"
+                                Detail: Key (produktnummer)=(129) already exists.</p>
+
+                        <p class="small">Alle geltenden Integritätsbedingungen müssen zum Ende einer Transaktion erfüllt sein: Primärschlüssel-, Fremdschlüssel-, UNIQUE-, NOT NULL-, CHECK-Constraints, etc.</p>
+                              <aside class="notes">Es ist erlaubt, dass in Mitten einer Transaktion die Datenbank in einem inkonsistenten Zustand ist. Aber spätestens beim Commit muss dafür gesorgt werden, dass alle Integritätsbedingungen erfüllt sind. Sind sie es nicht, kann die Transaktion nicht erfolgreich abschließen und wird abgebrochen und zurückgesetzt.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Isolation</h2>
+                        <p>Parallel laufendende Transaktionen beeinflussen sich nicht.</p>
+                        <h4>Mehrbenutzeranomalien</h4>
+                        <ul class="small">
+                          <li><b>Dirty Read</b>: TA<sub>2</sub> liest noch nicht committete Änderungen von TA<sub>1</sub></li>
+                          <li><b>Lost Update</b>: TA<sub>1</sub> und TA<sub>2</sub> schreiben gleichzeitig; wer gewinnt?</li>
+                          <li><b>Non-repeatable Read:</b> TA liest mal veraltete und mal aktualisierte Werte</li>
+                          <li>...</li>
+                        </ul>
+                        <p>Ziel: Gefühlter Einbenutzerbetrieb!</p>
+                        <aside class="notes">Um in Datenbanken eine hohe Performanz zu ermöglichen, ist es erlaubt, dass viele Transaktionen parallel laufen. Die dabei naturgemäß auftretenden Mehrbenutzeranomalien müssen dabei verhindert werden. Für eine Transaktion soll es sich so anfühlen, als ob sie die einzige gerade laufende Transaktion ist.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Dirty Read</h2>
+                        <div class="columns">
+                          <div style="width: 12cm;">TA<sub>1</sub>
+                              <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.89 EUR
+
+UPDATE produkte
+SET preis = 0 
+WHERE produktnr = 17;
+
+
+
+</code><code class="fragment sql" data-fragment-index="2">ROLLBACK;</code></pre>
+                          </div>
+                          <div>TA<sub>2</sub>
+                              <pre style="width: 12cm;"><code class="fragment sql" data-fragment-index="1">
+
+
+
+
+
+SELECT preis FROM produkte
+WHERE produktnr = 17; -- 0 EUR
+COMMIT;
+
+</code></pre>
+                          </div>
+                        </div>
+                        <div class="poll fragment" style="bottom:-160px">
+                          <h1>Was ist hier Dirty?</h1>
+                              <ul>
+                                  <li>TA1</li>
+                                  <li>TA2</li>
+                                  <li data-poll="correct">Der Preis von Produkt 17</li>
+                                  <li>Rollback</li>
+                              </ul>
+                          <h2>https://frage.space</h2>
+                      </div>
+                        <aside class="notes">Es wäre ein Dirty Read, wenn TA<sub>2</sub> die noch nicht freigegebene Preisänderung von TA<sub>1</sub> sehen würde. Das Transaktions-Management-System (TMS) eines DBMS muss gewährleisten, dass Änderungen für andere Transaktionen erst nach dem Commit der Änderung sichtbar werden.</aside>
+                      </section>
+
+                      <section>
+                        <h2>Lost Update</h2>
+                        <div class="columns">
+                            <div style="width: 12cm;">TA<sub>1</sub>
+                                <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.89 EUR
+
+</code><code class="fragment sql" data-fragment-index="1">UPDATE produkte
+SET preis = preis + 0.1
+WHERE produktnr = 17; -- 0.99 EUR
+  
+</code><code class="fragment sql" data-fragment-index="3">COMMIT;</code></pre>
+                            </div>
+                            <div>TA<sub>2</sub>
+                                <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte
+WHERE produktnr = 17; -- 0.89 EUR
+
+</code><code class="fragment sql" data-fragment-index="2">UPDATE produkte
+SET preis = preis + 0.1
+WHERE produktnr = 17; -- 0.99 EUR
+
+</code><code class="fragment sql" data-fragment-index="4">COMMIT;</code></pre>
+                            </div>
+                          </div>
+                          <aside class="notes">Zwei Transkationen möchten den Preis eines Produktes um 10 Cent erhöhen. Als Endresultat sollte das Produkte also 0.89+0.1+0.1 = 1.09 EUR kosten. Da im gezeigten Szenario die Änderungen gleichzeitig und unisoliert passierten, trat ein Lost Update aus. Eine der beiden Änderungsoperationen ist verloren gegangen. Das Transaktions-Management-System muss solche Lost Updates verhindern, sodass der Endzustand der Datenbank äquivalent ist zu dem Endzustand, den die DB hätte, wenn die Transaktionen nicht gleichzeitig, sondern seriell hintereinander gelaufen wären.</aside>
+                      </section>
+
+                      <section>
+                          <h2>Non-repeatable Read</h2>
+                          <div class="columns">
+                              <div style="width: 12cm;">TA<sub>1</sub>
+                                  <pre style="width: 12cm;"><code class="sql" data-trim>SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.89 EUR
+    
+
+
+
+SELECT preis FROM produkte 
+WHERE produktnr = 17; -- 0.99 EUR
+  
+COMMIT;</code></pre>
+                              </div>
+
+                              <div class="poll fragment" style="bottom:-160px">
+                                <h1>Was macht TA2?</h1>
+                                    <ul>
+                                        <li>INSERT ...;</li>
+                                        <li>UPDATE ...;</li>
+                                        <li>INSERT ... ; COMMIT;</li>
+                                        <li data-poll="correct">UPDATE ...; COMMIT;</li>
+                                    </ul>
+                                <h2>https://frage.space</h2>
+                            </div>
+
+                              <div>TA<sub>2</sub>
+
+                                
+
+                                  <pre style="width: 12cm;"><code class="fragment sql">
+
+UPDATE produkte
+SET preis = preis + 0.1
+WHERE produktnr = 17; -- 0.99 EUR
+COMMIT;
+
+
+
+
+</code></pre>
+                              </div>
+                            </div>
+                            <aside class="notes">Im Einbenutzerbetrieb wäre es unmöglich, dass eine Transaktion zwei verschiedene Ergebnisse für die gleiche Abfrage erhält, außer sie hätte die Daten selbst geändert. Das TMS muss gewährleisten, dass in einem Fall, wie er hier gezeigt wird, wiederholtes Lesen stets das gleiche Ergebnis liefert.</aside>
+                        </section>
+
+                        <section>
+                          <h2>Phantomproblem</h2>
+                          <div class="columns">
+                              <div style="width: 12cm;">TA<sub>1</sub>
+                                  <pre style="width: 12cm;"><code class="sql" data-trim>SELECT * FROM produkte 
+WHERE hersteller = 'Monsterfood';
+-- 2 Produkte werden angezeigt
+    
+
+
+
+SELECT COUNT(*) FROM produkte 
+WHERE hersteller = 'Monsterfood';
+-- Ergebnis: 3
+  
+COMMIT;</code></pre>
+                              </div>
+                              <div>TA<sub>2</sub>
+                                  <pre style="width: 12cm;"><code class="fragment sql">
+
+
+INSERT INTO produkte
+VALUES (..., 'Monsterfood');
+COMMIT;
+
+
+
+
+
+
+</code></pre>
+                              </div>
+                            </div>
+                            <aside class="notes">Das Phantomproblem ist ähnlich zum Non-repeatable Read, bezieht sich jedoch auf während einer laufenden Transaktion neu hinzugefügte oder gelöschte Zeilen. TA<sub>1</sub> möchte alle Monsterfood-Produkte anzeigen und zusätzlich deren Anzahl (oder Preis-Summe, o.ä.) berechnen. Das Ergebnis ist inkonsistent, weil zwischenzeitlich TA<sub>2</sub> ein neues Produkt hinzugefügt hat.</aside>
+                        </section>
+
+                       <section>
+                         <h2>Serialisierbarkeit</h2>
+                         <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-random green"></i></div>
+                         <p class="small">Jede Transaktion besteht aus Lese- und Schreibaktionen: $r_1(x), r_1(y), w_1(x), c_1$</p>
+                         <h4>Serieller Ablauf</h4>
+                         <p class="small" style="margin-top: -4mm;">Keine verzahnte Ausführung, z. B. $r_1(x), r_1(y), w_1(x), c_1, r_2(z), r_2(x), c_2, r_3(y), c_3$</p>
+                         <h4>Serialisierbarkeit (&quot;Final-State-serialisierbar&quot;)</h4>
+                         <p class="small" style="margin-top: -4mm;">Ablauf ist serialisierbar, wenn Anfragen das gleiche Ergebnis liefern und DB im gleichen Zustand hinterlassen wird, wie bei irgendeinem seriellen Ablauf.</p>
+                         <h4>Serialisierbarkeit (&quot;Konflikt-serialisierbar&quot;)</h4>
+                         <p class="small" style="margin-top: -4mm;">Ablauf ist serialisierbar, wenn es keine Zyklen im Serialisierbarkeitsgraphen gibt.</p>
+                         <aside class="notes">Die Notation $r_1(x)$ bzw. $w_1(x)$ bedeutet, dass eine Transaktion 1 ein Objekt X (z. B. eine Tabelle, eine Zeile oder einen Spaltenwert) liest bzw. schreibt. $c_1$ ist das Commit von TA<sub>1</sub>. Final-State-Serialisierbarkeit ist schwierig zu überprüfen und außerdem kann auch rein zufällig das gleiche herauskommen wie bei einem seriellen Ablauf. Daher wird in der Regel auf Konflikt-Serialisierbarkeit überprüft.</aside>
+                        </section>
+
+                        <section>
+                          <h2>Serialisierbarkeitsgraph</h2>
+                          <h4>Konfliktoperationen</h4>
+                          <ul>
+                            <li>r &rightarrow; w</li>
+                            <li>w &rightarrow; r</li>
+                            <li>w &rightarrow; w</li>
+                          </ul>
+                          <p class="small">Von verschiedenen TAs auf gleichem Objekt.</p>
+                          <p class="small">Im Serialisierbarkeitsgraphen sind die TA die Knoten und es gibt eine Kante von einer TA zu einer anderen, wenn Konfliktoperationen zwischen diesen existieren.</p>
+                        </section>
+
+                        <section>
+                          <h2>Serialisierbarkeitsgraph</h2>
+                          <p class="small">Beispiel: $r_1(x), w_1(y), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
+                          <p class="small">Konfliktoperationen hier:</p>
+                          <ul class="fragment small">
+                            <li>$r_1(x) \rightarrow w_3(x)$</li>
+                            <li>$w_1(y) \rightarrow w_3(y)$</li>
+                            <li>$r_2(x) \rightarrow w_1(x)$</li>
+                            <li>$r_2(x) \rightarrow w_3(x)$</li>
+                            <li>$w_1(x) \rightarrow w_3(x)$</li>
+                          </ul>
+                          
+                          <div class="fragment">
+                          <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 722px; top: 170px;" data-block-id="bac83d9b29a51e3a4b046cfc6c3673e1">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 300%;">
+                              <p style="font-size:70%">TA<sub>1</sub></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 735px; top: 388.5px;" data-block-id="efe2b7f915bcb8e4bb9db6028bba6215">
+                            <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="57" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 12;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="57" height="1" viewBox="0 0 57 1">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="51" y2="0"></line>
+                                    <line class="line-element" stroke="#000000" stroke-width="4" x1="0" y1="0" x2="51" y2="0"></line>
+                                    <polygon fill="#000000" transform="translate(51,0) rotate(90)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 838px; top: 279px;" data-block-id="5fb757cb6cb7997bdf02b16fd47328fd">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="152" data-line-y2="135" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 13;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="40" height="72" viewBox="112 63 40 72">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="149.0861424129282" y2="129.75505634327078"></line>
+                                    <line class="line-element" stroke="#000000" stroke-width="4" x1="112" y1="63" x2="149.0861424129282" y2="129.75505634327078"></line>
+                                    <polygon fill="#000000" transform="translate(149.0861424129282,129.75505634327078) rotate(150.945)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 668px; top: 248px;" data-block-id="3dd154d88a733acf2cd62dca57d9d424">
+                            <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="172" data-line-y2="-40" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="60" height="103" viewBox="112 -40 60 103">
+                                    <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="168.9799040311973" y2="-34.81550192022201"></line>
+                                    <line class="line-element" stroke="#000000" stroke-width="4" x1="112" y1="63" x2="168.9799040311973" y2="-34.81550192022201"></line>
+                                    <polygon fill="#000000" transform="translate(168.9799040311973,-34.81550192022201) rotate(30.222)" points="0,-6 6,6 -6,6"></polygon>
+                                </svg></div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 586px; top: 331px;" data-block-id="4f14a7b04309835f86c7c2935f03b455">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 300%;">
+                              <p style="font-size:70%">TA<sub>2</sub></p>
+                            </div>
+                        </div>
+                        <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 796px; top: 331px;" data-block-id="beb8381f9c5769f2463503ffa09bc44f">
+                            <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; font-size: 300%;">
+                              <p style="font-size:70%">TA<sub>3</sub></p>
+                            </div>
+                        </div>
+                        </div>
+                          <p class="fragment small">Kein Zyklus im Serialisierbarkeitsgraphen &Rightarrow; Der Ablauf ist serialisierbar</p>
+                          <p class="fragment small">Äquivalenter serieller Ablauf: TA<sub>2</sub>, TA<sub>1</sub>, TA<sub>3</sub></p>
+                          <aside class="notes">Um den Serialisierbarkeitsgraphen zu erzeugen, geht man wie folgt vor: Für jede Operation prüft man, ob Konfliktoperationen von einer anderen Transaktion auf dem gleichen Objekt zeitlich später folgen. Falls ja, erstellt man, falls noch nicht vorhanden, eine Kante von der ersten zur zweiten Transaktion. Manchmal gibt es mehrere äquivalente serielle Abläufpläne. Alle diese würden zum gleichen Ergebnis führen wie der gegebene verzahnte Ablauf.</aside>
+                        </section>
+
+                        <section>
+                            <h2>Serialisierbarkeitsgraph</h2>
+                            <p class="small">Anderes Beispiel: $r_1(x), w_1(x), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
+                            <p class="small">Konfliktoperationen hier:</p>
+
+                            <div class="poll fragment fade-in-then-out" style="bottom:-160px" data-fragment-index="1">
+                              <h1>Welches ist hier eine Konfliktoperation?</h1>
+                                  <ul>
+                                      <li>r1(x) &rightarrow; w1(x)</li>
+                                      <li data-poll="correct">r2(x) &rightarrow; w1(x)</li>
+                                      <li>r1(x) &rightarrow; w3(y)</li>
+                                      <li>r1(x) &rightarrow; r2(x)</li>
+                                  </ul>
+                              <h2>https://frage.space</h2>
+                          </div>
+
+                            <ul class="fragment small" data-fragment-index="2">
+                              <li>$r_1(x) \rightarrow w_3(x)$</li>
+                              <li>$w_1(x) \rightarrow r_2(x)$</li>
+                              <li>$w_1(x) \rightarrow w_3(x)$</li>
+                              <li>$r_2(x) \rightarrow w_1(x)$</li>
+                              <li>$r_2(x) \rightarrow w_3(x)$</li>
+                              <li>$w_1(x) \rightarrow w_3(x)$</li>
+                            </ul>
+                            <p class="fragment small" data-fragment-index="4">Zyklus im Serialisierbarkeitsgraphen &Rightarrow; Der Ablauf ist nicht serialisierbar</p>
+                            
+                            <div class="fragment" data-fragment-index="3">
+                            <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 722px; top: 170px;" data-block-id="bac83d9b29a51e3a4b046cfc6c3673e1">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 300%;">
+                                    <p style="font-size:70%">TA<sub>1</sub></p>
+                                </div>
+                            </div>
+                            
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 735px; top: 388.5px;" data-block-id="efe2b7f915bcb8e4bb9db6028bba6215">
+                              <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="57" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 12;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="57" height="1" viewBox="0 0 57 1">
+                                      <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="51" y2="0"></line>
+                                      <line class="line-element" stroke="#000000" stroke-width="4" x1="0" y1="0" x2="51" y2="0"></line>
+                                      <polygon fill="#000000" transform="translate(51,0) rotate(90)" points="0,-6 6,6 -6,6"></polygon>
+                                  </svg></div>
+                          </div>
+                            
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 712px; top: 273px;" data-block-id="efe2b7f915bcb8e4bb9db6028bba6215">
+                                <div class="sl-block-content" data-line-x1="102" data-line-y1="57" data-line-x2="64" data-line-y2="127" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 12;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="38" height="70" viewBox="64 57 38 70">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="102" y1="57" x2="67" y2="122"></line>
+                                        <line stroke="#000000" stroke-width="4" x1="102" y1="57" x2="67" y2="122"></line>
+                                        <polygon fill="#000000" transform="translate(67,122) rotate(208.496)" points="0,-6 6,6 -6,6"></polygon>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 838px; top: 279px;" data-block-id="5fb757cb6cb7997bdf02b16fd47328fd">
+                                <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="152" data-line-y2="135" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 13;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="40" height="72" viewBox="112 63 40 72">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="149" y2="130"></line>
+                                        <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="149" y2="130"></line>
+                                        <polygon fill="#000000" transform="translate(149,130) rotate(150.945)" points="0,-6 6,6 -6,6"></polygon>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 668px; top: 248px;" data-block-id="3dd154d88a733acf2cd62dca57d9d424">
+                                <div class="sl-block-content" data-line-x1="112" data-line-y1="63" data-line-x2="172" data-line-y2="-40" data-line-color="#000000" data-line-start-type="none" data-line-end-type="arrow" style="z-index: 14;" data-line-width="4px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="60" height="103" viewBox="112 -40 60 103">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="112" y1="63" x2="169" y2="-35"></line>
+                                        <line stroke="#000000" stroke-width="4" x1="112" y1="63" x2="169" y2="-35"></line>
+                                        <polygon fill="#000000" transform="translate(169,-35) rotate(30.222)" points="0,-6 6,6 -6,6"></polygon>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 615px; top: 331px;" data-block-id="4f14a7b04309835f86c7c2935f03b455">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 300%;">
+                                    <p style="font-size:70%">TA<sub>2</sub></p>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="text" style="height: auto; width: 164px; left: 796px; top: 331px;" data-block-id="beb8381f9c5769f2463503ffa09bc44f">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; font-size: 300%;">
+                                    <p style="font-size:70%">TA<sub>3</sub></p>
+                                </div>
+                            </div>
+                            </div>
+                            <aside class="notes">Es gibt keinen äquivalenten seriellen Ablauf, daher ist der hier gegebene Ablauf nicht serialisierbar..</aside>
+                          </section>
+
+                          <section>
+                            <h2>SX-Sperrverfahren</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-lock green"></i></div>
+                            <p class="small">Sperrverfahren werden eingesetzt, um Serialisierbarkeit zu erreichen. Bevor eine TA ein Objekt liest oder schreibt, muss es dies mit einer Sperre versehen.</p>
+                            <h4>Sperrmatrix</h4>
+                            <table>
+                                <tr><td>&nbsp;</td><td>S</td><td>X</td></tr>
+                                <tr><td>S</td><td>&check;</td><td>-</td></tr>
+                                <tr><td>X</td><td>-</td><td>-</td></tr>
+                            </table>
+                            <aside class="notes">Sperrverfahren werden eingesetzt, um Isolation zu gewährleisten. Beim SX-Sperrverfahren gibt es Shared-Sperren (S) und eXklusive Sperren (X). Mehrere TAs können eine gemeinsame S-Sperre auf dem gleichen Objekt haben, aber nur eine TA darf eine X-Sperre auf einem Objekt haben. Vor dem Lesen eines Objektes wird die S-Sperre angefordert, vor dem Schreiben eine X-Sperre. Links in der Sperrmatrix steht die aktuell auf einem Objekt existierende Sperre anderer Transaktionen. Oben steht, welche Sperre eine Transkation anfordern möchte. Der Haken gibt an, ob sie die Sperre bekommen kann oder nicht. Im letzteren Fall muss die TA warten, bis die Sperre wieder freigegeben wurde.</aside>
+                          </section>
+
+                          <section>
+                            <h2>SX-Sperrverfahren</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-lock-open green"></i></div>
+                            <p class="class">Beispiel: $r_1(x), r_2(x), c_1, c_2$</p>
+                            <table style="font-size: 60%;">
+                                <thead>
+                                <tr><th>TA<sub>1</sub></th><th>TA<sub>2</sub></th><th>Gesetzte Sperren</th></tr>
+                                </thead>
+                                <tr class="fragment"><td>$r_1(x)$</td><td></td><td>$S_1(x)$</td></tr>
+                                <tr class="fragment"><td></td><td>$r_2(x)$</td><td>$S_{1,2}(x)$</td></tr>
+                                <tr class="fragment"><td>$c_1$</td><td></td><td>$S_2(x)$</td></tr>
+                                <tr class="fragment"><td></td><td>$c_2$</td><td></td></tr>
+                              </table>
+                              <aside class="notes">Damit <sub>1</sub> das Objekt x lesen kann, muss es zunächst eine S-Sperre auf x anfordern. Dies funktioniert, da im Moment noch keine Sperre auf x existiert. Auch TA<sub>2</sub> möchte das Objekt x lesen. Aktuell gibt es eine S-Sperre von TA<sub>1</sub> auf x, die sich aber mit der angeforderten S-Sperre verträgt. Es gibt nun also eine S-Sperre von TA<sub>1</sub> und TA<sub>2</sub> auf x. Beim Commit oder Rollback einer Transaktion werden Sperren wieder freigegeben. In unserem Beispiel sehen wir, dass nach dem Commit von TA<sub>1</sub> nur noch die S-Sperre von TA<sub>2</sub> auf x existiert. Im nächsten Schritt, beim Commit von TA<sub>2</sub>, wird auch diese aufgelöst, sodass es schließlich keine Sperren mehr gibt.</aside>
+                          </section>
+
+                          <section>
+                            <h2>SX-Sperrverfahren</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-hourglass-half green"></i></div>
+                            <p class="small">Beispiel: $r_1(x), w_1(x), r_2(x), w_1(x), w_3(y), w_3(x), c_1, c_2, c_3$</p>
+                            <table style="font-size: 60%;">
+                              <thead>
+                              <tr><th>TA<sub>1</sub></th><th>TA<sub>2</sub></th><th>TA<sub>3</sub></th><th>Gesetzte Sperren</th></tr>
+                              </thead>
+                              <tr class="fragment" data-fragment-index="1"><td>$r_1(x)$</td><td></td><td></td><td>$S_1(x)$</td></tr>
+                              <tr class="fragment" data-fragment-index="2"><td>$w_1(x)$</td><td></td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment" data-fragment-index="4"><td></td><td>warten</td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment"><td>$w_1(x)$</td><td>warten</td><td></td><td>$X_1(x)$</td></tr>
+                              <tr class="fragment"><td></td><td>warten</td><td>$w_3(y)$</td><td>$X_1(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td>warten</td><td>warten</td><td>$X_1(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td>$c_1$</td><td>warten</td><td>warten</td><td>$X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td>$r_2(x)$</td><td>warten</td><td>$S_2(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td>$c_2$</td><td>warten</td><td>$X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td></td><td>$w_3(x)$</td><td>$X_3(x), X_3(y)$</td></tr>
+                              <tr class="fragment"><td></td><td></td><td>$c_3$</td><td></td></tr>
+                            </table>
+                            <div class="poll fragment" style="bottom:30px" data-fragment-index="3">
+                              <h1>Was kommt als nächstes?</h1>
+                                  <ul>
+                                      <li>TA2 liest x</li>
+                                      <li>TA2 setzt S-Sperre auf x</li>
+                                      <li>TA2 muss warten, bis TA1 x fertig geschrieben hat</li>
+                                      <li data-poll="correct">TA2 muss warten, bis TA1 committed hat</li>
+                                  </ul>
+                              <h2>https://frage.space</h2>
+                          </div>
+                          </section>
+                          <section>
+                            <h2>Deadlocks</h2>
+                            <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-ban green"></i></div>
+                            <p class="small">Beispiel: $r_1(x), r_2(y), w_2(x), w_1(y), c_1, c_2$</p>
+                            <table style="font-size: 60%;">
+                                <thead>
+                                <tr><th>TA<sub>1</sub></th><th>TA<sub>2</sub></th><th>Gesetzte Sperren</th></tr>
+                                </thead>
+                                <tr class="fragment"><td>$r_1(x)$</td><td></td><td>$S_1(x)$</td></tr>
+                                <tr class="fragment"><td></td><td>$r_2(y)$</td><td>$S_1(x), S_2(y)$</td></tr>
+                                <tr class="fragment"><td></td><td>warten</td><td>$S_1(x), S_2(y)$</td></tr>
+                                <tr class="fragment"><td>warten</td><td>warten</td><td>$S_1(x), S_2(y)$</td></tr>
+                              </table>
+                              <p class="fragment small">TA<sub>2</sub> wartet auf TA<sub>1</sub> und umgekehrt &Rightarrow; Deadlock</p>
+                              <p class="fragment small">Lösung: Eine der TAs muss vom TMS zurückgesetzt werden.</p>
+                              <aside class="notes">Ein Transaktions-Management-System muss in der Lage sein, Deadlocks zu erkennen (z. B. durch Erkennung zyklischer Wartebedingungen oder mittels Timeouts) und sie aufzulösen, damit Transaktionen nicht unendlich lange warten. In der Regel wird ein Deadlock aufgelöst, indem eine der TAs zurückgesetzt wird und somit die andere fortfahren kann.</aside>
+                          </section>
+
+                          <section>
+                            <h2>SQL-Isolationslevels</h2>
+                            <div class="columns">
+                              <div style="width: 12cm;"><p class="small">
+                                <ul class="small">
+                                  <li>Read Committed</li>
+                                  <li>Read Uncommitted</li>
+                                  <li>Repeatable Read</li>
+                                  <li>Serializable</li>
+                                </ul>
+                              </div>
+
+                              <div style="width: 12cm;"><img src="img/5/autocommit.png" alt="DBeaver Autocommit" style="width:12cm" class="noborder"></div>
+                            </div>
+                            <table class="fragment small" style="margin-top: -3mm;">
+                                <tr><td></td><td><b>Dirty Read</b></td><td><b>Non&#8209;Repeatable&nbsp;Read</b></td><td><b>Phantomproblem</b></td></tr>
+                                <tr><td><b>Read&nbsp;Uncommitted</b></td><td>möglich</td><td>möglich</td><td>möglich</td></tr>
+                                <tr><td><b>Read Committed</b> </td><td>nicht&nbsp;mögl.</td><td>möglich</td><td>möglich</td></tr>
+                                <tr><td><b>Repeatable Read</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>möglich</td></tr>
+                                <tr><td><b>Serializable</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>nicht mögl.</td></tr>
+                            </table>
+                            <p class="fragment small">Lost Updates werden stets verhindert, sie sind in allen Iso'levels nicht möglich.</p>
+                            <div class="poll fragment" style="bottom:-40px">
+                              <h1>Was ist der Grund, warum man mal ein lockereres Isolationslevel als Serializable wählen könnte?</h1>
+                                  <ul>
+                                      <li>Sicherheit</li>
+                                      <li data-poll="correct">Performanz</li>
+                                      <li>Bessere Erfüllung von ACID</li>
+                                      <li>Man will alte Werte lesen</li>
+                                  </ul>
+                              <h2>https://frage.space</h2>
+                          </div>
+                            <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regel eine bessere Performance möglich.</aside>
+                          </section>
+
+                          <section>
+                            <h3>Multi-Version-Concurrency-Control</h3>
+                            <ul class="small">
+                              <li>Ein Objekt (Tabelle, Zeile, Wert, ...) kann in mehreren Versionen existieren.</li>
+                              <li class="fragment">TA schreibt: $w_1(x)$ &Rightarrow; neue Version $x'$ anlegen</li>
+                              <li class="fragment">TA liest: $r_2(x)$ &Rightarrow; alte Version $x$ wird gelesen</li>
+                              <li class="fragment">TA committet: $c_1$ &Rightarrow; neue Version wird gültig und sichtbar für andere TAs</li>
+                            </ul>
+                            <p class="fragment small">Beispiel (nicht Konflikt-serialisierbar):
+                              $r_1(x), w_1(x), r_2(x), w_1(x), c_1, c_2$<br>
+                              <span style="display:inline-block; width: 17cm;"></span>&UpperLeftArrow; TA<sub>2</sub> liest alte Version</p>
+                              <p class="fragment small">Das ist äquivalent zu folgendem und somit doch Konflikt-serialisierbar:<br>
+                              $r_1(x), r_2(x), w_1(x), w_1(x), c_1, c_2$
+                            
+
+                            <aside class="notes">Moderne DBMS wie PostgreSQL, Oracle, DB2, SQL Server verwenden MVCC zur Transaktionssicherung. Jede Aktion einer TA basiert logisch gesehen auf einem Schnappschuss der Datenbank zum Zeitpunkt des TA-Starts. Im gezeigten Beispiel liest TA<sub>2</sub> den Wert von x, den es vor der Änderung von TA<sub>1</sub> hatte. Es ist daher auch kein Dirty Read.<br>
+                            Beim Schreiben eines Objektes wird eine neue Version davon angelegt. Die TA selbst arbeitet natürlich auf seiner geänderten Kopie, andere laufende Transaktion arbeiten auf der alten Version. Selbst wenn die TA committet, muss die alte Version noch beibehalten werden, solange noch laufende TAs diese alte Version benötigen.</aside>
+                          </section>
+
+                          <section>
+                            <h2>Recovery-Mechanismen</h2>
+                            <p class="small">Transaktionen müssen auch bei TA-, System- und Hardwarefehlern ACID-konform ausgeführt werden (atomar, ..., dauerhaft).</p>
+                            <p class="fragment small">Aus Performance-Gründen schreiben TAs erst einmal Änderungen nur im RAM; von Zeit zu Zeit werden die geänderten Blöcke dann auf die Festplatte ge-flush-t.</p>
+                            <p class="fragment small">Alle Änderungen einer TA werden aber in ein <b>Transaktions-Log</b> eingetragen, welches immer spätestens bei einem Commit auf die Platte geschrieben wird.</p>
+                            <table class="fragment small">
+                              <thead><tr><th>LSN</th><th>TA</th><th>PageID</th><th>Undo</th><th>Redo</th><th>PrevLSN</th></tr></thead>
+                              <tbody><tr><td>27</td><td>TA<sub>1</sub></td><td>x</td><td>Undo-Info</td><td>Redo-Info</td><td>22</td></tr></tbody>
+                            </table>
+                            <aside class="notes">Das Transaktions-Log speichert, wer (TA) wann (LSN = Log-Sequenz-Nummer) was (PageID) wie geändert hat (Redo) und wie man diese Änderung zurückgängig machen kann (Undo). Die Undo- und Redo-Infos so etwas wie &quot;Byte 17 bis Byte 20 haben sich verändert in 1A5B2FFF&quot;. Die LSN ist eine laufende Nummer, um die Einträge zu ordnen. Die PrevLSN beinhaltet die LSN der vorherigen Aktion der gleichen TA. Mit all diesen Infos können im Fehlerfall Änderungen rückgängig gemacht werden und noch nicht auf die Platte geschriebene Änderungen nachgeholt werden.</aside>
+                          </section>
+
+                          <section>
+                            <h2>Transaktionsfehler</h2>
+                            <p class="small">Beispiel: $r_1(x), r_2(y), r_1(z), w_1(x), w_2(y), w_1(z), a_1, c_2$</p>
+                            <table class="small" style="margin-top: -5mm;">
+                                <thead><tr><th>LSN</th><th>TA</th><th>PageID</th><th>Undo</th><th>Redo</th><th>PrevLSN</th></tr></thead>
+                                <tbody>
+                                  <tr class="fragment"><td>1</td><td>TA<sub>1</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                  <tr class="fragment"><td>2</td><td>TA<sub>2</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                  <tr class="fragment"><td>3</td><td>TA<sub>1</sub></td><td>x</td><td><b>Undo-Info</b></td><td>Redo-Info</td><td>1</td></tr>
+                                  <tr class="fragment"><td>4</td><td>TA<sub>2</sub></td><td>y</td><td>Undo-Info</td><td>Redo-Info</td><td>2</td></tr>
+                                  <tr class="fragment"><td>5</td><td>TA<sub>1</sub></td><td>z</td><td><b>Undo-Info</b></td><td>Redo-Info</td><td>3</td></tr>
+                                  <tr class="fragment"><td>6</td><td>TA<sub>1</sub></td><td>Abort</td><td>-</td><td>-</td><td>5</td></tr>
+                                  <tr class="fragment"><td>7</td><td>TA<sub>2</sub></td><td>Commit</td><td>-</td><td>-</td><td>4</td></tr>
+                                </tbody>
+                              </table>
+                            <aside class="notes">Irgendetwas hat nicht wie gewünscht funktioniert, daher rollt die Anwendung TA<sub>1</sub> zurück. Das DBMS verwendet dazu die hier fett markierten Undo-Infos. Diese können leicht im Log gefunden werden, indem man immer in die PrevLSN-Spalte schaut und dann an die entsprechende Zeile springt. BOT steht für Begin of Transaction.</aside>
+                          </section>
+
+                          <section>
+                              <h2>Systemfehler</h2>
+                              <p class="small">Beispiel: $r_1(x), r_2(y), r_1(z), w_1(x), w_2(y), w_1(z), c_1,$ &#8623; Crash!</p>
+                              <table class="fragment small" style="margin-top: -5mm;">
+                                  <thead><tr><th>LSN</th><th>TA</th><th>PageID</th><th>Undo</th><th>Redo</th><th>PrevLSN</th></tr></thead>
+                                  <tbody>
+                                    <tr><td>1</td><td>TA<sub>1</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                    <tr class=""><td>2</td><td>TA<sub>2</sub></td><td>BOT</td><td>-</td><td>-</td><td>-</td></tr>
+                                    <tr class=""><td>3</td><td>TA<sub>1</sub></td><td>x</td><td>Undo-Info</td><td>Redo-Info</td><td>1</td></tr>
+                                    <tr class=""><td>4</td><td>TA<sub>2</sub></td><td>y</td><td><b>Undo-Info</b></td><td>Redo-Info</td><td>2</td></tr>
+                                    <tr class=""><td>5</td><td>-</td><td>Flush</td><td>-</td><td>-</td><td>-</td></tr>
+                                    <tr class=""><td>6</td><td>TA<sub>1</sub></td><td>z</td><td>Undo-Info</td><td><b>Redo-Info</b></td><td>3</td></tr>
+                                    <tr class=""><td>7</td><td>TA<sub>1</sub></td><td>Commit</td><td>-</td><td>-</td><td>6</td></tr>
+                                  </tbody>
+                                </table>
+                                <div class="poll fragment" style="bottom:-80px">
+                                  <h1>Was bedeutet der Flush?</h1>
+                                      <ul>
+                                          <li data-poll="correct">Gepufferte Seiten werden auf die Platte geschrieben</li>
+                                          <li>Alle Transaktionen committen</li>
+                                          <li>Seiten werden von der Festplatte in den DB-Puffer geladen</li>
+                                          <li>Der DB-Puffer wird geleert</li>
+                                      </ul>
+                                  <h2>https://frage.space</h2>
+                              </div>
+                              <aside class="notes">Bei einem Systemfehler ist immer die Frage, welche Transaktionen sind Gewinner (haben committed) und welche sind Verlierer (waren noch aktiv). Da das System zu Zeitpunkt 5 zuletzt einen Flush gemacht hat, um DB-Seiten auf die Festplatte zu persistieren, müssen alle davor durchgeführten Aktionen von Verlierern rückgängig gemacht und noch nicht eingebrachte Änderungen von Gewinnern nachgeholt werden.</aside>
+                            </section>
+  
+
+                            <section>
+                              <h2>Checkpoints</h2>
+                              <p class="small">Regelmäßig legt die Datenbank Sicherungspunkte (Checkpoints) an.</p>
+                              <ul class="small">
+                                <li>Geänderte DB-Seiten im Puffer werden auf die Platte persistiert (Flush)</li>
+                                <li>Vorteil: Recovery beginnt beim letzten Checkpoint</li>
+                              </ul>
+                              <p class="small"></p>
+                              <div class="fragment">
+                              <h4>Varianten:</h4>
+                                <ul class="small">
+                                  <li>Transaktionskonsistente Checkpoints</li>
+                                  <li>Aktionskonsistente Checkpoints</li>
+                                  <li>Unscharfe (Fuzzy) Checkpoints</li>
+                                </ul>
+                              </div>
+                              <aside class="notes">Auf der vorherigen Folie war ein Flush zu sehen. Dieser wird beim Anlegen eines Checkpoints ausgeführt. Ein Flush schreibt alle im DB-Puffer befindlichen Änderungen auf die Festplatte. Wenn die Datenbank nie Checkpoints anlegen würde, wäre der Recovery-Prozess extrem aufwändig, da das komplette Transaktionslog von Anfang bis Ende durchgearbeitet werden muss. Wird in regelmäßigen Abständen ein Checkpoint angelegt, muss die Recovery immer nur beim letzten Checkpoint starten.</aside>
+                            </section>
+
+                            <section>
+                              <h3 style="width: 103%;">Transaktionskonsistente Checkpoints</h3>
+                              <p class="small">Checkpoint wird angelegt, wenn keine Transaktion läuft.</p>
+                              <ol class="small">
+                                <li>Anmeldung, dass nun ein Checkpoint angelegt werden soll</li>
+                                <li>Warten, bis alle laufenden TAs abgeschlossen sind</li>
+                                <li>Neu startende TAs müssen warten</li>
+                                <li>Wenn keine TA mehr läuft, gepufferte DB-Seiten persistieren</li>
+                              </ol>
+                              <div class="sl-block" data-block-type="line" data-name="line-493a7d" data-block-id="38bd1db33ea456f7a3c0811d5c165299" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 263px; top: 456px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 304px; top: 491px;" data-block-id="8176821c27af0e28b1dc80363be2ce67" data-name="line-97e26c">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="128" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="128" height="1" viewBox="0 0 128 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(125.0703125,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 352px; top: 522px;" data-block-id="c4afa20bfbfd5aa3dd4041c2c0afbafd" data-name="line-cdc849">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="200" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="200" height="1" viewBox="0 0 200 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="197.045" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="197.045" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(197.045,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" data-name="shape-345959" data-block-id="e3b82f2d9ce041c2e9392877b780fb45" style="width: 90px; height: 178px; left: 462px; top: 412px;">
+                                <div class="sl-block-style" style="z-index: 10; opacity: 0.33;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 10;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 90 178">
+                                            <rect width="90" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-344848" data-block-id="74353624ff4057204907d12b8281c5fb" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 483.5px; top: 560px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="89.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="none" style="z-index: 14;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="89.5" height="1" viewBox="0 0 89.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="89.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" stroke-dasharray="5.9642857142857135 5.9642857142857135" x1="3" y1="0" x2="89.5" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 573px; top: 560px;" data-block-id="f6348514e90aed02308ff34ad690fc3c" data-name="line-2b33fa">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="square" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 21px; height: 178px; left: 552px; top: 412px;" data-block-id="e31b93621416508b445a57b83442c4ce" data-name="shape-7e5980">
+                                <div class="sl-block-style" style="z-index: 17; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 21 178">
+                                            <rect width="21" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+
+                            <aside class="notes">Die Grafik zeigt zwei bereits abgeschlossene TAs und eine Transaktion, die noch aktiv ist, während der Checkpoint angelegt werden soll. Daher muss zunächst auf deren Ende gewartet werden. Die untere TA darf nicht mehr starten und wartet, bis der Checkpoint erstellt ist. Nachteil: evtl. lange Wartesituationen.</aside>
+                            </section>
+
+                            <section>
+                              <h3>Aktionskonsistente Checkpoints</h3>
+                              <p class="small">Beim Anlegen des Checkpoints werden aktuell laufende TAs pausiert.</p>
+                              <div class="sl-block" data-block-type="line" data-name="line-493a7d" style="width: auto; height: auto; left: 262.875px; top: 314px;" data-block-id="2136a92161f9b08081a2db1caf49a428">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 303.875px; top: 349px;" data-name="line-97e26c" data-block-id="102d9845fda56c6865ef957616146971">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="128" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="128" height="1" viewBox="0 0 128 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(125.0703125,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 497.875px; top: 380px;" data-name="line-cdc849" data-block-id="8fa25e17a78e635ca12567a8360ca056">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="75" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="square" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="75" height="1" viewBox="0 0 75 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="72" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="0" x2="72" y2="0"></line>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(72,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" data-name="shape-345959" style="width: 36px; height: 178px; left: 461.875px; top: 270px;" data-block-id="38c36d65514eb117ce9e8dc03b21224e">
+                                <div class="sl-block-style" style="z-index: 10; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 10;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 36 178">
+                                            <rect width="36" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 498.125px; top: 418px;" data-name="line-2b33fa" data-block-id="e3b501759fe5fdbe65226d15de71e5a7">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="square" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="0" x2="196" y2="0"></line>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-344848" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 463.375px; top: 418px;" data-block-id="dc7a9df1fe58804a77ac83b5bb49b755">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="69.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="none" style="z-index: 16;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="69.5" height="1" viewBox="0 0 69.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="69.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" stroke-dasharray="5.291666666666667 5.291666666666667" x1="3" y1="0" x2="69.5" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 351.875px; top: 380px;" data-block-id="8d415d116eea0a8aa9dab0047dd515c4" data-name="line-f66441">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="110.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="none" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="110.5" height="1" viewBox="0 0 110.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="110.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="110.5" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-a3dc55" data-block-id="3e1ccd810a5c929bb25baf297b8da2f9" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 463.375px; top: 380px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="34.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 18;" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="34.5" height="1" viewBox="0 0 34.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="0" x2="34.5" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" stroke-dasharray="4.75 4.75" x1="0" y1="0" x2="34.5" y2="0"></line>
+                                    </svg></div>
+                            </div>
+
+                            <aside class="notes">Auch hier können laufende Transaktionen in lange Wartezustände versetzt werden, wenn die Erstellung des Checkpoints lange dauert. Da nicht auf das Ende aller zu beginn noch laufenden TAs gewartet werden muss, sind diese Warteperioden jedoch kürzer.</aside>
+                            </section>
+
+                            <section>
+                              <h3>Fuzzy Checkpoints</h3>
+                              <ul class="small">
+                                <li>Kein Flush von geänderten Seiten</li>
+                                <li>Checkpoint beinhaltet nur Infos über aktuell laufende TAs und den Puffer-Zustand (welche Seiten sind dirty?)</li>
+                                <li>Recovery beginnt bei Min(DirtyLSN)</li>
+                                <li>Flush von beliebigen Seiten kann asynchron zu beliebiger Zeit erfolgen</li>
+                              </ul>
+                              <div class="sl-block" data-block-type="line" data-name="line-493a7d" style="width: auto; height: auto; left: 271.938px; top: 404px;" data-block-id="0909b2ad42ee870accf44d7deb7b5663">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 312.938px; top: 439px;" data-name="line-97e26c" data-block-id="493fd3295d2b0d026e41479fe8f915c0">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="128" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 12;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="128" height="1" viewBox="0 0 128 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="125.0703125" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(125.0703125,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" data-name="shape-345959" style="width: 9px; height: 178px; left: 470.938px; top: 360px;" data-block-id="d44d5370714ed2267f96911b8845d1a6">
+                                <div class="sl-block-style" style="z-index: 10; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 10;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 489.062px; top: 509px;" data-name="line-2b33fa" data-block-id="890c55d46897abb057d4015dfd979830">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="199" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="199" height="1" viewBox="0 0 199 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3" y1="0" x2="196.04522613065328" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(196.04522613065328,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" style="width: auto; height: auto; left: 360.938px; top: 470px;" data-name="line-f66441" data-block-id="3c9c59f790f242c3df517ac20b808cd8">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="139.5" data-line-y2="0" data-line-color="#000000" data-line-start-type="circle" data-line-end-type="square" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="139.5" height="1" viewBox="0 0 139.5 1">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="3.0000000000000004" y1="0" x2="136.56451612903226" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="3.0000000000000004" y1="0" x2="136.56451612903226" y2="0"></line>
+                                        <ellipse rx="3" ry="3" cx="3.0000000000000004" cy="0" fill="#000000"></ellipse>
+                                        <rect width="6" height="6" fill="#000000" x="-3" y="-3" transform="translate(136.56451612903226,0) rotate(90)"></rect>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 9px; height: 178px; left: 543.938px; top: 360px;" data-block-id="1c586e5fb8d6956ff958e44d6c23e853" data-name="shape-fa09b8">
+                                <div class="sl-block-style" style="z-index: 15; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 9px; height: 178px; left: 400.062px; top: 360px;" data-block-id="966f58629456987037f6ebbdd9e799ad" data-name="shape-95ef84">
+                                <div class="sl-block-style" style="z-index: 16; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 16;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 9px; height: 178px; left: 329.062px; top: 360px;" data-block-id="74f3eaadf5c9f249dc49140f44552074" data-name="shape-a2f598">
+                                <div class="sl-block-style" style="z-index: 17; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 17;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 9 178">
+                                            <rect width="9" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="shape" style="width: 8px; height: 178px; left: 607.938px; top: 360px;" data-block-id="82f80143a0bd8a6d1d57e7943f719c6e" data-name="shape-cc1d8b">
+                                <div class="sl-block-style" style="z-index: 18; opacity: 0.66;">
+                                    <div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(68, 170, 171)" data-shape-stretch="true" style="z-index: 18;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 8 178">
+                                            <rect width="8" height="178" rx="0" ry="0" class="shape-element" fill="rgb(68, 170, 171)"></rect>
+                                        </svg></div>
+                                </div>
+                            </div>
+                            <div class="sl-block" data-block-type="line" data-name="line-42f41e" data-block-id="d798e77166942ce54cab07a18c6df309" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 420.938px; top: 340px;">
+                                <div class="sl-block-content" data-line-x1="0" data-line-y1="200" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 19;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveAspectRatio="xMidYMid" width="1" height="200" viewBox="0 0 1 200">
+                                        <line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="200" x2="0" y2="0"></line>
+                                        <line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="200" x2="0" y2="0"></line>
+                                    </svg></div>
+                            </div>
+                            <div class="sl-block" data-block-type="text" data-name="text-c3a9c6" data-block-id="29e4be1be455889ed92ad683876632af" style="height: auto; width: 212.625px; left: 312.938px; top: 300px;">
+                                <div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20;">
+                                    <p><span style="font-size:0.7em">MinDirtyPageLSN</span></p>
+                                </div>
+                            </div>
+                              <aside class="notes">Unscharfe Checkpoints können sehr schnell angelegt werden, da hier kein tatsächliches Persistieren der Seiten im DB-Puffer erfolgt. Dieses kann immer mal wieder nebenbei und unabhängig von der Checkpoint-Erstellung passieren. Der Checkpoint speichert zu jeder Seite im DB-Puffer die LSN, seit wann diese Seite dirty ist, also seit wann ihr Status nicht mehr dem auf der Festplatte entspricht. Der Recovery-Prozess startet dann bei der kleinsten solchen LSN, zu der es eine Dirty Page gibt.</aside>
+                            </section>
+
+                            <section>
+                              <h2>Kapitelzusammenfassung</h2>
+                                  <ul class="small">
+                                    <li>Sichten: CREATE VIEW ... AS</li>
+                                    <li>WITH [LOCAL|CASCADED] CHECK OPTION</li>
+                                    <li>Materialisierte Sichten / REFRESH</li>
+                                    <li>Benutzer und Rollen</li>
+                                    <li>GRANT / REVOKE</li>
+                                    <li>ACID-Transaktionen</li>
+                                    <li>Mehrbenutzeranomalien (Dirty Read, Lost Update, ...)</li>
+                                    <li>Serialisierbarkeit / Serialisierbarkeitsgraph</li>
+                                    <li>SX-Sperrverfahren</li>
+                                    <li>Isolationslevels</li>
+                                    <li>MVCC</li>
+                                    <li>Recovery / Transaktions-Log</li>
+                                    <li>Checkpoint-Recovery</li>
+                                  </ul>
+                            </section>
+
+                        </div>
+                    </div>
+            
+                    <script src="reveal.js/dist/reveal.js"></script>
+		<script src="reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="reveal.js/plugin/highlight/highlight.js"></script>
+		<script src="reveal.js/plugin/zoom/zoom.js"></script>
+		<script src="reveal.js/plugin/math/math.js"></script>
+		<script src="reveal.js/plugin/notes/notes.js"></script>
+		<script src="reveal.js/plugin/search/search.js"></script>
+        <script src="lib/jquery.js"></script>
+        <script src="lib/lodash.js"></script>
+        <script src="lib/backbone.js"></script>
+        <script src="lib/joint.min.js"></script>
+        <script src="lib/deflate.js"></script>
+        
+		<script src="src/init_reveal.js"></script>
+
+        <script>
+        if(window.location.search.match( /print-pdf/gi )) {
+                document.getElementById('header').style="display:none";
+                document.getElementById('footer').style="display:none";
+        }
+        </script>
+
+
+	</body>
+</html>

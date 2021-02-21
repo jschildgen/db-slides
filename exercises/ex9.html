@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 9</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+        <style type="text/css">
+          li {
+            margin-left: -5mm;
+          }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+            <div>
+                <b>Datenbanken - WS 2020/21</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 9 vom 23.12.2020</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+        </div>
+        <hr>
+        </header>
+
+        <section style="padding-top: 2.5cm">
+          <h1>Aufgabe 1: Rechtemanagement, Transaktionen (10P)</h1>
+          <p>Abgabe-Deadline: 23.12.2020 11:00 im Moodle</p>
+          <h4>a) (6P)</h4>
+          <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+          <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+          <tr>
+              <td>1.</td><td>Wenn ich GRANT rolle TO benutzer ausführe, hat der angegebene Benutzer alle Berechtigungen der spezifizierten Rolle.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>2.</td><td>Mit REVOKE ... RESTRICT verbiete ich, ein Recht weiterzugeben.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>3.</td><td>Wenn eine Transaktion Daten schreibt und sie diese selbst wieder liest, nennt man dies ein Dirty Read.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>4.</td><td>Es laufen zwei Transaktionen parallel. Eine schreibt in x und die andere liest x gleichzeitig. Hier kann ein Lost Update auftreten.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>5.</td><td>Das Phantomproblem kann auftreten, wenn zwischen zwei Leseoperationen eine andere Transaktion Datensätze löscht.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr><!--
+          <tr>
+              <td>6.</td><td>Die Redo-Info im Transaktionslog wird verwendet, um noch nicht auf die Festplatte geschriebene Aktionen von Gewinner-Transaktionen auszuführen.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>-->
+          </table>
+
+          <h4>b) (3P)</h4>
+          <p>Zeichnen Sie den Serialisierbarkeitsgraphen für die folgende Historie:</p>
+          <p style="font-size:larger;">w<sub>1</sub>(x), w<sub>2</sub>(x), r<sub>2</sub>(y), r<sub>1</sub>(y), w<sub>3</sub>(y), c<sub>1</sub>, c<sub>2</sub>, c<sub>3</sub></p>
+
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+            <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+          <tr>
+            <td>7.</td><td>Es gibt einen Zyklus im Serialisierbarkeitsgraphen.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+          </table>
+
+          <h4>c) (2P)</h4>
+          <p>Skizzieren Sie den Ablauf des SX-Sperrverfahrens für die Historie aus Aufgabenteil b).</p>
+
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+            <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+        <tr>
+            <td>8.</td><td>Wird bei der Historie aus der vorherigen Frage das SX-Sperrverfahren eingesetzt, muss TA<sub>2</sub> warten, bevor sie in x schreiben darf.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+      </table>
+
+      <p>Ihre Lösungen zu Teil b) und c) (Serialisierbarkeitsgraph und SX-Sperrverfahren) werden in den Zoom-Sessions besprochen.</p>
+                  
+          </section>
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

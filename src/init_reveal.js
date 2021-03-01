@@ -22,6 +22,7 @@ Reveal.initialize({
     { src: 'src/sql.js', async: true },
     { src: 'src/clone.js', async: true },
     { src: 'src/erd.js' },
+    { src: 'src/hide-from.js' },
     { src: 'plugins/plantuml.js' },
     { src: 'plugins/jump.js', async: true },
     { src: 'plugins/badges.js' },

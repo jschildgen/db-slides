@@ -34,7 +34,7 @@
                     <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                     <h1>Datenbanken</h1>
                     <h3>Kapitel 1: Grundlagen</h3>
-                    <h4 style="text-align:center">2020-10-13</h4>
+                    <h4 style="text-align:center">&nbsp;</h4>
                     <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                     <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                 </section>
@@ -157,7 +157,7 @@
                     <li>Datenbanken-Grundlagen</li>
                     <li>Logischer DB-Entwurf: ER-Modellierung</li>
                     <li>Das Relationenmodell</li>
-                    <li>Relationale Algebra</li>
+                    <li data-hide-from="2V">Relationale Algebra</li>
                 </ol>
 								<p class="fragment">\[\pi_{Uhrzeit,~Bezeichnung}\sigma_{Datum = '2020-10-14'}(Termine) \]</p>
                 </section>
@@ -167,7 +167,7 @@
                     <li>Datenbanken-Grundlagen</li>
                     <li>Logischer DB-Entwurf: ER-Modellierung</li>
                     <li>Das Relationenmodell</li>
-                    <li>Relationale Algebra</li>
+                    <li data-hide-from="2V">Relationale Algebra</li>
                     <li>SQL</li>
                 </ol>
                 <br>
@@ -185,7 +185,7 @@ WHERE datum = '2020-10-14'
                     <li>Relationale Algebra</li>
                     <li>SQL</li>
                     <li>Entwicklung von DB-Anwendungen</li>
-                    <li>Indexstrukturen</li>
+                    <li data-hide-from="2V">Indexstrukturen</li>
                     <li>Transaktionen</li>
                 </ol>
                 </section>
@@ -713,7 +713,7 @@ commit;</code></pre></div>
 								</section>
 
 
-								<section>
+								<section data-hide-from="2V">
 									<h2>Datenabstraktion</h2>
 									<h4>Externe Ebene (Sichten / Views)</h4>
 									<p style="margin-left: 50px">Sicht auf eine Teilmenge des<br>logischen Schemas für eine<br>bestimmte Benutzergruppe</p>
@@ -779,7 +779,7 @@ commit;</code></pre></div>
 								</div>
 								</section>
 
-								<section>
+								<section data-hide-from="2V">
 									<h2>Datenabstraktion (Bsp.)</h2>
 									<h4>Externe Ebene (View für Webshop-Anwendung)</h4>
 										<table style="font-size:0.7em" data-fragment-index="0">
@@ -812,7 +812,7 @@ commit;</code></pre></div>
 									</div>
 									<p><b>Physische Ebene: </b>0010110000000100101111010101...</p>
 								</section>
-								<section>
+								<section data-hide-from="2V">
 									<h2>Datenunabhängigkeit</h2>
 									<h4>Logische Datenunabhängigkeit</h4>
 									<p style="font-size: 75%">Änderungen am logischen Schema<br>(z. B. Spaltenumbenennung) erfordern<br>lediglich eine Anpassung der externen<br>Sichten. Anwendungen bleiben unberührt.</p>
@@ -823,7 +823,7 @@ commit;</code></pre></div>
 
 									<aside class="notes">Wird in dem Beispiel auf der vorherigen Folie auf logischer Ebene die Spalte Bezeichnung in Produktbezeichnung umbenannt, kann die entsprechende Sicht auf externer Ebene einfach angepasst werden und alle bisherigen Anwendungen, die über die Sicht auf die Daten zugreifen, funktionieren auch weiterhin noch.</aside>
 								</section>
-								<section>
+								<section data-hide-from="2V">
 									<h2>Architektur von DBMS</h2>
 									<p>Vereinfachtes Modell: 3-Schichten-Modell</p>
 
@@ -937,8 +937,8 @@ commit;</code></pre></div>
 								<li>DDL / DML</li>
 								<li>Metadaten / Daten</li>
 								<li>Konzept. / Log. / Phys. Datenmodell</li>
-								<li>Ext. / Log. / Phy. Datenebene</li>
-								<li>Datensystem / Speichersystem / Zugriffssystem</li>
+								<li data-hide-from="2V">Ext. / Log. / Phy. Datenebene</li>
+								<li data-hide-from="2V">Datensystem / Speichersystem / Zugriffssystem</li>
 							</ul>
 			</section>
 

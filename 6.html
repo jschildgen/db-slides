@@ -45,11 +45,11 @@
                             <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                             <h1>Datenbanken</h1>
                             <h3>Kapitel 6: Anwendungsentwicklung</h3>
-                            <h4 style="text-align:center">2020-12-22</h4>
+                            <h4 style="text-align:center">&nbsp;</h4>
                             <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                             <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                         </section>
-                        <section>
+                        <section data-hide-from="2V">
                           <h3>In diesem Kapitel erstellen wir...</h3>
                           <ul class="small">
                               <li>... Java-Anwendungen, die mit JDBC mit der Datenbank kommunizieren,</li>
@@ -159,7 +159,7 @@
                              dann erzeugt ein Precompiler das eigentliche lauffähige Programm.</p>
 
                         <p class="small">Beispiel: SQL Object-Language Bindings (OLB) für Java (vormals SQLJ)</p>
-                        <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>ProdukteIterator iter;
+                        <pre><code class="java" data-trim contenteditable>ProdukteIterator iter;
 #sql iter = { SELECT bezeichnung, preis FROM produkte };
 do {
   #sql { FETCH :iter INTO :bezeichnung, :preis };
@@ -172,7 +172,7 @@ iter.close();</code></pre>
                 <section>
                     <h2>JDBC</h2>
                     <p class="small">SQL-Anfragen werden API-Methoden als Strings übergeben.</p>
-                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#23-30' data-trim contenteditable>
+                    <pre><code class="java" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#23-30' data-trim contenteditable>
                     </code></pre>
                     <p class="small">Vorteile: Flexibel (Anfragen können dynamisch zur Laufzeit generiert werden), kein Precompiler nötig, kompatibel mit allen Java-IDEs und vielen Frameworks.</p>
                     <aside class="notes">JDBC (Java Database Connectivity) ist eine universelle API-Schnittstelle für die Programmiersprache Java. </aside>
@@ -197,13 +197,13 @@ iter.close();</code></pre>
 
                 <section>
                     <h2>Connection</h2>
-                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#9-16,21,20,33-37' data-sample-mark="4,7,12" data-trim contenteditable></code></pre>
+                    <pre><code class="java" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#9-16,21,20,33-37' data-sample-mark="4,7,12" data-trim contenteditable></code></pre>
                 <aside class="notes">Eine JDBC-URL besteht aus <code>jdbc:</code>, dem Treiber-Namen, der Adresse des DB-Servers, dem Datenbanknamen und evtl. weiteren optionalen Properties. <code>DriverManager.getConnection</code> stellt eine Verbindung zur Datenbank her und liefert ein <code>Connection</code>-Objekt zurück. Mittels dieses Objekts kann nun mit der Datenbank gearbeitet werden. Tritt ein Fehler beim Verbinden auf (z. B. falsches Passwort), wird eine <code>SQLException</code> geworfen. Auch andere Methoden, z.&nbsp;B. diejenigen, die Anfragen an die Datenbank schicken, werfen im Fehlerfall ebendiese Exception. </aside>
                 </section>
 
                 <section>
                     <h2>Statement und ResultSet</h2>
-                    <pre><code class="hljava" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#22-31' data-sample-mark="" data-trim contenteditable></code></pre>
+                    <pre><code class="java" data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukte.java#22-31' data-sample-mark="" data-trim contenteditable></code></pre>
                 
                 <aside class="notes">Um eine Anfrage an die Datenbank zu schicken, kann auf der vorhandenen <code>Connection</code>ein <code>Statement</code>-Objekt erzeugt werden. Eine Anfrage wird mit der <code>executeQuery</code>- oder <code>executeUpdate</code>-Methode an die Datenbank geschickt. Erstere liefert ein <code>ResultSet</code> zurück, zweitere dient zur Ausführung von <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, usw. und liefert die Anzahl der betroffenen Zeilen zurück.<br>
                 Über ein <code>ResultSet</code> kann mittels der <code>next()</code>-Methode iteriert werden. <code>next()</code> liefert <code>false</code>, wenn wir am Ende der Ergebnismenge angekommen sind. Wie im Beispiel gezeigt, kann man mit einer While-Schleife Zeile für Zeile über das Ergebnis einer ausgeführten Anfrage iterieren. In jeder Iteration stehen einem Datentyp-spezifische Methoden bereit, um auf die Spaltenwerte der aktuellen Zeile zuzugreifen; entweder über die Position (beginnend mit 1) oder über das Spaltenlabel: <code>rs.getString(1)</code> und <code>rs.getString("bezeichnung")</code> liefert beides den Wert der Ergebnisspalte &quot;bezeichnung&quot;.</aside>
@@ -214,7 +214,7 @@ iter.close();</code></pre>
                     <div class="trackinfo"><i class="fas fa-headphones"></i> 100</div>
                     <div style="position: absolute; top: 20px; right:5px; font-size:160px"><i class="fas fa-exclamation-triangle red"></i></div>
                     <p class="small">Vorsicht beim Erzeugen von Query-Strings,<br>die Benutzereingaben beinhalten! (&rightarrow; <a href="https://www.xkcd.com/327/" target="_blank">xkcd.com/327</a>)</p>
-                    <pre><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukt_SQLInjection.java#23-24'></code></pre>
+                    <pre style="width:100%"><code class="java" data-trim contenteditable data-sample='code/JDBC_Webshop/src/lecture/ZeigeProdukt_SQLInjection.java#23-24'></code></pre>
                     <p class="fragment small"><em>Geben Sie einen Hersteller ein: </em><input type="text" value="'; DROP TABLE webshop.produkte;" style="font-size: 22pt; width:13cm"></p>
                     <p class="fragment"><input type="text" value="' UNION (SELECT email||' '||passwort, NULL FROM webshop.kunden)" style="font-size: 22pt; width:25cm"></p>
                     <aside class="notes">Mit SQL-Injections lassen sich Sicherheitslücken ausnutzen, die es dem Benutzer ermöglichen, Datenbankbefehle einzuschleusen. Das hier gezeigte Programm ist gut gemeint, aber unsicher. Wenn der Benutzer Hersteller Calgonte eingibt, soll <code>SELECT ... WHERE hersteller = 'Calgonte'</code> ausgeführt werden. Dadurch, dass der Benutzerinput ohne Überprüfung und Maskierung von Sonderzeichen einfach so als Teil der Anfrage an den String drangehangen wird, ermöglicht man dem Anwender beliebige Anfragen auf der Datenbank auszuführen. Ersterer Hack würde die Produkte-Tabelle droppen. Dies kann man mit der JDBC-Parameter-Einstellung <code>allowMultiQueries=false</code> verhindern. Der zweite Hack würde dennoch funktionieren. Er ermöglicht dem Angreifer die Einsicht der E-Mail-Adressen und Passwörter aller Kunden. Durch die Eingabe von <code>' OR 1=1 --</code> findet man alle Produkte.</aside>
@@ -258,7 +258,7 @@ iter.close();</code></pre>
                     <aside class="notes">JDBC stellt Methoden bereit, um auf die Metadaten der Datenbank (z. B. Tabellen, Spalten einer Tabelle, ...) und auf Metadaten eines ResultSets zuzugreifen.</aside>
                 </section>
 
-                <section>
+                <section data-hide-from="2V">
                     <h2>Routinen</h2>
                     <div class="trackinfo"><i class="fas fa-headphones"></i> 102</div>
                     <p>Benutzerdefinierte Routinen sind in der DB gespeicherte Datenbankobjekte (wie Tabellen und Views):</p>
@@ -273,10 +273,10 @@ iter.close();</code></pre>
                     </aside>
                 </section>
 
-                <section>
+                <section data-hide-from="2V">
                     <h2>PL/pgSQL</h2>
                     <h4>Block:</h4>
-                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                    <pre><code class="sql dont_execute_sql" data-trim contenteditable>
                         [ DECLARE 
                         -- hier können Variablen definiert werden ]
                         BEGIN
@@ -284,7 +284,7 @@ iter.close();</code></pre>
                         END
                     </code></pre>
                     <h4>Kontrollstrukturen:</h4>
-                        <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                        <pre><code class="sql dont_execute_sql" data-trim contenteditable>
                             IF ... THEN ... [ELSE ...] END IF;
                             WHILE ... LOOP ... END LOOP;
                             LOOP ... EXIT WHEN ...; END LOOP;
@@ -293,10 +293,10 @@ iter.close();</code></pre>
                         </code></pre>
                 </section>
 
-                <section>
+                <section data-hide-from="2V">
                     <h2>Stored Procedures</h2>
                     <div class="trackinfo"><i class="fas fa-headphones"></i> 103</div>
-                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                    <pre><code class="sql dont_execute_sql" data-trim contenteditable>
 CREATE OR REPLACE FUNCTION alles_leeren() RETURNS void AS
 $$ BEGIN
  TRUNCATE bewertungen CASCADE;
@@ -305,14 +305,14 @@ $$ BEGIN
  TRUNCATE kunden CASCADE;
 END $$ LANGUAGE plpgsql;</code></pre>
 
-<pre><code class="hlsql dont_execute_sql" contenteditable>SELECT alles_leeren();</code></pre>
+<pre><code class="sql dont_execute_sql" contenteditable>SELECT alles_leeren();</code></pre>
 
                 <aside class="notes">In diesem einfachen Beispiel hat unsere Prozedur <code>alles_leeren</code> keine Eingabeparameter (daher die leeren Klammern <code>()</code>), wir definieren keine Variablen und verwenden auch keine Kontrollstrukturen oder Schleifen. Es werden lediglich vier <code>TRUNCATE</code>-Kommandos ausgeführt. In PostgreSQL sind Prozeduren <code>FUNCTION</code>-Objekte mit dem Rückgabetyp <code>void</code>. Man ruft sie in einem <code>SELECT</code>-Kommando ohne <code>FROM</code>-Klausel auf. Seit PostgreSQL 11 gibt es jedoch auch <code>CREATE PROCEDURE</code>, welche dann mit einem <code>CALL</code>-Befehl aufgerufen werden (siehe übernächste Folie). In anderen DBMS werden Prozeduren mit einem <code>EXECUTE</code>-Befehl ausgeführt.<br>Schreibt man <code>CREATE OR REPLACE</code> statt einfach nur <code>CREATE</code>, wird die Funktion überschrieben, falls sie schon existiert.</aside>
                 </section>
-            <section>
+            <section data-hide-from="2V">
                 <h3>RAISE NOTICE</h3>
                 <p class="small"><code>RAISE NOTICE</code> gibt einen Infotext auf der Konsole aus.</p>
-                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                <pre><code class="sql dont_execute_sql" data-trim contenteditable>
 CREATE OR REPLACE FUNCTION hallo() RETURNS void AS $$
 DECLARE
     x INT := 5;
@@ -321,16 +321,16 @@ BEGIN
     RAISE NOTICE 'x ist %', x;
 END $$ LANGUAGE plpgsql;</code></pre>
 
-<pre><code class="hlsql dont_execute_sql" contenteditable>SELECT hallo();</code></pre>
+<pre><code class="sql dont_execute_sql" contenteditable>SELECT hallo();</code></pre>
             <img src="img/6/dbeaver_notice.png" alt="DBeaver Serverausgabe anzeigen" style="width:12cm">
             <aside class="notes">Verwendet man im Notice %-Platzhalter, kann man deren Werte als zusätzliche Parameter übermitteln. Diese Folie zeigt auch, wie man Variablen deklariert. Bei <code>x INT := 5;</code> hat x den Wert 5. Mit <code>x INT</code> würde man lediglich die Variable x ohne Wert definieren, damit man diesen später zuweisen kann.</aside>
             </section>
 
             
 
-            <section>
+            <section data-hide-from="2V">
                 <h2>Stored Procedures</h2>
-                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                <pre><code class="sql dont_execute_sql" data-trim contenteditable>
 CREATE PROCEDURE bestelle_produkt(_kundennr INT, 
                                   _produktnr INT) AS $$
 DECLARE
@@ -346,31 +346,31 @@ BEGIN
   COMMIT;
 END $$ LANGUAGE plpgsql;</code></pre>
 
-<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CALL bestelle_produkt(5, 17);</code></pre>
+<pre><code class="sql dont_execute_sql" data-trim contenteditable>CALL bestelle_produkt(5, 17);</code></pre>
                     
             <aside class="notes">Anders als bei <code>CREATE FUNCTION</code> werden bei PostgreSQL im <code>CREATE PROCEDURE</code> auch Transaktionen (<code>COMMIT</code> / <code>ROLLBACK</code>) unterstützt. Damit wird garantiert, dass beide hier dargestellten <code>INSERT</code>s ausgeführt werden (oder keines) und dass die mit MAX ermittelte neue Bestellnummer auch in jedem Fall gültig ist, auch wenn andere Transaktionen parallel Bestellungen einfügen (&rightarrow; Phantomproblem).</aside>
             </section>
             
-            <section>
+            <section data-hide-from="2V">
                 <h3>Eingabeparameter</h3>
                 <p class="small">Zugriff über den Namen oder die Position (<code>$1</code>, ...)</p>
 
-<pre><code class="hlsql dont_execute_sql" data-trim contenteditable>CREATE OR REPLACE PROCEDURE test(i int, s VARCHAR) AS $$
+<pre><code class="sql dont_execute_sql" data-trim contenteditable>CREATE OR REPLACE PROCEDURE test(i int, s VARCHAR) AS $$
 BEGIN
  RAISE NOTICE 'i ist %', i;     -- i ist 99
  RAISE NOTICE 's ist %', $2;    -- s ist Tomate
 END $$ LANGUAGE plpgsql;</code></pre>
 
-<pre><code class="hlsql dont_execute_sql" contenteditable>CALL test(99, 'Tomate');</code></pre>
+<pre><code class="sql dont_execute_sql" contenteditable>CALL test(99, 'Tomate');</code></pre>
 <aside class="notes"><code>$2</code> steht hier für den zweiten Parameter, also für <code>s</code>. Wir verwenden in den Beispielen aber auch oft Variablennamen, die mit einem Unterstrich beginnen (z. B. <code>_produktnr</code>), damit man sie nicht mit Spaltennamen oder ähnlichem verwechselt.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h2>Funktionen</h2>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 103</div>
     <p>UDF = User-defined Function</p>
 
-    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
+    <pre><code class="sql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
 $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
 
     <div class="poll fragment fade-in-then-out" style="bottom:-260px">
@@ -384,16 +384,16 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
         <h2>https://frage.space</h2>
     </div>
 
-    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
+    <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
 
-    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre>
+    <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre>
 
     
 
     <aside class="notes">Funktionen haben beliebig viele Eingabeparameter und liefern genau einen Rückgabewert zurück. Der Datentyp des Rückgabewerts steht oben hinter <code>RETURNS</code>. Mit einem <code>RETURN</code>-Kommando terminiert die Funktion und erzeugt die Rückgabe. Man kann die Funktion genau wie eingebaute SQL-Funktionen (UPPER, MD5, ...) in SELECT-Anfragen mit und ohne FROM-Klausel verwenden, aber auch in INSERT, UPDATE, etc. Die hier dargestellte Funktion addiert zwei Zahlen. Die Eingabeparameternamen kann man wie hier gezeigt einfach weggelassen, wenn man auf sie lediglich mittels <code>$1</code> etc. zugreift.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>Exceptions werfen und behandeln</h3>
 
     <pre><code class="sql dont_execute_sql" data-trim contenteditable>
@@ -418,9 +418,9 @@ END $$ LANGUAGE plpgsql;</code></pre>
     <aside class="notes">Hinter <code>EXCEPTION WHEN</code> steht der Name einer Exception, die abgefangen werden soll. <code>OTHERS</code> fängt alle sonstigen Fehler ab. Mit <code>RAISE EXCEPTION</code> wird ein Programm unterbrochen und die entsprechende Fehlermeldung an den Client zurückgegeben.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>Volatilitäts-Kategorien</h3>
-    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
+    <pre><code class="sql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
 $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql IMMUTABLE;</code></pre>
     
         <h4><code>VOLATILE</code> (Standard)</h4>
@@ -447,9 +447,9 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql IMMUTABLE;</code></pre>
     <aside class="notes">Wenn eine Funktion als <code>STABLE</code> oder <code>IMMUTABLE</code> deklariert wird, kann der Datenbank-Optimierer Ergebnisse der Funktion wiederverwenden, ohne die Funktion nochmals aufzurufen. Eine Funktion <code>get_hersteller_land</code>, die beispielsweise eine <code>SELECT</code>-Anfrage an eine Tabelle schickt, um das Land eines Herstellers zu ermitteln, ist <code>STABLE</code>, da sie innerhalb einer Anfrage, in der sie aufgerufen wird, für den gleichen Hersteller das gleiche Land liefern würde.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h2>Tabellenfunktionen</h2>
-    <pre><code class="hlsql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION produkte_von(VARCHAR) RETURNS TABLE
+    <pre><code class="sql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION produkte_von(VARCHAR) RETURNS TABLE
 (produktnr INT, bezeichnung VARCHAR(100), 
  preis DECIMAL(9,2), hersteller VARCHAR(50)) AS $$ 
 SELECT produktnr, bezeichnung, preis, hersteller 
@@ -468,12 +468,12 @@ $$ LANGUAGE sql;
     <h2>https://frage.space</h2>
 </div>
         
-            <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
+            <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
         
         <aside class="notes">Tabellenfunktionen liefert eine Tabelle zurück mit beliebig vielen Zeilen. Die Spalten und deren Typen werden im <code>CREATE FUNCTION</code>-Kommando im <code>RETURNS TABLE</code>-Teil definiert. Genau wie eine View wird eine Tabellenfunktion in der <code>FROM</code>-Klausel einer SELECT-Anfrage aufgerufen. Eine Tabellenfunktion ist quasi eine View mit Parametern.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h2>Trigger</h2>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 104</div>
     <p>Wenn ...</p>
@@ -511,7 +511,7 @@ $$ LANGUAGE sql;
     
 </section>
 
-    <section>
+    <section data-hide-from="2V">
         <h3>Trigger in PostgreSQL</h3>
         <h4>Triggerfunktion</h4>
         <ul class="small">
@@ -528,10 +528,10 @@ $$ LANGUAGE sql;
         Trigger können auch sogenannte ECA-Regel implementieren. ECA steht für Event, Condition, Action. Wenn also ein Ereignis eintritt, soll - falls die Bedingung erfüllt ist - das Ereignis ausgeführt werden. Die Bedingung lässt sich in PostgreSQL mittels einer optionalen <code>WHEN</code>-Bedingung festlegen.</aside>
     </section>
 
-    <section>
+    <section data-hide-from="2V">
         <h3>AFTER INSERT</h3>
         <p class="small">Nachdem das neue Tupel eingefügt wurde, soll noch etwas gemacht werden.</p>
-        <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+        <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE FUNCTION produkte_trigger() RETURNS TRIGGER AS
 $$ BEGIN
 IF (NEW.hersteller IS NOT NULL AND NOT EXISTS 
@@ -544,16 +544,16 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <p class="small"><code>NEW</code> bietet Zugriff auf die neu eingefügte Zeile.</p>
     
 
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE TRIGGER produkte_trigger AFTER INSERT ON produkte
 FOR EACH ROW EXECUTE PROCEDURE produkte_trigger();</code></pre> 
 
 <aside class="notes">Immer wenn ein INSERT auf die Produkttabelle gemacht wird, feuert der Trigger. Er sorgt dafür, dass der Hersteller in die Herstellertabelle eingefügt, wenn er noch nicht drin ist. Über das Objekt <code>NEW</code> hat man innerhalb des Triggers Zugriff auf die Attributwerte der neu eingefügten Zeile.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>AFTER INSERT</h3>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 INSERT INTO produkte VALUES(1000, 'Kuchen', 2.00, 'Kuchenpeter');
     </code></pre> 
     <p class="fragment small" style="color:red" data-fragment-index="1">[23503]: ERROR: insert or update on table "produkte" violates foreign key constraint "produkte_hersteller_fkey"
@@ -564,7 +564,7 @@ INSERT INTO produkte VALUES(1000, 'Kuchen', 2.00, 'Kuchenpeter');
         <li>oder das Fremdschlüssel-Constraint auf <code>DEFERRED</code> setzen:</li>
     </ul>
 
-    <pre class="fragment" data-fragment-index="2"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre class="fragment" data-fragment-index="2"><code class="sql dont_execute_sql" contenteditable data-trim>
 ALTER TABLE webshop.produkte ADD CONSTRAINT 
 produkte_hersteller_fkey FOREIGN KEY (hersteller) 
 REFERENCES hersteller(firma) ON UPDATE CASCADE 
@@ -574,12 +574,12 @@ INITIALLY DEFERRED;</code></pre>
 Als Alternative kann die Überprüfung des Fremdschlüssel-Constraints auch auf <code>DEFERRED</code> (verzögert) setzen. Der Standard ist <code>IMMEDIATE</code> - eine sofortige Überprüfung. Bei <code>DEFERRED</code> wird das Constraint erst zum Ende der Transaktion überprüft. In unserem Fall führt dies zum Erfolg, da zum Ende der Transaktion der zuvor nicht existierende Hersteller zwischenzeitlich durch den Trigger eingefügt wurde.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>BEFORE INSERT / UPDATE / DELETE</h3>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 105</div>
     <p class="small">Mit einem <code>BEFORE</code>-Trigger kann man das einzufügende Tupel modifizieren oder das <code>INSERT</code> / <code>UPDATE</code> / <code>DELETE</code> ablehnen.</p>
 
-<pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+<pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE OR REPLACE FUNCTION preis_trigger() RETURNS TRIGGER AS $$ 
 DECLARE anz_gratis_produkte INT;
 BEGIN
@@ -592,7 +592,7 @@ END IF;
 RETURN NEW;
 END; $$ LANGUAGE plpgsql;</code></pre>
 
-<pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+<pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE TRIGGER preis_trigger BEFORE INSERT OR UPDATE ON produkte
 FOR EACH ROW EXECUTE PROCEDURE preis_trigger();</code></pre>
 
@@ -608,14 +608,14 @@ FOR EACH ROW EXECUTE PROCEDURE preis_trigger();</code></pre>
 <aside class="notes">Bei einem <code>BEFORE INSERT</code>-Trigger kann man einzufügende Tupel noch abändern, bevor es tatsächlich in die Tabelle eingefügt wird. Hier wird der Preis auf 0 gesetzt, sollte jemand versuchen, ein Produkt mit negativen Preis einzufügen. Außerdem überwacht der Trigger, dass es nie mehr als drei kostenlose Produkte gibt. Ein INSERT oder UPDATE wird abgelehnt, wenn es dieses Constraint verletzen sollte.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>OLD / NEW</h3>
     <ul>
         <li><code>INSERT</code>-Trigger: Zugriff auf <code>NEW</code></li>
         <li><code>DELETE</code>-Trigger: Zugriff auf <code>OLD</code></li>
         <li><code>UPDATE</code>-Trigger: Zugriff auf <code>OLD</code> und <code>NEW</code></li>
     </ul>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE OR REPLACE FUNCTION preiserhoehung_trigger() 
 RETURNS TRIGGER AS $$ 
 BEGIN
@@ -628,7 +628,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 Hier wurde <code>10%%</code> geschrieben, da <code>%</code> als Platzhalter steht, der durch einen Wert ersetzt wird (siehe Folie zu RAISE NOTICE). <code>%%</code> wird durch <code>%</code> ersetzt.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>FOR EACH ROW / STATEMENT</h3>
     <h4>FOR EACH ROW</h4>
     <ul>
@@ -644,16 +644,16 @@ Hier wurde <code>10%%</code> geschrieben, da <code>%</code> als Platzhalter steh
     <aside class="notes">Der Trigger, der überprüft, dass es stets nie mehr drei kostenlose Produkte gibt, könnte auch vom Typ <code>FOR EACH STATEMENT</code> sein. Dies würde die Überprüfung bei großen Änderungsmengen deutlich beschleunigen, da sie nur einmal und nicht für jede geänderte Zeile erfolgen muss.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>INSTEAD OF-Trigger</h3>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 106</div>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>INSERT INTO meine_view VALUES (...)</code></pre>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>INSERT INTO meine_view VALUES (...)</code></pre>
     <ul class="small">
         <li>Nur in simple Views Projektion-Selektion-Views darf ein INSERT/UPDATE/DELETE erfolgen</li>
         <li>Mittels einer <code>CHECK OPTION</code> kann überprüft werden, dass das Tupel auch das WHERE-Prädikat der View erfüllt.</li>
         <li><code>INSTEAD OF</code>-Trigger ermöglichen INSERT/UPDATE/DELETE auf jeder View.</li>
     </ul>
-    <pre class="fragment"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre class="fragment"><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE TRIGGER meine_view_trigger INSTEAD OF INSERT ON meine_view
 FOR EACH ROW EXECUTE PROCEDURE meine_view_trigger();        
     </code></pre>
@@ -661,15 +661,15 @@ FOR EACH ROW EXECUTE PROCEDURE meine_view_trigger();
     <aside class="notes"><code>INSTEAD OF</code>-Trigger sind nur für Sichten gedacht. Jedes mal, wenn jemand ein INSERT / UPDATE / DELETE auf eine Sicht macht, soll stattdessen die Trigger-Aktion ausgelöst werden.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>INSTEAD OF-Trigger</h3>
-    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre style="width: 95%;"><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE VIEW meine_view AS
 SELECT p.produktnr, p.bezeichnung, p.preis, p.hersteller, h.land
 FROM produkte p JOIN hersteller h ON p.hersteller=h.firma;
 </code></pre>
 
-<pre class="fragment" style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>
+<pre class="fragment" style="width: 95%;"><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE OR REPLACE FUNCTION meine_view_trigger() 
 RETURNS TRIGGER AS $$ 
 BEGIN
@@ -688,7 +688,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <h2>Indexe</h2>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 107</div>
     <p class="small">Motivation: Wir haben $n$ Produkte. Wie teuer ist die folgende Anfrage?</p>
-    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+    <pre style="width: 95%;"><code class="sql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
     <ul class="small">
         <li class="fragment">Full Table Scan: $O(n)$</li>
         <li class="fragment">Tabelle intern sortiert nach Produktnummer: $O(log_2(n))$</li>
@@ -703,17 +703,17 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <h2>Full Table Scan</h2>
     <p class="small">Linearer Aufwand: $O(n)$</p>
     <p class="small">Jede einzelne Zeile wird gelesen und für sie wird überprüft, ob das WHERE-Prädikat wahr oder falsch ist.</p>
-    <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+    <pre style="width: 95%;"><code class="sql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
     <span data-sql-query="SELECT * FROM produkte ORDER BY (produktnr%13)+(length(bezeichnung)%3)/((100*(preis+1))%11)"></span>
     <aside class="notes">Bei einem Full Table Scan muss jede einzelne Zeile der Tabelle gelesen werden, um die gewünschte Zeile zu finden. Wäre die Tabelle doppelt so groß, wäre auch der Aufwand doppelt so groß.</aside>
 </section>
-<section>
+<section data-hide-from="2V">
     <h2>Clustered Index</h2>
     <div class="columns">
         <div><p class="small">Logarithmischer Aufwand: $O(log_2(n))$</p>
             <p class="small"><em>Binäre Suche</em>: In die Mitte der Tabelle springen. Hat diese Zeile eine größere Produktnummer als die gesuchte? Oberhalb weitersuchen, usw.</p>
-            <pre style="width: 95%; margin-top: -3mm;"><code class="hlsql dont_execute_sql" contenteditable data-trim>CLUSTER produkte USING produkte_pkey</code></pre>
-            <pre style="width: 95%;"><code class="hlsql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
+            <pre style="width: 95%; margin-top: -3mm;"><code class="sql dont_execute_sql" contenteditable data-trim>CLUSTER produkte USING produkte_pkey</code></pre>
+            <pre style="width: 95%;"><code class="sql dont_execute_sql" contenteditable data-trim>SELECT * FROM produkte WHERE produktnr = 29</code></pre>
             <ul class="fragment small">
                 <li>Es kann nur einen Clustered Index pro Tabelle geben</li>
                 <li>Re-Clustering nötig nach INSERT, UPDATE, DELETE</li>
@@ -725,7 +725,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <aside class="notes">Ein Clustered Index bestimmt die interne Speicherung der Zeilen. Clustert man die Produkttabelle nach der Primärschlüsselspalte <code>produktnr</code>, werden die Datensätze sortiert nach der Produktnummer abgespeichert. In PostgreSQL ist dazu die Ausführung des Kommandos <code>CLUSTER</code> nötig. PostgreSQL macht kein automatisches Reclustering, d. h. nach Änderungen an den Datensätzen muss nochmals <code>CLUSTER</code> ausgeführt werden. Liegen die Daten sortiert, ist eine Suche auf der Index-Spalte, ein GROUP BY und ein Sortieren sehr schnell. Das Re-Clustering ist jedoch eine sehr teure Operation.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h2>B-Bäume</h2>
     <p class="small">Logarithmischer Aufwand: $O(log_k(n))$</p>
     <p class="small">Simulation: <a href="https://www.cs.usfca.edu/~galles/visualization/BTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BTree.html</a></p>
@@ -739,7 +739,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     </div>
     <aside class="notes">Ein innerer Knoten hat immer einen Kindknoten mehr als Einträge. Ein Eintrag in einem B-Baum kann mit logarithmischem Aufwand gesucht werden. Erst wenn ein Baum k-mal mehr Einträge speichert, erhöhen sich die Suchkosten gerade mal um 1. Im gezeigten Baum können wir jeden Eintrag finden, indem wir höchstens drei Seiten lesen müssen, da die Höhe des Baumes 3 ist. In einem voll besetzten B-Baum der Klasse k=3 und der Höhe h=5 kann man mehr als 3<sup>5</sup>=243 Einträge abspeichern und jeder davon lässt sich mit höchstens 5 Leseoperationen wiederfinden. In der Realität ist z. B. k=1024. Somit lassen sich Milliarden Einträge so organisieren, dass man jeden davon mit nur drei Leseoperationen finden kann.</aside>
 </section>
-<section>
+<section data-hide-from="2V">
     <h2>B+-Bäume</h2>
     <p class="small">Simulation: <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a></p>
     <ul class="small">
@@ -753,7 +753,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <p class="small" style="text-align: center; margin-top: -7mm;">k=1, k*=1 &Rightarrow; max. Grad = 3</p>
     <aside class="notes">Da man in den Bäumen nicht lediglich Zahlen o.ä. sondern natürlich auch den Pointer zum tatsächlichen Datensatz speichern muss, ist es eine Optimierung, diese Pointer nur in die Blattebene zu speichern, sodass innere Knoten bei gleicher Seitengröße einen viel höheren Grad haben können als Blattknoten.</aside>
 </section>
-<section>
+<section data-hide-from="2V">
     <h2>Einfügen in B+-Baum</h2>
     <ol class="small">
         <li>Blattknoten suchen, in welchen der neue Schlüssel gehört</li>
@@ -769,7 +769,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <aside class="notes">Im links gezeigten B+-Baum (k=1, k*=1) soll der Eintrag 18 eingefügt werden. Zuerst wird der Knoten gesucht, in den die 18 gehört. 18 ist kleiner als 29, also gehen wir nach links. Dort ist bisher nur die 17 gespeichert. In jedem Knoten ist Platz für 2k* = 2 Einträge, also ist dort noch Platz, sodass wir die 18 einfach einfügen können.<br>
     Hat unsere Produkttabelle einen Index auf der Produktnummer-Spalte - die meisten DBMS legen auf Primärschlüsselspalten ohnehin automatisch B+-Baum-Indexe an -, wird in den gezeigten Baum der Wert 18 zusammen mit der Speicheradresse, wo der entsprechende Datensatz auf der Festplatte gespeichert ist, in die Blattebene des B+-Baums eingefügt. Möchte man nun suchen (<code>SELECT * FROM produkte WHERE produktnr=18</code>), kann der Index genutzt werden, um schnell den Datensatz zu finden. Auch bei Bereichsanfragen (<code>WHERE produktnr BETWEEN 18 and 88</code>) hilft der B+-Baum: Man navigiert sich zur Blattebene zur 18, und folgt dann den verketteten Blättern bis zur 88. Im B-Baum wäre dies komplexer.</aside>
 </section>
-<section>
+<section data-hide-from="2V">
     <h2>Einfügen in B+-Baum</h2>
     <ol class="small">
         <li>Blattknoten suchen, in welchen der neue Schlüssel gehört</li>
@@ -792,7 +792,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     </div>
     <aside class="notes">Die einzufügende 22 gehört in den Blattknoten links, da sie kleiner als 29 ist. Da dieser Knoten voll ist, erfolgt ein Split. Es gibt nun die 17, 18 und 22. Mittleres Element davon ist die 18. Alles, was kleiner als 18 ist (also die 17) kommt in einen Blattknoten, alles, was größer oder gleich 18 ist (18 und 22) in einen zweiten Blattknoten. Die 18 gelangt als Wegweiser in den bereits vorhandenen Vaterknoten.</aside>
 </section>
-<section>
+<section data-hide-from="2V">
     <h2>Einfügen in B+-Baum</h2>
     <div class="columns">
         <div><img src="img/6/bplustree_insert3.png" class="noborder" alt="B+-Baum" style="width:11cm"></div>
@@ -808,7 +808,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <aside class="notes">Fügen wir nun die 998 ein, ist ihr Platz im Blatt ganz rechts. Da dieses jedoch voll ist, muss wieder gesplittet werden: Es geht um die 29, 88 und 998. Mittleres Element ist 88, sie wandert in den Vaterknoten. Die beiden neuen Blätter sind [29] und [88, 998]. In deren Vaterknoten wären nun also die Wegweiser 18, 29 und 88. Da dort nur Platz für 2k=2 Wegweiser ist, erfolgt auch hier ein Split. Das mittlere Element (29) wandert in den Vaterknoten (wird neu erstellt), die 18 links, die 88 rechts davon.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h2>Löschen im B+-Baum</h2>
     <ol class="small">
         <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
@@ -824,7 +824,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <aside class="notes">Eine Löschung ist am einfachsten, wenn dabei kein Unterlauf entsteht. Dies ist der Fall, wenn wir in unserem B+-Baum den Schlüssel 998 löschen. In jedem Blatt müssen mindestens k* (=1) Einträge sein. Das ist hier nach der Löschung der 998 im Blattknoten unten rechts der Fall, also muss nichts weiter unternommen werden.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h2>Löschen im B+-Baum</h2>
     <ol class="small">
         <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
@@ -847,7 +847,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <aside class="notes">Gibt es in einem Nachbarknoten (erst links schauen, dann rechts) mehr als k* Einträge, kann ein Ausgleich mit diesem vorgenommen werden. Löschen wir in unserem B+-Baum die 29, haben wir einen Unterlauf. Da es im rechten Nachbarblatt genügend Einträge gibt, können wir die 88 einfach nach links verschieben. Der Wegweiser im Vaterknoten muss angepasst werden, weil rechts Einträge &ge; 998 sind.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h2>Löschen im B+-Baum</h2>
     <ol class="small">
         <li>Blattknoten suchen, in welchem sich der zu löschende Schlüssel befindet</li>
@@ -874,7 +874,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <h2>CREATE INDEX</h2>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 108</div>
     <p class="small"><code>CREATE INDEX</code> erstellt in den meisten DBMS einen B+-Baum-Index.</p>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr);</code></pre>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr);</code></pre>
     <h4>Kosten</h4>
     <ul class="small" style="margin-top: -4mm;">
         <li>Bei INSERT, UPDATE, DELETE muss der Index entsprechend gepflegt werden</li>
@@ -892,7 +892,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <section>
     <h2>Mehrdimensionale Indexe</h2>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 110</div>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX ON meine_tabelle(a, b, c);</code></pre>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>CREATE INDEX ON meine_tabelle(a, b, c);</code></pre>
     <h4>Kann genutzt werden bei:</h4>
     <ul class="small" style="margin-top: -4mm;">
         <li><code>WHERE a = 5 AND b = 7 AND c = 2</code></li>
@@ -905,7 +905,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 <!--
 <section>
     <h2>Hash-Indexe</h2>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr) USING HASH;</code></pre>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>CREATE INDEX produkte_pkey ON produkte(produktnr) USING HASH;</code></pre>
     <h4>Unterschiede zum B+-Baum:</h4>
     <ul class="small" style="margin-top: -4mm;">
         <li>Hilft nur bei exakter Suche (<code>=</code>) und Equi-Joins.</li>
@@ -1199,10 +1199,10 @@ END; $$ LANGUAGE plpgsql;</code></pre>
     <aside class="notes">Wenn wir die 28 einfügen, läuft es über. Wir müssen das 0-Bucket also splitten in ein 00- und ein 10-Bucket. Alle Einträge, deren Hash-Wert auf 00 enden, kommen in ersteres, die anderen in zweiteres. Die beiden Dictionary-Einträge, die auf 1 enden, zeigen auf das gleiche Bucket, welches die lokale Tiefe 1 hat.</aside>
 </section>
 -->
-<section>
+<section data-hide-from="2V">
     <h2>Join-Algorithmen</h2>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
            ON p.hersteller=h.firma;</code></pre>
     <p class="small">Es gibt viele Arten, einen Join auszuführen:</p>
@@ -1213,9 +1213,9 @@ SELECT * FROM produkte p JOIN hersteller h
         <li><em>Index-Join</em>: Während eine Tabelle komplett durchlaufen wird, werden für jede Zeile die Join-Partner in der anderen Tabelle mittels eines Indexes gesucht.</li>
     </ul>
 </section>
-<section>
+<section data-hide-from="2V">
     <h3>Nested-Loop-Join</h3>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
             ON p.hersteller=h.firma;</code></pre>
 
@@ -1229,9 +1229,9 @@ for each row p in PRODUKTE:
 <p class="small">Aufwand: $O(|R|\cdot|S|)$</p>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>Sort-Merge-Join</h3>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
             ON p.hersteller=h.firma;</code></pre>
 
@@ -1246,9 +1246,9 @@ SELECT * FROM produkte p JOIN hersteller h
 <aside class="notes">Der Aufwand beim Sort-Merge-Join ist im Wesentlichen der Aufwand, die beiden Tabellen zu sortieren.</aside>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>Hash-Join</h3>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
             ON p.hersteller=h.firma;</code></pre>
 
@@ -1266,10 +1266,10 @@ for each row p in PRODUKTE:
 <p class="small">Aufwand: $O(|R|+|S|)$</p>
 </section>
 
-<section>
+<section data-hide-from="2V">
     <h3>Index-Join</h3>
     <div class="trackinfo"><i class="fas fa-headphones"></i> 109</div>
-    <pre><code class="hlsql dont_execute_sql" contenteditable data-trim>
+    <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 SELECT * FROM produkte p JOIN hersteller h 
             ON p.hersteller=h.firma;</code></pre>
 
@@ -1289,11 +1289,12 @@ for each row p in PRODUKTE:
         <li>DB-Anwendungen: Embedded SQL, JDBC</li>
         <li>JDBC: DriverManager, Connection, Statement, PreparedStatement, ResultSet</li>
         <li>SQL-Injections</li>
-        <li>Benutzerdefinierte Routinen: Stored Procedures, (Tabellen-)Funktionen</li>
-        <li>Trigger: BEFORE / AFTER / INSTEAD OF</li>
-        <li>Indexe: Clustered Index, B-Baum, B+-Baum</li>
+        <li data-hide-from="2V">Benutzerdefinierte Routinen: Stored Procedures, (Tabellen-)Funktionen</li>
+        <li data-hide-from="2V">Trigger: BEFORE / AFTER / INSTEAD OF</li>
+        <li data-hide-from="!2V">Indexe</li>
+        <li data-hide-from="2V">Indexe: Clustered Index, B-Baum, B+-Baum</li>
         <!--<li>Hash-Verfahren: Lineares / Quadratisches Sondieren, Verkettung der Überläufer, Erweiterbares Hashing</li>-->
-        <li>Join-Algorithmen: Nested-Loop-Join, Sort-Merge-Join, Hash-Join, Index-Join</li>
+        <li data-hide-from="2V">Join-Algorithmen: Nested-Loop-Join, Sort-Merge-Join, Hash-Join, Index-Join</li>
     </ul>
 </section>
 

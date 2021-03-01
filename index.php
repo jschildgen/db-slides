@@ -13,7 +13,7 @@
 <?php
 $files = glob('./*.{html}', GLOB_BRACE);
 foreach($files as $file) {
-  echo "<a href=\"$file\">$file</a> <a href=\"$file?print-pdf&showNotes=true\"><i class=\"fas fa-print\"></i></a><br>";
+  echo "<a href=\"$file\">$file</a> <a href=\"$file?print-pdf&showNotes=true\"><i class=\"fas fa-print\"></i></a> <a href=\"$file?2V\">2V</a> <a href=\"$file?2V&print-pdf&showNotes=true\"><i class=\"fas fa-print\"></i></a><br>";
 }
 ?>
 <hr>

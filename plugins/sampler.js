@@ -230,6 +230,9 @@
             if (typeof hljs !== 'undefined') {
                 hljs.highlightBlock(element);
             }
+            if (typeof RevealHighlight !== 'undefined') {
+                RevealHighlight().highlightBlock(element);
+            }
         });
     });
 })();

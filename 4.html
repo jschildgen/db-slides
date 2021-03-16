@@ -77,7 +77,7 @@
                                         <li>Mit einem anderen</li>
                                         <li>Mit keinem</li>
                                     </ul>
-                                <h2>https://frage.space</h2>
+                                <h2>https://fraage.de</h2>
                             </div>
                             <aside class="notes">Die hier dargestellte Liste ist geordnet nach der Popularität der relationalen DBMS. Oracle, SQL Server und DB2 sind kommerzielle Systeme, MySQL, PostgreSQL, SQLite und MariaDB sind open source. MySQL wurde 2010 von Oracle aufgekauft und es hat sich ein zu MySQL kompatibler Fork MariaDB entwickelt. Alle hier dargestellten Systeme außer SQLite laufen als Serverprozess, sodass sich Anwendungen mit dem Datenbank-Server verbinden können, um Anfragen auf diesen zu stellen.</aside>
                         </section>
@@ -125,7 +125,7 @@
                                             <li data-poll="correct">DML</li>
                                             <li>DCL</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">SELECT gehört zur DML, da die Daten für den Zeitpunkt der Anfragestellung manipuliert werden. Der Benutzer sieht eine modifizierte Form der Daten. Natürlich wird diese Änderung anders als z. B. bei UPDATE nicht persistent in der Datenbank gespeichert. </aside>
                             </section> 
@@ -176,7 +176,7 @@
                                             <li>Dann wäre damit die Variable Ute gemeint</li>
                                             <li data-poll="correct">Dann wäre damit die Spalte Ute gemeint</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Merkregel: Bei allem, was man in Anführungszeichen schreibt, kommt es auf die korrekte Groß-/Kleinschreibung an. Bei regulären Identifikatoren sind reservierte SQL-Keywords und Sonderzeichen (außer _) verboten, bei begrenzten Identifikatoren ist dies erlaubt. In MySQL werden begrenzte Identifikatoren in `Apostrophe` geschrieben, bei PostgreSQL in &quot;Anführungszeichen&quot;.</aside>
                             </section>
@@ -273,7 +273,7 @@
                                             <li data-poll="correct">UNIQUE-Constraint über eine Kombination mehrerer Spalten möglich</li>
                                             <li>Spart Schreibarbeit</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Spezifiziert man hinter einer Spalte die Eigenschaft <code>UNIQUE</code>, darf es in dieser Spalte keine doppelten Werte gegen. In unserer Kundentabelle dürfen also keine zwei Kunden die gleiche E-Mail-Adresse haben. Die untere Notation ist nötig, wenn das UNIQUE-Constraint aus mehreren Spalten besteht, also wenn die Kombination aus mehreren Spaltenwerten eindeutig sein soll. Anders als bei Primärschlüsseln (in einer Tabelle darf höchstens einen geben), können auf einer Tabelle beliebig viele UNIQUE-Constraints definiert werden.</aside>
                             </section>
@@ -344,7 +344,7 @@
                                             <li>hersteller.land</li>
                                             <li>gar nichts</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Unter einer Aktion versteht man den Dann-Teil einer Wenn-Dann-Regel. Wenn man einen Hersteller löscht, dann... Im oben gezeigten Beispiel wird in einem solchen Fall wegen <code>ON DELETE SET NULL</code> der Wert der Hersteller-Spalte in der Produkte-Tabelle auf NULL gesetzt. Das <code>ON UPDATE CASCADE</code> sorgt dafür, dass bei einer Umbenennung im Primärschlüsselattribut des Herstellers (Firma) diese Umbenennung auch bei den Produkten dieses Herstellers erfolgt.</aside>
                             </section>
@@ -393,7 +393,7 @@
                                             <li>Land ist 0</li>
                                             <li data-poll="correct">Es kommt ein Fehler</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Später beim <code>INSERT</code>-Kommando wird gezeigt, dass man nicht zwangsweise alle Spaltenwerte beim Einfügen einer neuen Zeile setzen muss. Die DEFAULT-Option legt für solche Fälle den Standardwert fest. Gibt es keinen definierten DEFAULT-Wert und wird der Wert nicht gesetzt, erhält die Zeile in der entsprechenden Spalte den Wert NULL. Ist auf der Spalte ein <code>NOT NULL</code>-Constraint definiert, kommt ein Fehler. Vor solchen Fehlern kann dann ein DEFAULT-Wert schützen. Wird mittels <code>ALTER TABLE ... ADD COLUMN</code> nachträglich eine neue Spalte mit DEFAULT-Wert einer existierenden Tabelle hinzugefügt, erhalten alle bisherigen Zeilen in der neuen Spalte diesen DEFAULT-Wert.</aside>
                             </section>
@@ -429,7 +429,7 @@
                                             <li>UNIQUE</li>
                                             <li>NOT NULL</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
 
                             <aside class="notes">Mit einem CHECK-Constraint lassen sich benutzerdefinierte Spalten-Constraints definieren. In Klammern hinter dem Stichwort <code>CHECK</code> steht ein beliebiger boolescher Ausdruck, der stets wahr sein muss. Beim Einfügen und Ändern von Zeilen überprüft das DBMS die Bedingung und lehnt die entsprechende Operation ab, wenn das CHECK-Constraint verletzt würde. In den gezeigten Beispielen muss in der E-Mail-Spalte immer ein @-Zeichen vorkommen, der Wertebereich der Sterne-Spalte wird eingeschränkt auf ganze Zahlen zwischen 1 und 5, und das Hochzeitsdatum muss immer echt später sein als das Geburtsdatum einer Person.</aside>
@@ -516,7 +516,7 @@ WHERE produktnr = 88</code></pre>
                                             <li data-poll="correct">Alle Zeilen</li>
                                             <li>Gar nichts</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
 
                                 <pre class="fragment"><code class="sql" data-trim contenteditable>UPDATE produkte SET preis = preis+1</code></pre>
@@ -545,7 +545,7 @@ WHERE produktnr = 88</code></pre>
                                             <li data-poll="correct">TRUNCATE löscht nur die Daten, die Tabelle ist noch da</li>
                                             <li>Es gibt keinen</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
 
                                 <aside class="notes">Auch hier bestimmt die WHERE-Klausel wieder, welche Zeilen gelöscht werden sollen. Lässt man sie weg, löscht das System jede Zeile. Der TRUNCATE TABLE-Befehl ist jedoch meist schneller für solche Zwecke, er leert ebenfalls die komplette Tabelle.</aside>
@@ -585,7 +585,7 @@ FROM produkte</code></pre>
                                             <li>Kreuzprodukt</li>
                                             <li>Weder noch</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Die SELECT-Klausel wird bei der Anfrageausführung erst sehr spät ausgewertet. In ihr findet die Projektion statt, um festzulegen, welche Spalten man letztendlich im Ergebnis sehen möchte. Man kann mehrere Spalten mit Kommata trennen, mit <code>AS</code> einen Alias definieren - also eine Umbenennung vornehmen - und man kann Funktionen aufrufen. In der FROM-Klausel stehen eine oder mehrere Tabellen, aus der die Daten stammen sollen.</aside>
                             </section>
@@ -639,7 +639,7 @@ FROM produkte</code></pre>
                                             <li>Msliregel</li>
                                             <li>Keines davon</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Strings müssen stets in 'einfache Anführungszeichen' geschrieben werden. 'Innerhalb eines Strings braucht''s zwei Anführungszeichen', um es zu escapen. Im LIKE-Prädikat wird eine Musterüberprüfung vorgenommen. <code>%</code> steht dabei für beliebige Zeichen und <code>_</code> für genau ein beliebiges Zeichen.</aside>
                             </section>
@@ -656,7 +656,7 @@ FROM produkte</code></pre>
                                             <li>true, wenn hersteller NULL ist</li>
                                             <li>false, wenn hersteller NULL ist</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Überprüfungen, ob der Wert einer Spalte NULL ist, muss mit <code>IS NULL</code> erfolgen. Das Prädikat <code>IS NOT NULL</code> trifft auf Zeilen zu, die in der entsprechenden Spalte keinen NULL-Wert haben.</aside>
                             </section>
@@ -712,7 +712,7 @@ WHERE produkte.hersteller = hersteller.firma
                                             <li>Die Anfrage entspricht ON P.produktnr = B.produktnr</li>
                                             <li>Die Anfrage funktioniert nur, wenn beide Tabellen die Spalte produktnr haben</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes"><code>USING(produktnr)</code> ist eine verkürzte Schreibweise für den Equi-Join auf der Spalte Produktnummer, also in dem Fall für <code>ON P.produktnr = B.produktnr</code></aside>
                             </section>
@@ -768,7 +768,7 @@ GROUP BY hersteller</code></pre>
             <li data-poll="correct">So viele, wie es verschiedene Werte in der hersteller-Spalte gibt</li>
             <li>So viele, wie es Zeilen in der Produkte-Tabelle gibt</li>
         </ul>
-    <h2>https://frage.space</h2>
+    <h2>https://fraage.de</h2>
 </div>
                                 <span class="sqlresult fragment"></span>
                                 <aside class="notes">In der GROUP BY-Klausel werden Spalten spezifiziert, nach deren Werten Gruppen gebildet werden. <code>GROUP BY hersteller</code> bedeutet, dass für jeden distinkten Wert in der hersteller-Spalte eine Gruppe gebildet wird. In unserem Beispiel sind dies drei. Für jede Gruppe kann nun der Wert in dieser GROUP BY-Spalte ausgegeben werden. Alle anderen Spalten dürfen nur innerhalb von Aggregatfunktionen in der SELECT-Liste vorkommen. Wir berechnen in dem Beispiel auf dieser Folie für jeden einzelnen Hersteller die Anzahl und Durchschnittspreise seiner Produkte.</aside>
@@ -848,7 +848,7 @@ WHERE preis = (SELECT max(preis) FROM monsterfood_produkte)</code></pre>
                                             <li>Das, was zuletzt eingefügt wurde</li>
                                             <li data-poll="correct">Keine Ahnung</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Hier wird das Ergebnis der Anfrage aufsteigend nach den Werten der Preis-Spalte sortiert.</aside>
                             </section>
@@ -937,7 +937,7 @@ SELECT land FROM hersteller
                                             <li>Beides</li>
                                             <li>Weder noch</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <p class="small">Bei Mengenoperationen ohne das Stichwort <code>ALL</code> wird nach UNION, INTERSECT und EXCEPT eine Duplikateliminierung vorgenommen.</p>
                         
@@ -1021,7 +1021,7 @@ WHERE EXISTS
                                         <li>Hersteller, von denen es keine Produkte gibt</li>
                                         <li>Produkte mit Hersteller NULL</li>
                                     </ul>
-                                <h2>https://frage.space</h2>
+                                <h2>https://fraage.de</h2>
                             </div>
                             <aside class="notes">Die Anfrage hier liefert Hersteller, von denen es Produkte gibt. Dies könnte man auch einfach mit einem (Semi-)Join lösen.</aside>
                         </section>
@@ -1145,7 +1145,7 @@ FROM produkte
                                                 <li data-poll="correct">SELECT DATE '2020-12-25' - CURRENT_DATE AS anzahl_tage</li>
                                                 <li>RENAME column DATE '2020-12-25' - CURRENT_DATE AS anzahl_tage</li>
                                             </ul>
-                                        <h2>https://frage.space</h2>
+                                        <h2>https://fraage.de</h2>
                                     </div>
 
                                     <aside class="notes">PostgreSQL erlaubt SELECT-Anfragen ohne FROM-Klausel. Dies entspricht Anfragen auf der DUAL-Tabelle von der vorherigen Folie. Man kann mit solchen Anfragen leicht Funktionen aufrufen und ausprobieren oder Berechnungen durchführen.</aside>

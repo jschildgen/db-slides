@@ -381,7 +381,7 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
                 <li>SELECT * FROM addieren(5,4);</li>
                 <li>CALL addieren(5,4);</li>
             </ul>
-        <h2>https://frage.space</h2>
+        <h2>https://fraage.de</h2>
     </div>
 
     <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
@@ -412,7 +412,7 @@ END $$ LANGUAGE plpgsql;</code></pre>
             <li>In der Query-Ergebnistabelle</li>
             <li>Nirgendwo</li>
         </ul>
-    <h2>https://frage.space</h2>
+    <h2>https://fraage.de</h2>
 </div>
     
     <aside class="notes">Hinter <code>EXCEPTION WHEN</code> steht der Name einer Exception, die abgefangen werden soll. <code>OTHERS</code> fängt alle sonstigen Fehler ab. Mit <code>RAISE EXCEPTION</code> wird ein Programm unterbrochen und die entsprechende Fehlermeldung an den Client zurückgegeben.</aside>
@@ -441,7 +441,7 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql IMMUTABLE;</code></pre>
                 <li>Weil die UDF nachträglich nicht mehr verändert wird</li>
                 <li data-poll="correct">Weil 1+1 immer 2 ist und so</li>
             </ul>
-        <h2>https://frage.space</h2>
+        <h2>https://fraage.de</h2>
     </div>
 
     <aside class="notes">Wenn eine Funktion als <code>STABLE</code> oder <code>IMMUTABLE</code> deklariert wird, kann der Datenbank-Optimierer Ergebnisse der Funktion wiederverwenden, ohne die Funktion nochmals aufzurufen. Eine Funktion <code>get_hersteller_land</code>, die beispielsweise eine <code>SELECT</code>-Anfrage an eine Tabelle schickt, um das Land eines Herstellers zu ermitteln, ist <code>STABLE</code>, da sie innerhalb einer Anfrage, in der sie aufgerufen wird, für den gleichen Hersteller das gleiche Land liefern würde.</aside>
@@ -465,7 +465,7 @@ $$ LANGUAGE sql;
             <li data-poll="correct">SELECT * FROM produkte_von('Calgonte');</li>
             <li>CALL produkte_von('Calgonte');</li>
         </ul>
-    <h2>https://frage.space</h2>
+    <h2>https://fraage.de</h2>
 </div>
         
             <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
@@ -504,7 +504,7 @@ $$ LANGUAGE sql;
                 <li data-poll="correct">Wenn man die eingefügte Zeile noch modifizieren will</li>
                 <li>Das macht gar keinen Unterschied</li>
             </ul>
-        <h2>https://frage.space</h2>
+        <h2>https://fraage.de</h2>
     </div>
 
     <aside class="notes">Mittels Triggern können Aktionen ausgeführt werden, jedesmal wenn das festgelegte Ereignis eintritt. Nach einem INSERT in die Produkttabelle kann automatisch der Hersteller eingefügt werden, falls es ihn noch nicht gibt. Bevor der Preis eines Produkts geändert wird, wird überprüft, ob diese Änderung auch in Ordnung ist. Wenn der Preis um mehr als 20% erhöht wird, soll ein Fehler kommen. Wenn ein INSERT auf einer View gemacht wird, sollen stattdessen INSERTs in gewisse Tabellen gemacht werden. Solche Abläufe können mittels Trigger definiert werden.</aside>
@@ -602,7 +602,7 @@ FOR EACH ROW EXECUTE PROCEDURE preis_trigger();</code></pre>
             <li data-poll="correct">Na klar</li>
             <li>Nein, dafür ist es zu spät</li>
         </ul>
-    <h2>https://frage.space</h2>
+    <h2>https://fraage.de</h2>
 </div>
 
 <aside class="notes">Bei einem <code>BEFORE INSERT</code>-Trigger kann man einzufügende Tupel noch abändern, bevor es tatsächlich in die Tabelle eingefügt wird. Hier wird der Preis auf 0 gesetzt, sollte jemand versuchen, ein Produkt mit negativen Preis einzufügen. Außerdem überwacht der Trigger, dass es nie mehr als drei kostenlose Produkte gibt. Ein INSERT oder UPDATE wird abgelehnt, wenn es dieses Constraint verletzen sollte.</aside>

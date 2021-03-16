@@ -184,7 +184,7 @@ WHERE hersteller = 'Monsterfood'
                                   <li>Gibt das gleiche zurück, ist aber langsamer</li>
                                   <li data-poll="correct">Gibt das gleiche zurück und ist gleich schnell</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Erfolgt eine Abfrage auf eine View, wird der Name der View durch die Anfrage ersetzt, über die die View definiert ist. Danach erfolgen Optimierungen, sodass die hier dargestellt Anfrage äquivalent ist zu <code>SELECT * FROM produkte WHERE preis > 10 AND hersteller = 'Monsterfood'</code>. Anfragen auf Sichten sind nicht langsamer als die hinter der Sicht stehende Abfrage direkt auszuführen, sie sind aber auch nicht schneller.</aside>
                       </section>
@@ -224,7 +224,7 @@ WHERE hersteller = 'Monsterfood'
                                   <li data-poll="correct">funktioniert in der oberen, aber nicht in der unteren Sicht</li>
                                   <li>funktioniert in der unteren, aber nicht in der oberen Sicht</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Ein <code>INSERT INTO teure_produkte</code> ist hier möglich. Im unteren Fall jedoch nur, wenn das neue Produkt auch einen Preis von mehr als 10 EUR hat. <code>WITH CHECK OPTION</code> ist eine Kurzschreibweise für <code>WITH LOCAL CHECK OPTION</code>. Wenn eine View mit dieser Option eine andere View in der FROM-Klausel hat, wird nicht das Prädikat der anderen View überprüft, außer: Für diese ist ebenfalls eine CHECK OPTION gesetzt, oder wir spezifizieren für die View: <code>WITH CASCADED CHECK OPTION</code>.</aside>
                       </section>
@@ -385,7 +385,7 @@ SELECT * FROM klinik.raeume WHERE gebaeude IN (10,12,13,15);
                                   <li data-poll="correct">Rolle R erstellen, in der alle außer Peter sind. GRANT SELECT ON T TO R;</li>
                                   <li>Das geht nicht</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
 
                         <aside class="notes">Wichtig: Man kann nur Rechte entziehen, die man genau so auch erteilt hat. Man kann im gezeigten Beispiel nicht das Recht nur gewissen Benutzern der Rolle PUBLIC entziehen (nur allen). Genau so kann nach einem GRANT ALL PRIVILEGES nicht lediglich das INSERT-Recht o.&nbsp;ä. entzogen werden. REVOKE macht also ein GRANT wieder vollständig rückgängig. Im hier gezeigten Beispiel erstellen wir eine Sicht aus Gründen der <b>Row-Level-Security</b>. Wir möchten den Benutzern der Rolle PUBLIC nicht erlauben, alle Räume zu sehen, sondern lediglich Räume in den Gebäuden 10, 12, 13 und 15. Analog lässt sich auch <b>Column-Level-Security</b> realisieren. Man lässt einfach in der View-Definition Spalten weg, um den Zugriff nur auf bestimmte Spalten zu beschränken.</aside>
@@ -441,7 +441,7 @@ CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
                                   <li>beim Schließen der DB-Verbindung</li>
                                   <li>alle Paar Sekunden</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Autocommit bedeutet, dass jede SQL-Anfrage automatisch committet wird. Stelle man um auf manuelles Commit, muss man selbst eine <code>commit</code>-Operation ausführen, damit Änderungen wirklich in der Datenbank gespeichert werden. Ist Autocommit aus, kann die laufende Transaktion mittels <code>rollback</code> auch komplett zurückgerollt werden.</aside>
                       </section>
@@ -526,7 +526,7 @@ COMMIT;
                                   <li data-poll="correct">Der Preis von Produkt 17</li>
                                   <li>Rollback</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Es wäre ein Dirty Read, wenn TA<sub>2</sub> die noch nicht freigegebene Preisänderung von TA<sub>1</sub> sehen würde. Das Transaktions-Management-System (TMS) eines DBMS muss gewährleisten, dass Änderungen für andere Transaktionen erst nach dem Commit der Änderung sichtbar werden.</aside>
                       </section>
@@ -582,7 +582,7 @@ COMMIT;</code></pre>
                                         <li>INSERT ... ; COMMIT;</li>
                                         <li data-poll="correct">UPDATE ...; COMMIT;</li>
                                     </ul>
-                                <h2>https://frage.space</h2>
+                                <h2>https://fraage.de</h2>
                             </div>
 
                               <div>TA<sub>2</sub>
@@ -734,7 +734,7 @@ COMMIT;
                                       <li>r1(x) &rightarrow; w3(y)</li>
                                       <li>r1(x) &rightarrow; r2(x)</li>
                                   </ul>
-                              <h2>https://frage.space</h2>
+                              <h2>https://fraage.de</h2>
                           </div>
 
                             <ul class="fragment small" data-fragment-index="2">
@@ -854,7 +854,7 @@ COMMIT;
                                       <li>TA2 muss warten, bis TA1 x fertig geschrieben hat</li>
                                       <li data-poll="correct">TA2 muss warten, bis TA1 committed hat</li>
                                   </ul>
-                              <h2>https://frage.space</h2>
+                              <h2>https://fraage.de</h2>
                           </div>
                           </section>
                           <section>
@@ -905,7 +905,7 @@ COMMIT;
                                       <li>Bessere Erfüllung von ACID</li>
                                       <li>Man will alte Werte lesen</li>
                                   </ul>
-                              <h2>https://frage.space</h2>
+                              <h2>https://fraage.de</h2>
                           </div>
                             <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regel eine bessere Performance möglich.</aside>
                           </section>
@@ -982,7 +982,7 @@ COMMIT;
                                           <li>Seiten werden von der Festplatte in den DB-Puffer geladen</li>
                                           <li>Der DB-Puffer wird geleert</li>
                                       </ul>
-                                  <h2>https://frage.space</h2>
+                                  <h2>https://fraage.de</h2>
                               </div>
                               <aside class="notes">Bei einem Systemfehler ist immer die Frage, welche Transaktionen sind Gewinner (haben committed) und welche sind Verlierer (waren noch aktiv). Da das System zu Zeitpunkt 5 zuletzt einen Flush gemacht hat, um DB-Seiten auf die Festplatte zu persistieren, müssen alle davor durchgeführten Aktionen von Verlierern rückgängig gemacht und noch nicht eingebrachte Änderungen von Gewinnern nachgeholt werden.</aside>
                             </section>

@@ -1,5 +1,5 @@
 /*
- * Write an SQL query in <pre><code class="hlsql" data-trim contenteditable>...</pre>
+ * Write an SQL query in <pre><code class="sql" data-trim contenteditable>...</pre>
  * and create a <span class="sqlresult"></span> on the same slide.
  * The result of the query is displayed as a table in the sqlresult span.
  * Add data-sql="some_id" to the <code> element and the result will be
@@ -24,7 +24,7 @@ var SQLPlugin = (function(){
 	return {
 		init: function() {        
             db = create_db();
-            document.querySelectorAll('.hlsql').forEach(function(item) {
+            document.querySelectorAll('.sql,.hlsql').forEach(function(item) {
                 if(get_result_element(item) == null
                    || item.classList.contains('dont_execute_sql')) { return; }
                 execute_query(item.innerText, get_result_element(item));

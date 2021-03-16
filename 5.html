@@ -34,7 +34,7 @@
                         <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                         <h1>Datenbanken</h1>
                         <h3>Kapitel 5: Mehrbenutzerbetrieb</h3>
-                        <h4 style="text-align:center">2020-12-11</h4>
+                        <h4 style="text-align:center">&nbsp;</h4>
                         <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                         <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                     </section>
@@ -42,7 +42,7 @@
                           <h2>In diesem Kapitel...</h2>
                           <ul class="small">
                               <li>... definieren wir Sichten,</li>
-                              <li>... lernen, wie man DB-Benutzer und Rollen verwaltet,</li>
+                              <li data-hide-from="2V">... lernen, wie man DB-Benutzer und Rollen verwaltet,</li>
                               <li>... schauen wir uns das Transaktionenkonzept genauer an,</li>
                               <li>... erfahren wir, wie man Mehrbenutzeranomalien vermeidet</li>
                               <li>... und wie Recovery-Mechanismen funktionieren.</li>
@@ -184,7 +184,7 @@ WHERE hersteller = 'Monsterfood'
                                   <li>Gibt das gleiche zurück, ist aber langsamer</li>
                                   <li data-poll="correct">Gibt das gleiche zurück und ist gleich schnell</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Erfolgt eine Abfrage auf eine View, wird der Name der View durch die Anfrage ersetzt, über die die View definiert ist. Danach erfolgen Optimierungen, sodass die hier dargestellt Anfrage äquivalent ist zu <code>SELECT * FROM produkte WHERE preis > 10 AND hersteller = 'Monsterfood'</code>. Anfragen auf Sichten sind nicht langsamer als die hinter der Sicht stehende Abfrage direkt auszuführen, sie sind aber auch nicht schneller.</aside>
                       </section>
@@ -202,7 +202,7 @@ WHERE hersteller = 'Monsterfood'
                         <aside class="notes">Wenn Operationen wie Joins oder Aggregationen immer wieder in Anfragen vorkommen, kann man diese in eine View platzieren und damit den Zugriff vereinfachen. So sind auch Denormalisierungen von normalisierten Tabellen mittels Sichten möglich.</aside>
                       </section>
 
-                      <section>
+                      <section data-hide-from="2V">
                         <h3>CHECK OPTION</h3>
                         <div class="trackinfo"><i class="fas fa-headphones"></i> 106</div>
                         <p class="small">INSERT, UPDATE und DELETE sind auf simplen Projektion/Selektion-Views erlaubt.</p>
@@ -224,12 +224,12 @@ WHERE hersteller = 'Monsterfood'
                                   <li data-poll="correct">funktioniert in der oberen, aber nicht in der unteren Sicht</li>
                                   <li>funktioniert in der unteren, aber nicht in der oberen Sicht</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Ein <code>INSERT INTO teure_produkte</code> ist hier möglich. Im unteren Fall jedoch nur, wenn das neue Produkt auch einen Preis von mehr als 10 EUR hat. <code>WITH CHECK OPTION</code> ist eine Kurzschreibweise für <code>WITH LOCAL CHECK OPTION</code>. Wenn eine View mit dieser Option eine andere View in der FROM-Klausel hat, wird nicht das Prädikat der anderen View überprüft, außer: Für diese ist ebenfalls eine CHECK OPTION gesetzt, oder wir spezifizieren für die View: <code>WITH CASCADED CHECK OPTION</code>.</aside>
                       </section>
 
-                      <section>
+                      <section data-hide-from="2V">
                         <h2>Materialisierte Sichten</h2>
                         <div class="trackinfo"><i class="fas fa-headphones"></i> 98</div>
                         <p class="small">Views sind nur virtuell, sie speichern nicht wirklich Daten.</p>
@@ -248,7 +248,7 @@ SELECT * FROM anz_produkte; -- zeigt nun 9</code></pre>
                       <aside class="notes">Beim Erstellen einer materialisierten Sicht, wird diese initial mit dem Anfrageergebnis befüllt. Es gibt Datenbankmanagementsysteme, die ein automatisches Auffrischen unterstützen. Dies erfolgt, wenn sich die Daten in den Basistabellen ändern. In PostgreSQL ist beinhaltet die materialisierte Sich in diesen Fällen veraltete Daten. Mit <code>REFRESH MATERIALIZED VIEW</code> kann ein Auffrischen angestoßen werden.</aside>
                       </section>
 
-                      <section>
+                      <section data-hide-from="2V">
                         <h3><b style="color: rgba(66, 169, 170, 0.99);">Benutzer</b> und <span style="color:#5473b9;">Rollen</span></h3>
                         <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
                         <pre style="margin-top: -3mm;"><code class="hlsql" data-trim contenteditable>CREATE USER doktor_x WITH PASSWORD 'geheimespasswort1';
@@ -331,7 +331,7 @@ CREATE USER ninja WITH PASSWORD 'geheimespasswort4';
                         <aside class="notes">Die Data Control Language (DCL) wird genutzt, um Benutzer und Rollen anzulegen. Hier legen wir vier Benutzer an. Diese können sich mit dem angegebenen Nutzernamen und Passwort mit der Datenbank verbinden. In PostgreSQL sind Benutzer und Rollen übrigens das gleiche. <code>CREATE USER</code> ist lediglich ein Alias für <code>CREATE ROLE</code>.</aside>
 
                       </section>
-                      <section>
+                      <section data-hide-from="2V">
                           <h3><span style="color: rgba(66, 169, 170, 0.99);">Benutzer</span> und <b style="color:#5473b9;">Rollen</b></h3>
                           <pre style="margin-top: -3mm;"><code class="hlsql" data-trim contenteditable>CREATE ROLE klinikpersonal;
 GRANT klinikpersonal TO doktor_x, schwester_y;
@@ -343,7 +343,7 @@ GRANT finanzen TO big_boss;
                           <div data-clone="users_roles"></div>
                       </section>
 
-                      <section>
+                      <section data-hide-from="2V">
                         <h3>GRANT: Berechtigung erteilen</h3>
                         <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
                         <p class="small">GRANT &lt;Recht&gt; ON &lt;Objekt&gt; TO &lt;Benutzer oder Rolle&gt;</p>
@@ -367,7 +367,7 @@ GRANT SELECT, INSERT, UPDATE ON klinik.patienten TO schwester_y;</code></pre>
                         <aside class="notes">Mit dem GRANT-Befehl wird festgelegt, <b>wer</b> auf <b>welchem</b> Objekt <b>was</b> machen darf. Hinter dem Stichwort <code>ON</code> steht das Objekt. Für das CONNECT-Recht ist dies eine Datenbank. Bei den anderen hier angegeben Privilegien steht hinter dem Stichwort <code>ON</code> eine oder mehrere Tabellen, oder alle Tabellen eines Schemas. In der Rolle PUBLIC sind alle Benutzer.</aside>
                       </section>
 
-                      <section>
+                      <section data-hide-from="2V">
                         <h3>REVOKE: Berechtigung entziehen</h3>
                         
                         <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume TO PUBLIC;</code></pre>
@@ -385,13 +385,13 @@ SELECT * FROM klinik.raeume WHERE gebaeude IN (10,12,13,15);
                                   <li data-poll="correct">Rolle R erstellen, in der alle außer Peter sind. GRANT SELECT ON T TO R;</li>
                                   <li>Das geht nicht</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
 
                         <aside class="notes">Wichtig: Man kann nur Rechte entziehen, die man genau so auch erteilt hat. Man kann im gezeigten Beispiel nicht das Recht nur gewissen Benutzern der Rolle PUBLIC entziehen (nur allen). Genau so kann nach einem GRANT ALL PRIVILEGES nicht lediglich das INSERT-Recht o.&nbsp;ä. entzogen werden. REVOKE macht also ein GRANT wieder vollständig rückgängig. Im hier gezeigten Beispiel erstellen wir eine Sicht aus Gründen der <b>Row-Level-Security</b>. Wir möchten den Benutzern der Rolle PUBLIC nicht erlauben, alle Räume zu sehen, sondern lediglich Räume in den Gebäuden 10, 12, 13 und 15. Analog lässt sich auch <b>Column-Level-Security</b> realisieren. Man lässt einfach in der View-Definition Spalten weg, um den Zugriff nur auf bestimmte Spalten zu beschränken.</aside>
                       </section>
 
-                      <section>
+                      <section data-hide-from="2V">
                         <h3>GRANT OPTION</h3>
                         <p>Das Privileg, ein Privileg weiterzugeben.</p>
                         <pre><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss
@@ -441,7 +441,7 @@ CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
                                   <li>beim Schließen der DB-Verbindung</li>
                                   <li>alle Paar Sekunden</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Autocommit bedeutet, dass jede SQL-Anfrage automatisch committet wird. Stelle man um auf manuelles Commit, muss man selbst eine <code>commit</code>-Operation ausführen, damit Änderungen wirklich in der Datenbank gespeichert werden. Ist Autocommit aus, kann die laufende Transaktion mittels <code>rollback</code> auch komplett zurückgerollt werden.</aside>
                       </section>
@@ -526,7 +526,7 @@ COMMIT;
                                   <li data-poll="correct">Der Preis von Produkt 17</li>
                                   <li>Rollback</li>
                               </ul>
-                          <h2>https://frage.space</h2>
+                          <h2>https://fraage.de</h2>
                       </div>
                         <aside class="notes">Es wäre ein Dirty Read, wenn TA<sub>2</sub> die noch nicht freigegebene Preisänderung von TA<sub>1</sub> sehen würde. Das Transaktions-Management-System (TMS) eines DBMS muss gewährleisten, dass Änderungen für andere Transaktionen erst nach dem Commit der Änderung sichtbar werden.</aside>
                       </section>
@@ -582,7 +582,7 @@ COMMIT;</code></pre>
                                         <li>INSERT ... ; COMMIT;</li>
                                         <li data-poll="correct">UPDATE ...; COMMIT;</li>
                                     </ul>
-                                <h2>https://frage.space</h2>
+                                <h2>https://fraage.de</h2>
                             </div>
 
                               <div>TA<sub>2</sub>
@@ -734,7 +734,7 @@ COMMIT;
                                       <li>r1(x) &rightarrow; w3(y)</li>
                                       <li>r1(x) &rightarrow; r2(x)</li>
                                   </ul>
-                              <h2>https://frage.space</h2>
+                              <h2>https://fraage.de</h2>
                           </div>
 
                             <ul class="fragment small" data-fragment-index="2">
@@ -854,7 +854,7 @@ COMMIT;
                                       <li>TA2 muss warten, bis TA1 x fertig geschrieben hat</li>
                                       <li data-poll="correct">TA2 muss warten, bis TA1 committed hat</li>
                                   </ul>
-                              <h2>https://frage.space</h2>
+                              <h2>https://fraage.de</h2>
                           </div>
                           </section>
                           <section>
@@ -905,7 +905,7 @@ COMMIT;
                                       <li>Bessere Erfüllung von ACID</li>
                                       <li>Man will alte Werte lesen</li>
                                   </ul>
-                              <h2>https://frage.space</h2>
+                              <h2>https://fraage.de</h2>
                           </div>
                             <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regel eine bessere Performance möglich.</aside>
                           </section>
@@ -982,13 +982,13 @@ COMMIT;
                                           <li>Seiten werden von der Festplatte in den DB-Puffer geladen</li>
                                           <li>Der DB-Puffer wird geleert</li>
                                       </ul>
-                                  <h2>https://frage.space</h2>
+                                  <h2>https://fraage.de</h2>
                               </div>
                               <aside class="notes">Bei einem Systemfehler ist immer die Frage, welche Transaktionen sind Gewinner (haben committed) und welche sind Verlierer (waren noch aktiv). Da das System zu Zeitpunkt 5 zuletzt einen Flush gemacht hat, um DB-Seiten auf die Festplatte zu persistieren, müssen alle davor durchgeführten Aktionen von Verlierern rückgängig gemacht und noch nicht eingebrachte Änderungen von Gewinnern nachgeholt werden.</aside>
                             </section>
   
 
-                            <section>
+                            <section data-hide-from="2V">
                               <h2>Checkpoints</h2>
                               <p class="small">Regelmäßig legt die Datenbank Sicherungspunkte (Checkpoints) an.</p>
                               <ul class="small">
@@ -1007,7 +1007,7 @@ COMMIT;
                               <aside class="notes">Auf der vorherigen Folie war ein Flush zu sehen. Dieser wird beim Anlegen eines Checkpoints ausgeführt. Ein Flush schreibt alle im DB-Puffer befindlichen Änderungen auf die Festplatte. Wenn die Datenbank nie Checkpoints anlegen würde, wäre der Recovery-Prozess extrem aufwändig, da das komplette Transaktionslog von Anfang bis Ende durchgearbeitet werden muss. Wird in regelmäßigen Abständen ein Checkpoint angelegt, muss die Recovery immer nur beim letzten Checkpoint starten.</aside>
                             </section>
 
-                            <section>
+                            <section data-hide-from="2V">
                               <h3 style="width: 103%;">Transaktionskonsistente Checkpoints</h3>
                               <p class="small">Checkpoint wird angelegt, wenn keine Transaktion läuft.</p>
                               <ol class="small">
@@ -1072,7 +1072,7 @@ COMMIT;
                             <aside class="notes">Die Grafik zeigt zwei bereits abgeschlossene TAs und eine Transaktion, die noch aktiv ist, während der Checkpoint angelegt werden soll. Daher muss zunächst auf deren Ende gewartet werden. Die untere TA darf nicht mehr starten und wartet, bis der Checkpoint erstellt ist. Nachteil: evtl. lange Wartesituationen.</aside>
                             </section>
 
-                            <section>
+                            <section data-hide-from="2V">
                               <h3>Aktionskonsistente Checkpoints</h3>
                               <p class="small">Beim Anlegen des Checkpoints werden aktuell laufende TAs pausiert.</p>
                               <div class="sl-block" data-block-type="line" data-name="line-493a7d" style="width: auto; height: auto; left: 262.875px; top: 314px;" data-block-id="2136a92161f9b08081a2db1caf49a428">
@@ -1136,7 +1136,7 @@ COMMIT;
                             <aside class="notes">Auch hier können laufende Transaktionen in lange Wartezustände versetzt werden, wenn die Erstellung des Checkpoints lange dauert. Da nicht auf das Ende aller zu beginn noch laufenden TAs gewartet werden muss, sind diese Warteperioden jedoch kürzer.</aside>
                             </section>
 
-                            <section>
+                            <section data-hide-from="2V">
                               <h3>Fuzzy Checkpoints</h3>
                               <ul class="small">
                                 <li>Kein Flush von geänderten Seiten</li>
@@ -1229,10 +1229,10 @@ COMMIT;
                               <h2>Kapitelzusammenfassung</h2>
                                   <ul class="small">
                                     <li>Sichten: CREATE VIEW ... AS</li>
-                                    <li>WITH [LOCAL|CASCADED] CHECK OPTION</li>
-                                    <li>Materialisierte Sichten / REFRESH</li>
-                                    <li>Benutzer und Rollen</li>
-                                    <li>GRANT / REVOKE</li>
+                                    <li data-hide-from="2V">WITH [LOCAL|CASCADED] CHECK OPTION</li>
+                                    <li data-hide-from="2V">Materialisierte Sichten / REFRESH</li>
+                                    <li data-hide-from="2V">Benutzer und Rollen</li>
+                                    <li data-hide-from="2V">GRANT / REVOKE</li>
                                     <li>ACID-Transaktionen</li>
                                     <li>Mehrbenutzeranomalien (Dirty Read, Lost Update, ...)</li>
                                     <li>Serialisierbarkeit / Serialisierbarkeitsgraph</li>
@@ -1240,7 +1240,7 @@ COMMIT;
                                     <li>Isolationslevels</li>
                                     <li>MVCC</li>
                                     <li>Recovery / Transaktions-Log</li>
-                                    <li>Checkpoint-Recovery</li>
+                                    <li data-hide-from="2V">Checkpoint-Recovery</li>
                                   </ul>
                             </section>
 

@@ -34,7 +34,7 @@
                             <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                             <h1>Datenbanken</h1>
                             <h3>Kapitel 2: ER-Modelle</h3>
-                            <h4 style="text-align:center">2020-10-20</h4>
+                            <h4 style="text-align:center">&nbsp;</h4>
                             <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                             <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                         </section>
@@ -159,7 +159,7 @@
                                         <li>Login</li>
                                         <li>Titanik</li>
                                       </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                             </section>
 
@@ -227,7 +227,7 @@
                                             <li>Ja, aber nicht im gleichen Raum</li>
                                             <li>Nein, allein das Datum muss schon eindeutig sein</li>
                                           </ul>
-                                        <h2>https://frage.space</h2>
+                                        <h2>https://fraage.de</h2>
                                     </div>
                                     <aside class="notes">Der Personen-Entitätstyp hat als Primärschlüsselattribut die Personennummer. Dies kann zum Beispiel eine künstlich erzeugte laufende Nummer sein. Termine haben keine solche ID. Hier haben wir einen <em>zusammengesetzten Primärschlüssel</em> aus Datum, Uhrzeit und Raum. Dies bedeutet, dass es am gleichen Tag zur gleichen Zeit im gleichen Raum nur einen einzigen Termin geben darf. Manchmal gibt es mehrere Möglichkeiten, was der Primärschlüssel sein kann (sogenannte <em>Schlüsselkandidaten</em>). Dann muss man sich für einen entscheiden.</aside>
                             </section>
@@ -693,10 +693,10 @@
                                                             }
                                                            ]]
                                                         </div></div>
-                                                        <aside class="notes">Die beiden hier dargestellten Lösungen ist fast äquivalent. Da Entitätstypen stets einen Primärschlüssel benötigen, muss es im unteren Beispiel, in dem Bewertungen als Entitätstyp modelliert wird, eine Bewertungsnummer oder ähnliches geben. Mit schwachen Entitätstypen (siehe nächste Folie) lässt sich dies jedoch auch ohne Primärschlüssel lösen (siehe übernächste Folie).</aside>
+                                                        <aside class="notes">Die beiden hier dargestellten Lösungen ist fast äquivalent. Da Entitätstypen stets einen Primärschlüssel benötigen, muss es im unteren Beispiel, in dem Bewertungen als Entitätstyp modelliert wird, eine Bewertungsnummer oder ähnliches geben. <span data-hide-from="2V">Mit schwachen Entitätstypen (siehe nächste Folie) lässt sich dies jedoch auch ohne Primärschlüssel lösen (siehe übernächste Folie).</span></aside>
                                 </section>
 
-                                <section>
+                                <section data-hide-from="2V">
                                     <h2>Schwache Entitätstypen</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
                                     <ul class="small">
@@ -731,7 +731,7 @@
                                     <aside class="notes">Handytarif ist ein schwacher Entitätstyp (<em>Weak Entity Type</em>). Die Tarife sind existenzabhängig vom jeweiligen Anbieter des Tarifs. Dies ist daran zu erkennen, dass sowohl Entitätstyp als auch die Beziehung zum Anbieter doppelt umrahmt sind. Zu einem Tarif muss es einen Anbieter geben. Die Tarifbezeichnung ist ein <em>erweiternder Primärschlüssel</em>. Sie ist eindeutig für einen bestimmten Anbieter. Es kann einen &quot;Data Extreme&quot;-Tarif bei mehreren Anbietern geben, aber bei jedem nur einmal.</aside>
                                 </section>
 
-                                <section>
+                                <section data-hide-from="2V">
                                     <h3>N:M-Bez. vs. schwacher Entitätstyp</h3>
                                     <div data-clone="er_rates" style="height:200px; overflow:hidden"></div>
                                     <div id="er_ratings">    
@@ -769,7 +769,7 @@
                                         <aside class="notes">Der unten dargestellte schwache Entitätstyp &quot;Bewertungen&quot; hat keine Primärschlüssel-erweiternden Attribute, aber sie ist existenzabhängig vom bewertenden Kunden und dem bewerteten Produkt. Eine Bewertung wird also eindeutig identifiziert durch die entsprechende Kundennummer- und Produktnummer-Kombination. Die beiden auf dieser Folie dargestellten ER-Diagramme sind in ihrer aktuellen Version absolut äquivalent und modellieren genau das gleiche. Die untere Version bietet jedoch mehr Erweiterungsmöglichkeiten (siehe nächste Folie).</aside>
                                 </section>
 
-                                <section>
+                                <section data-hide-from="2V">
                                     <h3>N:M-Bez. vs. schwacher Entitätstyp</h3>
                                     <div id="er_ratings_likes">    
                                         <div class="stretch erd">
@@ -810,7 +810,7 @@
                                         <aside class="notes">Dadurch, dass die Bewertungen nun ein Entitätstyp sind, kann dieser nun an Beziehungen teilnehmen und Subtypen (siehe später in diesem Kapitel) haben. Kunden können bei einer Bewertung auf &quot;gefällt mir&quot; klicken. Die &quot;gefallen&quot;-Beziehung ist naturlich nicht doppelt umrahmt. Nicht die Kunden, denen eine Bewertung gefallen identifizieren diese, sondern diejenigen, die sie schreiben (und das bewertete Produkt). Löscht ein Kunde seinen Account, darf es keine Bewertungen mehr geben, von denen der Kunde Autor ist, aber es darf weiterhin Bewertungen geben, für die er oder sie ein Like abgegeben hat. In der Modellierung mit der &quot;bewertet&quot;-Beziehung (vorherige Folie oben) ist es nicht möglich, Bewertungslikes zu modellieren.</aside>
                                 </section>
 
-                                <section>
+                                <section data-hide-from="2V">
                                     <h3>N:M- vs. zwei 1:N-Beziehungen</h3>
                                     <div id="er_drink_bad" style="height: 173px; overflow:hidden">
                                             <div class="stretch erd">
@@ -875,7 +875,7 @@
                                     <aside class="notes">Gäste bestellen in einer Bar Getränke. Ein Gast kann mehrere Getränke trinken (Kunde Nr. 5 trinkt Rotwein und Mineralwasser) und ein Getränk kann von mehreren Gästen bestellt werden (Kunden 7 und 8 trinken Weißwein). Das Problem hier ist jedoch, dass niemand ein bestimmtes Getränk mehrfach trinken kann. Wir lösen das Problem, indem ein Kunde mehrere Bestellpositionen aufgibt. Jede Position erhält eine für den Kunden eindeutige Nummer und enthält nur ein Getränk. Bestellt ein Kunde 2x Rotwein und 1x Mineralwasser, werden dazu drei Bestellpositionen erfasst.</aside>
                                 </section>
 
-                                <section data-auto-animate>
+                                <section data-auto-animate data-hide-from="2V">
                                     <h2>Ternäre Beziehungen</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
                                     <ul>
@@ -917,7 +917,7 @@
                                                                 </div>
                                                             </div>
                                 </section>
-                                <section data-auto-animate>
+                                <section data-auto-animate data-hide-from="2V">
                                     <h2>Ternäre Beziehungen</h2>
                                     <div data-clone="er_degree_3"></div>
                                     <ul style="position: absolute; top:500px; font-size: 80%">
@@ -927,7 +927,7 @@
                                     </ul>
                                     <aside class="notes">Auch hier beginnt man zum korrekten Annotieren der Kardinalitäten den Satz wieder mit &quot;Ein...ein...&quot;.</aside>
                                 </section>
-                                <section>
+                                <section data-hide-from="2V">
                                     <h3>Ternäre vs. drei binäre Beziehungen</h3>
                                     <div>
                                     <div class="stretch erd">
@@ -983,7 +983,7 @@
                                             <aside class="notes">Diese Lösung ist nicht weniger oder mehr richtig als die Lösung mit der ternären Beziehung auf der vorherigen Folie, aber sie modelliert eine komplett andere Miniwelt.</aside>
                                 </section>
 
-                                <section>
+                                <section data-hide-from="2V">
                                     <h2>Generalisierung</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 13</div>
                                     <ul>
@@ -1017,12 +1017,12 @@
                                             <li data-poll="correct">Kundennr, Name, E-Mail</li>
                                             <li>Kundennr, Name, E-Mail, Type-Tag</li>
                                           </ul>
-                                        <h2>https://frage.space</h2>
+                                        <h2>https://fraage.de</h2>
                                     </div>
                                     <aside class="notes">Der Entitätstyp &quot;Kunden&quot; hat zwei Sub-Typen &quot;Privatkunden&quot; und &quot;Geschäftskunden&quot;. In unserer Datenbank können wir also für jeden Kunden speichern, ob er einfach nur Kunde ist, oder aber auch Geschäftskunde und Privatkunde. Es gibt Notationen, in der Überlappungen (Mehrklassenzugehörigkeit) und abstrakte Typen (nicht instanziierbar) modelliert werden können. In unserer Notation ist eine Entität stets nur eine direkte Instanz von einem Entitätstypen, und damit implizit auch Instanz von dessen Super-Typen. Jeder Privatkunde ist also auch Kunde. Subtypen können auch wieder Subtypen haben, sodass sich komplexe Typhierarchien modellieren lassen.</aside>
                                 </section>
 
-                                <section>
+                                <section data-hide-from="2V">
                                     <h2>Generalisierung</h2>
                                     <div class="erd stretch">
                                             [[
@@ -1203,9 +1203,9 @@
                                         <li>DB-Entwurf mit ER-Diagrammen</li>
                                         <li>Entitätstypen, Attribute, Beziehungen</li>
                                         <li>Primärschlüssel</li>
-                                        <li>Schwache Entitätstypen</li>
-                                        <li>Ternäre Beziehungen</li>
-                                        <li>Generalisierung</li>
+                                        <li data-hide-from="2V">Schwache Entitätstypen</li>
+                                        <li data-hide-from="2V">Ternäre Beziehungen</li>
+                                        <li data-hide-from="2V">Generalisierung</li>
                                         <li>Krähenfuß-Notation</li>
                                     </ul>
                                 </section>
@@ -1234,10 +1234,10 @@
                                     <p><i class="far fa-square"></i> Kardinalitäten richtig herum?</p>
                                     <p><i class="far fa-square"></i> Gibt es überflüssige Entitätstypen?</p>
                                     <p><i class="far fa-square"></i> Hat jeder Entitätstyp einen Primärschlüssel?</p>
-                                    <p><i class="far fa-square"></i> Müssen manche Entitätstypen schwach sein?</p>
-                                    <p><i class="far fa-square"></i> Ist die entsprechende Beziehung doppelt umrahmt?</p>
-                                    <p><i class="far fa-square"></i> Sind erweiternde Primärschlüssel unterstrichelt?</p>
-                                    <p><i class="far fa-square"></i> Sind Generalisierungen korrekt modelliert?</p>
+                                    <p data-hide-from="2V"><i class="far fa-square"></i> Müssen manche Entitätstypen schwach sein?</p>
+                                    <p data-hide-from="2V"><i class="far fa-square"></i> Ist die entsprechende Beziehung doppelt umrahmt?</p>
+                                    <p data-hide-from="2V"><i class="far fa-square"></i> Sind erweiternde Primärschlüssel unterstrichelt?</p>
+                                    <p data-hide-from="2V"><i class="far fa-square"></i> Sind Generalisierungen korrekt modelliert?</p>
                                 </section>
                                 <section>
                                     <h3>Beispielaufgabe</h3>

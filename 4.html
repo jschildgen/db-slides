@@ -34,7 +34,7 @@
                         <a href="mailto:johannes.schildgen@oth-regensburg.de">johannes.schildgen@oth-regensburg.de</a></h4>
                         <h1>Datenbanken</h1>
                         <h3>Kapitel 4: SQL</h3>
-                        <h4 style="text-align:center">2020-11-24</h4>
+                        <h4 style="text-align:center">&nbsp;</h4>
                         <img src="img/ccby.png" height="60px" style="position: absolute; left:0px; border:0; bottom:-160px;">
                         <img src="img/oth.png" height="60px" style="position: absolute; right:0px; border:0; bottom:-160px; box-shadow:none">
                     </section>
@@ -77,7 +77,7 @@
                                         <li>Mit einem anderen</li>
                                         <li>Mit keinem</li>
                                     </ul>
-                                <h2>https://frage.space</h2>
+                                <h2>https://fraage.de</h2>
                             </div>
                             <aside class="notes">Die hier dargestellte Liste ist geordnet nach der Popularität der relationalen DBMS. Oracle, SQL Server und DB2 sind kommerzielle Systeme, MySQL, PostgreSQL, SQLite und MariaDB sind open source. MySQL wurde 2010 von Oracle aufgekauft und es hat sich ein zu MySQL kompatibler Fork MariaDB entwickelt. Alle hier dargestellten Systeme außer SQLite laufen als Serverprozess, sodass sich Anwendungen mit dem Datenbank-Server verbinden können, um Anfragen auf diesen zu stellen.</aside>
                         </section>
@@ -125,7 +125,7 @@
                                             <li data-poll="correct">DML</li>
                                             <li>DCL</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">SELECT gehört zur DML, da die Daten für den Zeitpunkt der Anfragestellung manipuliert werden. Der Benutzer sieht eine modifizierte Form der Daten. Natürlich wird diese Änderung anders als z. B. bei UPDATE nicht persistent in der Datenbank gespeichert. </aside>
                             </section> 
@@ -150,7 +150,7 @@
                             </section>
                             <section>
                                 <h2>Sprachelemente</h2>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT email FROM kunden WHERE name = 'Ute';</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>SELECT email FROM kunden WHERE name = 'Ute';</code></pre>
                                 <h4 style="font-size: 90%;">SQL-Schlüsselworte (Keywords)</h4>
                                 <ul class="small">
                                     <li style="margin-top: -3mm;">Groß-/Kleinschreibung egal</li>
@@ -176,19 +176,19 @@
                                             <li>Dann wäre damit die Variable Ute gemeint</li>
                                             <li data-poll="correct">Dann wäre damit die Spalte Ute gemeint</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Merkregel: Bei allem, was man in Anführungszeichen schreibt, kommt es auf die korrekte Groß-/Kleinschreibung an. Bei regulären Identifikatoren sind reservierte SQL-Keywords und Sonderzeichen (außer _) verboten, bei begrenzten Identifikatoren ist dies erlaubt. In MySQL werden begrenzte Identifikatoren in `Apostrophe` geschrieben, bei PostgreSQL in &quot;Anführungszeichen&quot;.</aside>
                             </section>
 
                             <section>
                                 <h2>Kommentare</h2>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM t -- Ein Doppelminus leitet einen Kommentar ein</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM t -- Ein Doppelminus leitet einen Kommentar ein</code></pre>
 
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM t
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM t
 --WHERE x = 5</code></pre>
 
-<pre><code class="hlsql" data-trim contenteditable>SELECT kundennummer /*, email*/ FROM kunden</code></pre>
+<pre><code class="sql" data-trim contenteditable>SELECT kundennummer /*, email*/ FROM kunden</code></pre>
 
                                  <aside class="notes">Alles, was in einer Zeile auf ein <code>--</code> folgt, ist ein Kommentar und gehört nicht mehr zur Anfrage. Dies ist auch praktisch, um vorübergehend gewisse Teile einer Anfrage wegzulassen und später wieder zu entkommentieren. Die Syntax <code>/* ... */</code> ermöglicht Kommentare innerhalb einer Zeile und Kommentare, die mehrere Zeilen umfassen.</aside>
                             </section>
@@ -197,7 +197,7 @@
                                 <h2>DDL: CREATE, ALTER, DROP</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 44</div>
                                 <p>Anlegen, Verändern und Entfernen von <em>Datenbankobjekten</em> (Tabellen, Sichten, Funktionen, ...)</p>
-                                <pre style="width:95%"><code class="hlsql" data-trim contenteditable>CREATE TABLE personen (pid INT, name VARCHAR(500), geboren DATE);</code></pre>
+                                <pre style="width:95%"><code class="sql" data-trim contenteditable>CREATE TABLE personen (pid INT, name VARCHAR(500), geboren DATE);</code></pre>
                             
                                 <h4>CREATE TABLE</h4>
                                 <ul class="small">
@@ -228,7 +228,7 @@
                             <section>
                                 <h3>CREATE TABLE - Spaltenoptionen</h3>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 45, 47</div>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (
+                                <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (
  kundennummer INT PRIMARY KEY, name VARCHAR(100) NOT NULL, 
  email VARCHAR(500) CHECK (email LIKE '%@%') UNIQUE, 
  passwort CHAR(32), land VARCHAR(100) DEFAULT 'Deutschland', 
@@ -249,20 +249,20 @@
                             <section>
                                     <h3>NULL / NOT NULL</h3>
                                     <h4>NULL (Standard)</h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, name VARCHAR(100) NULL)</code></pre>
+                                    <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, name VARCHAR(100) NULL)</code></pre>
                                     <p>NULL-Werte sind in der Spalte erlaubt.</p>
     
                                     <h4>NOT NULL</h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, name VARCHAR(100) NOT NULL)</code></pre>
+                                    <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, name VARCHAR(100) NOT NULL)</code></pre>
                                     <p>NULL-Werte sind in der Spalte verboten.</p>
                                     <aside class="notes">In den meisten DBMS ist <code>NULL</code> die Standard-Eigenschaft von Spalten, das heißt, man darf NULL-Werte in die Spalte eintragen. Will man dies verhindert, deklariert man die Spalte als <code>NOT NULL</code>. Im hier gezeigten unteren Beispiel ist das Attribut &quot;Name&quot; also ein Pflichtfeld.</aside>
                             </section>
 
                             <section>
                                 <h3>UNIQUE-Constraint</h3>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, email VARCHAR(500) UNIQUE)</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* ... */, email VARCHAR(500) UNIQUE)</code></pre>
                                 <p class="small">oder:</p>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* .... */ email VARCHAR(500), 
+                                <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* .... */ email VARCHAR(500), 
                      UNIQUE(email))</code></pre>
                                 
                                 <div class="poll fragment" style="bottom:-350px">
@@ -273,7 +273,7 @@
                                             <li data-poll="correct">UNIQUE-Constraint über eine Kombination mehrerer Spalten möglich</li>
                                             <li>Spart Schreibarbeit</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Spezifiziert man hinter einer Spalte die Eigenschaft <code>UNIQUE</code>, darf es in dieser Spalte keine doppelten Werte gegen. In unserer Kundentabelle dürfen also keine zwei Kunden die gleiche E-Mail-Adresse haben. Die untere Notation ist nötig, wenn das UNIQUE-Constraint aus mehreren Spalten besteht, also wenn die Kombination aus mehreren Spaltenwerten eindeutig sein soll. Anders als bei Primärschlüsseln (in einer Tabelle darf höchstens einen geben), können auf einer Tabelle beliebig viele UNIQUE-Constraints definiert werden.</aside>
                             </section>
@@ -281,9 +281,9 @@
                             <section>
                                 <h3>Primärschlüssel-Constraint</h3>
                                 <div style="position: absolute; top: 20px; right:5px; font-size:170px"><i class="fas fa-key green"></i></div>
-                                <pre style="width: 20cm; left:-14mm;"><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT PRIMARY KEY, ...)</code></pre>
+                                <pre style="width: 20cm; left:-14mm;"><code class="sql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT PRIMARY KEY, ...)</code></pre>
                                 <p class="small">oder:</p>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT, ..., 
+                                <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (kundennummer INT, ..., 
                      PRIMARY KEY(kundennummer))</code></pre>
                                 
                             <p>Primärschlüssel sind UNIQUE und NOT NULL.</p>
@@ -293,10 +293,10 @@
 
                             <section>
                                 <h3>Fremdschlüssel-Constraints</h3>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+                                <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
  geworben_von INT REFERENCES kunden(kundennummer));</code></pre>
                             <p class="small">oder:</p>
-                            <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+                            <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
  geworben_von INT,
  FOREIGN KEY(geworben_von) REFERENCES kunden(kundennummer));</code></pre>
                             <aside class="notes">Besteht der Fremdschlüssel nur aus einer Spalte, kann <code>REFERENCES tabelle(spalte)</code> direkt hinter die Spalte geschrieben werden. Ansonsten muss die unten stehende <code>FOREIGN KEY</code>-Schreibweise verwendet werden.</aside>
@@ -305,13 +305,13 @@
                             <section>
                                 <h3>Zusammengesetzte Primär-/Fremdschlüssel</h3>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 46, 48</div>
-                                <pre><code class="hlsql" data-trim contenteditable data-line-numbers="6">CREATE TABLE bewertungen (
+                                <pre><code class="sql" data-trim contenteditable data-line-numbers="6">CREATE TABLE bewertungen (
  kundennummer INT REFERENCES kunden(kundennummer),
  produktnummer INT REFERENCES produkte(produktnummer),
  sterne INT DEFAULT 5 CHECK(sterne BETWEEN 1 AND 5),
  bewertungstext VARCHAR(100000),
  PRIMARY KEY(kundennummer, produktnummer));</code></pre>
- <pre class="fragment"><code class="hlsql" data-trim contenteditable data-line-numbers="5-6">CREATE TABLE bewertungslikes (
+ <pre class="fragment"><code class="sql" data-trim contenteditable data-line-numbers="5-6">CREATE TABLE bewertungslikes (
  liker INT REFERENCES kunden(kundennummer),
  kundennummer INT, produktnummer INT,
  PRIMARY KEY(liker, kundennummer, produktnummer),
@@ -320,10 +320,10 @@
                             <aside class="notes">Wenn der Primärschlüssel zusammengesetzt ist aus mehreren Spalten, ist es nicht mehr möglich, einfach PRIMARY KEY in die Spaltenoptionen zu schreiben. Stattdessen muss das PRIMARY-KEY-Constraint unten drunter geschrieben werden. Der Grund dafür ist, dass es nicht mehrere Primärschlüssel geben kann. Eine Tabelle hat immer nur einen Primärschlüssel, dieser kann jedoch zusammengesetzt sein aus mehreren Spalten. Das gleiche gilt für FOREIGN-KEY-Constraints für zusammengesetzte Fremdschlüssel.</aside>
                             </section>
                             
-                            <section>
+                            <section data-hide-from="2V">
                                 <h2>Referentielle Aktionen</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 49</div>
-                                <pre style="width: 95%;"><code class="hlsql" data-trim contenteditable data-line-numbers="5">CREATE TABLE produkte (
+                                <pre style="width: 95%;"><code class="sql" data-trim contenteditable data-line-numbers="5">CREATE TABLE produkte (
  produktnummer INT PRIMARY KEY, 
  bezeichnung VARCHAR(100) NOT NULL, preis DECIMAL(9,2), 
  hersteller VARCHAR(50) REFERENCES hersteller(firma) 
@@ -344,11 +344,11 @@
                                             <li>hersteller.land</li>
                                             <li>gar nichts</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Unter einer Aktion versteht man den Dann-Teil einer Wenn-Dann-Regel. Wenn man einen Hersteller löscht, dann... Im oben gezeigten Beispiel wird in einem solchen Fall wegen <code>ON DELETE SET NULL</code> der Wert der Hersteller-Spalte in der Produkte-Tabelle auf NULL gesetzt. Das <code>ON UPDATE CASCADE</code> sorgt dafür, dass bei einer Umbenennung im Primärschlüsselattribut des Herstellers (Firma) diese Umbenennung auch bei den Produkten dieses Herstellers erfolgt.</aside>
                             </section>
-                            <section>
+                            <section data-hide-from="2V">
                                 <h3>ON DELETE NO ACTION</h3>
                                 <p class="small">Fachbereich (<u>FBName</u>)<br>
                                                  Studierende (<u>MatrNr</u>, Name, FBName)<br>
@@ -382,7 +382,7 @@
 
                             <section>
                                 <h3>DEFAULT-Werte für Spalten</h3>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+                                <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
                      land VARCHAR(100) DEFAULT 'Deutschland');</code></pre>
                                 <p>Wird beim Einfügen in die Tabelle der Wert für eine Spalte nicht gesetzt, wird der DEFAULT-Wert dort eingetragen (standardmäßig NULL).</p>
                                 <div class="poll fragment" style="bottom:-290px">
@@ -393,7 +393,7 @@
                                             <li>Land ist 0</li>
                                             <li data-poll="correct">Es kommt ein Fehler</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Später beim <code>INSERT</code>-Kommando wird gezeigt, dass man nicht zwangsweise alle Spaltenwerte beim Einfügen einer neuen Zeile setzen muss. Die DEFAULT-Option legt für solche Fälle den Standardwert fest. Gibt es keinen definierten DEFAULT-Wert und wird der Wert nicht gesetzt, erhält die Zeile in der entsprechenden Spalte den Wert NULL. Ist auf der Spalte ein <code>NOT NULL</code>-Constraint definiert, kommt ein Fehler. Vor solchen Fehlern kann dann ein DEFAULT-Wert schützen. Wird mittels <code>ALTER TABLE ... ADD COLUMN</code> nachträglich eine neue Spalte mit DEFAULT-Wert einer existierenden Tabelle hinzugefügt, erhalten alle bisherigen Zeilen in der neuen Spalte diesen DEFAULT-Wert.</aside>
                             </section>
@@ -402,20 +402,20 @@
                                     <h3>Sequenzen / Autoincrement</h3>
                                     <p class="small">Primärschlüsselwerte (z. B. IDs) automatisch erzeugen lassen.</p>
                                     <h4>In MySQL:</h4>
-                                    <pre style="width: 95%;"><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr INT PRIMARY KEY AUTO_INCREMENT, ...);</code></pre>
+                                    <pre style="width: 95%;"><code class="sql" data-trim contenteditable>CREATE TABLE kunden(kundennr INT PRIMARY KEY AUTO_INCREMENT, ...);</code></pre>
                                     <h4>In PostgreSQL (aber auch MySQL):</h4>
-                                    <pre style="width: 95%;"><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden(kundennr SERIAL PRIMARY KEY  , ...);</code></pre>
+                                    <pre style="width: 95%;"><code class="sql" data-trim contenteditable>CREATE TABLE kunden(kundennr SERIAL PRIMARY KEY  , ...);</code></pre>
                                     <aside class="notes">In verschiedenen DBMS gibt es die Spaltenoption <code>AUTO_INCREMENT</code> (MySQL), <code>AUTOINCREMENT</code> (SQLite), <code>GENERATED BY DEFAULT AS IDENTITY</code> (SQL Standard, Oracle, DB2), <code>IDENTITY</code> (Microsoft SQL Server), o. ä. Spalten mit dieser Option müssen einen nummerischen Datentypen haben. Eingefügte Zeilen erhalten standardmäßig eine automatisch generierte laufende Nummer. Problematisch kann es werden, wenn nan beim Einfügen auch selbst einen Wert setzt, statt ihn automatisch generieren zu lassen. Der SQL Standard und DB2 unterstützen <code>INTEGER GENERATED ALWAYS AS IDENTITY</code>, damit immer (nicht nur als Default) eine automatische ID erzeugt wird.</aside>
                                 </section>
 
                             <section>
                                 <h3>CHECK-Constraint</h3>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 47</div>
-                                <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
+                                <pre><code class="sql" data-trim contenteditable>CREATE TABLE kunden (/* ... */,
  email VARCHAR(500) CHECK (email LIKE '%@%'));</code></pre>
-                     <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE bewertungen (/* ... */,
+                     <pre><code class="sql" data-trim contenteditable>CREATE TABLE bewertungen (/* ... */,
  sterne INT CHECK (sterne BETWEEN 1 AND 5));</code></pre>
-                     <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE personen (/* ... */,
+                     <pre><code class="sql" data-trim contenteditable>CREATE TABLE personen (/* ... */,
  geburtsdatum DATE,
  hochzeitsdatum DATE CHECK (hochzeitsdatum > geburtsdatum));</code></pre>
 
@@ -429,7 +429,7 @@
                                             <li>UNIQUE</li>
                                             <li>NOT NULL</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
 
                             <aside class="notes">Mit einem CHECK-Constraint lassen sich benutzerdefinierte Spalten-Constraints definieren. In Klammern hinter dem Stichwort <code>CHECK</code> steht ein beliebiger boolescher Ausdruck, der stets wahr sein muss. Beim Einfügen und Ändern von Zeilen überprüft das DBMS die Bedingung und lehnt die entsprechende Operation ab, wenn das CHECK-Constraint verletzt würde. In den gezeigten Beispielen muss in der E-Mail-Spalte immer ein @-Zeichen vorkommen, der Wertebereich der Sterne-Spalte wird eingeschränkt auf ganze Zahlen zwischen 1 und 5, und das Hochzeitsdatum muss immer echt später sein als das Geburtsdatum einer Person.</aside>
@@ -439,16 +439,16 @@
                                     <h2>CREATE TABLE LIKE / AS</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 51</div>
                                     <h4>CREATE TABLE</h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE pkw (bez VARCHAR(50) PRIMARY KEY, leistung INT);</code></pre>
+                                    <pre><code class="sql" data-trim contenteditable>CREATE TABLE pkw (bez VARCHAR(50) PRIMARY KEY, leistung INT);</code></pre>
 
                                     <div class="fragment">
                                     <h4>CREATE TABLE LIKE</h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE lkw (LIKE pkw);</code></pre>
+                                    <pre><code class="sql" data-trim contenteditable>CREATE TABLE lkw (LIKE pkw);</code></pre>
                                     </div>
 
                                     <div class="fragment">
                                     <h4>CREATE TABLE AS</h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>CREATE TABLE schrottkarren AS 
+                                    <pre><code class="sql" data-trim contenteditable>CREATE TABLE schrottkarren AS 
  SELECT * FROM pkw WHERE leistung < 60;</code></pre>
                                     </div>
 
@@ -462,38 +462,38 @@
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 52</div>
 
                                     <p>ALTER: Verändern von Datenbankobjekten</p>
-                                    <pre><code class="hlsql" data-trim contenteditable>ALTER TABLE bewertungen ADD COLUMN zeitstempel TIMESTAMP;</code></pre>
+                                    <pre><code class="sql" data-trim contenteditable>ALTER TABLE bewertungen ADD COLUMN zeitstempel TIMESTAMP;</code></pre>
     
                                     <p class="fragment" data-fragment-index="1">DROP: Entfernen von Datenbankobjekten</p>
-                                    <pre class="fragment" data-fragment-index="1"><code class="hlsql" data-trim contenteditable>DROP TABLE bewertungen;</code></pre>
+                                    <pre class="fragment" data-fragment-index="1"><code class="sql" data-trim contenteditable>DROP TABLE bewertungen;</code></pre>
                                     <aside class="notes">Die DDL-Befehle ALTER und DROP wirken sich genau wie CREATE auf den DB-Katalog aus. Das hier gezeigte ALTER TABLE ... ADD COLUMN-Kommando fügt eine neue Spalte namens &quot;zeitstempel&quot; vom Typ TIMESTAMP der Bewertungstabelle hinzu. Das gezeigte DROP-Kommando würde die Bewertungstabelle entfernen. Das heißt, es sind nicht nur alle Daten dieser Tabelle weg, sondern die ganze Tabelle existiert nicht mehr. Das DROP-Kommando hier würde aber abgelehnt werden, da es noch eine Tabelle Bewertungslikes gibt, bei der auf die Bewertungstabelle Fremdschlüsselreferenzen definiert sind. Man müsste also zunächst diese Tabelle oder zumindest die Fremdschlüssel droppen.</aside>
                             </section>
 
                             <section>
                                 <h3>DML: INSERT, UPDATE, DELETE, ...</h3>
                                 <p>Einfügen, ändern, löschen, abrufen von Daten.</p>
-                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(produktnr, bezeichnung, preis, hersteller) 
+                                <pre><code class="sql" data-trim contenteditable>INSERT INTO produkte(produktnr, bezeichnung, preis, hersteller) 
              VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
-                                <pre><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = 5.99 WHERE produktnr = 88</code></pre>
-                                <pre><code class="hlsql" data-trim contenteditable>DELETE FROM produkte WHERE produktnr = 88</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>UPDATE produkte SET preis = 5.99 WHERE produktnr = 88</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>DELETE FROM produkte WHERE produktnr = 88</code></pre>
                                 <aside class="notes">Hier wird das Produkt Katzenfutter mit der Produktnummer 88 eingefügt, dann der Preis auf 5,99 EUR erhölt und im dritten Kommando wird die Zeile wieder gelöscht.</aside>
                             </section>
 
                             <section>
                                 <h2>INSERT</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 53</div>
-                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(produktnr, bezeichnung, preis, hersteller) 
+                                <pre><code class="sql" data-trim contenteditable>INSERT INTO produkte(produktnr, bezeichnung, preis, hersteller) 
              VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
                                 
                                 <div class="fragment">
                                 <p class="small">Nur ein Teil der Spalten setzen:</p>
-                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte(preis, bezeichnung)
+                                <pre><code class="sql" data-trim contenteditable>INSERT INTO produkte(preis, bezeichnung)
              VALUES (4.99, 'Katzenfutter')</code></pre>
                                 </div>
 
                                 <div class="fragment    ">
                                 <p class="small">Spaltennamen weglassen:</p>
-                                <pre><code class="hlsql" data-trim contenteditable>INSERT INTO produkte VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>INSERT INTO produkte VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
                                 </div>
                                 <p class="fragment small">Nachteile: Schwerer verständlich zu lesen, man muss auf die korrekte Reihenfolge achten, man darf keine Spalte vergessen, in der Zukunft könnten sich die Spalten ändern.</p>
                                 
@@ -503,9 +503,9 @@
                             <section>
                                 <h2>UPDATE</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 54</div>
-                                <pre><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = 5.99 WHERE produktnr = 88</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>UPDATE produkte SET preis = 5.99 WHERE produktnr = 88</code></pre>
 
-                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte 
+                                <pre class="fragment"><code class="sql" data-trim contenteditable>UPDATE produkte 
 SET preis = 5.99, bezeichnung = 'Spezial-Katzenfutter' 
 WHERE produktnr = 88</code></pre>
 
@@ -516,26 +516,26 @@ WHERE produktnr = 88</code></pre>
                                             <li data-poll="correct">Alle Zeilen</li>
                                             <li>Gar nichts</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
 
-                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = preis+1</code></pre>
+                                <pre class="fragment"><code class="sql" data-trim contenteditable>UPDATE produkte SET preis = preis+1</code></pre>
 
-                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>UPDATE produkte SET preis = preis * 1.1</code></pre>
+                                <pre class="fragment"><code class="sql" data-trim contenteditable>UPDATE produkte SET preis = preis * 1.1</code></pre>
                                 <aside class="notes">Das UPDATE-Kommando besteht aus einem SET-Teil und einem WHERE-Teil. Im SET werden Komma-getrennte Zuweisungen angegeben, um die neuen Spaltenwerte zu setzen. Der WHERE-Teil besteht aus einer Bedingung, die für eine Zeile erfüllt sein muss, damit diese entsprechend geändert wird. Lässt man die WHERE-Klausel weg, steht dies für <code>WHERE TRUE</code>, man ändert also alle Zeilen.</aside>
                             </section>
                             <section>
                                 <h2>DELETE / TRUNCATE TABLE</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 55</div>
-                                <pre><code class="hlsql" data-trim contenteditable>DELETE FROM produkte WHERE produktnr = 88</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>DELETE FROM produkte WHERE produktnr = 88</code></pre>
 
-                                <pre><code class="hlsql" data-trim contenteditable>DELETE FROM produkte WHERE hersteller = 'Monsterfood'
+                                <pre><code class="sql" data-trim contenteditable>DELETE FROM produkte WHERE hersteller = 'Monsterfood'
                        AND preis < 1.00 
                                 </code></pre>
 
-                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>DELETE FROM produkte</code></pre>
+                                <pre class="fragment"><code class="sql" data-trim contenteditable>DELETE FROM produkte</code></pre>
 
-                                <pre class="fragment"><code class="hlsql" data-trim contenteditable>TRUNCATE TABLE produkte</code></pre>
+                                <pre class="fragment"><code class="sql" data-trim contenteditable>TRUNCATE TABLE produkte</code></pre>
 
                                 <div class="poll fragment" style="bottom:-260px">
                                     <h1>Was ist der Unterschied zwischen TRUNCATE TABLE und DROP TABLE?</h1>
@@ -545,14 +545,14 @@ WHERE produktnr = 88</code></pre>
                                             <li data-poll="correct">TRUNCATE löscht nur die Daten, die Tabelle ist noch da</li>
                                             <li>Es gibt keinen</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
 
                                 <aside class="notes">Auch hier bestimmt die WHERE-Klausel wieder, welche Zeilen gelöscht werden sollen. Lässt man sie weg, löscht das System jede Zeile. Der TRUNCATE TABLE-Befehl ist jedoch meist schneller für solche Zwecke, er leert ebenfalls die komplette Tabelle.</aside>
                             </section>
                             <section>
                                 <h2>SELECT</h2>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+                                <pre><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H LEFT JOIN produkte P ON H.firma = p.hersteller
 WHERE P.preis > 3
 GROUP BY h.land
@@ -573,7 +573,7 @@ ORDER BY COUNT(*)
                             <section>
                                 <h3>SELECT &lt;spalten&gt; FROM &lt;tabelle&gt;</h3>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 57</div>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT bezeichnung, preis, round(preis * 1.15, 2) AS preis_usd 
+                                <pre><code class="sql" data-trim contenteditable>SELECT bezeichnung, preis, round(preis * 1.15, 2) AS preis_usd 
 FROM produkte</code></pre>
                                 <span class="sqlresult fragment"></span>
 
@@ -585,13 +585,13 @@ FROM produkte</code></pre>
                                             <li>Kreuzprodukt</li>
                                             <li>Weder noch</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Die SELECT-Klausel wird bei der Anfrageausführung erst sehr spät ausgewertet. In ihr findet die Projektion statt, um festzulegen, welche Spalten man letztendlich im Ergebnis sehen möchte. Man kann mehrere Spalten mit Kommata trennen, mit <code>AS</code> einen Alias definieren - also eine Umbenennung vornehmen - und man kann Funktionen aufrufen. In der FROM-Klausel stehen eine oder mehrere Tabellen, aus der die Daten stammen sollen.</aside>
                             </section>
                             <section>
                                 <h3>SELECT * FROM &lt;tabelle&gt;</h3>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM produkte</code></pre>
                                 <span class="sqlresult fragment"></span>
                                 <aside class="notes">Mit <code>SELECT *</code> wird das ganze Tupel ausgegeben. In der Anfrage auf dieser Folio werden alle Spalten der Produkte-Tabelle angezeigt.</aside>
                             </section>
@@ -599,12 +599,12 @@ FROM produkte</code></pre>
                                 <h3>SELECT DISTINCT</h3>
                                 <div class="columns">
                                     <div style="width: 8cm;">
-                                            <pre><code class="hlsql" data-trim contenteditable data-sql="select_no_distinct">SELECT hersteller 
+                                            <pre><code class="sql" data-trim contenteditable data-sql="select_no_distinct">SELECT hersteller 
 FROM produkte</code></pre>
                                             <span id="select_no_distinct"></span>
                                     </div>
                                     <div style="width: 12cm">
-                                            <pre><code class="hlsql" data-trim contenteditable data-sql="select_distinct">SELECT DISTINCT hersteller 
+                                            <pre><code class="sql" data-trim contenteditable data-sql="select_distinct">SELECT DISTINCT hersteller 
 FROM produkte</code></pre>
                                             <span id="select_distinct"></span>
                                     </div>
@@ -616,21 +616,21 @@ FROM produkte</code></pre>
                                 <h2>WHERE</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 58</div>
                                 <div style="position: absolute; top: -1cm; right:5px; font-size:170px" class="green">&sigma;</div>
-                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis > 3</code></pre>
+                                <pre><code class="sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis > 3</code></pre>
                                 <span id="where_price_gt_3"></span>
-                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis >= 3 AND preis <= 9</code></pre>
-                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis BETWEEN 3 AND 9</code></pre>
+                                <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis >= 3 AND preis <= 9</code></pre>
+                                <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable data-sql="where_price_gt_3">SELECT * FROM produkte WHERE preis BETWEEN 3 AND 9</code></pre>
                                 <aside class="notes">In der WHERE-Klausel steht eine beliebige boolesche Bedingung. Alle Zeilen, die diese Bedingung erfüllen, sind im Ergebnis. Es wird also eine Selektion ausgeführt. Hat eine Anfrage keine WHERE-Klausel, qualifiziert sich jede Zeile. Bedingungen lassen sich mit AND und OR verknüpfen und mit NOT negieren. Auch die Klammerung von Ausdrücken ist möglich.</aside>
                             </section>
                             <section>
                                 <h2>LIKE-Prädikat</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 59</div>
-                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_description">SELECT * FROM produkte WHERE bezeichnung = 'Müsliriegel'</code></pre>
+                                <pre><code class="sql" data-trim contenteditable data-sql="where_description">SELECT * FROM produkte WHERE bezeichnung = 'Müsliriegel'</code></pre>
                                 <span id="where_description"></span>
-                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_description_like">SELECT * FROM produkte WHERE bezeichnung LIKE 'M%'</code></pre>
+                                <pre><code class="sql" data-trim contenteditable data-sql="where_description_like">SELECT * FROM produkte WHERE bezeichnung LIKE 'M%'</code></pre>
                                 <span id="where_description_like"></span>
-                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE '%-%'</code></pre>
-                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE 'M_sliriegel'</code></pre>
+                                <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE '%-%'</code></pre>
+                                <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE 'M_sliriegel'</code></pre>
                                 <div class="poll fragment" style="bottom:150px">
                                     <h1>Was wird durch die untere Anfrage gefunden?</h1>
                                         <ul>
@@ -639,15 +639,15 @@ FROM produkte</code></pre>
                                             <li>Msliregel</li>
                                             <li>Keines davon</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Strings müssen stets in 'einfache Anführungszeichen' geschrieben werden. 'Innerhalb eines Strings braucht''s zwei Anführungszeichen', um es zu escapen. Im LIKE-Prädikat wird eine Musterüberprüfung vorgenommen. <code>%</code> steht dabei für beliebige Zeichen und <code>_</code> für genau ein beliebiges Zeichen.</aside>
                             </section>
                             <section>
                                 <h2>NULL-Werte</h2>
-                                <pre><code class="hlsql" data-trim contenteditable data-sql="where_is_null">SELECT * FROM produkte WHERE hersteller IS NULL</code></pre>
+                                <pre><code class="sql" data-trim contenteditable data-sql="where_is_null">SELECT * FROM produkte WHERE hersteller IS NULL</code></pre>
                                 <span id="where_is_null"></span>
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE hersteller IS NOT NULL</code></pre>
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE hersteller IS NOT NULL</code></pre>
                                 <div class="poll fragment" style="bottom:-100px">
                                     <h1>hersteller = NULL ist...</h1>
                                         <ul>
@@ -656,21 +656,21 @@ FROM produkte</code></pre>
                                             <li>true, wenn hersteller NULL ist</li>
                                             <li>false, wenn hersteller NULL ist</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Überprüfungen, ob der Wert einer Spalte NULL ist, muss mit <code>IS NULL</code> erfolgen. Das Prädikat <code>IS NOT NULL</code> trifft auf Zeilen zu, die in der entsprechenden Spalte keinen NULL-Wert haben.</aside>
                             </section>
                             <section>
                                 <h2>Kreuzprodukt</h2>
                                 <div style="position: absolute; top: -1cm; right:5px; font-size:170px" class="green">&times;</div>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte, hersteller</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM produkte, hersteller</code></pre>
                                                                        <span class="sqlresult"></span>
                                 <aside class="notes">Listet man Komma-getrennt mehrere Tabellen in der FROM-Klausel auf, wird das kartesische Produkt (Cross-Join) zwischen diesen gebildet.</aside>
                             </section>
                             <section>
                                     <h2>Join</h2>
                                     <div style="position: absolute; top: -1cm; right:5px; font-size:170px" class="green">&bowtie;</div>
-                                    <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte, hersteller
+                                    <pre><code class="sql" data-trim contenteditable>SELECT * FROM produkte, hersteller
 WHERE produkte.hersteller = hersteller.firma
                                     </code></pre>
                                                                            <span class="sqlresult"></span>
@@ -679,14 +679,14 @@ WHERE produkte.hersteller = hersteller.firma
                             <section>
                                 <h3>&lt;tabelle&gt; JOIN &lt;tabelle&gt; ON &lt;präd.&gt;</h3>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 61-62</div>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte JOIN hersteller 
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM produkte JOIN hersteller 
  ON produkte.hersteller = hersteller.firma</code></pre>
                                 <span class="sqlresult"></span>
 
                                 <div class="fragment">
                                 <p class="small">   </p>
                                 <h4>Tabellen-Alias</h4>
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P JOIN hersteller H
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P JOIN hersteller H
  ON P.hersteller = H.firma</code></pre>
                                 </div>
                                 <aside class="notes">Die <code>JOIN ... ON</code>-Syntax in der FROM-Klausel ist eine Alternative zum Join in der WHERE-Klausel. An ihr ist besser erkennbar, dass hier ein Join ausgeführt wird, es verhindert, dass man aus Versehen die Join-Bedingung vergisst und es trennt klar den Verbund von weiteren Prädikaten. Außerdem lässt sich mit der <code>JOIN</code>-Klausel auch einen äußeren Verbund auszuführen (siehe nächste Folie). Bei nicht eindeutigen Spaltennamen muss unbedingt ein Tabellenprefix vor die Spalte geschrieben werden. Um Anfragen kompakter zu gestalten, bietet es sich an Tabellenaliase in der FROM-Klausel einzuführen (hier: P und H).</aside>
@@ -694,14 +694,14 @@ WHERE produkte.hersteller = hersteller.firma
                             <section>
                                 <h3>LEFT/RIGHT/FULL [OUTER] JOIN</h3>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 63</div>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte P LEFT JOIN hersteller H
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM produkte P LEFT JOIN hersteller H
  ON P.hersteller = H.firma</code></pre>
                                 <span class="sqlresult"></span>
                                 <aside class="notes">Ein äußerer Verbund lässt sich ausführen, indem statt dem <code>JOIN</code>-Schlüsselwort <code>LEFT JOIN</code>, <code>RIGHT JOIN</code> oder <code>FULL JOIN</code> geschrieben wird. Bei hier gezeigten linken äußeren Verbund sind alle Zeilen der linken Tabelle im Join-Ergebnis. Diejenigen, die keinen Join-Partner in der rechten Tabelle finden, erhalten in den entsprechenden Spalten einen NULL-Wert.</aside>
                             </section>
-                            <section>
+                            <section data-hide-from="2V">
                                 <h3>JOIN ... USING(...)</h3>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT P.*, B.sterne 
+                                <pre><code class="sql" data-trim contenteditable>SELECT P.*, B.sterne 
  FROM produkte P JOIN bewertungen B USING(produktnr)</code></pre>
                                 <span class="sqlresult"></span>
                                 <div class="poll fragment" style="bottom:-300px">
@@ -712,7 +712,7 @@ WHERE produkte.hersteller = hersteller.firma
                                             <li>Die Anfrage entspricht ON P.produktnr = B.produktnr</li>
                                             <li>Die Anfrage funktioniert nur, wenn beide Tabellen die Spalte produktnr haben</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes"><code>USING(produktnr)</code> ist eine verkürzte Schreibweise für den Equi-Join auf der Spalte Produktnummer, also in dem Fall für <code>ON P.produktnr = B.produktnr</code></aside>
                             </section>
@@ -732,24 +732,24 @@ WHERE produkte.hersteller = hersteller.firma
                             <section>
                                 <h2>COUNT</h2>
                                 <div class="columns">
-                                <div style="width:6.5cm">
-                                    <pre><code class="hlsql" data-trim contenteditable data-sql="count_star">SELECT COUNT(*) 
+                                <div style="width:6.8cm">
+                                    <pre><code class="sql" data-trim contenteditable data-sql="count_star">SELECT COUNT(*) 
 FROM produkte</code></pre>
                                     <span id="count_star"></span>
                                 </div>
-                                <div style="width:10cm">
-                                    <pre><code class="hlsql" data-trim contenteditable data-sql="count_manufacturer">SELECT COUNT(hersteller) 
+                                <div style="width:10.4cm">
+                                    <pre><code class="sql" data-trim contenteditable data-sql="count_manufacturer">SELECT COUNT(hersteller) 
 FROM produkte</code></pre>
                                     <span id="count_manufacturer"></span>
                                 </div>
                                 </div>
-                                <pre><code class="hlsql" data-trim contenteditable data-sql="count_distinct_manufacturer">SELECT COUNT(DISTINCT hersteller) FROM produkte</code></pre>
+                                <pre><code class="sql" data-trim contenteditable data-sql="count_distinct_manufacturer">SELECT COUNT(DISTINCT hersteller) FROM produkte</code></pre>
                                 <span id="count_distinct_manufacturer"></span>
                                 <aside class="notes"><code>COUNT(*)</code> (manche schreiben auch gerne <code>COUNT(1)</code>) zählt die Anzahl der Zeilen in der Gruppe. Da hier die Gruppe die ganze Tabelle ist, liefert dies die Anzahl der Zeilen in der Tabelle. COUNT mit Spaltenangaben zählt, wie viele Zeilen in den gegebenen Spalten keinen NULL-Wert haben. <code>COUNT(DISTINCT ...)</code> zählt die von NULL verschiedenen distinkten (unterschiedlichen) Werte in den gegebenen Spalten. In unserem Beispiel existieren die beiden Werte Calgonte und Monsterfood in der Hersteller-Spalte.</aside>
                             </section>
                             <section>
                                 <h2>SUM / AVG / MIN / MAX</h2>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT SUM(preis), AVG(preis), MIN(preis), MAX(preis)
+                                <pre><code class="sql" data-trim contenteditable>SELECT SUM(preis), AVG(preis), MIN(preis), MAX(preis)
 FROM produkte</code></pre>
                                 <span class="sqlresult"></span>
                                 <aside class="notes">Den Aggregatfunktionen SUM, AVG, MIN und MAX wird als Argument eine Spalte (oder ein Ausdruck, z. B. <code>SUM(preis * (1+steuersatz/100))</code> übergeben. Wir sehen hier im Ergebnis die Summe aller Preise, den Durchschnitt sowie den kleinsten und größten Preis. NULL-Werte werden in den Aggregatfunktionen übersprungen. Das heißt <code>AVG(preis)</code> berechnet sich aus der Summe der Preise, die nicht NULL sind, geteilt durch die Anzahl der Preise, die nicht NULL sind. Also: <code>SUM(preis)/COUNT(preis)</code></aside>
@@ -757,7 +757,7 @@ FROM produkte</code></pre>
                             <section>
                                 <h2>GROUP BY</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 65</div>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, COUNT(*), AVG(preis)
+                                <pre><code class="sql" data-trim contenteditable>SELECT hersteller, COUNT(*), AVG(preis)
 FROM produkte
 GROUP BY hersteller</code></pre>
 <div class="poll fragment" style="bottom:-250px">
@@ -768,7 +768,7 @@ GROUP BY hersteller</code></pre>
             <li data-poll="correct">So viele, wie es verschiedene Werte in der hersteller-Spalte gibt</li>
             <li>So viele, wie es Zeilen in der Produkte-Tabelle gibt</li>
         </ul>
-    <h2>https://frage.space</h2>
+    <h2>https://fraage.de</h2>
 </div>
                                 <span class="sqlresult fragment"></span>
                                 <aside class="notes">In der GROUP BY-Klausel werden Spalten spezifiziert, nach deren Werten Gruppen gebildet werden. <code>GROUP BY hersteller</code> bedeutet, dass für jeden distinkten Wert in der hersteller-Spalte eine Gruppe gebildet wird. In unserem Beispiel sind dies drei. Für jede Gruppe kann nun der Wert in dieser GROUP BY-Spalte ausgegeben werden. Alle anderen Spalten dürfen nur innerhalb von Aggregatfunktionen in der SELECT-Liste vorkommen. Wir berechnen in dem Beispiel auf dieser Folie für jeden einzelnen Hersteller die Anzahl und Durchschnittspreise seiner Produkte.</aside>
@@ -776,7 +776,7 @@ GROUP BY hersteller</code></pre>
                             <section>
                                 <h2>GROUP BY</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 66</div>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, preis, COUNT(*)
+                                <pre><code class="sql" data-trim contenteditable>SELECT hersteller, preis, COUNT(*)
 FROM produkte
 GROUP BY hersteller, preis</code></pre>
                                 <span class="sqlresult"></span>
@@ -786,7 +786,7 @@ GROUP BY hersteller, preis</code></pre>
                             <section>
                                 <h2>HAVING</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 69</div>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT hersteller, AVG(preis)
+                                <pre><code class="sql" data-trim contenteditable>SELECT hersteller, AVG(preis)
 FROM produkte
 GROUP BY hersteller
 HAVING COUNT(*) >= 2</code></pre>
@@ -797,14 +797,14 @@ HAVING COUNT(*) >= 2</code></pre>
                             <section>
                                 <h2>Sub-Anfragen</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 67-68</div>
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT hersteller, avg_preis FROM (
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT hersteller, avg_preis FROM (
  SELECT hersteller, COUNT(*) AS anzahl, AVG(preis) AS avg_preis 
  FROM produkte GROUP BY hersteller
 ) P WHERE anzahl >= 2</code></pre>
-                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte
+                                <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte
 WHERE preis = (SELECT MAX(preis) FROM produkte)</code></pre>
 
-<pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P1
+<pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P1
 WHERE preis = (SELECT MAX(preis) FROM produkte P2 
                WHERE P2.hersteller = P1.hersteller)</code></pre>
                <aside class="notes">Unteranfragen dürfen fast überall innerhalb einer Anfrage stehen, auch in INSERT, UPDATE, DELETE, usw. Auch korrelierende Sub-Anfragen sind erlaubt. In einer solchen kommen Spalten der Oberanfrage vor (P1.hersteller in der unteren Anfrage). Die obere Query entspricht der Anfrage mit HAVING aus der vorherigen Folie. Die zweite Anfrage liefert Produkte, die den Maximalpreis haben, es gibt also keine teureren als diese. Die untere Anfrage ist ähnlich: Sie liefert Produkte, die den Maximalpreis von Produkten vom jeweiligen Hersteller haben. Die Anfrage liefert z. B. den Müsliriegel, da es von seinem Hersteller Monsterfood keine Produkte gibt, die mehr kosten.</aside>
@@ -814,12 +814,12 @@ WHERE preis = (SELECT MAX(preis) FROM produkte P2
                                     <h3>CTE: Common Table Expressions</h3>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 90</div>
                                     <h4><code>WITH ... AS (SELECT ...) SELECT ...</code></h4>
-                                    <pre><code class="hlsql" data-trim contenteditable data-sql="cte_monsterfood">
+                                    <pre><code class="sql" data-trim contenteditable data-sql="cte_monsterfood">
 WITH monsterfood_produkte AS 
  (SELECT * FROM produkte WHERE hersteller = 'Monsterfood')
 SELECT count(*) FROM monsterfood_produkte</code></pre>
                                     <span id="cte_monsterfood"></span>
-                                    <pre><code class="hlsql" data-trim contenteditable data-sql="cte_monsterfood2">
+                                    <pre><code class="sql" data-trim contenteditable data-sql="cte_monsterfood2">
 WITH monsterfood_produkte AS 
     (SELECT * FROM produkte WHERE hersteller = 'Monsterfood')
 SELECT * FROM monsterfood_produkte
@@ -838,7 +838,7 @@ WHERE preis = (SELECT max(preis) FROM monsterfood_produkte)</code></pre>
                                     <li><code>ASC</code>: aufsteigend sortieren (Standard)</li>
                                     <li><code>DESC</code>: absteigend sortieren</li>
                                 </ul>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis</code></pre>
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis</code></pre>
                                 <span class="sqlresult"></span>
                                 <div class="poll fragment" style="bottom:120px">
                                     <h1>Wenn zwei Produkte den gleichen Preis haben, welches kommt dann zuerst?</h1>
@@ -848,7 +848,7 @@ WHERE preis = (SELECT max(preis) FROM monsterfood_produkte)</code></pre>
                                             <li>Das, was zuletzt eingefügt wurde</li>
                                             <li data-poll="correct">Keine Ahnung</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <aside class="notes">Hier wird das Ergebnis der Anfrage aufsteigend nach den Werten der Preis-Spalte sortiert.</aside>
                             </section>
@@ -857,7 +857,7 @@ WHERE preis = (SELECT max(preis) FROM monsterfood_produkte)</code></pre>
                                 <h2>ORDER BY</h2>
                                 <p class="small">&quot;Tabellen haben keine Ordnung, Ergebnisse schon.&quot;</p>
                                 
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte 
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte 
 ORDER BY hersteller NULLS LAST, preis DESC</code></pre>
                                 <span data-sql-query="SELECT * FROM produkte ORDER BY hersteller IS NULL, hersteller, preis DESC"></span>
                                 <aside class="notes">Gibt man mehrere Ausdrücke im ORDER BY an, wird zuerst nach dem ersten sortiert, dann nach dem zweiten, usw. NULLS FIRST bzw. NULLS LAST sorgt dafür, dass NULL-Werte in der zu sortierenden Spalte an den Anfang bzw. ans Ende sortiert werden. Hier kommt Calgonte im Alphabet vor Monsterfood, aber da es zwei Produkte von Monsterfood gibt, kommt wegen <code>preis DESC</code> das teuerste zuerst.</aside>
@@ -867,26 +867,26 @@ ORDER BY hersteller NULLS LAST, preis DESC</code></pre>
                                 <h2>LIMIT</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 71</div>
                                 <h4>SQL Standard (und DB2):</h4>
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
 FETCH FIRST 5 ROWS ONLY</code></pre>
                                 <h4>PostgreSQL, MySQL, MariaDB, SQLite, ...</h4>
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
 LIMIT 5</code></pre>
                                 <aside class="notes">Mit der LIMIT-Klausel lässt sich die Ergebnismenge auf eine bestimmte Anzahl von Tupeln begrenzen. <code>SELECT * FROM produkte LIMIT 5</code> würde irgendwelche fünf Produkte liefern. Die untere Anfrage auf dieser Folie liefert die fünf teuersten Produkte. <code>SELECT * FROM produkte ORDER BY preis DESC LIMIT 1</code> liefert das teuerste Produkt. Haben zwei Produkte den gleichen und den teuersten Preis, wird irgendeines von diesen ausgegeben.</aside>
                             </section>
 
                             <section>
                                 <h2>LIMIT mit OFFSET</h2>
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
 LIMIT 2, 5</code></pre>
-                                <pre><code class="hlsql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
+                                <pre><code class="sql" data-trim contenteditable>SELECT * FROM produkte ORDER BY preis DESC
 LIMIT 5 OFFSET 2</code></pre>
                                 <span class="sqlresult"></span>
                                 <aside class="notes">Die beiden hier dargestellten Anfragen sind äquivalent. Der Offset sorgt dafür, dass zunächst eine bestimmte Anzahl von Zeilen übersprungen wird. Hier werden die beiden teuersten Produkte (Regal und Maschinenbau-Lehrbuch) übersprungen und erst die fünf danach teuersten Produkte ausgegeben.</aside>
                             </section>
                             <section>
                                     <h2>SELECT</h2>
-                                    <pre><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+                                    <pre><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H JOIN produkte P ON H.firma = p.hersteller
 WHERE P.preis > 3
 GROUP BY h.land
@@ -901,15 +901,15 @@ ORDER BY COUNT(*)
                                 <section>
                                         <h2>SELECT mit OUTER JOIN</h2>
                                         <div class="trackinfo"><i class="fas fa-headphones"></i> 73</div>
-                                        <pre><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+                                        <pre><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H LEFT JOIN produkte P ON p.hersteller = H.firma
 WHERE P.preis > 3
 GROUP BY h.land HAVING COUNT(*) < 5 ORDER BY COUNT(*)
                                         </code></pre>
                                         <p class="small">Problem: WHERE-Prädikat <code>preis > 3</code> wird nach dem äußeren Verbund ausgeführt, schmeißt also die gewünschten Zeilen mit NULL-Werten wieder raus.</p>
-                                        <pre class="fragment"><code class="hlsql" data-trim contenteditable>SELECT /****/ 
+                                        <pre class="fragment"><code class="sql" data-trim contenteditable>SELECT /****/ 
 WHERE P.preis > 3 OR P.produktnr IS NULL</code></pre>
-<pre class="fragment"><code class="hlsql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+<pre class="fragment"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H
  LEFT JOIN (SELECT * FROM produkte WHERE preis > 3) P 
  ON p.hersteller = H.firma
@@ -923,7 +923,7 @@ GROUP BY h.land HAVING COUNT(*) < 5 ORDER BY COUNT(*)</code></pre>
                                 <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Union;</div>
                                 <h2>UNION</h2>
                                 <p class="small">Aus welchen Ländern sind unsere Kunden und Hersteller?</p>
-                                <pre><code class="hlsql" data-trim contenteditable>
+                                <pre><code class="sql" data-trim contenteditable>
 SELECT land FROM kunden
 UNION
 SELECT land FROM hersteller
@@ -937,7 +937,7 @@ SELECT land FROM hersteller
                                             <li>Beides</li>
                                             <li>Weder noch</li>
                                         </ul>
-                                    <h2>https://frage.space</h2>
+                                    <h2>https://fraage.de</h2>
                                 </div>
                                 <p class="small">Bei Mengenoperationen ohne das Stichwort <code>ALL</code> wird nach UNION, INTERSECT und EXCEPT eine Duplikateliminierung vorgenommen.</p>
                         
@@ -947,7 +947,7 @@ SELECT land FROM hersteller
                         <section>
                                 <h2>UNION ALL</h2>
                                 <p class="small">Aus welchen Ländern sind unsere Kunden und Hersteller?</p>
-                                <pre><code class="hlsql" data-trim contenteditable>
+                                <pre><code class="sql" data-trim contenteditable>
 SELECT land FROM kunden
 UNION ALL
 SELECT land FROM hersteller
@@ -961,13 +961,13 @@ SELECT land FROM hersteller
                                 <h2>INTERSECT</h2>
                                 <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Intersection;</div>
                                 <p class="small">In welchen Ländern gibt es Kunden und Hersteller?</p>
-                                <pre><code class="hlsql" data-trim contenteditable>
+                                <pre><code class="sql" data-trim contenteditable>
 SELECT land FROM kunden
 INTERSECT
 SELECT land FROM hersteller
                                 </code></pre>
                                 <span class="sqlresult"></span>
-                                <pre class="fragment"><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                                <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>
 SELECT land FROM kunden
 INTERSECT ALL
 SELECT land FROM hersteller</code></pre>
@@ -980,14 +980,14 @@ SELECT land FROM hersteller</code></pre>
                                 <h2>EXCEPT (MINUS)</h2>
                                 <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">\</div>
                                 <p class="small">In welchen Ländern gibt es Kunden, aber keine Hersteller?</p>
-                                <pre><code class="hlsql" data-trim contenteditable>
+                                <pre><code class="sql" data-trim contenteditable>
 SELECT land FROM kunden
 EXCEPT
 SELECT land FROM hersteller
                                 </code></pre>
                                 <span class="sqlresult"></span>
 
-                                <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>
+                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>
                                         SELECT land FROM kunden
                                         EXCEPT ALL
                                         SELECT land FROM hersteller
@@ -1007,7 +1007,7 @@ SELECT land FROM hersteller
                                     <li>FALSE, wenn die Anfrage die leere Menge liefert</li>
                                 </ul></li>
                             </ul>
-                            <pre><code class="hlsql" data-trim contenteditable>
+                            <pre><code class="sql" data-trim contenteditable>
 SELECT * FROM hersteller H
 WHERE EXISTS 
  (SELECT * FROM produkte P WHERE p.hersteller = H.firma)
@@ -1021,7 +1021,7 @@ WHERE EXISTS
                                         <li>Hersteller, von denen es keine Produkte gibt</li>
                                         <li>Produkte mit Hersteller NULL</li>
                                     </ul>
-                                <h2>https://frage.space</h2>
+                                <h2>https://fraage.de</h2>
                             </div>
                             <aside class="notes">Die Anfrage hier liefert Hersteller, von denen es Produkte gibt. Dies könnte man auch einfach mit einem (Semi-)Join lösen.</aside>
                         </section>
@@ -1030,7 +1030,7 @@ WHERE EXISTS
                                 <h2>NOT EXISTS</h2>
                                 <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&NotExists;</div>
                                 <p class="small">Von welchen Herstellern gibt es keine Produkte?</p>
-                                <pre><code class="hlsql" data-trim contenteditable>
+                                <pre><code class="sql" data-trim contenteditable>
     SELECT * FROM hersteller H
     WHERE NOT EXISTS 
      (SELECT * FROM produkte P WHERE p.hersteller = H.firma)
@@ -1050,7 +1050,7 @@ WHERE EXISTS
                                             <li>FALSE, wenn der Ausdruck nicht enthalten ist</li>
                                         </ul></li>
                                     </ul>
-                                    <pre><code class="hlsql" data-trim contenteditable>
+                                    <pre><code class="sql" data-trim contenteditable>
 SELECT * FROM hersteller H
 WHERE firma IN ('Holzkopf', 'Monsterfood')
                                     </code></pre>
@@ -1061,13 +1061,13 @@ WHERE firma IN ('Holzkopf', 'Monsterfood')
                                 <section>
                                     <h2>Das IN-Prädikat</h2>
                                     <div style="position: absolute; top: 5cm; right:5px; font-size:170px" class="green">&NotElement;</div>
-                                    <pre><code class="hlsql" data-trim contenteditable data-sql="sql_in">
+                                    <pre><code class="sql" data-trim contenteditable data-sql="sql_in">
 SELECT * FROM hersteller H
 WHERE firma IN (SELECT hersteller FROM produkte)
                                     </code></pre>
                                     <span id="sql_in"></span>
 
-                                    <pre><code class="hlsql" data-trim contenteditable data-sql="sql_not_in">
+                                    <pre><code class="sql" data-trim contenteditable data-sql="sql_not_in">
 SELECT * FROM hersteller H
 WHERE firma NOT IN 
  (SELECT hersteller FROM produkte WHERE hersteller IS NOT NULL)
@@ -1080,7 +1080,7 @@ WHERE firma NOT IN
                                     <h2>CAST: Typumwandlung</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 80</div>
                                     <h4><code>CAST(ausdruck AS datentyp)</code></h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>
+                                    <pre><code class="sql" data-trim contenteditable>
 SELECT preis, CAST(preis AS INT), CAST(preis AS VARCHAR(50))
 FROM produkte
                                     </code></pre>
@@ -1092,7 +1092,7 @@ FROM produkte
                                     <h2>CASE WHEN</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 81</div>
                                     <h4><code>CASE WHEN ... THEN ... ELSE ... END</code></h4>
-                                    <pre><code class="hlsql" data-trim contenteditable>
+                                    <pre><code class="sql" data-trim contenteditable>
 SELECT bezeichnung, preis, 
 CASE WHEN preis < 1 THEN 'billig' 
      WHEN preis < 5 THEN 'mittel' 
@@ -1106,7 +1106,7 @@ FROM produkte
                                 <section>
                                         <h2>CASE WHEN</h2>
                                         <h4><code>CASE ... WHEN ... THEN ... ELSE ... END</code></h4>
-                                        <pre><code class="hlsql" data-trim contenteditable>
+                                        <pre><code class="sql" data-trim contenteditable>
     SELECT bezeichnung, preis, 
     CASE preis WHEN 0 THEN 'kostenlos' ELSE preis END
     FROM produkte ORDER BY preis
@@ -1119,22 +1119,22 @@ FROM produkte
                                     <h2>Dummy-Tabelle DUAL</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 81</div>
                                     <p class="class">In einigen DBMS (Oracle, DB2, ...) gibt es die Tabelle DUAL.</p>
-                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT * FROM dual</code></pre>
+                                    <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM dual</code></pre>
                                     <span data-sql-query="select null as dummy"></span>
 
                                     <p class="small">Praktisch zum Rechnen und Ausprobieren von Funktionen:</p>
-                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END FROM DUAL</code></pre>
+                                    <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END FROM DUAL</code></pre>
                                     <span data-sql-query="SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END"></span>
                                 </section>
 
                                 <section>
                                     <h3>SELECT ohne FROM in PostgreSQL</h3>
-                                    <pre><code class="hlsql" data-trim contenteditable>SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END</code></pre>
+                                    <pre><code class="sql" data-trim contenteditable>SELECT 5*3, CASE WHEN 7>4 THEN 'Ja' ELSE 'Nein' END</code></pre>
                                     <span class="sqlresult"></span>
 
                                     <div class="fragment">
                                     <p class="small">Wie viele Tage sind noch bis Weihnachten?</p>
-                                    <pre><code class="hlsql dont_execute_sql" data-trim contenteditable>SELECT DATE '2020-12-25' - CURRENT_DATE</code></pre>
+                                    <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT DATE '2020-12-25' - CURRENT_DATE</code></pre>
                                     </div>
 
                                     <div class="poll fragment" style="bottom:-280px">
@@ -1145,7 +1145,7 @@ FROM produkte
                                                 <li data-poll="correct">SELECT DATE '2020-12-25' - CURRENT_DATE AS anzahl_tage</li>
                                                 <li>RENAME column DATE '2020-12-25' - CURRENT_DATE AS anzahl_tage</li>
                                             </ul>
-                                        <h2>https://frage.space</h2>
+                                        <h2>https://fraage.de</h2>
                                     </div>
 
                                     <aside class="notes">PostgreSQL erlaubt SELECT-Anfragen ohne FROM-Klausel. Dies entspricht Anfragen auf der DUAL-Tabelle von der vorherigen Folie. Man kann mit solchen Anfragen leicht Funktionen aufrufen und ausprobieren oder Berechnungen durchführen.</aside>
@@ -1158,7 +1158,7 @@ FROM produkte
                                             <li>DDL: CREATE / ALTER / DROP TABLE</li>
                                             <li>Datentypen: INT, VARCHAR, CHAR, DECIMAL, DATE, ...</li>
                                             <li>Constraints: PRIMARY KEY, NOT NULL, CHECK, UNIQUE, ...</li>
-                                            <li>Referentielle Aktionen: ON DELETE/UPDATE ...</li>
+                                            <li data-hide-from="2V">Referentielle Aktionen: ON DELETE/UPDATE ...</li>
                                             <li>DML: INSERT, UPDATE, DELETE, TRUNCATE, SELECT</li>
                                             <li>SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY ... LIMIT</li>
                                             <li>[LEFT/RIGHT/FULL] JOIN ON ...</li>

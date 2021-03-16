@@ -1,0 +1,29 @@
+on:
+  push:
+    branches:
+      - master
+      - add-gh-pages
+
+jobs:
+  publish:
+    name: Publish to gh-pages
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+      - name: Create index.html and gh-pages/
+        run: |
+          mkdir gh-pages
+          php .github/workflows/create-index-html.php > gh-pages/index.html
+          cp -a *.html db-slides.code-workspace gh-pages/
+          cp -a code exercises img lib plugins reveal.js src webfonts gh-pages/
+          touch gh-pages/.nojekyll
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages

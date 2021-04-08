@@ -226,7 +226,7 @@ WHERE datum = '2020-10-14'
 										<pre class="fragment"><code class="nohighlight">Gib mir alle Details zu Buch 2817;
 Berechne die Durchschnittsbewertung von Buch 2817;
 Kunde 123456 bestellt Buch 2817;</code></pre>
-                    <aside class="notes">Statements und Transaktionen in OLTP-Anwendungen sind meist kurz und simpel, jedoch können sehr vieler solcher Transkationen parallel laufen. Die operativen Daten haben eine hohe Änderungshäufigkeit.</aside>
+                    <aside class="notes">Statements und Transaktionen in OLTP-Anwendungen sind meist kurz und simpel, jedoch können sehr vieler solcher Transaktionen parallel laufen. Die operativen Daten haben eine hohe Änderungshäufigkeit.</aside>
                 </section>
 
                 <section>
@@ -345,7 +345,7 @@ generierten;</code></pre>
 								</section>
 
 				<section>
-					<h2>Transkationskonzept</h2>
+					<h2>Transaktionskonzept</h2>
 					<ul>
 						<li>DBMS unterstützt Mehrbenutzerbetrieb</li>
 						<li>TA = Folge mehrerer DB-Operationen als eine Einheit</li>
@@ -364,7 +364,7 @@ commit;</code></pre></div>
 			<li>Pausieren der TA</li>
 			<li>Fortsetzen der TA</li>
 		</ul>
-	<h2>https://frage.space</h2>
+	<h2>https://fraage.de</h2>
 </div>
 
 					<aside class="notes">Die hier dargestellte Transaktion (TA) besteht aus zwei Schreiboperationen auf zwei Konten. Die Commit-Operation schließt die Transaktion ab. Tritt beispielsweise bei der Ausführung des zweiten Befehls ein Fehler auf (Konto existiert nicht, Limit erreicht, Hardwarefehler,...), wird auch der Rest der TA, also der erste Befehl, nicht ausgeführt. Mittels eines Rollbacks statt dem Commit kann die Transaktion manuell abgebrochen und zurückgesetzt werden.</aside>
@@ -379,7 +379,7 @@ commit;</code></pre></div>
 								<li>Mehrere Transaktionen hintereinander bilden eine Einheit</li>
 								<li data-poll="correct">Eine Transaktion wird ganz oder gar nicht ausgeführt</li>
 							</ul>
-						<h2>https://frage.space</h2>
+						<h2>https://fraage.de</h2>
 				</div>
 					<h2>ACID-Transaktionen</h2>
                 <ul>
@@ -389,7 +389,7 @@ commit;</code></pre></div>
                 <li>Dauerhaftigkeit</li>
                 </ul>
 
-								<div data-badge="Transaktion" data-badge-position="tr"><pre><code class="java">konto1.kontostand -= 100;
+								<div data-badge="Transaktion" data-badge-position="tr"><pre><code class="java" contenteditable>konto1.kontostand -= 100;
 konto2.kontostand += 100;
 commit;</code></pre></div>
 
@@ -508,7 +508,7 @@ commit;</code></pre></div>
 			<li data-poll="correct">... ein Datenbankmanagementsystem</li>
 			<li>... ein Datenbanksystem</li>
 		</ul>
-	<h2>https://frage.space</h2>
+	<h2>https://fraage.de</h2>
 </div>
 
 
@@ -625,7 +625,7 @@ commit;</code></pre></div>
 											<li data-poll="correct">um Metadaten</li>
 											<li>Das wüsst' ich auch mal gern</li>
 										</ul>
-									<h2>https://frage.space</h2>
+									<h2>https://fraage.de</h2>
 								</div>
 
 								</section>

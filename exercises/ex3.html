@@ -14,62 +14,77 @@
         <header>
             <div>
             <div>
-                <b>Datenbanken - WS 2020/21</b><br>
+                <b>Datenbanken - SS 2021</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 3 vom 11.11.2020</b>
+                <b>Übungsblatt 3 vom 20./21.04.2021</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
 
+        
+        
         <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: MonstER-Park (10P)</h1>
-            <p>Abgabe-Deadline: 09.11.2020 12:00 im Moodle</p>
-            <p>Spielen Sie das Spiel MonstER-Park (<a href="http://www.monst-er.de" target="_blank">http://www.monst-er.de)</a> und lassen Sie sich zum Ende des Spiels ein Zertifikat generieren. Tragen Sie die darauf befindliche Zertifikat-ID im Moodle ein. Achtung: Hier ist keine Gruppenarbeit möglich. Jeder muss eine eigene Zertifikat-ID abgeben.</p>
-    </section>
-
-        <section>
-            <h1>Aufgabe 2: Transformation ER ins Relationenmodell</h1>
-            <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema:</p>
-            <div style="height: 9.5cm; overflow: hidden; margin-left: -2.5cm">
-                    <div class="erd">
-                            [[
-                             { _e: "Personen", pos: [150, 100],
-                              attributes: [
-                               { _a:"PersNr", options:["primary"], pos: [89, 13] },
-                               { _a:"Name", pos: [245, 13] }
-                              ]
-                             },
-                             { _e: "Theaterstück", pos: [530, 100],
-                               attributes: [
-                                { _a:"Bezeichnung", pos: [485, 25], options:["primary"] },
-                                { _a:"Genres", pos: [610, 25], options:["multi"]}
-                               ]
-                             },
-                             { _e: "Rollen", pos: [334, 277],
-                               attributes: [
-                                { _a:"Vorname", pos: [205, 212], options:["primary"] },
-                                { _a:"Nachname", pos: [205, 275], options:["primary"] },
-                                { _a:"Beschreibung", pos: [510, 274] }
-                               ]
-                             }
-                            ],
-                            [
-                             { _r: "spielt mit", pos: [350, 180],
-                               _e: ["Personen", "Theaterstück", "Rollen"],
-                               card: ["1", "N", "M"],
-                               attributes: [{_a:"Jahr", pos: [450, 200]}]
-                             },
-                             { _r: "Regisseur",
-                               _e: ["Personen", "Theaterstück"],
-                               card: ["1", "N"]
-                             }
-                            ]]
-                                        </div></div>
+            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
+            <p>Abgabe-Deadline: 20.04.2021 14:00 im Moodle</p>
+            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
+            <p>Wir verwenden folgende Relationen:</p>
+            <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+               Studenten(<u>MatrNr</u>, Name, Semester)<br>
+               Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+               hoeren(<u>MatrNr, VorlNr</u>)</p>
+            <p>Vorlesungen.gelesenVon ist Fremdschlüssel auf Professoren.PersNr<br>
+               hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+               hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
+            <p>Formulieren Sie die folgenden Anfragen mittels Ausdrücken der relationalen Algebra.</p>
+            
+            <table border="0" style="width: 100%; margin-top: -3mm;">
+                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830? (3P)</td></tr>
+                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen? (4P)</td></tr>
+            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält? (3P)</td></tr>
+            </table>
         </section>
         
+        <section>
+            <h1>Aufgabe 2: Relationale Algebra</h1>
+            <p>Formulieren Sie Ausdrücke der relationalen Algebra für die folgenden Aufgabenstellungen ebenfalls auf dem Relationenschema von Aufgabe 1:</p>
+            <table border="0" style="width: 100%">
+                
+                <tr><td>4.</td><td>Welche Studierenden (Namen) heißen genau gleich wie ein Professor?</td></tr>
+                <tr><td>5.</td><td>Welche Vorlesungen (VorlNr, Titel) werden von Studierenden gehört, die im zweiten Semester sind?</td></tr>
+                <tr><td>6.</td><td>Welche Professoren (PersNr, Name) haben den gleichen Rang wie der Professor mit PersNr 2137? Geben Sie aber nicht den Professor 2137 aus!</td></tr>
+            </table>
+        </section>
+        
+        <section>
+            <h1>Aufgabe 3: Relationenschema &rightarrow; ER-Diagramm</h1>
+            <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
+        </section>
+        
+        <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 3: Normalisierung</h1>
+            <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
+            <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
+            <p>schauspieler ist ein mengenwertiges Attribut.</p>
+            <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
+            <ul>
+                <li>serie &rightarrow; produzent</li>
+                <li>serie, staffel &rightarrow; regisseur</li>
+                <li>serie, staffel, folge &rightarrow; titel</li>
+                <li>produzent &rightarrow; sprache</li>
+            </ul>
+        </section>
+        <section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 4: Relationale Algebra</h1>
+            <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
+            <table border="0" style="width: 100%">
+                <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
+                <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
+            </table>
+        </section>-->
+
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Datenbanken - Übungsblatt 4</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Datenbanken - SS 2021</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Übungsblatt 3 vom 28./29./30.04.2021</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+
+<section style="padding-top: 2.5cm">
+    <h1>Aufgabe 1: Transformation ER ins Relationenmodell (10P)</h1>
+    <p>Abgabe-Deadline: 28.04.2021 9:00 im Moodle</p>
+        <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema:</p>
+        <div style="height: 9.4cm; overflow: hidden; margin-left: -2.5cm">
+                <div class="erd">
+                    [[
+                    { _e: "Schlüsselkarte", pos: [150, 100],
+                     attributes: [
+                      { _a:"KEYID", options:["primary"], pos: [190, 13] },
+                     ]
+                    },
+                    { _e: "Raum", pos: [520, 100],
+                      attributes: [
+                       { _a:"GebäudeNr", pos: [465, 25], options:["primary"] },
+                       { _a:"RaumNr", pos: [580, 25], options:["primary"]}
+                      ]
+                    },
+                    { _e: "Mitarbeiter", pos: [320, 280],
+                      attributes: [
+                       { _a:"Mitarbeiternr", pos: [490, 200], options:["primary"] },
+                       { _a:"Name", pos: [490, 280]}
+                      ]
+                    }
+                   ],
+                   [
+                    { _r: "öffnet", options:[],
+                      _e: ["Schlüsselkarte","Raum"],
+                      card: ["N", "M"], attributes: [{_a:"gültig_bis", pos: [340, 15] }]
+                    },
+                    { _r: "gehört", 
+                      _e: ["Schlüsselkarte","Mitarbeiter"],
+                      card: ["N", "1"],
+                    }
+                   ]]
+                                    </div></div>
+    </section>    
+
+<section>
+        <h1>Aufgabe 2: Transformation ER ins Relationenmodell</h1>
+        <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema:</p>
+        <div style="height: 9cm; overflow: hidden; margin-left: -2.5cm">
+                <div class="erd">
+                        [[
+                         { _e: "Bestellung", pos: [150, 100],
+                          attributes: [
+                           { _a:"Bestellnr", options:["primary"], pos: [89, 13] },
+                           { _a:"Uhrzeit", pos: [245, 13] },
+                           { _a:"Koordinaten", pos: [150, 190], attributes: [
+                                {_a: "Lon", pos: [89, 270]},
+                                {_a: "Lat", pos: [245, 270]}
+                                ]
+                            }
+                            ]
+                         },
+                         { _e: "Gericht", pos: [430, 100],
+                           attributes: [
+                            { _a:"Nr", pos: [385, 25], options:["primary"] },
+                            { _a:"Bezeichnung", pos: [510, 25]},
+                            { _a:"Preis", pos: [610, 75] },
+                            { _a:"Zutaten", options:["multi"], pos: [610, 150] }
+                           ]
+                         },
+                         { _e: "Gutschein", pos: [430, 277],
+                           attributes: [
+                            { _a:"Gutscheincode", pos: [440, 210], options:["primary"] },
+                            { _a:"gueltig_bis", pos: [550, 210], options:["primary"] },
+                            { _a:"Wert", pos: [610, 274] }
+                           ]
+                         }
+                        ],
+                        [
+                         { _r: "besteht aus", 
+                           _e: ["Gericht", "Bestellung"],
+                           card: ["N", "M"],
+                           attributes: [{_a:"Anzahl", pos: [330, 190]}]
+                         }
+                        ]]
+                                    </div></div>
+    </section>  
+
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

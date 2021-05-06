@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 4</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+    </head>
+    <body>
+        <header>
+            <div>
+            <div>
+                <b>Datenbanken - SS 2021</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 4 vom 27./28.04.2021</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+        </div>
+        <hr>
+        </header>
+
+        
+        
+        <section style="padding-top: 2.5cm">
+            <h1>Aufgabe 1: Kardinalitätsschätzung (10P)</h1>
+            <p>Abgabe-Deadline: 27.04.2021 14:00 im Moodle</p>
+            <p>Gegeben sind die Tabellen eines Videoportals:<br>
+                Videos(<u>vnr</u>, titel, genre, sprache)<br>
+                Schlagworte(<u>vnr, schlagwort</u>)</p>
+                <p>Schlagworte.vnr ist ein Fremdschlüssel Videos.vnr</p>
+            <p>Die Kardinalitäten der Tabellen bzw. Spalten sind wie folgt:<br>
+            |Videos| = 100.000.000, |Schlagworte| = 400.000.000<br>
+            |Videos.vnr| = 100.000.000, |Videos.titel| = 50.000.000<br>
+            |Videos.genre| = 20, |Videos.sprache| = 25<br>
+            |Schlagworte.vnr| = 50.000.000, |Schlagworte.schlagwort| = 400</p>
+        
+
+            <p>Führen Sie eine Schätzung durch, wie viele Zeilen die folgenden Ausdrücke liefern (je 2P). Gehen Sie von Gleichverteilung und Werteunabhängigkeit zwischen den Attributen aus.</p>
+            
+            <table border="0" style="width: 100%; margin-top: -3mm;">
+                <tr><td>1.</td><td>&pi;<sub>vnr</sub>(Schlagworte)</td></tr>
+                <tr><td>2.</td><td>&sigma;<sub>genre='Musik' &vee; genre = 'Musikvideo'</sub>(Videos)</td></tr>
+                <tr><td>3.</td><td>&sigma;<sub>genre='Musik' &wedge; sprache = 'Deutsch'</sub>(Videos)</td></tr>
+                <tr><td>4.</td><td>Videos &bowtie;<sub>Videos.vnr = Schlagworte.vnr</sub> Schlagworte</td></tr>
+                <tr><td>5.</td><td>&pi;<sub>vnr, titel</sub> &sigma;<sub>Schlagworte.schlagwort='lustig'</sub>(Videos &bowtie;<sub>Videos.vnr = Schlagworte.vnr</sub> Schlagworte)</td></tr>
+            </table>
+        </section>
+
+        
+        <section>
+            <h1>Aufgabe 2: Anfrageoptimierung</h1>
+            <p>Überführen Sie diese Anfrage in eine äquivalente Anfrage gemäß den Heuristiken zur Anfrageoptimierung aus der Vorlesung:</p>
+            <p>&pi;<sub>schlagwort</sub> &sigma;<sub>genre = 'Musik'</sub> &sigma; <sub>Videos.vnr = schlagworte.vnr</sub> (Videos &times; Schlagworte)<br>
+            &Union;
+            &pi;<sub>schlagwort</sub> &sigma;<sub>genre = 'Musikvideo'</sub> &sigma; <sub>Videos.vnr = schlagworte.vnr</sub> (Videos &times; Schlagworte)</p>
+        </section>
+        
+        <section>
+            <h1>Aufgabe 3: Relationale Algebra</h1>
+            <table border="0" style="width: 100%">
+                <tr><td>1.</td><td>Formulieren Sie in Ihren eigenen Worten, was die Anfrage 5 aus Ausgabe 1 liefert.</td></tr>
+                <tr><td>2.</td><td>Formulieren Sie in Ihren eigenen Worten, was die Anfrage aus Aufgabe 2 liefert.</td></tr>
+                <tr><td style="vertical-align: top;">3.</td><td>Formulieren Sie auf dem Relationenschema von Aufgabe 1 einen Ausdruck der relationalen Algebra, der Ihnen die Titel von derjenigen Videos ausgibt, die mindestens ein Schlagwort haben, welches auch das Video mit der VNR 3517 besitzt.</td></tr>
+            </table>
+        </section>
+        
+        <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 3: Normalisierung</h1>
+            <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
+            <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
+            <p>schauspieler ist ein mengenwertiges Attribut.</p>
+            <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
+            <ul>
+                <li>serie &rightarrow; produzent</li>
+                <li>serie, staffel &rightarrow; regisseur</li>
+                <li>serie, staffel, folge &rightarrow; titel</li>
+                <li>produzent &rightarrow; sprache</li>
+            </ul>
+        </section>
+        <section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 4: Relationale Algebra</h1>
+            <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
+            <table border="0" style="width: 100%">
+                <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
+                <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
+            </table>
+        </section>-->
+
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

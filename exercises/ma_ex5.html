@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Datenbanken - Übungsblatt 5</title>
+    <link rel="stylesheet" href="../exercises/exercises.css">
+    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
+</head>
+<body>
+    <header>
+        <div>
+        <div>
+            <b>Datenbanken - SS 2021</b><br>
+            Prof. Dr.-Ing. Johannes Schildgen<br>
+            johannes.schildgen@oth-regensburg.de<br>
+            <b>Übungsblatt 5 vom 5./6./7.05.2021</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+
+<section style="padding-top: 2.5cm">
+  <h1>Aufgabe 1: CREATE TABLE (10P)</h1>
+  <p>Abgabe-Deadline: 05.05.2021 9:00 im Moodle</p>
+  <p>Erstellen Sie <code>CREATE TABLE</code>-Befehle, um das folgende ER-Diagramm eines sozialen Netzwerkes in Datenbanktabellen zu überführen. Achten Sie auf Primärschlüssel, Fremdschlüssel, UNIQUE-, CHECK- und NOT NULL-Constraints sowie DEFAULT-Werte und wählen Sie geeignete Datentypen. Das eingesetzte DBMS soll PostgreSQL sein.</p>
+  <div style="height: 10.5cm; overflow: hidden;">
+  <div class="erd">
+      [[
+      { _e: "Foto", pos: [110, 100],
+       attributes: [
+         { _a:"Dateiname", options:["primary"], pos: [15, 10] },
+         { _a:"hochgeladen", pos: [130, 10] },
+         { _a:"Titel", pos: [250, 10] },
+       ]
+      },
+     { _e: "Benutzer", pos: [470, 100],
+         attributes: [
+         { _a:"Benutzernr", options:["primary"], pos: [410, 10] }, 
+         { _a:"Name", pos: [520, 10] }
+         ]
+     }
+     ],
+     [
+     { _r: "lädt hoch",
+         _e: ["Foto", "Benutzer"],
+         card: ["N", "1"],
+         attributes: [  ]
+     },
+     { _r: "verlinkt", pos: [400, 240],
+         _e: ["Foto", "Benutzer"],
+         card: ["N", "M"],
+         attributes: [{_a:"pos_x", pos: [340, 334]}, {_a:"pos_y", pos: [460, 334]}]
+     }
+     ]] </div></div>
+
+      <ul>
+        <li>Die Spalte &quot;hochgeladen&quot; soll Datum und Uhrzeit beinhalten, wann das Foto hochgeladen wurde</li>
+        <li>pos_x und pos_y beschreiben die Position auf dem Foto, an der sich die verlinkte Person befindet. Diese Zahlen haben keine Nachkommastellen. Sie sind optional.</li>
+        <li>Der Dateiname eines Fotos ist genau 32 Zeichen lang.</li>
+        <li>Es ist nicht möglich, dass ein Foto ohne Angabe des Benutzers gespeichert wird.</li>
+      </ul>
+  
+      <p>Sie können das Schema entweder auf <a href="http://sqlfiddle.com/" target="_blank">http://sqlfiddle.com/</a> (wählen Sie dort oben PostgreSQL 9.6 aus) oder dbfiddle.uk erstellen, sich mit der PostgreSQL-Datenbank der Hochschule verbinden oder sich PostgreSQL lokal installieren.</p>
+          
+  </section> 
+
+<section style="page-break-inside:avoid; padding-top: 2.5cm">
+        <h1>Aufgabe 2: CREATE TABLE</h1>
+        <p>Formulieren Sie <code>CREATE TABLE</code>-Befehle, um die folgenden Tabellen in Ihrer PostgreSQL-Datenbank anzulegen:</p>
+        
+        <p>PAKETDIENST (<u>Paketdienst</u>, Hotline)<br>
+PAKETSENDUNG (<u>Paketdienst, Sendungsnummer</u>, Sendungsdatum, Status)<br>
+BESTELLUNG (<u>Bestellnummer</u>, Zeit, Kunde, Preis)<br>
+BESTELLUNG_PAKETE (<u>Bestellnummer, Paketdienst, Sendungsnummer</u>)</p>
+<p>PAKETSENDUNG.Paketdienst ist Fremschlüssel auf PAKETDIENST.Paketdienst<br>
+BESTELLUNG_PAKETE.Bestellnummer ist Fremdschlüssel auf BESTELLUNG.Bestellnummer<br>
+BESTELLUNG_PAKETE(Paketdienst, Sendungsnummer) ist Fremdschlüssel auf PAKETSENDUNG(Paketdienst, Sendungsnummer)</p>
+
+<ul>
+  <li>Wählen Sie sinnvolle Datentypen</li>
+  <li>Die Hotline und der Status dürfen NULL sein, sonst nichts.</li>
+  <li>Der Preis darf nicht negativ und nicht 0.00 EUR sein.</li>
+  <li>Die Bestellzeit soll automatisch auf <code>CURRENT_TIMESTAMP</code> gesetzt werden.</li>
+</ul>
+    </section>  
+
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

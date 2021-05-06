@@ -515,6 +515,7 @@ WHERE produktnr = 88</code></pre>
                                             <li>Nur die erste Zeile</li>
                                             <li data-poll="correct">Alle Zeilen</li>
                                             <li>Gar nichts</li>
+                                            <li>Es kommt ein Fehler</li>
                                         </ul>
                                     <h2>https://fraage.de</h2>
                                 </div>
@@ -577,7 +578,7 @@ ORDER BY COUNT(*)
 FROM produkte</code></pre>
                                 <span class="sqlresult fragment"></span>
 
-                                <div class="poll fragment" style="bottom:-40px">
+                                <div class="poll fragment" style="bottom:-40px" data-hide-from="2V">
                                     <h1>Was macht dieses SELECT?</h1>
                                         <ul>
                                             <li>Selektion</li>
@@ -632,7 +633,7 @@ FROM produkte</code></pre>
                                 <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE '%-%'</code></pre>
                                 <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte WHERE bezeichnung LIKE 'M_sliriegel'</code></pre>
                                 <div class="poll fragment" style="bottom:150px">
-                                    <h1>Was wird durch die untere Anfrage gefunden?</h1>
+                                    <h1>Was würde durch die untere Anfrage gefunden werden?</h1>
                                         <ul>
                                             <li data-poll="correct">Masliriegel</li>
                                             <li>Muesliriegel</li>

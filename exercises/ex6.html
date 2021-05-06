@@ -1,3 +1,5 @@
+<!-- TODO: mc-Notation ändern in Chen- oder Krähenfuß-Notation; außerdem Aufgabe entsprechend anpassen, je nachdem was in der Vorlesung schon behandelt wurde. -->
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -13,117 +15,117 @@
     <body>
         <header>
             <div>
-            <div>
-                <b>Datenbanken - WS 2020/21</b><br>
-                Prof. Dr.-Ing. Johannes Schildgen<br>
-                johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 6 vom 02.12.2020</b>
-            </div>
+                <div>
+                    <b>Datenbanken - SS 2021</b><br>
+                    Prof. Dr.-Ing. Johannes Schildgen<br>
+                    johannes.schildgen@oth-regensburg.de<br>
+                    <b>Übungsblatt 6 vom 11./12.05.2021</b>
+                </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
 
-        <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Normalformenlehre (10P)</h1>
-            <p>Abgabe-Deadline: 01.12.2020 12:00 im Moodle</p>
+<section style="padding-top: 2.5cm">
+    <h1>Aufgabe 1: CREATE TABLE (10P)</h1>
+    <p>Abgabe-Deadline: 11.05.2021 14:00 im Moodle</p>
+    <p>Erstellen Sie <code>CREATE TABLE</code>-Befehle, um das folgende ER-Diagramm eines sozialen Netzwerkes in Datenbanktabellen zu überführen. Verwenden Sie zur Umsetzung der Generalisierung die vertikale Partitionierung. Achten Sie auf Primärschlüssel, Fremdschlüssel, UNIQUE-, CHECK- und NOT NULL-Constraints sowie DEFAULT-Werte und wählen Sie geeignete Datentypen. Das eingesetzte DBMS soll PostgreSQL sein.</p>
+    <div style="height: 10.5cm; overflow: hidden;">
+    <div class="erd">
+        [[
+        { _e: "Beitrag", pos: [110, 100],
+         attributes: [
+           { _a:"BeitragsID", options:["primary"], pos: [15, 10] },
+           { _a:"gepostet_am", pos: [130, 10] },
+           { _a:"Beitragstext", pos: [250, 10] }
+         ]
+        },
+        { _e: "Sponsored_Post", pos: [10, 250], isa: {_e:"Beitrag"},
+           attributes: [ {_a:"Tagesbudget", pos: [35, 334]} ]},
+        { _e: "Foto", pos: [200, 250], isa: {_e:"Beitrag"}, 
+           attributes: [ { _a:"Dateiname", pos: [225, 334]} ]},
+       { _e: "Benutzer", pos: [470, 100],
+           attributes: [
+           { _a:"Benutzernr", options:["primary"], pos: [410, 10] }, 
+           { _a:"Name", pos: [520, 10] }
+           ]
+       }
+       ],
+       [
+       { _r: "postet",
+           _e: ["Beitrag", "Benutzer"],
+           card: ["N", "1"],
+           attributes: [  ]
+       },
+       { _r: "verlinkt", pos: [505, 240],
+           _e: ["Foto", "Benutzer"],
+           card: ["N", "M"],
+           attributes: [{_a:"pos_x", pos: [410, 334]}, {_a:"pos_y", pos: [520, 334]}]
+       }
+       ]] </div></div>
+       <!--Hinweise siehe nächste Seite.
+       <p style="page-break-inside:avoid; padding-top: 2.5cm"></p>-->
 
-            <p>Betrachten Sie das folgende Relationenschema mit den dazugehörigen funktionalen Abhängigkeiten:</p>
+        <p>Hinweise:</p>
+        <ul>
+          <li>gepostet_am soll Datum und Uhrzeit beinhalten, wann der Beitrag gepostet wurde</li>
+          <li>Sponsored_Posts sind Werbebeiträge, die von Benutzern gepostet werden können. Für diese wird ein Tagesbudget in Euro und Cent festgelegt, welches bestimmt, wie oft der Beitrag auf den Profilen anderer Nutzer angezeigt wird. Das Mindestbudget beträgt 1 EUR pro Tag. Dies ist zugleich aus das Standard-Budget, wenn keins angegeben wird.</li>
+          <li>pos_x und pos_y beschreiben die Position auf dem Foto, an der sich die verlinkte Person befindet. Diese Zahlen haben keine Nachkommastellen. Sie sind optional.</li>
+          <li>Der Dateiname eines Fotos ist genau 32 Zeichen lang.</li>
+          <li>Die BeitragsID soll automatisch generiert werden.</li>
+        </ul>
+    
+        <p>Sie können das Schema entweder auf <a href="http://sqlfiddle.com/" target="_blank">http://sqlfiddle.com/</a> erstellen (wählen Sie dort oben PostgreSQL 9.6 aus) oder sich mit der PostgreSQL der Hochschule (siehe Aufgabe 2) verbinden.</p>
+            
+    </section>
 
-            <p>musikunterricht (wochentag, uhrzeit, instrument, raum, lehrer, schüler)</p>
-            <ul>
-                <li>wochentag, lehrer &rightarrow; raum</li>
-                <li>schüler &rightarrow; instrument</li>
-                <li>wochentag, uhrzeit, raum &rightarrow; lehrer, schüler</li>
-            </ul>
+<section style="padding-top: 3.5cm">
+    <h1>Aufgabe 2: SQL-Anfragen in PostgreSQL</h1>
+    <p>Wichtig: Um außerhalb des Hochschulnetzwerks auf die PostgreSQL-Datenbank der OTH Regensburg zuzugreifen, müssen Sie eine VPN-Verbindung aufbauen (siehe <a href="https://www.oth-regensburg.de/supportwiki/doku.php?id=public:netz:vpn-forticlient" target="_blank">https://www.oth-regensburg.de/supportwiki/doku.php?id=public:netz:vpn-forticlient</a>).</p>
 
-            <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt.</p>
-            <table border="0" style="width: 100%">
-            <tr>
-                <td style="width:10mm">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td style="text-align: center; width:15mm">Richtig</td>
-                <td style="text-align: center; width:15mm">Falsch</td>
-            </tr>
-            <tr>
-                <td>1.</td><td>Ein Schüler kann Unterricht für mehrere verschiedene Instrumente nehmen.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>2.</td><td>Es gilt: lehrer &rightarrow; instrument</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>3.</td><td>Es gilt: schüler, lehrer &Rightarrow; instrument</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>4.</td><td>{wochentag, uhrzeit, instrument, raum} ist ein Superschlüssel</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>5.</td><td>{wochentag, uhrzeit, instrument, raum} ist ein Schlüsselkandidat</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>6.</td><td>{wochentag, uhrzeit, lehrer} ist ein Schlüsselkandidat</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>7.</td><td>In der Tabelle &quot;musikunterricht&quot; gibt es nur einen Schlüsselkandidaten.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>8.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 1NF.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>9.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 2NF.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>10.</td><td>Die Tabelle &quot;musikunterricht&quot; ist in 3NF.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            </table>
-        </section>
-
-<section  style="page-break-inside:avoid; padding-top: 0.5cm">
-    <h1>Aufgabe 2: Normalisierung</h1>
-    <p>Überführen Sie die Tabelle aus Aufgabe 1 in die dritte Normalform.</p>
-</section>
-
-<section  style="page-break-inside:avoid; padding-top: 2.5cm">
-    <h1>Aufgabe 3: Normalisierung</h1>
-    <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
-    <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
-    <p>schauspieler ist ein mengenwertiges Attribut.</p>
-    <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
+    <p>Installieren Sie den SQL-Client DBeaver (<a href="https://dbeaver.io/" target="_blank">https://dbeaver.io/</a>) oder einen anderen Datenbank-Client und richten Sie dort eine Verbindung zu der folgenden PostgreSQL-Datenbank ein:</p>
     <ul>
-        <li>serie &rightarrow; produzent</li>
-        <li>serie, staffel &rightarrow; regisseur</li>
-        <li>serie, staffel, folge &rightarrow; titel</li>
-        <li>produzent &rightarrow; sprache</li>
+      <li>Host: hera.hs-regensburg.de</li>
+      <li>Datenbank: Ihr Hochschul-Kürzel (z. B. xyz12345)</li>
+      <li>Benutzer: Ihr Hochschul-Kürzel</li>
+      <li>Passwort: Ihr Hochschul-Kürzel</li>
+      <li>Schema: public (können Sie auswählen, nachdem Sie sich verbunden haben)</li>
     </ul>
-</section>
-<section  style="page-break-inside:avoid; padding-top: 0.5cm">
-    <h1>Aufgabe 4: Relationale Algebra</h1>
-    <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
+    <p>Da das Passwort gleich Ihrem Benutzernamen ist, wird empfohlen, es mit <code>ALTER USER ihr_benutzername PASSWORD 'neues_passwort';</code> zu ändern.</p>
+    <p>Formulieren Sie diese Anfragen mit SQL:</p>
     <table border="0" style="width: 100%">
-        <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
-        <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
-    </table>
+        <tr><td>1.</td><td>Legen Sie die Tabellen aus Aufgabe 1 an.</td></tr>
+        <tr><td>2.</td><td>Fügen Sie zwei Benutzer ein: Benutzernummer 1, Name Olivia und Benutzernummer 2, Name Yvonne.</td></tr>
+        <tr><td>3.</td><td>Geben Sie die Benutzertabelle vollständig aus.</td></tr>
+        <tr><td>4.</td><td>Ändern Sie den Namen von Benutzer 1 auf Olivia von Opel.</td></tr>
+        <tr><td>5.</td><td>Wie viele Benutzer gibt es?</td></tr>
+        <tr><td>6.</td><td>Welche Benutzer haben ein ' von ' im Namen?</td></tr>
+        <tr><td>7.</td><td>Löschen Sie Benutzer 1.</td></tr>
+        </table>
 </section>
+<!--
+<section style="page-break-inside:avoid; padding-top: 2.5cm">
+    <h1>Aufgabe 3: SELECT-Anfragen</h1>
+        <p>Auf der Webseite des Datenbankmanagementsystems Hyper können Sie SQL-Anfragen gegen das Uni-Schema aus dem Kemper-Datenbanksysteme-Buch stellen: <a href="http://hyper-db.de/interface.html" target="_blank">http://hyper-db.de/interface.html</a></p>
+        <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+            Studenten(<u>MatrNr</u>, Name, Semester)<br>
+            Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+            hoeren(<u>MatrNr, VorlNr</u>)</p>
+         <p>Vorlesungen.gelesen_von ist Fremdschlüssel auf Professoren.PersNr<br>
+            hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+            hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
+
+        <p>Formulieren Sie die folgenden Anfragen mittels SQL. Verwenden Sie bitte nicht das Relax-Tool. Verwenden Sie bei den Fragen 1 bis 4 keine Unteranfragen oder CTEs. Richtige Antworten geben 2 Punkte. Für teilweise richtige Antworten können leider keine Teilpunkte gegeben werden, da ein automatisches Query-Bewertungssystem eingesetzt wird. Achten Sie daher auch darauf, dass keine Tippfehler in Ihren Anfragen sind.</p>
+
+        <table border="0" style="width: 100%">
+        <tr><td>1.</td><td>Wie viele Professoren, die den Rang C4 haben, gibt es? (2P)</td></tr>
+        <tr><td>2.</td><td>Geben Sie die Namen der Studierenden aus, die die Vorlesung &quot;Grundzüge&quot; hören, und zwar alphabetisch aufsteigend sortiert. (2P)</td></tr>
+        <tr><td>3.</td><td>Geben zu jedem Professor, der mindestens zwei Vorlesungen hält, den Namen sowie die Gesamt-SWS-Zahl der von ihm oder ihr gehaltenen Vorlesungen aus. (3P)</td></tr>
+        <tr><td>4.</td><td>Wie sind die Namen der Studierenden, die zusammen mit dem Studenten namens &quot;Feuerbach&quot; zumindest eine gemeinsame Vorlesung hören? Geben Sie keinen Namen doppelt aus. (3P)</td></tr>
+        <tr><td>5.</td><td>Welche Professoren haben den Rang C4 und halten keine einzige 4-SWS-Vorlesung.</td></tr>
+        </table>
+            
+    </section>-->
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>
 <script src="../lib/backbone.js"></script>

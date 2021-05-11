@@ -753,13 +753,14 @@ ON produkte.hersteller = hersteller.firma</code></pre>
                                 <div data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr in (17,18,29)"></div>
                                 <aside class="notes">Hier taucht jedes Tupel aus beiden Relationen im Join-Ergebnis auf. Der Join ist verlustfrei.</aside>
                             </section>
-                            <section data-hide-from="2V">
+                            <section data-hide-from="!2V">
                                 <h3>Rekonstruktion der Tabellen</h3>
                                 <div data-sql-tablename="V" data-sql-query="select * from produkte join hersteller on produkte.hersteller=hersteller.firma where produktnr in (17,18,29)"></div>
                             
-                                <p>&nbsp;</p>
-                                <p>$produkte = \pi_{produktnr, bezeichnung, preis, hersteller}(V)$</p>
-                                <p>$hersteller = \pi_{firma, land}(V)$</p>
+                                <pre><code class="sql" contenteditable>-- Produkte
+SELECT DISTINCT produktnr, bezeichnung, preis, hersteller FROM V</code></pre>
+                                <pre><code class="sql" contenteditable>-- Hersteller
+SELECT DISTINCT firma, land FROM V</code></pre>
                                 <aside class="notes">Aus dem Join-Ergebnis V lassen sich die beiden ursprünglichen Relationen wieder mittels Projektionen rekonstruieren. Das funktioniert allerdings nur, wenn der Verbund verlustfrei ist.</aside>
                             </section>
 

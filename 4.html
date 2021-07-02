@@ -553,7 +553,7 @@ WHERE produktnr = 88</code></pre>
                             </section>
                             <section>
                                 <h2>SELECT</h2>
-                                <pre><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+                                <pre style="width: 95%;"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H LEFT JOIN produkte P ON H.firma = p.hersteller
 WHERE P.preis > 3
 GROUP BY h.land
@@ -1000,7 +1000,7 @@ LIMIT 5 OFFSET 2</code></pre>
                             </section>
                             <section>
                                     <h2>SELECT</h2>
-                                    <pre><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+                                    <pre style="width: 95%;"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H JOIN produkte P ON H.firma = p.hersteller
 WHERE P.preis > 3
 GROUP BY h.land

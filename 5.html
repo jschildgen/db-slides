@@ -348,21 +348,21 @@ GRANT finanzen TO big_boss;
                         <div class="trackinfo"><i class="fas fa-headphones"></i> 97</div>
                         <p class="small">GRANT &lt;Recht&gt; ON &lt;Objekt&gt; TO &lt;Benutzer oder Rolle&gt;</p>
 
-                        <pre class="fragment"><code class="sql" data-trim>--Mitarbeiter dürfen sich mit der Datenbank verbinden
+                        <pre class="fragment"><code class="sql" data-trim contenteditable>--Mitarbeiter dürfen sich mit der Datenbank verbinden
 GRANT CONNECT ON klinik_db TO mitarbeiter;</code></pre>
 
-                        <pre class="fragment"><code class="sql" data-trim>--Die Finanzabteilung darf die Tabelle Reisekosten lesen
+                        <pre class="fragment"><code class="sql" data-trim contenteditable>--Die Finanzabteilung darf die Tabelle Reisekosten lesen
 GRANT SELECT ON klinik.reisekosten TO finanzen;</code></pre>
 
-                        <pre class="fragment"><code class="sql" data-trim>--Doktor X darf alles auf der Patienten-Tabelle machen
+                        <pre class="fragment"><code class="sql" data-trim contenteditable>--Doktor X darf alles auf der Patienten-Tabelle machen
 GRANT ALL PRIVILEGES ON klinik.patienten TO doktor_x;</code></pre>
 
-                        <pre class="fragment"><code class="sql" data-trim>--Schwester Y darf Patienten einsehen, erstellen und ändern
+                        <pre class="fragment"><code class="sql" data-trim contenteditable>--Schwester Y darf Patienten einsehen, erstellen und ändern
 GRANT SELECT, INSERT, UPDATE ON klinik.patienten TO schwester_y;</code></pre>
 
-                        <pre class="fragment"><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss;</code></pre>
+                        <pre class="fragment"><code class="sql" data-trim contenteditable>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss;</code></pre>
 
-                        <pre class="fragment"><code class="sql" data-trim>GRANT SELECT ON klinik.raeume TO PUBLIC; -- Das darf jeder</code></pre>
+                        <pre class="fragment"><code class="sql" data-trim contenteditable>GRANT SELECT ON klinik.raeume TO PUBLIC; -- Das darf jeder</code></pre>
 
                         <aside class="notes">Mit dem GRANT-Befehl wird festgelegt, <b>wer</b> auf <b>welchem</b> Objekt <b>was</b> machen darf. Hinter dem Stichwort <code>ON</code> steht das Objekt. Für das CONNECT-Recht ist dies eine Datenbank. Bei den anderen hier angegeben Privilegien steht hinter dem Stichwort <code>ON</code> eine oder mehrere Tabellen, oder alle Tabellen eines Schemas. In der Rolle PUBLIC sind alle Benutzer.</aside>
                       </section>
@@ -370,13 +370,13 @@ GRANT SELECT, INSERT, UPDATE ON klinik.patienten TO schwester_y;</code></pre>
                       <section data-hide-from="2V">
                         <h3>REVOKE: Berechtigung entziehen</h3>
                         
-                        <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume TO PUBLIC;</code></pre>
-                        <pre><code class="sql" data-trim>CREATE VIEW klinik.raeume_view AS
+                        <pre><code class="sql" data-trim contenteditable>GRANT SELECT ON klinik.raeume TO PUBLIC;</code></pre>
+                        <pre><code class="sql" data-trim contenteditable>CREATE VIEW klinik.raeume_view AS
 SELECT * FROM klinik.raeume WHERE gebaeude IN (10,12,13,15);
                         </code></pre>
                         <p class="small">REVOKE &lt;Recht&gt; ON &lt;Objekt&gt; FROM &lt;Benutzer oder Rolle&gt;</p>
-                        <pre><code class="sql" data-trim>REVOKE SELECT ON klinik.raeume FROM PUBLIC;</code></pre>
-                        <pre><code class="sql" data-trim>GRANT SELECT ON klinik.raeume_view TO PUBLIC;</code></pre>
+                        <pre><code class="sql" data-trim contenteditable>REVOKE SELECT ON klinik.raeume FROM PUBLIC;</code></pre>
+                        <pre><code class="sql" data-trim contenteditable>GRANT SELECT ON klinik.raeume_view TO PUBLIC;</code></pre>
                         
                         <div class="poll fragment" style="bottom:-260px">
                           <h1>Alle Benutzer außer Peter sollen ein SELECT auf T machen dürfen.</h1>
@@ -502,7 +502,9 @@ WHERE produktnr = 17;
 
 
 
-</code><code class="fragment sql" data-fragment-index="2">ROLLBACK;</code></pre>
+</code></pre>
+
+<pre style="width: 12cm; margin-top: -2cm;"><code class="fragment sql" data-fragment-index="2">ROLLBACK;</code></pre>
                           </div>
                           <div>TA<sub>2</sub>
                               <pre style="width: 12cm;"><code class="fragment sql" data-fragment-index="1">

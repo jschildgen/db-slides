@@ -55,3 +55,8 @@ table.border, table.border>thead>tr>th, table.border>tbody>tr>td {
     border: 1px solid black;
     border-collapse: collapse;
 }
+
+.columns {
+    display: flex;
+    justify-content: space-around;
+}

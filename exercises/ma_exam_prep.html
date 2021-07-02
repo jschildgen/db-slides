@@ -29,42 +29,19 @@
         <hr>
         </header>
 <section style="padding-top: 2.5cm">
-        <h1>Aufgabe 1: ER-Diagramme (ca. 15% der Klausurpunkte)</h1>
+        <h1>Aufgabe 1: ER-Diagramme (ca. 20% der Klausurpunkte)</h1>
         
-        <p>Erstellen Sie ein ER-Diagramm für den Minigolfbetreiber &quot;Bahn frei&quot;. Dieser möchte zur Auswertung und Analyse der Bahnergebnisse die Statistiken über von den Gästen gesammelten Daten in einer Datenbank erfassen. Verwenden Sie die Chen-Notation.</p>
+        <p>Erstellen Sie ein ER-Diagramm für den Getränkelieferanten &quot;Durst-Delete&quot;. Verwenden Sie die Chen-Notation.</p>
 
-        <p>Jeder Gast erhält eine Mitgliedskarte, auf welcher eine Gastnummer, der Name und das Geburtsdatum steht. Die Gastnummer ist eine automatisch generierte laufende Nummer und sets eindeutig.</p>
-        <p>Es gibt 18 Bahnen, sie sind von 1 bis 18 durchnummeriert.</p>
-        <p>Mehrere Gäste können zusammen eine Partie Minigolf spielen. Zu einem solchen Spiel soll das Datum und eine eindeutige Spiel-ID gespeichert werden. Des Weiteren ist zu speichern, wie viele Schläge ein Gast in einem bestimmten Spiel insgesamt benötigt hat.</p>
-        <p>Es gibt eine spezielle Form von Spielen, nämlich Wettkampf-Spiele. Diese sind Teil eines Wettkampfs. Ein Wettkampf hat ein Datum und eine Bezeichnung. Es ist möglich, dass an ein und dem selben Tag mehrere Wettkämpfe stattfinden, diese haben dann aber jeweils eine andere Bezeichnung, z. B. &quot;Ü60&quot;. Zu einem Wettkampf speichern wir noch die Startgebühr, die von jedem Spieler zu zahlen ist, sowie eine Menge von Preisen, welche jeweils aus einer Platzierung und einem Gewinn bestehen. Beispielsweise kann es für den ersten Platz 100 EUR geben, für den zweiten Platz 50 EUR, etc.</p>
+       <p>Jedes Getränk, welches Durst-Delete verkauft, hat eine eindeutige GNR (Getränkenummer), eine Bezeichnung und zwei Preise: einen Kistenpreis und einen Flaschenpreis.</p>
+       <p>Kunden registrieren sich in einer App mit ihrer Handynummer und ihrem Namen. Wenn man sich gerade neu registiert hat, speichern wir noch einen Aktivierungscode, den der Kunde per SMS bekommt und zur Aktivierung des Accounts eingeben muss.</p>
+       <p>Wenn ein Kunde eine Bestellung aufgibt, erzeugen wir für diese eine eindeutige Bestellnummer und speichern den Bestellzeitpunkt. Zusätzlich speichern wir natürlich, welche Getränke in welcher Menge Teil der Bestellung sind. Und mit Menge meinen wir: Anzahl der Flaschen und Anzahl der Kisten.</p>
 </section>
 
-<section>
-    <h1>Aufgabe 2: Normalisierung (10%)</h1>
-    <ol>
-        <li>Bringen Sie die folgende Tabelle &quot;Buch&quot; in die erste Normalform und stellen Sie das Ergebnis als Tabelle mit den hier gezeigten Daten dar.
-            <table class="border">
-                <thead><tr><th><u>ISBN</u></th><th>Titel</th><th>Autoren</th></tr></thead>
-                <tbody>
-                    <tr><td>123456789X</td><td>Das Fahrrad</td><td>Karin Biker, Bob Biker</td></tr>
-                </tbody>
-            </table>
-            <br>
-        </li>
-        <li>Überführen Sie die folgende Tabelle &quot;Arzttermine&quot; zunächst in die zweite, dann in die dritte Normalform:
-            <p>Arzttermine(<u>Datum, Uhrzeit, Arzt</u>, Patient, Raum, Geburtsdatum)</p>
-            <p>Es gelten folgende funktionale Abhängigkeiten:</p>
-            <ul>
-                <li>Arzt &rightarrow; Raum</li>
-                <li>Patient &rightarrow; Geburtsdatum</li>
-            </ul>
-        </li>
-    </ol>
 
-</section>
 
 <section style="page-break-inside:avoid; padding-top: 3cm">
-    <h1>Aufgabe 3: Transformation ER &rightarrow; Relationenschema (15%)</h1>
+    <h1>Aufgabe 2: Transformation ER &rightarrow; Relationenschema (20%)</h1>
     <ol>
         <li>Überführen Sie das folgende ER-Diagramm in ein Relationenschema. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.
             <div style="height: 11.5cm; overflow: hidden; margin-left: -2.5cm">
@@ -88,14 +65,15 @@
                             { _a:"Strasse", pos: [580, 200]}
                            ]
                          },
-                         { _e: "Lieferung", pos: [150, 277], options:["weak"],
+                         { _e: "Lieferung", pos: [150, 277], 
                            attributes: [
-                            { _a:"Abfahrt", pos: [89, 350], options:["extending_primary"] }
+                            { _a:"Lieferkürzel", pos: [89, 350], options:["primary"] },
+                            { _a:"Abfahrt", pos: [200, 350] }
                            ]
                          }
                         ],
                         [
-                         { _r: "fährt", options:["weak"],
+                         { _r: "fährt", 
                            _e: ["LKW","Lieferung"],
                            card: ["1", "N"],
                          },
@@ -111,33 +89,15 @@
                         ]]
                                     </div></div>
         </li>
-        <li>Zeichnen Sie &quot;LKW&quot;, &quot;fährt&quot; und &quot;Lieferung&quot; erneut und verwenden Sie nun die Krähenfuß-Notation. Beachten Sie dabei, dass es auch LKWs geben darf, die noch nie eine Lieferung gefahren haben.</li>
+        <li>Zeichnen Sie &quot;LKW&quot;, &quot;fährt&quot; und &quot;Lieferung&quot; erneut und verwenden Sie nun die Krähenfuß-Notation. Beachten Sie dabei, dass es auch LKWs geben darf, die noch nie eine Lieferung gefahren haben. Einer Lieferung ist aber stets ein LKW zugeordnet.</li>
         <li>Schreiben Sie ein <code>CREATE TABLE</code>-Kommando, um Ihre Relation &quot;Lieferung&quot; zu erstellen. Gehen Sie davon aus, dass die anderen Tabellen bereits existieren. Das Attribut &quot;Abfahrt&quot; soll das Datum und die Uhrzeit der Abfahrt speichern. Wählen Sie sinnvolle Datentypen, definieren Sie Primär- und Fremdschlüssel. </li>
     </ol>
             
     </section>
 
     <section style="page-break-inside:avoid; padding-top: 3cm">
-        <h1>Aufgabe 4: Relationale Algebra (8%)</h1>
-        <p>Gegeben ist folgendes Schema, formulieren Sie unten stehende Anfragen mithilfe von Ausdrücken der relationalen Algebra:</p>
-        
-        <p>
-            Kunde (<u>Kundennr</u>, Name, EMail)<br>
-            Konzert (<u>Konzertnr</u>, Datum, Location, Band, Eintrittspreis)<br>
-            Buchung (<u>Kundennr, Konzertnr</u>, Anzahl_Tickets, Buchungsdatum)
-        </p>
-
-        <ol>
-            <li>Am welchem Datum spielt die Band &quot;Bongo Group&quot;?</li>
-            <li>Wie heißen die Kunden, die das Konzert mit der Konzertnummer 517 gebucht haben?</li>
-            <li>Welche Kunden haben schon einmal eine Buchung für ein Konzert in letzter Minute - also am Tag des Konzerts - aufgegeben?</li>
-        </ol>
-
-    </section>
-
-    <section>
-        <h1>Aufgabe 5: SQL (20%)</h1>
-        <p>Gegeben ist folgendes Schema, formulieren Sie unten stehende Anfragen mithilfe von SQL:</p>
+        <h1>Aufgabe 3: SQL (25%)</h1>
+        <p>Gegeben ist folgendes Schema, formulieren Sie unten stehende Anfragen mithilfe von SQL. Verwenden Sie keine Subanfragen.</p>
         
         <p>
             Kunde (<u>Kundennr</u>, Name, EMail)<br>

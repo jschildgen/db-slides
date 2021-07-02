@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 12</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+        <style type="text/css">
+          li {
+            margin-left: -5mm;
+          }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+              <div>
+                <b>Datenbanken - SS 2021</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 12 vom 06.07.2021</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+        </div>
+        <hr>
+        </header>
+
+        <section style="padding-top: 2.5cm">
+          <h1>Aufgabe 1: SX-Sperrverfahren (10P)</h1>
+          <p>Abgabe-Deadline: 06.07.2021 14:00 im Moodle</p>
+
+          <p>Skizzieren Sie den Ablauf des SX-Sperrverfahrens für die folgende Historie:</p>
+          <p style="font-size:larger;">w<sub>1</sub>(x), w<sub>2</sub>(x), r<sub>2</sub>(y), r<sub>1</sub>(y), w<sub>3</sub>(y), c<sub>1</sub>, c<sub>2</sub>, c<sub>3</sub></p>
+
+          <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 5 Punkte, falsche Antworten geben keine Punktabzüge.</p>
+
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+            <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+          <tr>
+            <td>1.</td><td>TA<sub>2</sub> muss warten, bevor sie in x schreiben darf.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+          <td>2.</td><td>Ein Deadlock tritt auf.</td>
+          <td style="text-align: center"><i class="far fa-square"></i></td>
+          <td style="text-align: center"><i class="far fa-square"></i></td>
+      </tr>
+          </table>
+
+      <p><b>Zu diesem Übungsblatt finden keine Zoom-Sessions statt.</b><br>Fragen können Sie gerne im Forum des GRIPS-Kurses oder per E-Mail stellen.</p>
+                  
+          </section>
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt 9</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+    </head>
+    <body>
+        <header>
+            <div>
+              <div>
+                <b>Datenbanken - SS 2021</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 9 vom 16./17./18.06.2021</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+        </div>
+        <hr>
+        </header>
+
+    <section style="padding-top: 2.5cm">
+        <section style="padding-top: 2.5cm">
+            <h1>Aufgabe 1: Sichten in SQL (10P)</h1>
+            <p>Abgabe-Deadline: 16.06.2021 9:00 im Moodle</p>
+            <p>Auf <a href="https://data.deutschebahn.com/dataset/data-stationsdaten" target="_blank">https://data.deutschebahn.com/dataset/data-stationsdaten</a> finden Sie Datensätze mit deutschen Bahnhöfen.</p>
+            <ol>
+                <li>Laden Sie sich den neusten Datensatz im CSV-Format herunter.</li>
+                <li>Betrachten Sie die Datei in einem Texteditor, welche Spalten gibt es?</li>
+                <li>Erstellen Sie in Ihrer PostgreSQL-Datenbank eine Tabelle &quot;bahnhoefe&quot; mit den passenden Spalten und wählen Sie sinnvolle Datentypen und Primärschlüssel.</li>
+                <li>Benutzen Sie die Import-Funktion von DBeaver, um die CSV-Datei in Ihre Tabelle zu importieren (Rechtsklick auf die Tabelle - Daten importieren).</li>
+                <li>Erstellen Sie eine View &quot;hbf&quot; mit dem Spalten &quot;bhfnr&quot;, &quot;bundesland&quot;, &quot;station&quot; und &quot;kategorie&quot;, die alle Bahnhöfe enthält, die auf &quot;Hbf&quot; oder &quot;Hauptbahnhof&quot; enden. Die Kategorie-Spalte der View soll lediglich eine Umbenennung der Spalte Kat. Vst. sein.</li>
+            </ol>
+          </section>
+      
+          <section>
+              <h1>Aufgabe 2: SQL-Anfragen</h1>
+            <ol>
+              <li>Erstellen Sie eine weitere View: &quot;grosser_hbf&quot;, die auf der Sicht &quot;hbf&quot; basiert, aber nur die Bahnhöfe der Kategorie 1 enthält.</li>
+                <li>Formulieren Sie nun folgende Anfragen auf den Views:
+                        <ol type="a">
+                            <li>Finden Sie den Regensburger Hauptbahnhof</li>
+                            <li>Finden Sie alle großen Hauptbahnhöfe in Bayern</li>
+                            <li>Listen Sie pro Bundesland auf, wie viele großen Hauptbahnhöfe es dort gibt.</li>
+                        </ol>
+            </ol>
+            
+          </section>
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
+</body>
+</html>

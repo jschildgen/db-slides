@@ -63,11 +63,11 @@
 										<!--<li>Weitere Aufgaben zur Besprechung in Übung</li>-->
 								</ul>
 								<br>
-								<h4>Übung</h4>
+								<h4>Übung (ab <span data-metadata="exercise_startdate"></span>)</h4>
 								<ul>
 										<li>Besprechung von Aufgabe 2 etc. in 2er-Gruppen </li>
 										<li>5-Minuten-Slots über Zoom</li>
-										<li>anschließend: Beispiellösung auf YouTube</li>
+										<li><span data-metadata="exercise_time"></span>: Beispiellösung über YouTube Premiere</li>
                 </ul>
 								<aside class="notes">Achtung: Es ist nicht möglich, Punkte für die Übung zu bekommen, wenn im GRIPS die Deadline abgelaufen ist oder die Abgabe nicht vollständig eingereicht wurde.</aside>
 								</section>
@@ -580,13 +580,13 @@ commit;</code></pre></div>
 									<div>
 									<div class="stretch erd">
 	                [[
-	                 { _e: "Personen", pos: [150, 100],
+	                 { _e: "Person", pos: [150, 100],
 	                  attributes: [
 	                   { _a:"PersNr", options:["primary"], pos: [89, 13] },
 	                   { _a:"Name", pos: [245, 13] }
 	                  ]
 	                 },
-	                 { _e: "Termine", pos: [530, 100],
+	                 { _e: "Termin", pos: [530, 100],
 	                   attributes: [
 	                    { _a:"Datum", pos: [475, 25], options:["primary"] },
 	                    { _a:"Uhrzeit", pos: [634, 25], options:["primary"] },
@@ -597,8 +597,8 @@ commit;</code></pre></div>
 	                 }
 	                ],
 	                [
-	                 { _r: "nehmen teil",
-	                   _e: ["Personen", "Termine"],
+	                 { _r: "nimmt teil",
+	                   _e: ["Person", "Termin"],
 	                   card: ["N", "M"]
 	                 }
 	                ]]

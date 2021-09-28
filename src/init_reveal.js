@@ -21,6 +21,7 @@ Reveal.initialize({
  dependencies: [
     { src: 'src/sql.js', async: true },
     { src: 'src/clone.js', async: true },
+    { src: 'src/metadata.js', async: true },
     { src: 'src/erd.js' },
     { src: 'src/hide-from.js' },
     { src: 'plugins/plantuml.js' },

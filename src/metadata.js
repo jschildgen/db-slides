@@ -10,13 +10,15 @@ var metadata = {
 	    "speaker_name"      : "Prof. Dr. Johannes Schildgen",
 	    "speaker_email"     : "johannes.schildgen@oth-regensburg.de",
 	    "lecture_startdate" : "2021-10-04",
+			"exercise_startdate": "2021-10-15",
+			"exercise_time"			: "Mi, 15:30 Uhr",
 	    "lecture_times"     : [
                                 "Mo, 10:00 Uhr (über YouTube Live)",
                                 "Mi, 13:45 Uhr (über YouTube Live)",
 	                        ],
           }
 };
-x=5;
+
 var MetadataPlugin = (function(){
 	return {
 		init: function() {

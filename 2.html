@@ -48,13 +48,13 @@
                             <div>
 									<div class="stretch erd">
 	                [[
-	                 { _e: "Personen", pos: [150, 100],
+	                 { _e: "Person", pos: [150, 100],
 	                  attributes: [
 	                   { _a:"PersNr", options:["primary"], pos: [89, 13] },
 	                   { _a:"Name", pos: [245, 13] }
 	                  ]
 	                 },
-	                 { _e: "Termine", pos: [530, 100],
+	                 { _e: "Termin", pos: [530, 100],
 	                   attributes: [
 	                    { _a:"Datum", pos: [475, 25], options:["primary"] },
 	                    { _a:"Uhrzeit", pos: [634, 25], options:["primary"] },
@@ -65,8 +65,8 @@
 	                 }
 	                ],
 	                [
-	                 { _r: "nehmen teil",
-	                   _e: ["Personen", "Termine"],
+	                 { _r: "nimmt teil",
+	                   _e: ["Person", "Termin"],
 	                   card: ["N", "M"]
 	                 }
 	                ]]
@@ -95,7 +95,7 @@
                                 <div style="position:absolute; left: 400px; top: 150px; height: 250px; overflow:hidden;">
                                 <div class="erd" style="width: 400px;">
                                         [[
-                                         { _e: "Personen", pos: [150, 100],
+                                         { _e: "Person", pos: [150, 100],
                                           attributes: [
                                            { _a:"Vorname", options:["primary"], pos: [89, 13] },
                                            { _a:"MySpace-URL", pos: [245, 13] },
@@ -133,7 +133,7 @@
                                 <div style="position:absolute; left: 600px; top: 150px; height: 200px; overflow:hidden;">
                                 <div class="erd" style="width: 200px;">
                                         [[
-                                         { _e: "Personen", pos: [20, 50] }
+                                         { _e: "Person", pos: [20, 50] }
                                         ],
                                         [
                                         ]]
@@ -155,7 +155,7 @@
                                     <h1>Was ist ein sinnvoller Entitätstyp?</h1>
                                       <ul>
                                         <li>Webshop</li>
-                                        <li data-poll="correct">Kunden</li>
+                                        <li data-poll="correct">Kunde</li>
                                         <li>Login</li>
                                         <li>Titanik</li>
                                       </ul>
@@ -175,7 +175,7 @@
                                     <div style="position:absolute; left: 620px; top: 150px; height: 200px; overflow:hidden;">
                                     <div class="erd" style="width: 400px;">
                                             [[
-                                             { _e: "Personen", pos: [130, 100],
+                                             { _e: "Person", pos: [130, 100],
                                               attributes: [
                                                 { _a:"PersNr", options:["primary"], pos: [69, 13] },
                                                 { _a:"Name", pos: [225, 13] }
@@ -199,13 +199,13 @@
                                 <div style="height: 200px; overflow:hidden;">
                                         <div class="stretch erd">
                         [[
-                         { _e: "Personen", pos: [150, 100],
+                         { _e: "Person", pos: [150, 100],
                           attributes: [
                            { _a:"PersNr", options:["primary"], pos: [89, 13] },
                            { _a:"Name", pos: [245, 13] }
                           ]
                          },
-                         { _e: "Termine", pos: [530, 100],
+                         { _e: "Termin", pos: [530, 100],
                            attributes: [
                             { _a:"Datum", pos: [415, 15], options:["primary"] },
                             { _a:"Uhrzeit", pos: [535, 15], options:["primary"] },
@@ -224,7 +224,7 @@
                                           <ul>
                                             <li>Ja, sogar im gleichen Raum</li>
                                             <li>Nein, auf keinen Fall</li>
-                                            <li>Ja, aber nicht im gleichen Raum</li>
+                                            <li data-poll="correct">Ja, aber nicht im gleichen Raum</li>
                                             <li>Nein, allein das Datum muss schon eindeutig sein</li>
                                           </ul>
                                         <h2>https://fraage.de</h2>
@@ -236,7 +236,7 @@
                                 <p>Attribute können aus mehreren Sub-Attributen zusammengesetzt sein.</p>
                                 <div class="stretch erd">
                                         [[
-                                         { _e: "Personen", pos: [150, 100],
+                                         { _e: "Person", pos: [150, 100],
                                           attributes: [
                                            { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                            { _a:"Name", pos: [245, 13] },
@@ -260,7 +260,7 @@
                                     <div style="height:250px; overflow:hidden;">
                                     <div class="erd">
                                             [[
-                                             { _e: "Personen", pos: [150, 100],
+                                             { _e: "Person", pos: [150, 100],
                                               attributes: [
                                                { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                { _a:"Name", pos: [245, 13] },
@@ -275,7 +275,7 @@
                                     <div class="fragment" style="height:200px; overflow:hidden;">
                                     <div class="erd">
                                             [[
-                                             { _e: "Personen", pos: [150, 100],
+                                             { _e: "Person", pos: [150, 100],
                                               attributes: [
                                                { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                { _a:"Name", pos: [245, 13] },
@@ -305,13 +305,13 @@
                                     <div data-id="er_termin_1_n" id="er_termin_1_n">
                                     <div class="stretch erd">
                                             [[
-                                             { _e: "Personen", pos: [150, 100],
+                                             { _e: "Person", pos: [150, 100],
                                               attributes: [
                                                { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                { _a:"Name", pos: [245, 13] }
                                               ]
                                              },
-                                             { _e: "Termine", pos: [530, 100],
+                                             { _e: "Termin", pos: [530, 100],
                                                attributes: [
                                                 { _a:"Datum", pos: [475, 25], options:["primary"] },
                                                 { _a:"Uhrzeit", pos: [634, 25], options:["primary"] },
@@ -322,8 +322,8 @@
                                              }
                                             ],
                                             [
-                                             { _r: "haben",
-                                               _e: ["Personen", "Termine"],
+                                             { _r: "erstellt",
+                                               _e: ["Person", "Termin"],
                                                card: ["1", "N"]
                                              }
                                             ]]
@@ -335,7 +335,7 @@
                                     <h2 data-id="h_beziehungen">1:N-Beziehungen</h2>
                                     <div data-id="er_termin_1_n" data-clone="er_termin_1_n"></div>
                                     <ul style="position:absolute; top:400px">
-                                        <li>Eine Person hat <b>N</b> Termine (beliebig viele)</li>
+                                        <li>Eine Person erstellt <b>N</b> Termine (beliebig viele)</li>
                                         <li>Ein Termin gehört immer zu <b>einer</b> Person</li>
                                     </ul>
                                 <aside class="notes">Man muss den Satz immer mit &quot;Ein(e)...&quot; beginnen. Je nachdem, ob man den Satz fortfährt mit &quot;... hat 1&quot; oder &quot;... hat N&quot;, kommt dementsprechend eine 1 oder ein N an den gegenüberliegenden Entitätstypen. </aside>
@@ -403,13 +403,13 @@
                                     <div id="er_termin_n_m">
                                             <div class="stretch erd">
                                                     [[
-                                                     { _e: "Personen", pos: [150, 100],
+                                                     { _e: "Person", pos: [150, 100],
                                                       attributes: [
                                                        { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                        { _a:"Name", pos: [245, 13] }
                                                       ]
                                                      },
-                                                     { _e: "Termine", pos: [530, 100],
+                                                     { _e: "Termin", pos: [530, 100],
                                                        attributes: [
                                                         { _a:"Datum", pos: [475, 25], options:["primary"] },
                                                         { _a:"Uhrzeit", pos: [634, 25], options:["primary"] },
@@ -420,8 +420,8 @@
                                                      }
                                                     ],
                                                     [
-                                                     { _r: "nehmen teil",
-                                                       _e: ["Personen", "Termine"],
+                                                     { _r: "nimmt teil",
+                                                       _e: ["Person", "Termin"],
                                                        card: ["N", "M"]
                                                      }
                                                     ]]
@@ -498,13 +498,13 @@
                                     <div style="height: 300px; overflow:hidden">
                                     <div class="stretch erd">
                                             [[
-                                             { _e: "Personen", pos: [150, 100],
+                                             { _e: "Person", pos: [150, 100],
                                               attributes: [
                                                { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                { _a:"Name", pos: [245, 13] }
                                               ]
                                              },
-                                             { _e: "Kreditkarten", pos: [530, 100],
+                                             { _e: "Kreditkarte", pos: [530, 100],
                                                attributes: [
                                                 { _a:"Kreditkartennr", pos: [475, 25], options:["primary"] },
                                                 { _a:"Ablaufdatum", pos: [595, 25] },
@@ -514,21 +514,21 @@
                                              }
                                             ],
                                             [
-                                             { _r: "haben",
-                                               _e: ["Personen", "Kreditkarten"],
+                                             { _r: "hat",
+                                               _e: ["Person", "Kreditkarte"],
                                                card: ["1", "1"]
                                              }
                                             ]]
                                                         </div></div>
                                     <ul style="position:absolute; top:340px">
-                                            <li>Eine Person hat <b>1</b> Kreditkarte</li>
+                                            <li>Eine Person hat <b>eine</b> Kreditkarte</li>
                                             <li>Eine Kreditkarte gehört immer nur zu <b>einer</b> Person</li>
                                         </ul>
 
                                         <div class="fragment" style="margin-top: 5mm">
                                         <div class="stretch erd">
                                                 [[
-                                                 { _e: "Personen", pos: [400, 100],
+                                                 { _e: "Person", pos: [400, 100],
                                                   attributes: [
                                                    { _a:"PersNr", options:["primary"], pos: [235, 78] },
                                                    { _a:"Name", pos: [310, 20] },
@@ -561,13 +561,13 @@
                                     <div id="er_termin_n_m_attr">
                                         <div class="stretch erd">
                                                 [[
-                                                 { _e: "Personen", pos: [150, 100],
+                                                 { _e: "Person", pos: [150, 100],
                                                   attributes: [
                                                    { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                    { _a:"Name", pos: [245, 13] }
                                                   ]
                                                  },
-                                                 { _e: "Termine", pos: [530, 100],
+                                                 { _e: "Termin", pos: [530, 100],
                                                    attributes: [
                                                     { _a:"Datum", pos: [475, 25], options:["primary"] },
                                                     { _a:"Uhrzeit", pos: [634, 25], options:["primary"] },
@@ -578,8 +578,8 @@
                                                  }
                                                 ],
                                                 [
-                                                 { _r: "nehmen teil",
-                                                   _e: ["Personen", "Termine"],
+                                                 { _r: "nimmt teil",
+                                                   _e: ["Person", "Termin"],
                                                    card: ["N", "M"],
                                                    attributes: [ {_a:"ist Organisator", pos: [317, 194] } ]
                                                  }
@@ -597,14 +597,14 @@
                                     <div id="er_webshop">
                                         <div class="stretch erd">
                                                 [[
-                                                 { _e: "Kunden", pos: [150, 100],
+                                                 { _e: "Kunde", pos: [150, 100],
                                                   attributes: [
                                                    { _a:"Kundennr", options:["primary"], pos: [40, 15] }, 
                                                    { _a:"Name", pos: [159, 9] },
                                                    { _a:"E-Mail", pos: [280, 25] }
                                                   ]
                                                  },
-                                                 { _e: "Produkte", pos: [630, 100],
+                                                 { _e: "Produkt", pos: [630, 100],
                                                    attributes: [
                                                     { _a:"Produktnr", pos: [575, 25], options:["primary"] },
                                                     { _a:"Bezeichnung", pos: [734, 25] },
@@ -619,11 +619,11 @@
                                                  }
                                                 ],
                                                 [
-                                                 { _r: "sind von", pos: [612, 191],
-                                                   _e: ["Produkte", "Hersteller"],
+                                                 { _r: "ist von", pos: [612, 191],
+                                                   _e: ["Produkt", "Hersteller"],
                                                    card: ["N", "1"]                                                 },
-                                                 { _r: "bewerten",
-                                                   _e: ["Kunden", "Produkte"],
+                                                 { _r: "bewertet",
+                                                   _e: ["Kunde", "Produkt"],
                                                    card: ["N", "M"],
                                                    attributes: [ {_a:"Sterne", pos: [317, 194] }, {_a:"Text", pos: [430, 194] } ]
                                                  }
@@ -639,13 +639,13 @@
                                     <div style="height:200px; overflow:hidden" id="er_rates">    
                                                     <div class="stretch erd">
                                                         [[
-                                                        { _e: "Kunden", pos: [50, 10],
+                                                        { _e: "Kunde", pos: [50, 10],
                                                          attributes: [
                                                          { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
                                                          { _a:"...", pos: [140, 85] }
                                                          ]
                                                         },
-                                                        { _e: "Produkte", pos: [730, 10],
+                                                        { _e: "Produkt", pos: [730, 10],
                                                           attributes: [
                                                           { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
                                                           { _a:"...", pos: [810, 85] }
@@ -653,8 +653,8 @@
                                                         }
                                                        ],
                                                        [
-                                                        { _r: "bewerten",
-                                                          _e: ["Kunden", "Produkte"],
+                                                        { _r: "bewertet",
+                                                          _e: ["Kunde", "Produkt"],
                                                           card: ["N", "M"],
                                                           attributes: [ {_a:"Sterne", pos: [340, 100] }, {_a:"Text", pos: [480, 100] } ]
                                                         }
@@ -663,19 +663,19 @@
                                                     <div id="er_ratings">    
                                                         <div class="stretch erd">
                                                             [[
-                                                            { _e: "Kunden", pos: [50, 10],
+                                                            { _e: "Kunde", pos: [50, 10],
                                                              attributes: [
                                                              { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
                                                              { _a:"...", pos: [140, 85] }
                                                              ]
                                                             },
-                                                            { _e: "Produkte", pos: [730, 10],
+                                                            { _e: "Produkt", pos: [730, 10],
                                                               attributes: [
                                                               { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
                                                               { _a:"...", pos: [810, 85] }
                                                               ]
                                                             },
-                                                            { _e: "Bewertungen", pos: [390, 10],
+                                                            { _e: "Bewertung", pos: [390, 10],
                                                             attributes: [ 
                                                                 {_a:"Bewertungsnr", pos: [300, 100], options:["primary"]},
                                                                 {_a:"Sterne", pos: [430, 100] }, 
@@ -683,12 +683,12 @@
                                                             }
                                                            ],
                                                            [
-                                                            { _r: "schreiben",
-                                                              _e: ["Kunden", "Bewertungen"],
+                                                            { _r: "schreibt",
+                                                              _e: ["Kunde", "Bewertung"],
                                                               card: ["1", "N"]
                                                             },
                                                             { _r: "für",
-                                                              _e: ["Bewertungen", "Produkte"],
+                                                              _e: ["Bewertung", "Produkt"],
                                                               card: ["N", "1"]
                                                             }
                                                            ]]
@@ -737,31 +737,31 @@
                                     <div id="er_ratings">    
                                         <div class="stretch erd">
                                             [[
-                                            { _e: "Kunden", pos: [50, 10],
+                                            { _e: "Kunde", pos: [50, 10],
                                              attributes: [
                                                 { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
                                                    { _a:"...", pos: [140, 85] }
                                              ]
                                             },
-                                            { _e: "Produkte", pos: [730, 10],
+                                            { _e: "Produkt", pos: [730, 10],
                                               attributes: [
                                                 { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
                                                    { _a:"...", pos: [810, 85] }
                                               ]
                                             },
-                                            { _e: "Bewertungen", pos: [390, 10], options: ["weak"],
+                                            { _e: "Bewertung", pos: [390, 10], options: ["weak"],
                                             attributes: [ 
                                                 {_a:"Sterne", pos: [340, 100] }, 
                                                 {_a:"Text", pos: [480, 100] } ]
                                             }
                                            ],
                                            [
-                                            { _r: "schreiben",
-                                              _e: ["Kunden", "Bewertungen"], options: ["weak"],
+                                            { _r: "schreibt",
+                                              _e: ["Kunde", "Bewertung"], options: ["weak"],
                                               card: ["1", "N"]
                                             },
                                             { _r: "für",
-                                              _e: ["Bewertungen", "Produkte"], options: ["weak"],
+                                              _e: ["Bewertung", "Produkt"], options: ["weak"],
                                               card: ["N", "1"]
                                             }
                                            ]]
@@ -774,35 +774,35 @@
                                     <div id="er_ratings_likes">    
                                         <div class="stretch erd">
                                             [[
-                                            { _e: "Kunden", pos: [50, 10],
+                                            { _e: "Kunde", pos: [50, 10],
                                              attributes: [
                                                 { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
                                                    { _a:"...", pos: [140, 85] }
                                              ]
                                             },
-                                            { _e: "Produkte", pos: [730, 10],
+                                            { _e: "Produkt", pos: [730, 10],
                                               attributes: [
                                                 { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
                                                    { _a:"...", pos: [810, 85] }
                                               ]
                                             },
-                                            { _e: "Bewertungen", pos: [390, 10], options: ["weak"],
+                                            { _e: "Bewertung", pos: [390, 10], options: ["weak"],
                                             attributes: [ 
                                                 {_a:"Sterne", pos: [340, 100] }, 
                                                 {_a:"Text", pos: [480, 100] } ]
                                             }
                                            ],
                                            [
-                                            { _r: "schreiben",
-                                              _e: ["Kunden", "Bewertungen"], options: ["weak"],
+                                            { _r: "schreibt",
+                                              _e: ["Kunde", "Bewertung"], options: ["weak"],
                                               card: ["1", "N"]
                                             },
                                             { _r: "für",
-                                              _e: ["Bewertungen", "Produkte"], options: ["weak"],
+                                              _e: ["Bewertung", "Produkt"], options: ["weak"],
                                               card: ["N", "1"]
                                             },
-                                            { _r: "gefallen", pos: [80, 161], 
-                                              _e: ["Kunden", "Bewertungen"], 
+                                            { _r: "gefällt", pos: [80, 161], 
+                                              _e: ["Kunde", "Bewertung"], 
                                               card: ["N", "M"]
                                             }
                                            ]]
@@ -815,13 +815,13 @@
                                     <div id="er_drink_bad" style="height: 173px; overflow:hidden">
                                             <div class="stretch erd">
                                                     [[
-                                                     { _e: "Gäste", pos: [150, 100],
+                                                     { _e: "Gast", pos: [150, 100],
                                                       attributes: [
                                                        { _a:"Kundennr", options:["primary"], pos: [89, 25] },
                                                        { _a:"Tischnr", pos: [245, 25] }
                                                       ]
                                                      },
-                                                     { _e: "Getränke", pos: [530, 100],
+                                                     { _e: "Getränk", pos: [530, 100],
                                                        attributes: [
                                                         { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
                                                         { _a:"Preis", pos: [627, 25]}
@@ -829,8 +829,8 @@
                                                      }
                                                     ],
                                                     [
-                                                    { _r: "trinken",
-                                                       _e: ["Gäste", "Getränke"],
+                                                    { _r: "trinkt",
+                                                       _e: ["Gast", "Getränk"],
                                                        card: ["N", "M"]
                                                      }
                                                     ]]
@@ -841,18 +841,18 @@
                                                 <p style="font-size:70%; z-index:9999999 !important">Besser:</p>
                                                     <div class="stretch erd" style="margin-top: -25px;">
                                                             [[
-                                                                { _e: "Gäste", pos: [20, 100],
+                                                                { _e: "Gast", pos: [20, 100],
                                                                 attributes: [
                                                                 { _a:"Kundennr", options:["primary"], pos: [5, 25] },
                                                                 { _a:"Tischnr", pos: [120, 25] }
                                                                 ]
                                                                 },
-                                                                { _e: "Bestellpositionen", pos: [350, 100], options: ["weak"],
+                                                                { _e: "Bestellposition", pos: [350, 100], options: ["weak"],
                                                                 attributes: [
                                                                 { _a:"Positionsnr.", options:["extending_primary"], pos: [375, 25] }
                                                                 ]
                                                                 },
-                                                                { _e: "Getränke", pos: [750, 100],
+                                                                { _e: "Getränk", pos: [750, 100],
                                                                 attributes: [
                                                                 { _a:"Bezeichnung", pos: [695, 25], options:["primary"] },
                                                                 { _a:"Preis", pos: [847, 25]}
@@ -860,12 +860,12 @@
                                                                 }
                                                             ],
                                                             [
-                                                            { _r: "geben auf",
-                                                                _e: ["Gäste", "Bestellpositionen"], options: ["weak"],
+                                                            { _r: "gibt auf",
+                                                                _e: ["Gast", "Bestellposition"], options: ["weak"],
                                                                 card: ["1", "N"]
                                                                 },
                                                                 { _r: "von",
-                                                                _e: ["Bestellpositionen", "Getränke"],
+                                                                _e: ["Bestellposition", "Getränk"],
                                                                 card: ["N", "1"]
                                                                 }
                                                             ]]
@@ -886,20 +886,20 @@
                                     <div id="er_degree_3">
                                             <div class="stretch erd">
                                                     [[
-                                                     { _e: "Kunden", pos: [150, 100],
+                                                     { _e: "Kunde", pos: [150, 100],
                                                       attributes: [
                                                        { _a:"Kundennr", options:["primary"], pos: [89, 13] },
                                                        { _a:"Name", pos: [245, 13] }
                                                       ]
                                                      },
-                                                     { _e: "Tarife", pos: [530, 100],
+                                                     { _e: "Tarif", pos: [530, 100],
                                                        attributes: [
                                                         { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
                                                         { _a:"Mindestlaufzeit", pos: [599, 25]},
                                                         { _a:"Preis", pos: [698, 71]}
                                                        ]
                                                      },
-                                                     { _e: "Fitnessstudios", pos: [334, 277],
+                                                     { _e: "Fitnessstudio", pos: [334, 277],
                                                        attributes: [
                                                         { _a:"Strasse", pos: [205, 212], options:["primary"] },
                                                         { _a:"Hausnummer", pos: [205, 275], options:["primary"] },
@@ -908,8 +908,8 @@
                                                      }
                                                     ],
                                                     [
-                                                     { _r: "buchen",
-                                                       _e: ["Kunden", "Tarife", "Fitnessstudios"],
+                                                     { _r: "bucht",
+                                                       _e: ["Kunde", "Tarif", "Fitnessstudio"],
                                                        card: ["N", "1", "M"],
                                                        attributes: [{_a:"Datum", pos: [462, 195]}]
                                                      }
@@ -932,13 +932,13 @@
                                     <div>
                                     <div class="stretch erd">
                                             [[
-                                             { _e: "Kunden", pos: [150, 100],
+                                             { _e: "Kunde", pos: [150, 100],
                                               attributes: [
                                                { _a:"Kundennr", options:["primary"], pos: [89, 13] },
                                                { _a:"Name", pos: [245, 13] }
                                               ]
                                              },
-                                             { _e: "Tarife", pos: [530, 100],
+                                             { _e: "Tarif", pos: [530, 100],
                                                attributes: [
                                                 { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
                                                 { _a:"Mindestlaufzeit", pos: [599, 25]},
@@ -954,22 +954,22 @@
                                              }
                                             ],
                                             [
-                                             { _r: "buchen",
-                                               _e: ["Kunden", "Tarife"],
+                                             { _r: "bucht",
+                                               _e: ["Kunde", "Tarif"],
                                                card: ["N", "1"],
                                                attributes: [{_a:"Datum", pos: [364, 27]}]
                                              },
                                              { _r: "angemeldet bei", pos: [284, 188],
-                                               _e: ["Kunden", "Fitnessstudio"],
+                                               _e: ["Kunde", "Fitnessstudio"],
                                                card: ["N", "M"]                                             
                                              },
-                                             { _r: "buchen",
-                                               _e: ["Kunden", "Tarife"],
+                                             { _r: "bucht",
+                                               _e: ["Kunde", "Tarif"],
                                                card: ["N", "1"],
                                                attributes: [{_a:"Datum", pos: [364, 27]}]
                                              },
                                              { _r: "gilt in", pos: [452, 193],
-                                               _e: ["Fitnessstudio", "Tarife"],
+                                               _e: ["Fitnessstudio", "Tarif"],
                                                card: ["N", "M"]
                                              }
                                             ]]
@@ -994,16 +994,16 @@
                                     <div style="position:absolute; left: 620px; top: 150px; height: 400px; overflow:hidden;">
                                     <div class="erd" style="width: 400px;">
                                             [[
-                                             { _e: "Kunden", pos: [110, 100],
+                                             { _e: "Kunde", pos: [110, 100],
                                               attributes: [
                                                 { _a:"Kundennr", options:["primary"], pos: [15, 10] },
                                                 { _a:"Name", pos: [130, 10] },
                                                 { _a:"E-Mail", pos: [250, 10] }
                                               ]
                                              },
-                                             { _e: "Privatkunden", pos: [10, 250], isa: {_e:"Kunden"},
+                                             { _e: "Privatkunde", pos: [10, 250], isa: {_e:"Kunde"},
                                                 attributes: []},
-                                             { _e: "Geschäftskunden", pos: [200, 250], isa: {_e:"Kunden"}, 
+                                             { _e: "Geschäftskunde", pos: [200, 250], isa: {_e:"Kunde"}, 
                                                 attributes: []}
                                             ],
                                             [
@@ -1026,18 +1026,18 @@
                                     <h2>Generalisierung</h2>
                                     <div class="erd stretch">
                                             [[
-                                             { _e: "Kunden", pos: [110, 100],
+                                             { _e: "Kunde", pos: [110, 100],
                                               attributes: [
                                                 { _a:"Kundennr", options:["primary"], pos: [15, 10] },
                                                 { _a:"Name", pos: [130, 10] },
                                                 { _a:"E-Mail", pos: [250, 10] }
                                               ]
                                              },
-                                             { _e: "Privatkunden", pos: [10, 250], isa: {_e:"Kunden"},
+                                             { _e: "Privatkunde", pos: [10, 250], isa: {_e:"Kunde"},
                                                 attributes: [ {_a:"Bonuspunke", pos: [35, 334]} ]},
-                                             { _e: "Geschäftskunden", pos: [200, 250], isa: {_e:"Kunden"}, 
+                                             { _e: "Geschäftskunde", pos: [200, 250], isa: {_e:"Kunde"}, 
                                                 attributes: [ { _a:"USt-IdNr.", pos: [225, 334]} ]},
-                                            { _e: "Produkte", pos: [730, 100],
+                                            { _e: "Produkt", pos: [730, 100],
                                                 attributes: [
                                                 { _a:"Produktnr", options:["primary"], pos: [690, 10] }, 
                                                 { _a:"...", pos: [810, 10] }
@@ -1045,13 +1045,13 @@
                                             }
                                             ],
                                             [
-                                            { _r: "bewerten",
-                                                _e: ["Kunden", "Produkte"],
+                                            { _r: "bewertet",
+                                                _e: ["Kunde", "Produkt"],
                                                 card: ["N", "M"],
                                                 attributes: [ {_a:"Sterne", pos: [390, 10] }, {_a:"Text", pos: [500, 10] } ]
                                             },
-                                            { _r: "verkaufen", pos: [538, 189],
-                                                _e: ["Geschäftskunden", "Produkte"],
+                                            { _r: "verkauft", pos: [538, 189],
+                                                _e: ["Geschäftskunde", "Produkt"],
                                                 card: ["1", "N"]
                                             }
                                             ]]
@@ -1253,14 +1253,14 @@
                                     <div style="height: 300px; overflow:hidden">
                                             <div class="stretch erd">
                                                     [[
-                                                     { _e: "Bücher", pos: [150, 100],
+                                                     { _e: "Buch", pos: [150, 100],
                                                       attributes: [
                                                        { _a:"ISBN", options:["primary"], pos: [50, 13] },
                                                        { _a:"Autoren", options: ["multi"], pos: [175, 13] },
                                                        { _a:"Titel", pos: [295, 13] }
                                                       ]
                                                      },
-                                                     { _e: "Verlage", pos: [530, 100],
+                                                     { _e: "Verlag", pos: [530, 100],
                                                        attributes: [
                                                         { _a:"Verlags-ID", pos: [475, 25], options:["primary"] },
                                                         { _a:"Name", pos: [595, 25] },
@@ -1269,8 +1269,8 @@
                                                      }
                                                     ],
                                                     [
-                                                     { _r: "sind von",
-                                                       _e: ["Bücher", "Verlage"],
+                                                     { _r: "ist von",
+                                                       _e: ["Buch", "Verlag"],
                                                        card: ["N", "1"]
                                                      }
                                                     ]]
@@ -1291,14 +1291,14 @@
                                                       attributes: [
                                                       ]
                                                      },
-                                                     { _e: "Bücher", pos: [350, 100],
+                                                     { _e: "Buch", pos: [350, 100],
                                                       attributes: [
                                                        { _a:"ISBN", pos: [250, 13] },
                                                        { _a:"Autoren", options: ["multi"], pos: [375, 13] },
                                                        { _a:"Titel", pos: [495, 13] }
                                                       ]
                                                      },
-                                                     { _e: "Verlage", pos: [730, 100],
+                                                     { _e: "Verlag", pos: [730, 100],
                                                        attributes: [
                                                         { _a:"Verlags-ID", pos: [675, 25], options:["primary"] },
                                                         { _a:"Name", pos: [795, 25] }
@@ -1306,8 +1306,8 @@
                                                      }
                                                     ],
                                                     [
-                                                     { _r: "sind von",
-                                                       _e: ["Bücher", "Verlage"],
+                                                     { _r: "ist von",
+                                                       _e: ["Buch", "Verlag"],
                                                        card: ["1", "N"]
                                                      },
                                                      { _r: "setzt ein",
@@ -1316,7 +1316,7 @@
                                                      },
 
                                                      { _r: "verwaltet",
-                                                       _e: ["Datenbank", "Bücher"],
+                                                       _e: ["Datenbank", "Buch"],
                                                        card: ["", ""]
                                                      }
                                                     ]]

@@ -18,7 +18,13 @@
         <link rel="stylesheet" href="src/poll.css" />
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="src/rainbow.css">
+		<script>
+			if(window.location.search.match( /print-pdf/gi )) {
+				document.getElementsByTagName("head")[0].innerHTML += '<link rel="stylesheet" href="src/routeros.css">';
+			} else {
+				document.getElementsByTagName("head")[0].innerHTML += '<link rel="stylesheet" href="src/rainbow.css">';
+			}
+		</script>
 
         <!--<script defer src="lib/fontawesome.all.min.js"/>-->
         <link href="lib/fontawesome.all.min.css" rel="stylesheet">

@@ -264,6 +264,21 @@ iter.close();</code></pre>
                     <aside class="notes">JDBC stellt Methoden bereit, um auf die Metadaten der Datenbank (z. B. Tabellen, Spalten einer Tabelle, ...) und auf Metadaten eines ResultSets zuzugreifen.</aside>
                 </section>
 
+                <section>
+                    <h3>Python-Anwendung</h3>
+                    <img style="position: absolute; top: 1.7cm; right:0cm; width:12cm; z-index:99999" src="img/6/console2.png" class="noborder">
+                    <pre style="width: 96%; z-index:1"><code style="max-height: 40cm; z-index: 2;" class="python" data-sample-indent="keep" contenteditable data-sample='code/dbtest.py'></code></pre>
+                    <aside class="notes">Das hier gezeigte Python-Programm verwendet die PostgreSQL-Treiber-Library psycopg2. Ähnlich wie in JDBC wird zunächst eine Verbindung mit der Datenbank aufgebaut, dann ein SELECT-Statement ausgeführt und über das Ergebnis der Anfrage Zeile für Zeile iteriert.</aside>
+                </section>
+
+                <section>
+                    <h3>Python-Anwendung</h3>
+                    <h4>Parametrisierte Anfragen</h4>
+                    <img style="position: absolute; top: 1.7cm; right:0cm; width:12cm; z-index:99999" src="img/6/dbtest_prepared.png" class="noborder">
+                    <pre style="width: 96%; z-index:1"><code style="max-height: 40cm; z-index: 2;" class="python" data-sample-indent="keep" contenteditable data-sample='code/dbtest_prepared.py#10-21'></code></pre>
+                    <aside class="notes">psycopg2 unterstützt zwar nicht auf direktem Wege Prepared Statements, aber es unterstützt parametrisierte Anfragen. In der hier gezeigten Anfrage wurde ein Parameter <code>%(suche)</code> vom Typ String (<code>s</code>) eingeführt. Der Wert wird in einem Dictionary als zweiten Parameter der <code>execute</code>-Methode übergeben. Python kümmert sich dann um das escapen von <code>'</code> und anderen Zeichen, um SQL-Injections zu verhindern. Da wir in der gezeigten Anfrage das Prozent-Symbol brauchen, müssen wir es escapen, indem wir <code>%%</code> schreiben.</aside>
+                </section>
+
                 <section data-hide-from="2V">
                     <h2>Routinen</h2>
                     <div class="trackinfo"><i class="fas fa-headphones"></i> 102</div>

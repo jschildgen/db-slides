@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Datenbanken - Übungsblatt 10</title>
+        <title>Datenbanken - Übungsblatt 9</title>
         <link rel="stylesheet" href="../exercises/exercises.css">
         <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
         <link href="../src/erd.css" rel="stylesheet">
@@ -18,45 +18,58 @@
     <body>
         <header>
             <div>
-              <div>
-                <b>Datenbanken - SS 2021</b><br>
-                Prof. Dr.-Ing. Johannes Schildgen<br>
-                johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 10 vom 22./23.06.2021</b>
-            </div>
+                <div>
+                    <b>Datenbanken - WS 2021/22</b><br>
+                    Prof. Dr.-Ing. Johannes Schildgen<br>
+                    johannes.schildgen@oth-regensburg.de<br>
+                    <b>Übungsblatt 9 vom 10./15.12.2021</b>
+                </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
 
-        <section style="padding-top: 2.5cm">
-          <h1>Aufgabe 1: Anwendungsentwicklung mit JDBC (10P)</h1>
-          <p>Abgabe-Deadline: 22.06.2021 14:00 im Moodle</p>
-          <p><em>Da Sie für diese Aufgabe Ihr Datenbank-Passwort im Klartext in Ihren Quellcode schreiben müssen, empfiehlt es sich, dies vorher auf ein zufälliges Passwort zu ändern. Verwenden Sie dazu</em> <code>ALTER USER ihr_benutzername PASSWORD 'neues_passwort';</code> <em>Tragen Sie dieses neue Passwort dann auch in Ihren DBeaver-Verbindungseinstellungen ein.</em></p>
-          <ol>
-            <li>Erstellen Sie im DBeaver eine Tabelle &quot;Kontakte&quot; mit den Spalten Name (<code>VARCHAR(200) PRIMARY KEY</code>), handynummer (<code>VARCHAR(20)</code>) und gesucht (<code>INT NOT NULL DEFAULT 0</code>).</li>
-            <li>Fügen Sie im DBeaver einen neuen Kontakt ein: Peter hat die handynummer 0151-555</li>
-            <li>Schreiben Sie ein Konsolenprogramm in Java und binden Sie den PostgreSQL-JDBC-Treiber ein; entweder indem Sie die Jar-Datei von <a href="https://jdbc.postgresql.org/" target="_blank">https://jdbc.postgresql.org/</a> herunterladen oder mittels Maven.</li>
-            <li>Bauen Sie in Ihrem Java-Programm eine Verbindung zu Ihrer Datenbank auf.</li>
-            <li>Geben Sie alle Kontakte (Name und Handynummer) sortiert nach ihrem Namen aus.</li>
-          </ol>
-        </section>
+    <section style="padding-top: 2.5cm">
+      <h1>Aufgabe 1: Sichten in SQL (10P)</h1>
+      <p>Abgabe-Deadline: 10.12.2021 9:00 im Moodle</p>
+      <p>Auf <a href="https://data.deutschebahn.com/dataset/data-stationsdaten" target="_blank">https://data.deutschebahn.com/dataset/data-stationsdaten</a> finden Sie Datensätze mit deutschen Bahnhöfen.</p>
+      <ol>
+          <li>Laden Sie sich den neusten Datensatz im CSV-Format herunter (den von 03/2020).</li>
+          <li>Betrachten Sie die Datei in einem Texteditor, welche Spalten gibt es?</li>
+          <li>Erstellen Sie in Ihrer PostgreSQL-Datenbank eine Tabelle &quot;bahnhoefe&quot; mit den passenden Spalten und wählen Sie sinnvolle Datentypen und Primärschlüssel.</li>
+          <li>Benutzen Sie die Import-Funktion von DBeaver, um die CSV-Datei in Ihre Tabelle zu importieren (Rechtsklick auf die Tabelle - Daten importieren).</li>
+          <li>Erstellen Sie eine View &quot;hbf&quot; mit dem Spalten &quot;bhfnr&quot;, &quot;bundesland&quot;, &quot;station&quot; und &quot;kategorie&quot;, die alle Bahnhöfe enthält, die auf &quot;Hbf&quot; oder &quot;Hauptbahnhof&quot; enden. Die Kategorie-Spalte der View soll lediglich eine Umbenennung der Spalte Kat. Vst. sein.</li>
+      </ol>
+    </section>
 
-          <section>
-          <h1>Aufgabe 2: Anwendungsentwicklung mit JDBC (Fortsetzung)</h1>
-          <ol start="6">
-            <li>Implementieren Sie eine Suchfunktion für ihr Programm aus Aufgabe 1:
-                <ol>
-                    <li>Der Benutzer gibt auf der Konsole einen Namen ein</li>
-                    <li>Wird ein leerer Name eingegeben, sollen wie gehabt alle Kontakte ausgegeben werden.</li>
-                    <li>Andernfalls wird nur der Kontakt mit dem eingegebenen Namen ausgegeben.</li>
-                    <li>Gibt es keinen Kontakt mit dem eingegebenen Namen, soll eine Meldung &quot;Kein Kontakt gefunden&quot; angezeigt werden.</li>
-                    <li>Verhindern Sie SQL-Injections!</li>
-                </ol></li>
-            <li>Hinter dem Kontakt soll in Klammern die Anzahl stehen, wie oft nach ihr oder ihm gesucht wurde (&quot;gesucht&quot;-Spalte).</code></li>
-            <li>Immer wenn nach einem bestimmten Kontakt gesucht wird, soll in der Datenbank die &quot;gesucht&quot;-Zahl für diesen Kontakt um eins erhöht werden.</li>
-          </ol>
-        </section>
+    <section>
+        <h1>Aufgabe 2: SQL-Anfragen, Materialisierte Sichten</h1>
+      <ol>
+        <li>Erstellen Sie eine weitere View: &quot;grosser_hbf&quot;, die auf der Sicht &quot;hbf&quot; basiert, aber nur die Bahnhöfe der Kategorie 1 enthält. Schreiben Sie am Ende des <code>CREATE VIEW</code>-Kommandos: <code>WITH LOCAL CHECK OPTION</code>. Dadurch wird beim Einfügen in die View das WHERE-Prädikat überprüft.</li>
+          <li>Formulieren Sie nun folgende Anfragen auf den Views:
+                  <ol type="a">
+                      <li>Finden Sie den Regensburger Hauptbahnhof</li>
+                      <li>Fügen Sie in die hbf-Sicht einen neuen Bahnhof ein: &quot;Teststadt Nord&quot; in Hessen mit der ID 9999 und Kategorie 5.</li>
+                      <li>Finden Sie mit einer SELECT-Anfrage auf der hbf-Sicht den neu eingefügten Bahnhof?</li>
+                      <li>Löschen Sie den Bahnhof 9999 wieder aus der bahnhoefe-Tabelle</li>
+                      <li>Versuchen Sie das INSERT aus b) nun auf der grosser_hbf-Sicht</li>
+                      <li>Passen Sie in dem INSERT-Kommando die Bahnhofskategorie so an, dass es auf der grosser_hbf-Sicht funktioniert.</li>
+                      <li>Finden Sie mit einer SELECT-Abfrage auf der grosser_hbf-Sicht den neu eingefügten Bahnhof?</li>
+                      <li>Droppen Sie die grosser_hbf-Sicht und erstellen Sie sie erneut, jedoch so, dass wirklich nur Bahnhöfe in diese Sicht eingefügt werden können, die auch in der View sichtbar sind: <code>WITH CASCADED CHECK OPTION</code></li>
+                  </ol>
+          </li>
+          <li>Erstellen Sie eine materialisierte Sicht &quot;Bahnhof_Statistik&quot;, die zu jedem Bundesland die Anzahl der Bahnhöfe zeigt. Wie viele Bahnhöfe zeigt diese Sicht in Hessen an? Löschen Sie Ihren Bahnhof 9999 und schauen Sie wieder in die materialiserte Sicht. Führen Sie ein <code>REFRESH</code> aus.</li>
+          <li>Stellen Sie abschließend noch folgende Anfragen auf der Tabelle &quot;bahnhoefe&quot;: (siehe nächste Seite)</li>
+                  <ol type="a" style="padding-top: 4.5cm">
+                      <li>Geben Sie alle Bundesländer aus (keine Duplikate).</li>
+                      <li>In welchen Städten gibt es mehr als 10 Bahnhöfe?</li>
+                      <li>Welche Bahnhöfe haben die gleiche Kategorie (Kat. Vst.) wie &quot;Ulm Hbf&quot;?</li>
+                      <li>Geben Sie zu jedem Bundesland aus, wie viele Bahnhöfe die dort befindlichen Städte im Durchschnitt besitzen.</li>
+                  </ol>
+              </li>
+      </ol>
+      
+    </section>
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

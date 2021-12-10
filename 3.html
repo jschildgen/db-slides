@@ -1269,10 +1269,10 @@
                                                     Nachher: $produkte \bowtie_{produkte.produktnr=bewertungen.produktnr} (bewertungen)$</p>
                                                 <h4 class="fragment" data-fragment-index="2">Frühstmögliche Projektion <small>(ohne Duplikateliminierung)</small></h4>
                                                 <p class="fragment small" data-fragment-index="2">Vorher: $\pi_{bezeichnung}(produkte \bowtie bewertungen)$<br>
-                                                    Nachher: $\pi_{bezeichnung}(\pi_{produktnr, bezeichnung}(produkte) \bowtie bewertungen)$</p>
+                                                    Nachher: $\pi_{bezeichnung}(\pi_{produktnr, bezeichnung}(produkte) \bowtie \pi_{produktnr}(bewertungen))$</p>
                                                 
                                                     <div class="poll fragment fade-in-then-out" style="bottom:200px">
-                                                        <h1>Warum haben wir nach der Optimierung zwei Projektionsoperationen in der Anfrage?</h1>
+                                                        <h1>Warum haben wir nach der Optimierung drei Projektionsoperationen in der Anfrage?</h1>
                                                           <ul>
                                                             <li>Wegen der Sicherheit</li>
                                                             <li>Wegen der Redundanz</li>

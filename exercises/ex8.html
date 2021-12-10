@@ -9,66 +9,79 @@
         <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
         <link href="../src/erd.css" rel="stylesheet">
         <link rel="stylesheet" href="../lib/joint.min.css" />
-        <style type="text/css">
-          li {
-            margin-left: -5mm;
-          }
-        </style>
     </head>
     <body>
         <header>
             <div>
                 <div>
-                    <b>Datenbanken - SS 2021</b><br>
+                    <b>Datenbanken - WS 2021/22</b><br>
                     Prof. Dr.-Ing. Johannes Schildgen<br>
                     johannes.schildgen@oth-regensburg.de<br>
-                    <b>Übungsblatt 8 vom 01./02.06.2021</b>
+                    <b>Übungsblatt 8 vom 03./08.12.2021</b>
                 </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
+<section style="padding-top: 2.5cm">
+    <h1>Aufgabe 1: SELECT-Anfragen (10P)</h1>
+    <p>Abgabe-Deadline: 03.12.2021 9:00 im Moodle</p>
+    <p>Auf der Webseite des Datenbankmanagementsystems Hyper können Sie SQL-Anfragen gegen das Uni-Schema aus dem Kemper-Datenbanksysteme-Buch stellen: <a href="http://hyper-db.de/interface.html" target="_blank">http://hyper-db.de/interface.html</a></p>
+        <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+            Studenten(<u>MatrNr</u>, Name, Semester)<br>
+            Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+            hoeren(<u>MatrNr, VorlNr</u>)</p>
+         <p>Vorlesungen.gelesen_von ist Fremdschlüssel auf Professoren.PersNr<br>
+            hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+            hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
 
-    <section style="padding-top: 2.5cm">
-      <h1>Aufgabe 1: Sichten in SQL (10P)</h1>
-      <p>Abgabe-Deadline: 01.06.2021 14:00 im Moodle</p>
-      <p>Auf <a href="https://data.deutschebahn.com/dataset/data-stationsdaten" target="_blank">https://data.deutschebahn.com/dataset/data-stationsdaten</a> finden Sie Datensätze mit deutschen Bahnhöfen.</p>
-      <ol>
-          <li>Laden Sie sich den neusten Datensatz im CSV-Format herunter.</li>
-          <li>Betrachten Sie die Datei in einem Texteditor, welche Spalten gibt es?</li>
-          <li>Erstellen Sie in Ihrer PostgreSQL-Datenbank eine Tabelle &quot;bahnhoefe&quot; mit den passenden Spalten und wählen Sie sinnvolle Datentypen und Primärschlüssel.</li>
-          <li>Benutzen Sie die Import-Funktion von DBeaver, um die CSV-Datei in Ihre Tabelle zu importieren (Rechtsklick auf die Tabelle - Daten importieren).</li>
-          <li>Erstellen Sie eine View &quot;hbf&quot; mit dem Spalten &quot;bhfnr&quot;, &quot;bundesland&quot;, &quot;station&quot; und &quot;kategorie&quot;, die alle Bahnhöfe enthält, die auf &quot;Hbf&quot; oder &quot;Hauptbahnhof&quot; enden. Die Kategorie-Spalte der View soll lediglich eine Umbenennung der Spalte Kat. Vst. sein.</li>
-      </ol>
+        <p>Formulieren Sie die folgenden Anfragen mittels SQL. <!--Verwenden Sie bitte nicht das Relax-Tool. Verwenden Sie bei den Fragen 1 bis 4 keine Unteranfragen oder CTEs. -->Richtige Antworten geben 2 bzw. 3 Punkte. Für teilweise richtige Antworten können leider keine Teilpunkte gegeben werden, da ein automatisches Query-Bewertungssystem eingesetzt wird. Achten Sie daher auch darauf, dass keine Tippfehler in Ihren Anfragen sind.</p>
+
+        <table border="0" style="width: 100%">
+        <tr><td>1.</td><td>Wie viele Professoren, die den Rang C4 haben, gibt es? (2P)</td></tr>
+        <tr><td>2.</td><td>Geben Sie die Namen der Studierenden aus, die die Vorlesung &quot;Grundzüge&quot; hören<!--, und zwar alphabetisch aufsteigend sortiert-->. (2P)</td></tr>
+        <tr><td>3.</td><td>Geben zu jedem Professor, der mindestens zwei Vorlesungen hält, den Namen sowie die Gesamt-SWS-Zahl der von ihm oder ihr gehaltenen Vorlesungen aus. (3P)</td></tr>
+        <tr><td>4.</td><td>Wie sind die Namen der Studierenden, die zusammen mit dem Studenten namens &quot;Feuerbach&quot; zumindest eine gemeinsame Vorlesung hören? Geben Sie keinen Namen doppelt aus. (3P)</td></tr>
+        <!--<tr><td>5.</td><td>Welche Professoren haben den Rang C4 und halten keine einzige 4-SWS-Vorlesung.</td></tr>-->
+        </table>
     </section>
 
-    <section>
-        <h1>Aufgabe 2: SQL-Anfragen, Materialisierte Sichten</h1>
-      <ol>
-        <li>Erstellen Sie eine weitere View: &quot;grosser_hbf&quot;, die auf der Sicht &quot;hbf&quot; basiert, aber nur die Bahnhöfe der Kategorie 1 enthält. Schreiben Sie am Ende des <code>CREATE VIEW</code>-Kommandos: <code>WITH LOCAL CHECK OPTION</code>. Dadurch wird beim Einfügen in die View das WHERE-Prädikat überprüft.</li>
-          <li>Formulieren Sie nun folgende Anfragen auf den Views:
-                  <ol type="a">
-                      <li>Finden Sie den Regensburger Hauptbahnhof</li>
-                      <li>Fügen Sie in die hbf-Sicht einen neuen Bahnhof ein: &quot;Teststadt Nord&quot; in Hessen mit der ID 9999 und Kategorie 5.</li>
-                      <li>Finden Sie mit einer SELECT-Anfrage auf der hbf-Sicht den neu eingefügten Bahnhof?</li>
-                      <li>Löschen Sie den Bahnhof 9999 wieder aus der bahnhoefe-Tabelle</li>
-                      <li>Versuchen Sie das INSERT aus b) nun auf der grosser_hbf-Sicht</li>
-                      <li>Passen Sie in dem INSERT-Kommando die Bahnhofskategorie so an, dass es auf der grosser_hbf-Sicht funktioniert.</li>
-                      <li>Finden Sie mit einer SELECT-Abfrage auf der grosser_hbf-Sicht den neu eingefügten Bahnhof?</li>
-                      <li>Droppen Sie die grosser_hbf-Sicht und erstellen Sie sie erneut, jedoch so, dass wirklich nur Bahnhöfe in diese Sicht eingefügt werden können, die auch in der View sichtbar sind: <code>WITH CASCADED CHECK OPTION</code></li>
-                  </ol>
-          </li>
-          <li>Erstellen Sie eine materialisierte Sicht &quot;Bahnhof_Statistik&quot;, die zu jedem Bundesland die Anzahl der Bahnhöfe zeigt. Wie viele Bahnhöfe zeigt diese Sicht in Hessen an? Löschen Sie Ihren Bahnhof 9999 und schauen Sie wieder in die materialiserte Sicht. Führen Sie ein <code>REFRESH</code> aus.</li>
-          <li>Stellen Sie abschließend noch folgende Anfragen auf der Tabelle &quot;bahnhoefe&quot;: (siehe nächste Seite)</li>
-                  <ol type="a" style="padding-top: 4.5cm">
-                      <li>Geben Sie alle Bundesländer aus (keine Duplikate).</li>
-                      <li>In welchen Städten gibt es mehr als 10 Bahnhöfe?</li>
-                      <li>Welche Bahnhöfe haben die gleiche Kategorie (Kat. Vst.) wie &quot;Ulm Hbf&quot;?</li>
-                      <li>Geben Sie zu jedem Bundesland aus, wie viele Bahnhöfe die dort befindlichen Städte im Durchschnitt besitzen.</li>
-                  </ol>
-              </li>
-      </ol>
-      
+    <section style="page-break-inside:avoid; padding-top: 2.5cm">
+        <h1>Aufgabe 2: SQL-Anfragen auf einer Zugverbindungs-DB</h1>
+        <p>Betrachten Sie die folgenden Tabellen BAHNHOEFE und FAHRTEN:</p>
+        <div class="columns">
+            <div>
+                <h3>Bahnhoefe</h3>
+                <table>
+                    <tr><th><u>BID</u></th><th>Ort</th><th>Bahnhof</th></tr>
+                    <tr><td>1</td><td>Regensburg</td><td>Hbf</td></tr>
+                    <tr><td>2</td><td>München</td><td>Flughafen</td></tr>
+                    <tr><td>3</td><td>München</td><td>Hbf</td></tr>
+                </table>
+                </div>
+                
+                <div>
+                    <h3>Fahrten</h3>
+                    <table>
+                        <tr><th><u>ZugNr</u></th><th>Start</th><th>Ziel</th></tr>
+                        <tr><td>101</td><td>1</td><td>2</td></tr>
+                        <tr><td>102</td><td>1</td><td>3</td></tr>
+                        <tr><td>103</td><td>3</td><td>2</td></tr>
+                    </table>
+                    </div>
+        </div>
+        <p>Fahrten.Start und Fahrten.Ziel sind jeweils ein Fremdschlüssel auf Bahnhoefe.BID.</p>
+
+        <p>Formulieren Sie SQL-Anfragen für die folgenden Fragestellungen:</p>
+        
+        <ol>
+            <li>Legen Sie die beiden Tabellen Bahnhoefe und Fahrten an, wählen Sie sinnvolle Datentypen, achten Sie auf Primär- und Fremdschlüssel.</li>
+            <li>Fügen Sie die oben stehenden Datenzeilen in die Tabellen ein.</li>
+            <li>Geben Sie für jeden Ort an, wie viele Bahnhöfe es dort gibt.</li>
+            <li>Geben Sie für jeden Ort an, wie viele Zugfahrten in diesem Ort starten.</li>
+            <li>Geben Sie für jede Fahrt die Zugnummer, den Start_Ort, Start_Bahnhof, Ziel_Ort und Ziel_Bahnhof aus.</li>
+            <li>Wo hin kann man von einem Bahnhof in Regensburg aus fahren? Geben Sie diese Orte aus, jeden aber nur einmal.</li>
+        </ol>
     </section>
 
 <script src="../lib/jquery.js"></script>

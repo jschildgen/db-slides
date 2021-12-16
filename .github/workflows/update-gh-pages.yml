@@ -17,7 +17,6 @@ jobs:
           php-version: '8.0'
       - name: Create index.html and gh-pages/
         run: |
-          rm exams
           mkdir gh-pages
           php .github/workflows/create-index-html.php > gh-pages/index.html
           cp -a *.html db-slides.code-workspace gh-pages/

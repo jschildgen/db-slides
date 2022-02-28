@@ -26,14 +26,14 @@ import {
 } from './utils/constants.js'
 
 // The reveal.js version
-export const VERSION = '4.1.2';
+export const VERSION = '4.3.0';
 
 /**
  * reveal.js
  * https://revealjs.com
  * MIT licensed
  *
- * Copyright (C) 2020 Hakim El Hattab, https://hakim.se
+ * Copyright (C) 2011-2022 Hakim El Hattab, https://hakim.se
  */
 export default function( revealElement, options ) {
 
@@ -121,9 +121,13 @@ export default function( revealElement, options ) {
 	 */
 	function initialize( initOptions ) {
 
+		if( !revealElement ) throw 'Unable to find presentation root (<div class="reveal">).';
+
 		// Cache references to key DOM elements
 		dom.wrapper = revealElement;
 		dom.slides = revealElement.querySelector( '.slides' );
+
+		if( !dom.slides ) throw 'Unable to find slides container (<div class="slides">).';
 
 		// Compose our config object in order of increasing precedence:
 		// 1. Default reveal.js options
@@ -185,6 +189,9 @@ export default function( revealElement, options ) {
 
 		// Prevent the slides from being scrolled out of view
 		setupScrollPrevention();
+
+		// Adds bindings for fullscreen mode
+		setupFullscreen();
 
 		// Resets all vertical slides so that only the first is visible
 		resetVerticalSlides();
@@ -373,6 +380,19 @@ export default function( revealElement, options ) {
 	}
 
 	/**
+	 * After entering fullscreen we need to force a layout to
+	 * get our presentations to scale correctly. This behavior
+	 * is inconsistent across browsers but a force layout seems
+	 * to normalize it.
+	 */
+	function setupFullscreen() {
+
+		document.addEventListener( 'fullscreenchange', onFullscreenChange );
+		document.addEventListener( 'webkitfullscreenchange', onFullscreenChange );
+
+	}
+
+	/**
 	 * Registers a listener to postMessage events, this makes it
 	 * possible to call all reveal.js API methods from another
 	 * window. For example:
@@ -385,32 +405,7 @@ export default function( revealElement, options ) {
 	function setupPostMessage() {
 
 		if( config.postMessage ) {
-			window.addEventListener( 'message', event => {
-				let data = event.data;
-
-				// Make sure we're dealing with JSON
-				if( typeof data === 'string' && data.charAt( 0 ) === '{' && data.charAt( data.length - 1 ) === '}' ) {
-					data = JSON.parse( data );
-
-					// Check if the requested method can be found
-					if( data.method && typeof Reveal[data.method] === 'function' ) {
-
-						if( POST_MESSAGE_METHOD_BLACKLIST.test( data.method ) === false ) {
-
-							const result = Reveal[data.method].apply( Reveal, data.args );
-
-							// Dispatch a postMessage event with the returned value from
-							// our method invocation for getter functions
-							dispatchPostMessage( 'callback', { method: data.method, result: result } );
-
-						}
-						else {
-							console.warn( 'reveal.js: "'+ data.method +'" is is blacklisted from the postMessage API' );
-						}
-
-					}
-				}
-			}, false );
+			window.addEventListener( 'message', onPostMessage, false );
 		}
 
 	}
@@ -525,6 +520,7 @@ export default function( revealElement, options ) {
 		controls.bind();
 		focus.bind();
 
+		dom.slides.addEventListener( 'click', onSlidesClicked, false );
 		dom.slides.addEventListener( 'transitionend', onTransitionEnd, false );
 		dom.pauseOverlay.addEventListener( 'click', resume, false );
 
@@ -550,8 +546,68 @@ export default function( revealElement, options ) {
 
 		window.removeEventListener( 'resize', onWindowResize, false );
 
+		dom.slides.removeEventListener( 'click', onSlidesClicked, false );
 		dom.slides.removeEventListener( 'transitionend', onTransitionEnd, false );
 		dom.pauseOverlay.removeEventListener( 'click', resume, false );
+
+	}
+
+	/**
+	 * Uninitializes reveal.js by undoing changes made to the
+	 * DOM and removing all event listeners.
+	 */
+	function destroy() {
+
+		removeEventListeners();
+		cancelAutoSlide();
+		disablePreviewLinks();
+
+		// Destroy controllers
+		notes.destroy();
+		focus.destroy();
+		plugins.destroy();
+		pointer.destroy();
+		controls.destroy();
+		progress.destroy();
+		backgrounds.destroy();
+		slideNumber.destroy();
+
+		// Remove event listeners
+		document.removeEventListener( 'fullscreenchange', onFullscreenChange );
+		document.removeEventListener( 'webkitfullscreenchange', onFullscreenChange );
+		document.removeEventListener( 'visibilitychange', onPageVisibilityChange, false );
+		window.removeEventListener( 'message', onPostMessage, false );
+		window.removeEventListener( 'load', layout, false );
+
+		// Undo DOM changes
+		if( dom.pauseOverlay ) dom.pauseOverlay.remove();
+		if( dom.statusElement ) dom.statusElement.remove();
+
+		document.documentElement.classList.remove( 'reveal-full-page' );
+
+		dom.wrapper.classList.remove( 'ready', 'center', 'has-horizontal-slides', 'has-vertical-slides' );
+		dom.wrapper.removeAttribute( 'data-transition-speed' );
+		dom.wrapper.removeAttribute( 'data-background-transition' );
+
+		dom.viewport.classList.remove( 'reveal-viewport' );
+		dom.viewport.style.removeProperty( '--slide-width' );
+		dom.viewport.style.removeProperty( '--slide-height' );
+
+		dom.slides.style.removeProperty( 'width' );
+		dom.slides.style.removeProperty( 'height' );
+		dom.slides.style.removeProperty( 'zoom' );
+		dom.slides.style.removeProperty( 'left' );
+		dom.slides.style.removeProperty( 'top' );
+		dom.slides.style.removeProperty( 'bottom' );
+		dom.slides.style.removeProperty( 'right' );
+		dom.slides.style.removeProperty( 'transform' );
+
+		Array.from( dom.wrapper.querySelectorAll( SLIDES_SELECTOR ) ).forEach( slide => {
+			slide.style.removeProperty( 'display' );
+			slide.style.removeProperty( 'top' );
+			slide.removeAttribute( 'hidden' );
+			slide.removeAttribute( 'aria-hidden' );
+		} );
 
 	}
 
@@ -613,6 +669,8 @@ export default function( revealElement, options ) {
 			// parent window. Used by the notes plugin
 			dispatchPostMessage( type );
 		}
+
+		return event;
 
 	}
 
@@ -1188,9 +1246,22 @@ export default function( revealElement, options ) {
 	 * @param {number} [v=indexv] Vertical index of the target slide
 	 * @param {number} [f] Index of a fragment within the
 	 * target slide to activate
-	 * @param {number} [o] Origin for use in multimaster environments
+	 * @param {number} [origin] Origin for use in multimaster environments
 	 */
-	function slide( h, v, f, o ) {
+	function slide( h, v, f, origin ) {
+
+		// Dispatch an event before hte slide
+		const slidechange = dispatchEvent({
+			type: 'beforeslidechange',
+			data: {
+				indexh: h === undefined ? indexh : h,
+				indexv: v === undefined ? indexv : v,
+				origin
+			}
+		});
+
+		// Abort if this slide change was prevented by an event listener
+		if( slidechange.defaultPrevented ) return;
 
 		// Remember where we were at before
 		previousSlide = currentSlide;
@@ -1326,7 +1397,7 @@ export default function( revealElement, options ) {
 					indexv,
 					previousSlide,
 					currentSlide,
-					origin: o
+					origin
 				}
 			});
 		}
@@ -2193,55 +2264,55 @@ export default function( revealElement, options ) {
 
 	}
 
-	function navigateLeft() {
+	function navigateLeft({skipFragments=false}={}) {
 
 		navigationHistory.hasNavigatedHorizontally = true;
 
 		// Reverse for RTL
 		if( config.rtl ) {
-			if( ( overview.isActive() || fragments.next() === false ) && availableRoutes().left ) {
+			if( ( overview.isActive() || skipFragments || fragments.next() === false ) && availableRoutes().left ) {
 				slide( indexh + 1, config.navigationMode === 'grid' ? indexv : undefined );
 			}
 		}
 		// Normal navigation
-		else if( ( overview.isActive() || fragments.prev() === false ) && availableRoutes().left ) {
+		else if( ( overview.isActive() || skipFragments || fragments.prev() === false ) && availableRoutes().left ) {
 			slide( indexh - 1, config.navigationMode === 'grid' ? indexv : undefined );
 		}
 
 	}
 
-	function navigateRight() {
+	function navigateRight({skipFragments=false}={}) {
 
 		navigationHistory.hasNavigatedHorizontally = true;
 
 		// Reverse for RTL
 		if( config.rtl ) {
-			if( ( overview.isActive() || fragments.prev() === false ) && availableRoutes().right ) {
+			if( ( overview.isActive() || skipFragments || fragments.prev() === false ) && availableRoutes().right ) {
 				slide( indexh - 1, config.navigationMode === 'grid' ? indexv : undefined );
 			}
 		}
 		// Normal navigation
-		else if( ( overview.isActive() || fragments.next() === false ) && availableRoutes().right ) {
+		else if( ( overview.isActive() || skipFragments || fragments.next() === false ) && availableRoutes().right ) {
 			slide( indexh + 1, config.navigationMode === 'grid' ? indexv : undefined );
 		}
 
 	}
 
-	function navigateUp() {
+	function navigateUp({skipFragments=false}={}) {
 
 		// Prioritize hiding fragments
-		if( ( overview.isActive() || fragments.prev() === false ) && availableRoutes().up ) {
+		if( ( overview.isActive() || skipFragments || fragments.prev() === false ) && availableRoutes().up ) {
 			slide( indexh, indexv - 1 );
 		}
 
 	}
 
-	function navigateDown() {
+	function navigateDown({skipFragments=false}={}) {
 
 		navigationHistory.hasNavigatedVertically = true;
 
 		// Prioritize revealing fragments
-		if( ( overview.isActive() || fragments.next() === false ) && availableRoutes().down ) {
+		if( ( overview.isActive() || skipFragments || fragments.next() === false ) && availableRoutes().down ) {
 			slide( indexh, indexv + 1 );
 		}
 
@@ -2253,12 +2324,12 @@ export default function( revealElement, options ) {
 	 * 2) Previous vertical slide
 	 * 3) Previous horizontal slide
 	 */
-	function navigatePrev() {
+	function navigatePrev({skipFragments=false}={}) {
 
 		// Prioritize revealing fragments
-		if( fragments.prev() === false ) {
+		if( skipFragments || fragments.prev() === false ) {
 			if( availableRoutes().up ) {
-				navigateUp();
+				navigateUp({skipFragments});
 			}
 			else {
 				// Fetch the previous horizontal slide, if there is one
@@ -2271,10 +2342,15 @@ export default function( revealElement, options ) {
 					previousSlide = Util.queryAll( dom.wrapper, HORIZONTAL_SLIDES_SELECTOR + '.past' ).pop();
 				}
 
-				if( previousSlide ) {
+				// When going backwards and arriving on a stack we start
+				// at the bottom of the stack
+				if( previousSlide && previousSlide.classList.contains( 'stack' ) ) {
 					let v = ( previousSlide.querySelectorAll( 'section' ).length - 1 ) || undefined;
 					let h = indexh - 1;
 					slide( h, v );
+				}
+				else {
+					navigateLeft({skipFragments});
 				}
 			}
 		}
@@ -2284,13 +2360,13 @@ export default function( revealElement, options ) {
 	/**
 	 * The reverse of #navigatePrev().
 	 */
-	function navigateNext() {
+	function navigateNext({skipFragments=false}={}) {
 
 		navigationHistory.hasNavigatedHorizontally = true;
 		navigationHistory.hasNavigatedVertically = true;
 
 		// Prioritize revealing fragments
-		if( fragments.next() === false ) {
+		if( skipFragments || fragments.next() === false ) {
 
 			let routes = availableRoutes();
 
@@ -2302,13 +2378,13 @@ export default function( revealElement, options ) {
 			}
 
 			if( routes.down ) {
-				navigateDown();
+				navigateDown({skipFragments});
 			}
 			else if( config.rtl ) {
-				navigateLeft();
+				navigateLeft({skipFragments});
 			}
 			else {
-				navigateRight();
+				navigateRight({skipFragments});
 			}
 		}
 
@@ -2334,6 +2410,38 @@ export default function( revealElement, options ) {
 	}
 
 	/**
+	* Listener for post message events posted to this window.
+	*/
+	function onPostMessage( event ) {
+
+		let data = event.data;
+
+		// Make sure we're dealing with JSON
+		if( typeof data === 'string' && data.charAt( 0 ) === '{' && data.charAt( data.length - 1 ) === '}' ) {
+			data = JSON.parse( data );
+
+			// Check if the requested method can be found
+			if( data.method && typeof Reveal[data.method] === 'function' ) {
+
+				if( POST_MESSAGE_METHOD_BLACKLIST.test( data.method ) === false ) {
+
+					const result = Reveal[data.method].apply( Reveal, data.args );
+
+					// Dispatch a postMessage event with the returned value from
+					// our method invocation for getter functions
+					dispatchPostMessage( 'callback', { method: data.method, result: result } );
+
+				}
+				else {
+					console.warn( 'reveal.js: "'+ data.method +'" is is blacklisted from the postMessage API' );
+				}
+
+			}
+		}
+
+	}
+
+	/**
 	 * Event listener for transition end on the current slide.
 	 *
 	 * @param {object} [event]
@@ -2346,6 +2454,33 @@ export default function( revealElement, options ) {
 				type: 'slidetransitionend',
 				data: { indexh, indexv, previousSlide, currentSlide }
 			});
+		}
+
+	}
+
+	/**
+	 * A global listener for all click events inside of the
+	 * .slides container.
+	 *
+	 * @param {object} [event]
+	 */
+	function onSlidesClicked( event ) {
+
+		const anchor = Util.closest( event.target, 'a[href^="#"]' );
+
+		// If a hash link is clicked, we find the target slide
+		// and navigate to it. We previously relied on 'hashchange'
+		// for links like these but that prevented media with
+		// audio tracks from playing in mobile browsers since it
+		// wasn't considered a direct interaction with the document.
+		if( anchor ) {
+			const hash = anchor.getAttribute( 'href' );
+			const indices = location.getIndicesFromHash( hash );
+
+			if( indices ) {
+				Reveal.slide( indices.h, indices.v, indices.f );
+				event.preventDefault();
+			}
 		}
 
 	}
@@ -2376,6 +2511,26 @@ export default function( revealElement, options ) {
 				document.activeElement.blur();
 			}
 			document.body.focus();
+		}
+
+	}
+
+	/**
+	 * Handler for the document level 'fullscreenchange' event.
+	 *
+	 * @param {object} [event]
+	 */
+	function onFullscreenChange( event ) {
+
+		let element = document.fullscreenElement || document.webkitFullscreenElement;
+		if( element === dom.wrapper ) {
+			event.stopImmediatePropagation();
+
+			// Timeout to avoid layout shift in Safari
+			setTimeout( () => {
+				Reveal.layout();
+				Reveal.focus.focus(); // focus.focus :'(
+			}, 1 );
 		}
 
 	}
@@ -2432,6 +2587,7 @@ export default function( revealElement, options ) {
 
 		initialize,
 		configure,
+		destroy,
 
 		sync,
 		syncSlide,

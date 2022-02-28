@@ -19,117 +19,65 @@
         <header>
             <div>
               <div>
-                <b>Datenbanken - SS 2021</b><br>
+                <b>Datenbanken - WS 2021/22</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 12 vom 06./07.07.2021</b>
-              </div>
+                <b>Übungsblatt 12 vom 14./19.01.2022</b>
+            </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
 
         <section style="padding-top: 2.5cm">
-          <h1>Aufgabe 0: Bonusaufgabe (7P)</h1>
-          <p>Abgabe-Deadline: 06.07.2021 14:00 im Moodle</p>
-          <li>Betrachten Sie das folgende <b>fehlerhafte</b> Relationenschema.</li>
-            <li>Nennen Sie alle Fehler, die Ihnen auffallen und machen Sie Verbesserungsvorschläge.</li>
-            <li></li>
+          <h1>Aufgabe 0: SQL-Insekten (Bonusaufgabe, 10P)</h1>
+          <p>Abgabe-Deadline: 21.01.2022 9:00 im Moodle</p>
+          <p>Spielen Sie das Spiel SQL-Insekten (<a href="http://www.sql-insekten.de" target="_blank">http://www.sql-insekten.de)</a>. In dem Spiel werden Sie das Gehalt der Mitarbeiterin Greta Maria herausfinden. Tragen Sie dies im GRIPS ein und erhalten Sie 10 Bonuspunkte.</p>
+  </section>
 
-
-<style type="text/css">
-	table.tableizer-table {
-		font-size: 12px;
-		border: 1px solid #CCC; 
-		font-family: Arial, Helvetica, sans-serif;
-	} 
-	.tableizer-table td {
-		padding: 4px;
-		margin: 3px;
-		border: 1px solid #CCC;
-	}
-	.tableizer-table th {
-		color: #A4A4A4;
-		font-weight: bold;
-                font-style: italic;
-                font-size: 8px;
-	}
-        caption { 
-	        caption-side: top;
-	        font-style: italic;
-                font-size: 15px;
-}
-</style>
-
-
-<table class="tableizer-table" style="float:left;margin-right:40px">
-<caption>
-   kunde
-</caption>
-<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(100)</th><th>VARCHAR(100)<br>NOT NULL</th></tr></thead><tbody>
- <tr><td><b>kunde_id</b></td><td><b>name</b></td><td><b>email</b></td></tr>
- <tr><td>117</td><td>Michael</td><td>michael@example.de</td></tr>
- <tr><td>682</td><td>Elena</td><td>elena@example.de</td></tr>
-</tbody></table>
-
-<table class="tableizer-table">
-<caption>
-   haendler
-</caption>
-<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(100)</th><th>VARCHAR(100)</th></tr></thead><tbody>
- <tr><td><b>haendler_id</b></td><td><b>name</b></td><td><b>land</b></td></tr>
- <tr><td>4</td><td>Haushalt AG</td><td>Österreich</td></tr>
- <tr><td>9</td><td>Alternativ GmbH</td><td>Deutschland</td></tr>
-</tbody></table>
-
-<p></p>
-
-<table class="tableizer-table">
-<caption>
-   produkt
-</caption>
-<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(500)</th><th>INT</th><th>VARCHAR(40)</th><th>VARCHAR(1000)</th><th>INT<br>FK auf haendler.haendler_id</th></tr></thead><tbody>
- <tr><td><b>produkt_id</b></td><td><b>bezeichnung</b></td><td><b>preis</b></td><td><b>preiskategorie</b></td><td><b>tags</b></td><td><b>haendler</b></td></tr>
- <tr><td>16</td><td>Kühlschrank</td><td>500</td><td>mittel</td><td>Haushalt, Kühlung, stromsparend</td><td>4</td></tr>
- <tr><td>23</td><td>Gefrierschrank</td><td>150</td><td>günstig</td><td>Haushalt, Kühlung</td><td>4</td></tr>
-</tbody></table>
-
-<p></p>
-
-<table class="tableizer-table">
-<caption>
-   bewertung
-</caption>
-<thead><tr class="tableizer-firstrow"><th>INT<br>PK</th><th>VARCHAR(5)</th><th>VARCHAR(100)</th><th>VARCHAR(100)<br>FK auf kunde.name</th><th>INT<br>FK auf haendler.haendler_id</th><th>INT<br>FK auf produkt.produkt_id</th><th>VARCHAR(40)<br>CHECK(type_tag='Produktbewertung'<br>OR type_tag='Händlerbewertung')</th></tr></thead><tbody>
- <tr><td><b>bewertung_id</b></td><td><b>sterne</b></td><td><b>text</b></td><td><b>verfasser</b></td><td><b>bewerteter_haendler</b></td><td><b>bewertetes_produkt</b></td><td><b>type_tag</b></td></tr>
- <tr><td>437</td><td>*****</td><td>Alles super!</td><td>Elena</td><td>&nbsp;</td><td>23</td><td>Produktbewertung</td></tr>
- <tr><td>265</td><td>**</td><td>Haben stark nachgelassen...</td><td>Michael</td><td>9</td><td>&nbsp;</td><td>Händlerbewertung</td></tr>
-</tbody></table>
-
-</br>
-</section>
-
-<section>
-  <h1>Aufgabe 1: B+-Bäume (10P)</h1>
-  <p>Abgabe-Deadline: 06.07.2021 14:00 im Moodle</p>
-  <p>Betrachten Sie folgenden B+-Baum der Klasse (k=1, k*=1):</p>
-  <img src="img/ex6_tree.png" alt="B+-Baum" style="height:3cm">
-      <p>Lösen Sie mit Stift und Papier:<br>Fügen Sie Leo und anschließend Zoe in den Baum ein. Zeichnen Sie den kompletten Baum, so wie er nach den beiden Einfügungen aussieht.</p>
-      <!--<li>Lösen Sie mit dem B+-Baum-Simulations-Tool auf <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a>:<br>Fügen Sie 20 Zahlen so in einen B+-Baum der Klasse (k=2, k*=2, also Max. Degree=5) ein, sodass dieser die Höhe 2 hat.</li>-->
-  
-</section>
-
-
-        <section style="padding-top: 6.5cm">
-          <h1>Aufgabe 2: Trigger</h1>
+        <section>
+          <h1>Aufgabe 1: Anwendungsentwicklung mit JDBC (10P)</h1>
+          <p>Abgabe-Deadline: 14.01.2022 9:00 im Moodle</p>
+          <p><em>Da Sie für diese Aufgabe Ihr Datenbank-Passwort im Klartext in Ihren Quellcode schreiben müssen, empfiehlt es sich, dies vorher auf ein zufälliges Passwort zu ändern. Verwenden Sie dazu</em> <code>ALTER USER ihr_benutzername PASSWORD 'neues_passwort';</code> <em>Tragen Sie dieses neue Passwort dann auch in Ihren DBeaver-Verbindungseinstellungen ein.</em></p>
           <ol>
-            <li>Erstellen Sie für ein soziales Netzwerk eine Tabelle <code>freundschaften</code> mit den Spalten <code>person1</code> und <code>person2</code>.</li>
-            <li>Erstellen Sie eine Triggerfunktion und einen Trigger, der bewirkt, dass beim Einfügen einer Freundschaft (A, B) auch eine Freundschaft in die umgekehrte Richtung (B, A) eingefügt wird.</li>
-            <li>Testen Sie Ihren Trigger.</li>
+            <li>Erstellen Sie im DBeaver eine Tabelle &quot;kontakte&quot; mit den Spalten Name (<code>VARCHAR(200) PRIMARY KEY</code>), handynummer (<code>VARCHAR(20)</code>) und gesucht (<code>INT NOT NULL DEFAULT 0</code>).</li>
+            <li>Fügen Sie im DBeaver einen neuen Kontakt ein: Peter hat die handynummer 0151-555</li>
+            <li>Schreiben Sie ein Konsolenprogramm in Java und binden Sie den PostgreSQL-JDBC-Treiber ein; entweder indem Sie die Jar-Datei von <a href="https://jdbc.postgresql.org/" target="_blank">https://jdbc.postgresql.org/</a> herunterladen oder mittels Maven.</li>
+            <li>Bauen Sie in Ihrem Java-Programm eine Verbindung zu Ihrer Datenbank auf.</li>
+            <li>Geben Sie alle Kontakte (Name und Handynummer) sortiert nach ihrem Namen aus.</li>
           </ol>
         </section>
 
-        
+        <section>
+          <h1>Aufgabe 2: Stored Procedures</h1>
+          <p>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine Prozedur namens <code>kontakte_vorbereiten(anzahl INT)</code>, die eine Tabelle erstellt und diese mit Testdaten füllt.</p>
+          <ol>
+            <li>Die Prozedur soll die Tabelle <code>kontakte</code> droppen, falls Sie schon existiert: <code>DROP TABLE IF EXISTS kontakte;</code></li>
+            <li>Nun soll die Prozedur die <code>kontakte</code>-Tabelle anlegen. Die Spalten sind wie bei Aufgabe 1: <code>name VARCHAR(200) PRIMARY KEY, handynummer VARCHAR(20), gesucht INT NOT NULL DEFAULT 0</code>.</li>
+            <li>Der Parameterwert, der der Prozedur übergeben wird, bestimmt die Anzahl der Zeilen, die eingefügt werden. Erzeugen Sie entsprechend viele Dummy-Datensätze, z. B. ('Peter1', '0151-1'), ('Peter2', '0151-2'), usw.</li>
+            <li>Wenn eine negative Zahl übergeben wird, soll die Prozedur eine Exception &quot;Ungültige Anzahl&quot; werfen.</li>
+            <li>Rufen Sie die Prozedur auf, um hunderttausend Kontakte zu generieren.</li>
+          </ol>
+          <p>Hinweis: Die in einer For-Schleife <code>FOR _variablenname IN _von .. _bis LOOP ... END LOOP;</code> verwendeten Variablen müssen Sie in der <code>DECLARE</code>-Section definieren (oder sie sind Parameter).</p>
+        </section>
+
+
+        <section style="padding-top: 2.5cm">
+          <h1>Aufgabe 3: Anwendungsentwicklung mit JDBC (Fortsetzung)</h1>
+          <ol start="6">
+            <li>Implementieren Sie eine Suchfunktion für ihr Programm aus Aufgabe 1:
+                <ol>
+                    <li>Der Benutzer gibt auf der Konsole einen Namen ein</li>
+                    <li>Wird ein leerer Name eingegeben, sollen wie gehabt alle Kontakte ausgegeben werden.</li>
+                    <li>Andernfalls wird nur der Kontakt mit dem eingegebenen Namen ausgegeben.</li>
+                    <li>Gibt es keinen Kontakt mit dem eingegebenen Namen, soll eine Meldung &quot;Kein Kontakt gefunden&quot; angezeigt werden.</li>
+                    <li>Verhindern Sie SQL-Injections!</li>
+                </ol></li>
+            <li>Hinter dem Kontakt soll in Klammern die Anzahl stehen, wie oft nach ihr oder ihm gesucht wurde (&quot;gesucht&quot;-Spalte).</code></li>
+            <li>Immer wenn nach einem bestimmten Kontakt gesucht wird, soll in der Datenbank die &quot;gesucht&quot;-Zahl für diesen Kontakt um eins erhöht werden.</li>
+          </ol>
+        </section>
+
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>
 <script src="../lib/backbone.js"></script>

@@ -394,7 +394,12 @@ END $$ LANGUAGE plpgsql;</code></pre>
     <pre><code class="sql dont_execute_sql" contenteditable>CREATE OR REPLACE FUNCTION addieren(int, int) RETURNS INT AS
 $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
 
-    <div class="poll fragment fade-in-then-out" style="bottom:-260px">
+
+    <div class="fragment" data-fragment-index="2"><pre><code class="sql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre></div>
+
+    <div class="fragment" data-fragment-index="3"><pre><code class="sql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre></div>
+
+    <div class="poll fragment fade-in-then-out" style="bottom:-260px" data-fragment-index="1">
         <h1>Wie lässt sich diese UDF aufrufen?</h1>
             <ul>
                 <li>EXECUTE addieren(5,4);</li>
@@ -404,12 +409,6 @@ $$ BEGIN RETURN $1+$2; END $$ LANGUAGE plpgsql;</code></pre>
             </ul>
         <h2>https://fraage.de</h2>
     </div>
-
-    <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT addieren(5,4);</code></pre>
-
-    <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT *, addieren(sterne, 1) FROM bewertungen;</code></pre>
-
-    
 
     <aside class="notes">Funktionen haben beliebig viele Eingabeparameter und liefern genau einen Rückgabewert zurück. Der Datentyp des Rückgabewerts steht oben hinter <code>RETURNS</code>. Mit einem <code>RETURN</code>-Kommando terminiert die Funktion und erzeugt die Rückgabe. Man kann die Funktion genau wie eingebaute SQL-Funktionen (UPPER, MD5, ...) in SELECT-Anfragen mit und ohne FROM-Klausel verwenden, aber auch in INSERT, UPDATE, etc. Die hier dargestellte Funktion addiert zwei Zahlen. Die Eingabeparameternamen kann man wie hier gezeigt einfach weggelassen, wenn man auf sie lediglich mittels <code>$1</code> etc. zugreift.</aside>
 </section>
@@ -478,7 +477,9 @@ FROM produkte WHERE hersteller = $1
 $$ LANGUAGE sql;
 </code></pre>
 
-<div class="poll fragment fade-in-then-out" style="bottom:-280px">
+<div class="fragment" data-fragment-index="2"><pre><code class="sql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre></div>
+
+<div class="poll fragment fade-in-then-out" style="bottom:-280px" data-fragment-index="1">
     <h1>Wie lässt sich diese Tabellenfunktion aufrufen?</h1>
         <ul>
             <li>EXECUTE produkte_von('Calgonte');</li>
@@ -489,7 +490,7 @@ $$ LANGUAGE sql;
     <h2>https://fraage.de</h2>
 </div>
         
-            <pre class="fragment"><code class="sql dont_execute_sql" contenteditable>SELECT * FROM produkte_von('Calgonte');</code></pre>
+            
         
         <aside class="notes">Tabellenfunktionen liefert eine Tabelle zurück mit beliebig vielen Zeilen. Die Spalten und deren Typen werden im <code>CREATE FUNCTION</code>-Kommando im <code>RETURNS TABLE</code>-Teil definiert. Genau wie eine View wird eine Tabellenfunktion in der <code>FROM</code>-Klausel einer SELECT-Anfrage aufgerufen. Eine Tabellenfunktion ist quasi eine View mit Parametern.</aside>
 </section>
@@ -585,11 +586,11 @@ INSERT INTO produkte VALUES(1000, 'Kuchen', 2.00, 'Kuchenpeter');
         <li>oder das Fremdschlüssel-Constraint auf <code>DEFERRED</code> setzen:</li>
     </ul>
 
-    <pre class="fragment" data-fragment-index="2"><code class="sql dont_execute_sql" contenteditable data-trim>
+    <div class="fragment" data-fragment-index="2"><pre><code class="sql dont_execute_sql" contenteditable data-trim>
 ALTER TABLE webshop.produkte ADD CONSTRAINT 
 produkte_hersteller_fkey FOREIGN KEY (hersteller) 
 REFERENCES hersteller(firma) ON UPDATE CASCADE 
-INITIALLY DEFERRED;</code></pre>
+INITIALLY DEFERRED;</code></pre></div>
 
 <aside class="notes">Ändern wir den Trigger auf <code>BEFORE INSERT</code>, wird die Prozedur, die den Hersteller einfügt, ausgeführt, bevor die neue Zeile in die Produkttabelle eingefügt wird. Der Hersteller ist hier der Parent-Record und das Produkt der Child-Record. Der Parent muss vorher existieren, bevor der Child-Record existiert.<br>
 Als Alternative kann die Überprüfung des Fremdschlüssel-Constraints auch auf <code>DEFERRED</code> (verzögert) setzen. Der Standard ist <code>IMMEDIATE</code> - eine sofortige Überprüfung. Bei <code>DEFERRED</code> wird das Constraint erst zum Ende der Transaktion überprüft. In unserem Fall führt dies zum Erfolg, da zum Ende der Transaktion der zuvor nicht existierende Hersteller zwischenzeitlich durch den Trigger eingefügt wurde.</aside>
@@ -674,10 +675,10 @@ Hier wurde <code>10%%</code> geschrieben, da <code>%</code> als Platzhalter steh
         <li>Mittels einer <code>CHECK OPTION</code> kann überprüft werden, dass das Tupel auch das WHERE-Prädikat der View erfüllt.</li>
         <li><code>INSTEAD OF</code>-Trigger ermöglichen INSERT/UPDATE/DELETE auf jeder View.</li>
     </ul>
-    <pre class="fragment"><code class="sql dont_execute_sql" contenteditable data-trim>
+    <div class="fragment"><pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE TRIGGER meine_view_trigger INSTEAD OF INSERT ON meine_view
 FOR EACH ROW EXECUTE PROCEDURE meine_view_trigger();        
-    </code></pre>
+    </code></pre></div>
 
     <aside class="notes"><code>INSTEAD OF</code>-Trigger sind nur für Sichten gedacht. Jedes mal, wenn jemand ein INSERT / UPDATE / DELETE auf eine Sicht macht, soll stattdessen die Trigger-Aktion ausgelöst werden.</aside>
 </section>
@@ -690,7 +691,7 @@ SELECT p.produktnr, p.bezeichnung, p.preis, p.hersteller, h.land
 FROM produkte p JOIN hersteller h ON p.hersteller=h.firma;
 </code></pre>
 
-<pre class="fragment" style="width: 95%;"><code class="sql dont_execute_sql" contenteditable data-trim>
+<div class="fragment"><pre style="width: 95%;"><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE OR REPLACE FUNCTION meine_view_trigger() 
 RETURNS TRIGGER AS $$ 
 BEGIN
@@ -700,7 +701,7 @@ INSERT INTO hersteller (firma, land)
 INSERT INTO produkte (produktnr, bezeichnung, preis, hersteller)
  VALUES (NEW.produktnr, NEW.bezeichnung, NEW.preis, NEW.hersteller);
 RETURN NEW;
-END; $$ LANGUAGE plpgsql;</code></pre> 
+END; $$ LANGUAGE plpgsql;</code></pre></div>
 
 <aside class="notes">Die gezeigte View führt eine Denormalisierung der beiden Tabellen Produkte und Hersteller aus, also einen Join. Der Trigger sorgt dafür, dass ein INSERT in diese View aufgeteilt wird in zwei INSERT-Kommandos. Zunächst wird der Hersteller eingefügt. Falls es ihn schon gibt, wird sein Land angepasst. Im Anschluss erfolgt das Einfügen des Produktes.</aside>
 </section>

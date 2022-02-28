@@ -19,10 +19,10 @@
         <header>
             <div>
             <div>
-              <b>Datenbanken - SS 2021</b><br>
-              Prof. Dr.-Ing. Johannes Schildgen<br>
-              johannes.schildgen@oth-regensburg.de<br>
-              <b>Übungsblatt 10 vom 29./30.06.2021</b>
+                <b>Datenbanken - WS 2021/22</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 11 vom 7./12.01.2022</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -30,44 +30,87 @@
         </header>
 
         <section style="padding-top: 2.5cm">
-          <h1>Aufgabe 1: User-Defined Functions (10P)</h1>
-          <p>Abgabe-Deadline: 29.06.2021 14:00 im Moodle</p>
-          <ol>
-            <li>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine UDF namens <code>fakultaet(INT)</code>, die eine Integer-Zahl entgegennimmt und einen Integer ausgibt: die Fakultät der übergebenen Zahl.</li>
-            <li>Was ist die größte Zahl, deren Fakultät Sie mit Ihrer Funktion berechnen können?</li>
-        </section>
+          <h1>Aufgabe 1: Rechtemanagement, Transaktionen (10P)</h1>
+          <p>Abgabe-Deadline: 07.01.2021 9:00 im GRIPS</p>
+          <h4>a) (6P)</h4>
+          <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+          <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+          <tr>
+              <td>1.</td><td>Wenn ich GRANT rolle TO benutzer ausführe, hat der angegebene Benutzer alle Berechtigungen der spezifizierten Rolle.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>2.</td><td>Mit REVOKE ... RESTRICT verbiete ich, ein Recht weiterzugeben.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>3.</td><td>Wenn eine Transaktion Daten schreibt und sie diese selbst wieder liest, nennt man dies ein Dirty Read.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>4.</td><td>Es laufen zwei Transaktionen parallel. Eine schreibt in x und die andere liest x gleichzeitig. Hier kann ein Lost Update auftreten.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>5.</td><td>Das Phantomproblem kann auftreten, wenn zwischen zwei Leseoperationen eine andere Transaktion Datensätze löscht.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr><!--
+          <tr>
+              <td>6.</td><td>Die Redo-Info im Transaktionslog wird verwendet, um noch nicht auf die Festplatte geschriebene Aktionen von Gewinner-Transaktionen auszuführen.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>-->
+          </table>
 
-        <section>
-          <h1>Aufgabe 2: Stored Procedures</h1>
-          <p>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine Prozedur namens <code>kontakte_vorbereiten(anzahl INT)</code>, die eine Tabelle erstellt und diese mit Testdaten füllt.</p>
-          <ol>
-            <li>Die Prozedur soll die Tabelle <code>kontakte</code> droppen, falls Sie schon existiert: <code>DROP TABLE IF EXISTS kontakte;</code></li>
-            <li>Nun soll die Prozedur die <code>kontakte</code>-Tabelle anlegen. Die Spalten sind wie im letzten Übungsblatt <code>name VARCHAR(200) PRIMARY KEY, handynummer VARCHAR(20), gesucht INT NOT NULL DEFAULT 0</code>.</li>
-            <li>Der Parameterwert, der der Prozedur übergeben wird, bestimmt die Anzahl der Zeilen, die eingefügt werden. Erzeugen Sie entsprechend viele Dummy-Datensätze, z. B. ('Peter1', '0151-1'), ('Peter2', '0151-2'), usw.</li>
-            <li>Wenn eine negative Zahl übergeben wird, soll die Prozedur eine Exception &quot;Ungültige Anzahl&quot; werfen.</li>
-            <li>Rufen Sie die Prozedur auf, um hunderttausend Kontakte zu generieren.</li>
-          </ol>
-          <p>Hinweis: Die in einer For-Schleife <code>FOR _variablenname IN _von .. _bis LOOP ... END LOOP;</code> verwendeten Variablen müssen Sie in der <code>DECLARE</code>-Section definieren (oder sie sind Parameter).</p>
-        </section>
-<!--
-          <section>
-          <h1>Aufgabe 2: Trigger</h1>
-          <ol>
-            <li>Erstellen Sie für ein soziales Netzwerk eine Tabelle <code>freundschaften</code> mit den Spalten <code>person1</code> und <code>person2</code>.</li>
-            <li>Erstellen Sie eine Triggerfunktion und einen Trigger, der bewirkt, dass beim Einfügen einer Freundschaft (A, B) auch eine Freundschaft in die umgekehrte Richtung (B, A) eingefügt wird.</li>
-            <li>Testen Sie Ihren Trigger.</li>
-          </ol>
-        </section>
+          <h4>b) (3P)</h4>
+          <p>Zeichnen Sie den Serialisierbarkeitsgraphen für die folgende Historie:</p>
+          <p style="font-size:larger;">w<sub>1</sub>(x), w<sub>2</sub>(x), r<sub>2</sub>(y), r<sub>1</sub>(y), w<sub>3</sub>(y), c<sub>1</sub>, c<sub>2</sub>, c<sub>3</sub></p>
 
-        <section>
-          <h1>Aufgabe 3: B+-Bäume</h1>
-          <p>Betrachten Sie folgenden B+-Baum der Klasse (k=1, k*=1):</p>
-          <img src="img/ex6_tree.png" alt="B+-Baum" style="height:3cm">
-          <ol>
-              <li>Lösen Sie mit Stift und Papier:<br>Fügen Sie Leo und anschließend Zoe in den Baum ein. Zeichnen Sie den kompletten Baum, so wie er nach den beiden Einfügungen aussieht.</li>
-              <li>Lösen Sie mit dem B+-Baum-Simulations-Tool auf <a href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html" target="_blank">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a>:<br>Fügen Sie 20 Zahlen so in einen B+-Baum der Klasse (k=2, k*=2, also Max. Degree=5) ein, sodass dieser die Höhe 2 hat.</li>
-          </ol>
-      </section>-->
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+            <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+          <tr>
+            <td>7.</td><td>Es gibt einen Zyklus im Serialisierbarkeitsgraphen.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+          </table>
+
+          <h4>c) (2P)</h4>
+          <p>Skizzieren Sie den Ablauf des SX-Sperrverfahrens für die Historie aus Aufgabenteil b).</p>
+
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+            <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+        <tr>
+            <td>8.</td><td>Wird bei der Historie aus der vorherigen Frage das SX-Sperrverfahren eingesetzt, muss TA<sub>2</sub> warten, bevor sie in x schreiben darf.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+      </table>
+
+      <p>Ihre Lösungen zu Teil b) und c) (Serialisierbarkeitsgraph und SX-Sperrverfahren) werden in den Zoom-Sessions besprochen.</p>
+                  
+          </section>
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

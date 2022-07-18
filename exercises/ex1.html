@@ -7,25 +7,70 @@
     <title>Datenbanken - Übungsblatt 1</title>
     <link rel="stylesheet" href="../exercises/exercises.css">
     <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+    <link href="../src/erd.css" rel="stylesheet">
+    <link rel="stylesheet" href="../lib/joint.min.css" />
 </head>
 <body>
     <header>
         <div>
         <div>
-            <b>Datenbanken - WS 2021/22</b><br>
+            <b>Datenbanken - SS 2022</b><br>
             Prof. Dr.-Ing. Johannes Schildgen<br>
             johannes.schildgen@oth-regensburg.de<br>
-            <b>Übungsblatt 1 vom 15/20.10.2021</b>
+            <b>Übungsblatt 1 vom 05.04.2022</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
     <hr>
     </header>
-<section style="padding-top: 2.5cm">
-    <h1>Aufgabe 1: Datenbanken-Grundbegriffe (10P)</h1>
-    <p>Abgabe-Deadline: 15.10.2021 9:00 im Moodle</p>
-    <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt.</p>
-    <table border="0" style="width: 100%">
+
+    <section style="padding-top: 2.5cm">
+        <h1>Aufgabe 0: MonstER-Park (Bonusaufgabe; 10P)</h1>
+        <p>Abgabe-Deadline: 05.04.2022 8:00 im Moodle</p>
+        <p>Spielen Sie das Spiel MonstER-Park (<a href="http://www.monst-er.de" target="_blank">http://www.monst-er.de)</a> und lassen Sie sich zum Ende des Spiels ein Zertifikat generieren. Tragen Sie die darauf befindliche Zertifikat-ID im Moodle ein, um die 10 Bonuspunkte zu bekommen. Achtung: Hier ist keine Gruppenarbeit möglich. Jeder muss eine eigene Zertifikat-ID abgeben.</p>
+    </section>
+    <section>
+    <h1>Aufgabe 1: ER-Diagramme (10P)</h1>
+    <p>Abgabe-Deadline: 05.04.2022 8:00 im GRIPS</p>
+    <p>Betrachten Sie dieses sinnlose ER-Diagramm:</p>
+    <div style="height: 9.5cm; overflow: hidden; margin-left: -2.5cm">
+    <div class="erd">
+            [[
+             { _e: "Dings", pos: [150, 100],
+              attributes: [
+               { _a:"Baum", options:["primary"], pos: [89, 13] },
+               { _a:"Nummer", pos: [245, 13] }
+              ]
+             },
+             { _e: "Foo", pos: [530, 100],
+               attributes: [
+                { _a:"Bazinga", pos: [485, 25], options:["primary"] },
+                { _a:"Bratpfanne", pos: [610, 25]}
+               ]
+             },
+             { _e: "Bar", pos: [334, 277],
+               attributes: [
+                { _a:"Dies", pos: [205, 212], options:["primary"] },
+                { _a:"Das", pos: [205, 275], options:["primary"] },
+                { _a:"Dem", pos: [510, 274], options: ["multi"] }
+               ]
+             }
+            ],
+            [
+             { _r: "wird gebaut", pos: [350, 180],
+               _e: ["Dings", "Foo", "Bar"],
+               card: ["1", "1", "N"],
+             },
+             { _r: "hat",
+               _e: ["Dings", "Foo"],
+               card: ["1", "N"],
+               attributes: [{_a:"Buh", pos: [365, 13]}]
+             }
+            ]]
+                        </div></div>
+        <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 2 Punkte, falsche Antworten geben keine Punktabzüge.</p>
+    
+            <table border="0" style="width: 100%">
     <tr>
         <td style="width:10mm">&nbsp;</td>
         <td>&nbsp;</td>
@@ -33,59 +78,41 @@
         <td style="text-align: center; width:15mm">Falsch</td>
     </tr>
     <tr>
-        <td>1.</td><td>In OLTP-Systemen sind Transaktionen oft komplex und langdauernd.</td>
+        <td>1.</td><td>Ein Dings hat immer nur ein Foo.</td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
     </tr>
     <tr>
-        <td>2.</td><td>Ein Data-Warehouse ist eine separate DB, die parallel zur operationalen DB zum Einsatz kommt.</td>
+        <td>2.</td><td>Es kann Dings geben, die kein Foo haben.</td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
     </tr>
     <tr>
-        <td>3.</td><td>Das I in ACID steht für Integrität.</td>
+        <td>3.</td><td>Ein und dasselbe Dings kann von einem Foo in mehreren verschiedenen Bars gebaut werden.</td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
     </tr>
     <tr>
-        <td>4.</td><td>MySQL ist ein Datenbankmanagementsystem.</td>
+        <td>4.</td><td>Es kann nur eine Bar geben, in der Dies 'hallo' ist.</td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
     </tr>
     <tr>
-        <td>5.</td><td>Ein Befehl einer Anfragesprache, mit dem man eine neue Spalte in eine existierende Tabelle hinzufügen kann, fällt in die Kategorie DDL.</td>
+        <td>5.</td><td>Eine Bar kann viele Dem haben.</td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
     </tr>
-    <tr>
-        <td>6.</td><td>In den DB-Metadaten wird beschreiben, dass Peter die Telefonnummer 0151-12345 hat.</td>
+    <!--<tr>
+        <td>6.</td><td>Die Nummer eines Dings ist eindeutig.</td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>7.</td><td>Daten belegen in der Regel mehr Platz als Metadaten.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>8.</td><td>Das logische Datenmodell legt fest, wie Datensätze intern auf die Festplatte gespeichert werden.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>9.</td><td>Eine View ist eine Sicht auf die in der Datenbank gespeicherten Daten und kann zum externen Zugriff für Anwendungen dienen.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>10.</td><td>Wenn ich bei meinem DBS die Storage-Engine umstelle, muss ich mein Tabellenschema komplett neu anpassen.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
+    </tr>-->
     </table>
+    <!--<p>b) Erstellen Sie ein ER-Diagramm für die News-Seite &quot;Igel Online&quot;. Dafür gibt es bis zu 5 Punkte:<br>
+        Auf der Plattform Igel Online gibt es Beiträge, die eine eindeutige Beitrags-ID haben, sowie aus einem Titel, Datum, Uhrzeit und Text bestehen. Benutzer können sich mit ihrer E-Mail-Adresse registrieren und einen Namen und ein Passwort wählen. Ein Kommentar kann gepostet werden unter einen Beiträg. Er hat eine Kommentarnummer, Datum, Uhrzeit und einen Text. Der Autor des Kommentars ist stets ein registrierter Benutzer. Des Weiteren können Benutzer bei Beiträgen auf &quot;gefällt mir&quot; klicken.</p>-->
 </section>
 
-<section>
+<section style="page-break-inside:avoid; padding-top: 2.5cm">
     <h1>Aufgabe 2: ER-Diagramm einer Mitfahrbörse</h1>
     <p>Erstellen Sie ein ER-Diagramm für die Mitfahrbörse Blablabla.</p>
 <p>Benutzer registrieren sich bei Blablabla mit ihrer Handynummer und geben ihren Namen an. Außerdem beschreiben sie ihr Auto: Farbe und Modell.</p>
@@ -93,5 +120,33 @@
 <p>Benutzer können sich für Fahrten eines anderen Benutzers eintragen, wenn sie mitfahren möchten. Dazu wird lediglich ein Status notiert, damit klar ist, ob die Meldung noch unbestätigt oder bereits bestätigt ist.</p>
 <p>Die Kommunikation erfolgt über SMS, daher braucht Blablabla kein eigenes Nachrichtensystem.</p>
 </section>
+
+    <section style="page-break-inside:avoid; padding-top: 1.0cm">
+    <h1>Aufgabe 3: ER-Diagramm eines Autovermieters</h1>
+    <p>Erstellen Sie ein ER-Diagramm für den Autovermieter Entenpreis.</p>
+<p>Ein Kunde registriert sich bei Entenpreis mit seiner E-Mail-Adresse und einem Passwort, außerdem erhält er eine automatisch generierte Kundennummer.</p>
+<p>Wenn ein Kunde eine Buchung aufgibt, wird eine global eindeutige Buchungsnummer generiert und zusätzlich das Buchungsdatum und das Datum der Ausleihe und Rückgabe gespeichert.</p>
+<p>Eine Buchung umfasst immer nur ein einziges Fahrzeug. Fahrzeuge sind von einem bestimmten Modell. Modelle haben eine Marke, eine Modellbezeichnung und einen Preis. Beispielsweise gibt des den "Citroen 2CV" für 100 EUR pro Tag. Von diesem Modell existieren ein Dutzend buchbare Fahrzeuge, jedes hat eine für das jeweilige Modell eindeutige laufende Nummer (von 1 bis 12) und eine Farbe.</p>
+<p>Modelle teilen sich auf in PKWs, Transporter und LKWs. Bei LKWs wird die zulässige Gesamtmasse gespeichert.</p>
+<p>Kunden können beliebig viele PKWs als Favoriten markieren. Für Transporter und LKWs ist das nicht möglich.</p>
+</section>
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+
 </body>
 </html>

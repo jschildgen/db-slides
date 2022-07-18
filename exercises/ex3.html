@@ -14,10 +14,10 @@
         <header>
             <div>
             <div>
-                <b>Datenbanken - WS 2021/22</b><br>
+                <b>Datenbanken - SS 2022</b><br>
                 Prof. Dr.-Ing. Johannes Schildgen<br>
                 johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 3 vom 29.10./03.11.2021</b>
+                <b>Übungsblatt 3 vom 26.04.2022</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -25,62 +25,41 @@
         </header>
 
         <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Relationenmodell (10P)</h1>
-            <p>Abgabe-Deadline: 29.10.2021 9:00 im GRIPS</p>
-            <p>Betrachten Sie das folgende Relationenschema eines Friseursalons:</p>
-            
-            <p>PERSONAL (<u>Vorname</u>, Tarifstufe)<br>
-               KUNDEN (<u>Kundennr</u>, Name, Telefon)<br>
-               TERMIN (<u>Datum, Uhrzeit, Personal</u>, Kunde)</p>
-        
-               <p>TERMIN.Personal ist Fremdschlüssel auf PERSONAL.Vorname<br>
-            TERMIN.Kunde ist Fremdschlüssel auf KUNDEN.Kundennr</p>
-        
-                <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort bei Fragen 1 bis 5 gibt es 1 Punkt, falsche Antworten geben keine Punktabzüge. Frage 6 gibt bis zu 5 Punkte.</p>
-            
-                    <table border="0" style="width: 100%">
-            <tr>
-                <td style="width:10mm">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td style="text-align: center; width:15mm">Richtig</td>
-                <td style="text-align: center; width:15mm">Falsch</td>
-            </tr>
-            <tr>
-                <td>1.</td><td>Es darf nur eine Mitarbeiterin mit dem Vornamen Ute geben.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>2.</td><td>Es ist möglich, dass die Kundin 5 einen Termin bucht, obwohl es gar keine Kundin mit der Kundennummer 5 gibt.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>3.</td><td>Es ist möglich, dass ein Mitarbeiter überhaupt keine Termine hat.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>4.</td><td>Es ist möglich, dass ein Kunde am gleichen Tag zur gleichen Uhrzeit mehrere Termine hat.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>5.</td><td>In dem Tabellenschema gibt es einen zusammengesetzten Fremdschlüssel.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
+            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
+            <p>Abgabe-Deadline: 26.04.2022 8:00 im Moodle</p>
 
-            <tr>
-                <td>6.</td>
-                <td colspan="3">Überführen Sie das Relationenschema zurück in ein ER-Diagramm. Verwenden Sie die Chen-Notation.</td>
-            </tr>
+            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
+            <p>Wir verwenden folgende Relationen:</p>
+            <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+               Studenten(<u>MatrNr</u>, Name, Semester)<br>
+               Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+               hoeren(<u>MatrNr, VorlNr</u>)</p>
+            <p>Vorlesungen.gelesenVon ist Fremdschlüssel auf Professoren.PersNr<br>
+               hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+               hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
+            <p>Formulieren Sie die folgenden Anfragen mittels Ausdrücken der relationalen Algebra.</p>
             
+            <table border="0" style="width: 100%; margin-top: -3mm;">
+                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830? (3P)</td></tr>
+                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen? (4P)</td></tr>
+            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält? (3P)</td></tr>
             </table>
-              </section>
+        </section>
+        
+        <section>
+            <h1>Aufgabe 2: Relationale Algebra</h1>
+            <p>Formulieren Sie Ausdrücke der relationalen Algebra für die folgenden Aufgabenstellungen ebenfalls auf dem Relationenschema von Aufgabe 1:</p>
+            <table border="0" style="width: 100%">
+                
+                <tr><td>4.</td><td>Welche Studierenden (Namen) heißen genau gleich wie ein Professor?</td></tr>
+                <tr><td>5.</td><td>Welche Vorlesungen (VorlNr, Titel) werden von Studierenden gehört, die im zweiten Semester sind?</td></tr>
+                <tr><td>6.</td><td>Welche Professoren (PersNr, Name) haben den gleichen Rang wie der Professor mit PersNr 2137? Geben Sie aber nicht den Professor 2137 aus!</td></tr>
+            </table>
+        </section>
+        
 
     <section style="page-break-inside:avoid; padding-top: 2.5cm">
-        <h1>Aufgabe 2: ER-Diagramm &rightarrow; Relationenschema</h1>
+        <h1>Aufgabe 3: ER-Diagramm &rightarrow; Relationenschema</h1>
         <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema. Dabei geht es um eine App, um sich mit dem Handy Essen an die aktuelle Position liefern zu lassen. Verwenden Sie zur Umsetzung der Generalisierung das Konzept der vertikalen Partitionierung.</p>
         <div style="height: 9cm; overflow: hidden; margin-left: -2.5cm">
                 <div class="erd">
@@ -119,46 +98,13 @@
                         ]]
                                     </div></div>
     </section>  
-        
-        <!--
-        <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
-            <p>Abgabe-Deadline: 29.10.2021 9:00 im Moodle</p>
 
-            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
-            <p>Wir verwenden folgende Relationen:</p>
-            <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
-               Studenten(<u>MatrNr</u>, Name, Semester)<br>
-               Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
-               hoeren(<u>MatrNr, VorlNr</u>)</p>
-            <p>Vorlesungen.gelesenVon ist Fremdschlüssel auf Professoren.PersNr<br>
-               hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
-               hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
-            <p>Formulieren Sie die folgenden Anfragen mittels Ausdrücken der relationalen Algebra.</p>
-            
-            <table border="0" style="width: 100%; margin-top: -3mm;">
-                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830? (3P)</td></tr>
-                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen? (4P)</td></tr>
-            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält? (3P)</td></tr>
-            </table>
-        </section>
-        
-        <section>
-            <h1>Aufgabe 2: Relationale Algebra</h1>
-            <p>Formulieren Sie Ausdrücke der relationalen Algebra für die folgenden Aufgabenstellungen ebenfalls auf dem Relationenschema von Aufgabe 1:</p>
-            <table border="0" style="width: 100%">
-                
-                <tr><td>4.</td><td>Welche Studierenden (Namen) heißen genau gleich wie ein Professor?</td></tr>
-                <tr><td>5.</td><td>Welche Vorlesungen (VorlNr, Titel) werden von Studierenden gehört, die im zweiten Semester sind?</td></tr>
-                <tr><td>6.</td><td>Welche Professoren (PersNr, Name) haben den gleichen Rang wie der Professor mit PersNr 2137? Geben Sie aber nicht den Professor 2137 aus!</td></tr>
-            </table>
-        </section>
-        
-        <section>
-            <h1>Aufgabe 3: Relationenschema &rightarrow; ER-Diagramm</h1>
-            <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
-        </section>
-    -->
+
+    <section>
+        <h1>Aufgabe 4: Relationenschema &rightarrow; ER-Diagramm</h1>
+        <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
+    </section>
+
         
         <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
             <h1>Aufgabe 3: Normalisierung</h1>

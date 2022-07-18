@@ -255,7 +255,7 @@
                             <div class="columns">
                             <div class="erd" style="margin-top:15mm; width: 400px;">
                                     [[
-                                     { _e: "Personen", pos: [130, 100],
+                                     { _e: "Person", pos: [130, 100],
                                       attributes: [
                                         { _a:"PersNr", options:["primary"], pos: [69, 13] },
                                         { _a:"Name", pos: [225, 13] }
@@ -268,7 +268,7 @@
                             <div class="fragment" style="margin-top: -1mm;">
                                 <span data-sql-query="SELECT kundennr AS PersNr, name as Name FROM kunden" data-sql-pk="PersNr" data-sql-tablename="personen"></span></div>
                             </div>
-                            <aside class="notes">Jeder Entitätstyp des ER-Diagramms wird in eine Relation überführt, die den gleichen Namen trägt. Für jedes Attribut gibt es eine Spalte in der Relation, Primärschlüsselattribute sind genau wie im ER-Diagramm unterstrichen.</aside>
+                            <aside class="notes">Jeder Entitätstyp des ER-Diagramms wird in eine Relation überführt. Für jedes Attribut gibt es eine Spalte in der Relation, Primärschlüsselattribute sind genau wie im ER-Diagramm unterstrichen.</aside>
                         </section>
                         <section>
                                 <h3>Sub-Attribute &rightarrow; Einzelne Attribute</h3>
@@ -276,7 +276,7 @@
                                 <div class="columns">
                                         <div class="erd" style="margin-top:15mm; width: 450px;">
                                                 [[
-                                                 { _e: "Personen", pos: [150, 100],
+                                                 { _e: "Person", pos: [150, 100],
                                                   attributes: [
                                                    { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                    { _a:"Name", pos: [245, 13] },
@@ -315,7 +315,7 @@
                                 <div class="columns">
                                         <div class="erd" style="margin-top:5mm; width: 350px;">
                                                 [[
-                                             { _e: "Personen", pos: [150, 100],
+                                             { _e: "Person", pos: [150, 100],
                                               attributes: [
                                                { _a:"PersNr", options:["primary"], pos: [89, 13] },
                                                { _a:"Name", pos: [245, 13] },
@@ -356,7 +356,7 @@
                             <div class="columns">
                                     <div class="erd" style="margin-top:5mm; width: 350px;">
                                             [[
-                                             { _e: "Produkte", pos: [30, 100],
+                                             { _e: "Produkt", pos: [30, 100],
                                                attributes: [
                                                 { _a:"Produktnr", pos: [15, 25], options:["primary"] },
                                                 { _a:"Bezeichnung", pos: [134, 25] },
@@ -371,8 +371,8 @@
                                              }
                                             ],
                                             [
-                                             { _r: "sind von",
-                                               _e: ["Produkte", "Hersteller"],
+                                             { _r: "ist von",
+                                               _e: ["Produkt", "Hersteller"],
                                                card: ["N", "1"]      }
                                             ]]
                                                         </div>
@@ -417,14 +417,14 @@
                                 <div class="columns">
                                         <div class="erd" style="margin-top:-9mm; width: 350px;">
                                                 [[
-                                                 { _e: "Kunden", pos: [30, 100],
+                                                 { _e: "Kunde", pos: [30, 100],
                                                    attributes: [
                                                     { _a:"Kundennr", pos: [12, 30], options:["primary"] },
                                                     { _a:"Name", pos: [124, 23] },
                                                     { _a:"E-Mail", pos: [204, 71]}
                                                    ]
                                                  },
-                                                 { _e: "Produkte", pos: [30, 304],
+                                                 { _e: "Produkt", pos: [30, 304],
                                                    attributes: [
                                                    { _a:"Produktnr", pos: [15, 400], options:["primary"] },
                                                    { _a:"Bezeichnung", pos: [134, 400] },
@@ -433,8 +433,8 @@
                                                  }
                                                 ],
                                                 [
-                                                 { _r: "bewerten",
-                                                   _e: ["Kunden", "Produkte"],
+                                                 { _r: "bewertet",
+                                                   _e: ["Kunde", "Produkt"],
                                                    attributes: [ {_a:"Sterne", pos: [150, 175] }, {_a:"Text", pos: [150, 240] } ],
                                                    card: ["N", "M"]      }
                                                 ]]
@@ -472,7 +472,7 @@
                                                  }
                                                 ],
                                                 [
-                                                 { _r: "haben", options: ["weak"],
+                                                 { _r: "hat", options: ["weak"],
                                                    _e: ["Anbieter", "Handytarif"],
                                                    card: ["1", "N"]      }
                                                 ]]
@@ -492,31 +492,31 @@
                                 <div id="er_ratings" style="height: 4.5cm; overflow: hidden;">    
                                         <div class="stretch erd">
                                             [[
-                                            { _e: "Kunden", pos: [50, 10],
+                                            { _e: "Kunde", pos: [50, 10],
                                              attributes: [
                                                 { _a:"Kundennr", options:["primary"], pos: [10, 85] }, 
                                                    { _a:"...", pos: [140, 85] }
                                              ]
                                             },
-                                            { _e: "Produkte", pos: [730, 10],
+                                            { _e: "Produkt", pos: [730, 10],
                                               attributes: [
                                                 { _a:"Produktnr", options:["primary"], pos: [690, 85] }, 
                                                    { _a:"...", pos: [810, 85] }
                                               ]
                                             },
-                                            { _e: "Bewertungen", pos: [390, 10], options: ["weak"],
+                                            { _e: "Bewertung", pos: [390, 10], options: ["weak"],
                                             attributes: [ 
                                                 {_a:"Sterne", pos: [340, 100] }, 
                                                 {_a:"Text", pos: [480, 100] } ]
                                             }
                                            ],
                                            [
-                                            { _r: "schreiben",
-                                              _e: ["Kunden", "Bewertungen"], options: ["weak"],
+                                            { _r: "schreibt",
+                                              _e: ["Kunde", "Bewertung"], options: ["weak"],
                                               card: ["1", "N"]
                                             },
                                             { _r: "für",
-                                              _e: ["Bewertungen", "Produkte"], options: ["weak"],
+                                              _e: ["Bewertung", "Produkt"], options: ["weak"],
                                               card: ["N", "1"]
                                             }
                                            ]]
@@ -538,7 +538,7 @@
                                               </ul>
                                             <h2>https://fraage.de</h2>
                                         </div>
-                                        <aside class="notes">Der schwache Entitätstyp Bewertungen ist von zwei Entitätstypen existenzabhängig: Kunden und Produkte. Die Bewertungen-Relation hat also als Primärschlüssel die Kombination aus den Primärschlüsseln ebendieser beider Tabellen: Kundennr, Produktnr.<br>Das Resultat ist genau das gleiche wie die Relation, die aus der N:M-Beziehung &quot;bewerten&quot; entstanden ist (siehe 2 Folien zurück).</aside>
+                                        <aside class="notes">Der schwache Entitätstyp Bewertung ist von zwei Entitätstypen existenzabhängig: Kunden und Produkte. Die Bewertungen-Relation hat also als Primärschlüssel die Kombination aus den Primärschlüsseln ebendieser beider Tabellen: Kundennr, Produktnr.<br>Das Resultat ist genau das gleiche wie die Relation, die aus der N:M-Beziehung &quot;bewerten&quot; entstanden ist (siehe 2 Folien zurück).</aside>
                             </section>
 
                             <section data-hide-from="2V">
@@ -546,20 +546,20 @@
                                 <div id="er_degree_3" style="height: 9cm; overflow: hidden;">
                                         <div class="stretch erd">
                                                 [[
-                                                 { _e: "Kunden", pos: [150, 100],
+                                                 { _e: "Kunde", pos: [150, 100],
                                                   attributes: [
                                                    { _a:"Kundennr", options:["primary"], pos: [89, 13] },
                                                    { _a:"Name", pos: [245, 13] }
                                                   ]
                                                  },
-                                                 { _e: "Tarife", pos: [530, 100],
+                                                 { _e: "Tarif", pos: [530, 100],
                                                    attributes: [
                                                     { _a:"Bezeichnung", pos: [475, 25], options:["primary"] },
                                                     { _a:"Mindestlaufzeit", pos: [599, 25]},
                                                     { _a:"Preis", pos: [698, 71]}
                                                    ]
                                                  },
-                                                 { _e: "Fitnessstudios", pos: [334, 277],
+                                                 { _e: "Fitnessstudio", pos: [334, 277],
                                                    attributes: [
                                                     { _a:"Strasse", pos: [205, 212], options:["primary"] },
                                                     { _a:"Hausnummer", pos: [205, 275], options:["primary"] }
@@ -567,8 +567,8 @@
                                                  }
                                                 ],
                                                 [
-                                                 { _r: "buchen",
-                                                   _e: ["Kunden", "Tarife", "Fitnessstudios"],
+                                                 { _r: "bucht",
+                                                   _e: ["Kunde", "Tarif", "Fitnessstudio"],
                                                    card: ["N", "1", "M"],
                                                    attributes: [{_a:"Datum", pos: [462, 195]}]
                                                  }
@@ -599,41 +599,41 @@
                             <section>
                                 <h3>NOT NULL / UNIQUE</h3>
                                 
-                                <p><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                <p><img style="width:8.5cm; vertical-align: middle;" uml="entity Person {
                                     PersNr
                                     --
                                     Name
                                     E-Mail
                                   }
-                                  entity Orte {
+                                  entity Ort {
                                     Ort
                                     --
                                   }
-                                  Personen }o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist NOT NULL</p>
+                                  Person }o-right-|| Ort : Geburtsort"/> &Rightarrow; Geburtsort ist NOT NULL</p>
 
-                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Person {
                                     PersNr
                                     --
                                     Name
                                     E-Mail
                                   }
-                                  entity Orte {
+                                  entity Ort {
                                     Ort
                                     --
                                   }
-                                  Personen |o-right-o| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE</p>
+                                  Person |o-right-o| Ort : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE</p>
 
-                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Personen {
+                                  <p style="margin-top: -1.25cm"><img style="width:8.5cm; vertical-align: middle;" uml="entity Person {
                                     PersNr
                                     --
                                     Name
                                     E-Mail
                                   }
-                                  entity Orte {
+                                  entity Ort {
                                     Ort
                                     --
                                   }
-                                  Personen |o-right-|| Orte : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE NOT NULL</p>
+                                  Person |o-right-|| Ort : Geburtsort"/> &Rightarrow; Geburtsort ist UNIQUE NOT NULL</p>
                                   
 
                                   
@@ -642,23 +642,23 @@
                             </section>
                             <section>
                                     <h3>NOT NULL / UNIQUE</h3>
-                                    <img style="position: absolute; right:1cm; width:9cm; max-height:1000px" uml="entity Personen {
+                                    <img style="position: absolute; right:1cm; width:9cm; max-height:1000px" uml="entity Person {
                                         PersNr
                                         --
                                         Name
                                         E-Mail
                                       }
-                                      entity Orte {
+                                      entity Ort {
                                         Ort
                                         --
                                       }
-                                      entity Kreditkarten {
+                                      entity Kreditkarte {
                                         Kreditkartennr
                                         --
                                         ...
                                       }
-                                      Personen }o-right-|| Orte : Geburtsort
-                                      Personen ||--o| Kreditkarten : haben"/>
+                                      Person }o-right-|| Ort : Geburtsort
+                                      Person ||--o| Kreditkarte : hat"/>
                                     
                                         <p>Personen(<br>&nbsp;<u>PersNr</u>,<br>&nbsp;Name,<br>&nbsp;E-Mail,<br>&nbsp;Geburtsort NOT NULL,<br>&nbsp;Kreditkarte UNIQUE<br>)</p>
                                         
@@ -678,16 +678,16 @@
                                 <div style="position:absolute; left: 625px; top: 220px; height: 400px; overflow:hidden;">
                                         <div class="erd" style="width: 400px;">
                                                 [[
-                                                 { _e: "Kunden", pos: [110, 100],
+                                                 { _e: "Kunde", pos: [110, 100],
                                                   attributes: [
                                                     { _a:"Kundennr", options:["primary"], pos: [15, 10] },
                                                     { _a:"Name", pos: [130, 10] },
                                                     { _a:"E-Mail", pos: [250, 10] }
                                                   ]
                                                  },
-                                                 { _e: "Privatkunden", pos: [10, 230], isa: {_e:"Kunden"},
+                                                 { _e: "Privatkunde", pos: [10, 230], isa: {_e:"Kunde"},
                                                  attributes: [ {_a:"Bonuspunke", pos: [35, 310]} ]},
-                                                 { _e: "Geschäftskunden", pos: [200, 230], isa: {_e:"Kunden"}, 
+                                                 { _e: "Geschäftskunde", pos: [200, 230], isa: {_e:"Kunde"}, 
                                                  attributes: [ { _a:"USt-IdNr.", pos: [225, 310]} ]},
                                                 ],
                                                 [
@@ -820,9 +820,9 @@
                                             <section data-hide-from="2V">
                                                 <h3>RelaX - relational algebra calculator</h3>
                                                 <p><a href="https://dbis-uibk.github.io/relax/">https://dbis-uibk.github.io/relax/</a></p>
-                                                <p class="small">Gist-ID unseres Webshop-Schemas: d67f16874b528abc6e6c88d07a50b2dc</p>
+                                                <!--<p class="small">Gist-ID unseres Webshop-Schemas: d67f16874b528abc6e6c88d07a50b2dc</p>-->
                                                 <img src="img/3/relax.png" alt="RelaX" class="noborder stretch" style="margin-top:-3mm">
-                                                <aside class="notes">Mit dem webbasierten Tool RelaX kann man Ausdrücke der relationalen Algebra formulieren und ausführen. Oben links im Tool wähnt man aus verschiedenen Beispielschemas, man kann auch ein eigenes Schema erstellen oder ein vorgefertigtes mittels einer Gist-ID importieren. Die Gist-ID des Webshop-Beispiels aus dieser Vorlesung steht auf dieser Folie und kann zum Üben von Anfragen auf diesem Schema verwendet werden.</aside>
+                                                <aside class="notes">Mit dem webbasierten Tool RelaX kann man Ausdrücke der relationalen Algebra formulieren und ausführen. Oben links im Tool wähnt man aus verschiedenen Beispielschemas, man kann auch ein eigenes Schema erstellen. Das Webshop-Schema aus dieser Vorlesung steht dort ebenfalls zur Auswahl und kann zum Üben von Anfragen auf diesem Schema verwendet werden.</aside>
                                             </section>
                                             <section data-hide-from="2V">
                                                 <h2>Mengenoperationen</h2>

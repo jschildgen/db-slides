@@ -19,10 +19,10 @@
         <header>
             <div>
                 <div>
-                    <b>Datenbanken - WS 2021/22</b><br>
+                    <b>Datenbanken - SS 2022</b><br>
                     Prof. Dr.-Ing. Johannes Schildgen<br>
                     johannes.schildgen@oth-regensburg.de<br>
-                    <b>Übungsblatt 9 vom 10./15.12.2021</b>
+                    <b>Übungsblatt 9 vom 14.06.2022</b>
                 </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -31,7 +31,7 @@
 
     <section style="padding-top: 2.5cm">
       <h1>Aufgabe 1: Datenimport aus einer CSV-Datei (10P)</h1>
-      <p>Abgabe-Deadline: 10.12.2021 9:00 im Moodle</p>
+      <p>Abgabe-Deadline: 14.06.2022 8:00 im Moodle</p>
         <p>In diesem Übungsblatt geht es darum, die aktuellen Corona-Impfzahlen als CSV-Datei herunterzuladen, diese in eine PostgreSQL-Datenbank zu importieren und Analysen mit SQL darauf auszuführen.</p>
         
         <ol>
@@ -50,7 +50,7 @@ impfungen decimal(10,1), primary key(datum, land));</code></pre>
         </ol>
 
 <table><tr><th>datum</th><th>land</th><th>kontinent</th><th>impfungen</th></tr>
-    <tr><td>2021-12-01</td><td>Germany</td><td>Europe</td><td><!--1063287-->???</td></tr>
+    <tr><td>2022-05-01</td><td>Germany</td><td>Europe</td><td><!--1063287-->???</td></tr>
 </table>
 
         <p>Hinweise sind auf der nächsten Seite.</p>
@@ -73,7 +73,7 @@ impfungen decimal(10,1), primary key(datum, land));</code></pre>
       <h1>Aufgabe 2: SQL-Anfragen</h1>
       <p>Formulieren Sie SQL-Anfragen für die die folgenden Fragestellungen auf der in Aufgabe 1 importierten Impfungen-Tabelle:</p>
       <ol>
-        <li>Wie viele Corona-Impfungen gab es insgesamt im November 2021? (Tipp: Verwenden Sie BETWEEN).</li>
+        <li>Wie viele Corona-Impfungen gab es insgesamt im Mai 2022? (Tipp: Verwenden Sie BETWEEN).</li>
         <li>Geben Sie für jedes Land die Gesamtanzahl an Impfungen aus; jedoch nur für Länder mit mind. 100.000 Impfungen. Die Ausgabe soll absteigend sortiert sein nach der Anzahl an Impfungen.</li>
         <!--<li>Geben Sie für jeden Kontinent den Namen desjenigen Landes in diesem Kontinent aus, in welchem es bisher die meisten gemeldeten Corona-Fälle gibt.</li>-->
         <li>In welchen Ländern gibt es über alle Zeit gesehen mehr Impfungen als in Deutschland?</li>

@@ -18,58 +18,99 @@
     <body>
         <header>
             <div>
-                <div>
-                    <b>Datenbanken - WS 2021/22</b><br>
-                    Prof. Dr.-Ing. Johannes Schildgen<br>
-                    johannes.schildgen@oth-regensburg.de<br>
-                    <b>Übungsblatt 10 vom 17./22.12.2021</b>
-                </div>
+            <div>
+                <b>Datenbanken - SS 2022</b><br>
+                Prof. Dr.-Ing. Johannes Schildgen<br>
+                johannes.schildgen@oth-regensburg.de<br>
+                <b>Übungsblatt 10 vom 21.06.2022</b>
+            </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
         <hr>
         </header>
 
-    <section style="padding-top: 2.5cm">
-      <h1>Aufgabe 1: Sichten in SQL (10P)</h1>
-      <p>Abgabe-Deadline: 17.12.2021 9:00 im Moodle</p>
-      <p>Auf <a href="https://data.deutschebahn.com/dataset/data-stationsdaten" target="_blank">https://data.deutschebahn.com/dataset/data-stationsdaten</a> finden Sie Datensätze mit deutschen Bahnhöfen.</p>
-      <ol>
-          <li>Laden Sie sich den neusten Datensatz im CSV-Format herunter (den von 03/2020).</li>
-          <li>Betrachten Sie die Datei in einem Texteditor, welche Spalten gibt es?</li>
-          <li>Erstellen Sie in Ihrer PostgreSQL-Datenbank eine Tabelle &quot;bahnhoefe&quot; mit den passenden Spalten und wählen Sie sinnvolle Datentypen und Primärschlüssel.</li>
-          <li>Benutzen Sie die Import-Funktion von DBeaver, um die CSV-Datei in Ihre Tabelle zu importieren (Rechtsklick auf die Tabelle - Daten importieren).</li>
-          <li>Erstellen Sie eine View &quot;hbf&quot; mit dem Spalten &quot;bhfnr&quot;, &quot;bundesland&quot;, &quot;station&quot; und &quot;kategorie&quot;, die alle Bahnhöfe enthält, die auf &quot;Hbf&quot; oder &quot;Hauptbahnhof&quot; enden. Die Kategorie-Spalte der View soll lediglich eine Umbenennung der Spalte Kat. Vst. sein.</li>
-      </ol>
-    </section>
+        <section style="padding-top: 2.5cm">
+          <h1>Aufgabe 1: Rechtemanagement, Transaktionen (10P)</h1>
+          <p>Abgabe-Deadline: 21.06.2022 8:00 im GRIPS</p>
+          <h4>a) (6P)</h4>
+          <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+          <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+          <tr>
+              <td>1.</td><td>Wenn ich GRANT rolle TO benutzer ausführe, hat der angegebene Benutzer alle Berechtigungen der spezifizierten Rolle.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>2.</td><td>Mit REVOKE ... RESTRICT verbiete ich, ein Recht weiterzugeben.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>3.</td><td>Wenn eine Transaktion Daten schreibt und sie diese selbst wieder liest, nennt man dies ein Dirty Read.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>4.</td><td>Es laufen zwei Transaktionen parallel. Eine schreibt in x und die andere liest x gleichzeitig. Hier kann ein Lost Update auftreten.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>
+          <tr>
+              <td>5.</td><td>Das Phantomproblem kann auftreten, wenn zwischen zwei Leseoperationen eine andere Transaktion Datensätze löscht.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr><!--
+          <tr>
+              <td>6.</td><td>Die Redo-Info im Transaktionslog wird verwendet, um noch nicht auf die Festplatte geschriebene Aktionen von Gewinner-Transaktionen auszuführen.</td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+              <td style="text-align: center"><i class="far fa-square"></i></td>
+          </tr>-->
+          </table>
 
-    <section>
-        <h1>Aufgabe 2: SQL-Anfragen, Materialisierte Sichten</h1>
-      <ol>
-        <li>Erstellen Sie eine weitere View: &quot;grosser_hbf&quot;, die auf der Sicht &quot;hbf&quot; basiert, aber nur die Bahnhöfe der Kategorie 1 enthält. Schreiben Sie am Ende des <code>CREATE VIEW</code>-Kommandos: <code>WITH LOCAL CHECK OPTION</code>. Dadurch wird beim Einfügen in die View das WHERE-Prädikat überprüft.</li>
-          <li>Formulieren Sie nun folgende Anfragen auf den Views:
-                  <ol type="a">
-                      <li>Finden Sie den Regensburger Hauptbahnhof</li>
-                      <li>Fügen Sie in die hbf-Sicht einen neuen Bahnhof ein: &quot;Teststadt Nord&quot; in Hessen mit der ID 9999 und Kategorie 5.</li>
-                      <li>Finden Sie mit einer SELECT-Anfrage auf der hbf-Sicht den neu eingefügten Bahnhof?</li>
-                      <li>Löschen Sie den Bahnhof 9999 wieder aus der bahnhoefe-Tabelle</li>
-                      <li>Versuchen Sie das INSERT aus b) nun auf der grosser_hbf-Sicht</li>
-                      <li>Passen Sie in dem INSERT-Kommando die Bahnhofskategorie so an, dass es auf der grosser_hbf-Sicht funktioniert.</li>
-                      <li>Finden Sie mit einer SELECT-Abfrage auf der grosser_hbf-Sicht den neu eingefügten Bahnhof?</li>
-                      <li>Droppen Sie die grosser_hbf-Sicht und erstellen Sie sie erneut, jedoch so, dass wirklich nur Bahnhöfe in diese Sicht eingefügt werden können, die auch in der View sichtbar sind: <code>WITH CASCADED CHECK OPTION</code></li>
-                  </ol>
-          </li>
-          <li>Erstellen Sie eine materialisierte Sicht &quot;Bahnhof_Statistik&quot;, die zu jedem Bundesland die Anzahl der Bahnhöfe zeigt. Wie viele Bahnhöfe zeigt diese Sicht in Hessen an? Löschen Sie Ihren Bahnhof 9999 und schauen Sie wieder in die materialiserte Sicht. Führen Sie ein <code>REFRESH</code> aus.</li>
-          <li>Stellen Sie abschließend noch folgende Anfragen auf der Tabelle &quot;bahnhoefe&quot;: (siehe nächste Seite)</li>
-                  <ol type="a" style="padding-top: 4.5cm">
-                      <li>Geben Sie alle Bundesländer aus (keine Duplikate).</li>
-                      <li>In welchen Städten gibt es mehr als 10 Bahnhöfe?</li>
-                      <li>Welche Bahnhöfe haben die gleiche Kategorie (Kat. Vst.) wie &quot;Ulm Hbf&quot;?</li>
-                      <li>Geben Sie zu jedem Bundesland aus, wie viele Bahnhöfe die dort befindlichen Städte im Durchschnitt besitzen.</li>
-                  </ol>
-              </li>
-      </ol>
-      
-    </section>
+          <h4>b) (3P)</h4>
+          <p>Zeichnen Sie den Serialisierbarkeitsgraphen für die folgende Historie:</p>
+          <p style="font-size:larger;">w<sub>1</sub>(x), w<sub>2</sub>(x), r<sub>2</sub>(y), r<sub>1</sub>(y), w<sub>3</sub>(y), c<sub>1</sub>, c<sub>2</sub>, c<sub>3</sub></p>
+
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+            <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+          <tr>
+            <td>7.</td><td>Es gibt einen Zyklus im Serialisierbarkeitsgraphen.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+          </table>
+
+          <h4>c) (2P)</h4>
+          <p>Skizzieren Sie den Ablauf des SX-Sperrverfahrens für die Historie aus Aufgabenteil b).</p>
+
+          <table border="0" style="width: 100%; margin-top: -5mm;">
+            <tr>
+              <td style="width:10mm">&nbsp;</td>
+              <td>&nbsp;</td>
+              <td style="text-align: center; width:15mm">Richtig</td>
+              <td style="text-align: center; width:15mm">Falsch</td>
+          </tr>
+        <tr>
+            <td>8.</td><td>Wird bei der Historie aus der vorherigen Frage das SX-Sperrverfahren eingesetzt, muss TA<sub>2</sub> warten, bevor sie in x schreiben darf.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+      </table>
+
+      <!--<p>Ihre Lösungen zu Teil b) und c) (Serialisierbarkeitsgraph und SX-Sperrverfahren) werden in den Zoom-Sessions besprochen.</p>-->
+                  
+          </section>
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>

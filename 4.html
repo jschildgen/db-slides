@@ -917,14 +917,14 @@ HAVING COUNT(*) >= 2</code></pre>
                             <section>
                                 <h2>Sub-Anfragen</h2>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 67-68</div>
-                                <pre><code class="sql dont_execute_sql" data-trim contenteditable>SELECT hersteller, avg_preis FROM (
+                                <pre style="width: 93%"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT hersteller, avg_preis FROM (
  SELECT hersteller, COUNT(*) AS anzahl, AVG(preis) AS avg_preis 
  FROM produkte GROUP BY hersteller
 ) P WHERE anzahl >= 2</code></pre>
-                                <pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte
+                                <pre style="width: 93%" class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte
 WHERE preis = (SELECT MAX(preis) FROM produkte)</code></pre>
 
-<pre class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P1
+<pre style="width: 93%" class="fragment"><code class="sql dont_execute_sql" data-trim contenteditable>SELECT * FROM produkte P1
 WHERE preis = (SELECT MAX(preis) FROM produkte P2 
                WHERE P2.hersteller = P1.hersteller)</code></pre>
                <aside class="notes">Unteranfragen dürfen fast überall innerhalb einer Anfrage stehen, auch in INSERT, UPDATE, DELETE, usw. Auch korrelierende Sub-Anfragen sind erlaubt. In einer solchen kommen Spalten der Oberanfrage vor (P1.hersteller in der unteren Anfrage). Die obere Query entspricht der Anfrage mit HAVING aus der vorherigen Folie. Die zweite Anfrage liefert Produkte, die den Maximalpreis haben, es gibt also keine teureren als diese. Die untere Anfrage ist ähnlich: Sie liefert Produkte, die den Maximalpreis von Produkten vom jeweiligen Hersteller haben. Die Anfrage liefert z. B. den Müsliriegel, da es von seinem Hersteller Monsterfood keine Produkte gibt, die mehr kosten.</aside>
@@ -1021,7 +1021,7 @@ ORDER BY COUNT(*)
                                 <section>
                                         <h2>SELECT mit OUTER JOIN</h2>
                                         <div class="trackinfo"><i class="fas fa-headphones"></i> 73</div>
-                                        <pre><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+                                        <pre style="width: 93%"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H LEFT JOIN produkte P ON p.hersteller = H.firma
 WHERE P.preis > 3
 GROUP BY h.land HAVING COUNT(*) < 5 ORDER BY COUNT(*)
@@ -1079,7 +1079,7 @@ SELECT land FROM hersteller
                         <section>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 76</div>
                                 <h2>INTERSECT</h2>
-                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Intersection;</div>
+                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:160px" class="green">&Intersection;</div>
                                 <p class="small">In welchen Ländern gibt es Kunden und Hersteller?</p>
                                 <pre><code class="sql" data-trim contenteditable>
 SELECT land FROM kunden
@@ -1098,7 +1098,7 @@ SELECT land FROM hersteller</code></pre>
                         <section>
                                 <div class="trackinfo"><i class="fas fa-headphones"></i> 76</div>
                                 <h2>EXCEPT (MINUS)</h2>
-                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">\</div>
+                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:160px" class="green">\</div>
                                 <p class="small">In welchen Ländern gibt es Kunden, aber keine Hersteller?</p>
                                 <pre><code class="sql" data-trim contenteditable>
 SELECT land FROM kunden
@@ -1119,7 +1119,7 @@ SELECT land FROM hersteller
                         <section>
                             <h2>Das EXISTS-Prädikat</h2>
                             <div class="trackinfo"><i class="fas fa-headphones"></i> 78</div>
-                            <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Exists;</div>
+                            <div style="position: absolute; top: -0.1cm; right:1px; font-size:150px" class="green">&Exists;</div>
                             <ul>
                                 <li>Eingabe: Eine SELECT-Anfrage</li>
                                 <li>Ausgabe: <ul>
@@ -1148,7 +1148,7 @@ WHERE EXISTS
 
                         <section>
                                 <h2>NOT EXISTS</h2>
-                                <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&NotExists;</div>
+                                <div style="position: absolute; top: -0.1cm; right:1px; font-size:160px" class="green">&NotExists;</div>
                                 <p class="small">Von welchen Herstellern gibt es keine Produkte?</p>
                                 <pre><code class="sql" data-trim contenteditable>
     SELECT * FROM hersteller H
@@ -1162,7 +1162,7 @@ WHERE EXISTS
                             <section>
                                     <h2>Das IN-Prädikat</h2>
                                     <div class="trackinfo"><i class="fas fa-headphones"></i> 79</div>
-                                    <div style="position: absolute; top: -0.5cm; right:5px; font-size:170px" class="green">&Element;</div>
+                                    <div style="position: absolute; top: -0.5cm; right:5px; font-size:160px" class="green">&Element;</div>
                                     <ul>
                                         <li>Eingabe: Ein Ausdruck und entweder eine Werte-Liste oder eine SELECT-Anfrage</li>
                                         <li>Ausgabe: <ul>
@@ -1180,7 +1180,7 @@ WHERE firma IN ('Holzkopf', 'Monsterfood')
 
                                 <section>
                                     <h2>Das IN-Prädikat</h2>
-                                    <div style="position: absolute; top: 5cm; right:5px; font-size:170px" class="green">&NotElement;</div>
+                                    <div style="position: absolute; top: 5cm; right:5px; font-size:160px" class="green">&NotElement;</div>
                                     <pre><code class="sql" data-trim contenteditable data-sql="sql_in">
 SELECT * FROM hersteller H
 WHERE firma IN (SELECT hersteller FROM produkte)

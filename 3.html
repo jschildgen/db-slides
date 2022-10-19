@@ -1583,8 +1583,9 @@
                                                 <p>Zerlegung in Relationen, die den Teil der Schlüsselattribute besitzen, von dem die jeweiligen Nicht-Schlüssel-Attribute voll funktional abhängen.</p>
                                                 <p class="fragment small">Gegeben: Pizza1(<u>pizza_id</u>, bezeichnung, <u>zutat</u>)<br>
                                                     $pizza\_id \rightarrow bezeichnung$</p>
-                                                <p class="fragment small">Resultat in 2NF: Pizza1a(<u>pizza_id</u>, <u>zutat</u>) und Pizza1b(<u>pizza_id</u>, bezeichnung)</p>
-                                                <p class="fragment">Wichtig bei Zerlegungen: Zerlegung muss verlustfrei erfolgen und ein Join der neuen Tabellen muss wieder die ursprüngliche Tabelle ergeben.</p>
+                                                <p class="fragment small"><b>Resultat in 2NF:</b><br>Pizza1a(<u>pizza_id</u>, <u>zutat</u>) und Pizza1b(<u>pizza_id</u>, bezeichnung)<br>
+                                                Pizza1a.pizza_id ist Fremdschlüssel auf Pizza1b.pizza_id</p>
+                                                <p class="fragment small">Wichtig bei Zerlegungen: Zerlegung muss verlustfrei erfolgen und ein Join der neuen Tabellen muss wieder die ursprüngliche Tabelle ergeben.</p>
                                             </section>
                                             <section data-hide-from="2V">
                                                 <h3>CD-Track-Beispieltabelle</h3>
@@ -1614,14 +1615,16 @@
                                                 </div>
                                                 </div>
 
-                                                <p class="small fragment">Überprüfe für Nicht-Schlüsselattribut &quot;album&quot;, ob $cd\_id, tracknr \Rightarrow album$ ?</p>
-                                                <p class="small fragment">Nein, weil $cd\_id \rightarrow album$ &Rightarrow; Die Relation ist also nicht in 2NF</p>
-                                                <p class="small fragment">Überführung in 2NF:</p>
-                                                <ul class="small fragment">
+                                                <p class="small fragment" style="margin-top: -2mm">Überprüfe für Nicht-Schlüsselattribut &quot;album&quot;, ob $cd\_id, tracknr \Rightarrow album$ ?</p>
+                                                <p class="small fragment" style="margin-top: -2mm">Nein, weil $cd\_id \rightarrow album$ &Rightarrow; Die Relation ist also nicht in 2NF</p>
+                                                <p class="small fragment" style="margin-top: -2mm">Überführung in 2NF:</p>
+                                                <div class="fragment">
+                                                <ul class="small" style="margin-top: -2mm">
                                                     <li>Tracks(<u>cd_id</u>,<u>tracknr</u>, song)</li>
                                                     <li>Alben(<u>cd_id</u>, album, band, land)</li>
                                                 </ul>
-
+                                                <p class="small">Tracks.cd_id ist Fremdschlüssel auf Alben.cd_id</p>
+                                                </div>
                                                 <aside class="notes">Bei der Überführung der CD-Track-Tabelle in 2NF wurde diese Tabelle in zwei Tabellen zerlegt. Wir geben ihnen sinnvolle Namen: Alben und Tracks. Lediglich die Spalte &quot;song&quot; ist vom ganzen Schlüssel voll funktional abhängig. Die anderen Nicht-Schlüsselattribute hängen nur von der CD_ID ab und werden daher in die neue Alben-Relation ausgelagert.</aside>
                                             </section>
                                             <section data-hide-from="2V">
@@ -1657,6 +1660,7 @@
                                                     <li>Alben(<u>cd_id</u>, album, band)</li>
                                                     <li>Bands(<u>band</u>, land)</li>
                                                 </ul>
+                                                <p class="fragment small" data-fragment-index="2">Alben.band ist Fremdschlüssel auf Bands.band</p>
                                             </section>
 
                                             

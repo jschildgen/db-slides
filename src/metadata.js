@@ -9,17 +9,17 @@ var metadata = {
   "":  {
 	    "speaker_name"      : "Prof. Dr. Johannes Schildgen",
 	    "speaker_email"     : "johannes.schildgen@oth-regensburg.de",
-	    "lecture_startdate" : "2022-03-21",
-			"first_exercise_sheet_date": "2022-03-30",
-			"exercise_startdate": "2022-04-05",
+	    "lecture_startdate" : "2022-10-04",
+			"first_exercise_sheet_date": "2022-10-11",
+			"exercise_startdate": "2022-10-13",
 			"exercise_times"			: [
-				"Di, 10:00 Uhr (K007)",
-				"Di, 15:30 Uhr (K007)",
-				"Di, 15:30 Uhr (K140)",
+				"Do, 11:45 Uhr (K220)",
+				"Fr, 8:15 Uhr (K223 + Zoom)",
+				"Fr, 11:45 Uhr (K139)",
 	],
 	    "lecture_times"     : [
-                                "Mo, 11:45 Uhr (D003 + YouTube)",
-                                "Mi, 10:00 Uhr (D003 + YouTube)",
+                                "Di, 11:45 Uhr (U212 + YouTube)",
+                                "Do, 10:00 Uhr (K001 + YouTube)",
 	                        ],
           }
 };

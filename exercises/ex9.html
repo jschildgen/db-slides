@@ -22,7 +22,7 @@
                     <b>Datenbanken - SS 2022</b><br>
                     Prof. Dr.-Ing. Johannes Schildgen<br>
                     johannes.schildgen@oth-regensburg.de<br>
-                    <b>Übungsblatt 9 vom 14.06.2022</b>
+                    <b>Übungsblatt 9 vom 08/09.12.2022</b>
                 </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -30,55 +30,45 @@
         </header>
 
     <section style="padding-top: 2.5cm">
-      <h1>Aufgabe 1: Datenimport aus einer CSV-Datei (10P)</h1>
-      <p>Abgabe-Deadline: 14.06.2022 8:00 im Moodle</p>
-        <p>In diesem Übungsblatt geht es darum, die aktuellen Corona-Impfzahlen als CSV-Datei herunterzuladen, diese in eine PostgreSQL-Datenbank zu importieren und Analysen mit SQL darauf auszuführen.</p>
-        
-        <ol>
-          <li>Laden Sie die Datei &quot;owid-covid-data.csv&quot; von  <a href="https://github.com/owid/covid-19-data/tree/master/public/data/" target="_blank">https://github.com/owid/covid-19-data/tree/master/public/data/</a> herunter.</li>
-          <li>Betrachten Sie die Datei direkt im Browser oder in einem Texteditor (nicht mit Excel o. ä.). Schauen Sie sich an, welche Spalten es gibt, was das Spaltentrennzeichen ist, in welchem Format Datumswerte gespeichert werden, etc.</li>
-          <li>Verbinden Sie sich mit der PostgreSQL-Datenbank der Hochschule (oder Ihrer eigenen PostgreSQL-Installation) und erstellen Sie die folgende Tabelle:<br>
-            <pre><code>create table impfungen
-(datum date, land varchar(50), kontinent varchar(50),
-impfungen decimal(10,1), primary key(datum, land));</code></pre>
-          </li>
-          <li>Klicken Sie im DBeaver mit einem Rechtsklick auf die neue Impfungen-Tabelle (vorher: Rechtsklick - Aktualisieren) und dann auf Daten importieren und wählen als Datentyp <code>CSV</code>, dann Ihre Quelldatei. Überprüfen Sie die Import-Einstellungen und achten Sie darauf, dass das Spaltenkennzeichen, Datumsformat etc. richtig eingestellt ist. Wichtig ist jedoch noch im vorletzten Schritt das Column-Mapping. Wählen Sie dort aus, welche Spalten aus der CSV-Datei mit welchen Spalten aus der soeben erstellten Tabelle korrespondieren. (8P)</li>
-          <li>Schauen Sie sich nach erfolgreichem Import die Tabelle an.</li>
-          <li>Es gibt jede Menge Zeilen, bei denen das Land gar kein Land ist, sondern &quot;World&quot;, &quot;Europe&quot; o.ä.. Sie erkennen dies daran, dass in der Kontinent-Spalte ein leerer String steht (oder NULL, falls Sie in den Import-Einstellungen eingestellt haben, dass leere Strings in NULL-Werte konvertiert werden sollen). Löschen Sie diese Zeilen. Zur Überprüfung: Das sind ca. 5% der Zeilen.</li>
-          <li>Überprüfen Sie, ob Sie die Daten korrekt importiert haben, indem Sie die unten abgebildete Zeile in Ihrer Tabelle wiederfinden. Wie lautet der fehlende Wert in der Impfungen-Spalte? (2P)</li>
-          <li>Wie viele verschiedene Länder tauchen in der Tabelle auf? (2P)</li>
-        </ol>
-
-<table><tr><th>datum</th><th>land</th><th>kontinent</th><th>impfungen</th></tr>
-    <tr><td>2022-05-01</td><td>Germany</td><td>Europe</td><td><!--1063287-->???</td></tr>
-</table>
-
-        <p>Hinweise sind auf der nächsten Seite.</p>
-
-        <div style="page-break-inside:avoid; padding-top: 2.5cm">
-        <p>Hinweise:</p>
-        <ul>
-            <li>Setzen Sie beim Spalten-Mapping zuerst alle Spalten der CSV-Datei auf Skip (ansonsten werden neue Spalten an Ihre Tabelle angefügt) und danach wählen Sie bei den entsprechenden Spalten der CSV-Datei als Ziel die jeweilige Spalte in Ihrer Tabelle aus:
-                <br><img src="img/ex7_import_corona.png" alt="Import" style="width: 80%;"> </li>
-            <li>Viele Spalten in der CSV beinhalten bereits voraggregierte Werte. total_vaccinations ist beispielsweise die Summe aller Corona-Impfungen bis zu diesem Tag innerhalb eines Landes. Diese Zahlen wollen wir nicht importieren, sondern nur die Rohdaten, also die neu hinzugekommen Fälle von dem einen Tag.</li>
-            <li>Falls Sie sich über den Datentyp DECIMAL(18,1) wundern: Die Anzahl der Impfungen haben in der CSV immer eine .0-Nachkommastelle. DBeaver macht leider Blödsinn, wenn Dezimalzahlen in INT-Spalten importiert werden. Dann erscheint eine 123.0 als 1230.</li>
-            <li>Wenn Sie aus irgendeinem Grund die Daten neu importieren müssen, droppen Sie am besten vorher die Tabelle und erstellen Sie neu.</li>
-        </ul>
-        </div>
-
-            
+      <h1>Aufgabe 1: Sichten in SQL (10P)</h1>
+      <p>Abgabe-Deadline: 08.12.2022 9:00 im Moodle</p>
+      <p>Auf <a href="https://data.deutschebahn.com/dataset/data-stationsdaten" target="_blank">https://data.deutschebahn.com/dataset/data-stationsdaten</a> finden Sie Datensätze mit deutschen Bahnhöfen.</p>
+      <ol>
+          <li>Laden Sie sich den neusten Datensatz im CSV-Format herunter (den von 03/2020).</li>
+          <li>Betrachten Sie die Datei in einem Texteditor, welche Spalten gibt es?</li>
+          <li>Erstellen Sie in Ihrer PostgreSQL-Datenbank eine Tabelle &quot;bahnhoefe&quot; mit den passenden Spalten und wählen Sie sinnvolle Datentypen und Primärschlüssel.</li>
+          <li>Benutzen Sie die Import-Funktion von DBeaver, um die CSV-Datei in Ihre Tabelle zu importieren (Rechtsklick auf die Tabelle - Daten importieren).</li>
+          <li>Erstellen Sie eine View &quot;hbf&quot; mit dem Spalten &quot;bhfnr&quot;, &quot;bundesland&quot;, &quot;station&quot; und &quot;kategorie&quot;, die alle Bahnhöfe enthält, die auf &quot;Hbf&quot; oder &quot;Hauptbahnhof&quot; enden. Die Kategorie-Spalte der View soll lediglich eine Umbenennung der Spalte Kat. Vst. sein.</li>
+      </ol>
     </section>
 
     <section>
-      <h1>Aufgabe 2: SQL-Anfragen</h1>
-      <p>Formulieren Sie SQL-Anfragen für die die folgenden Fragestellungen auf der in Aufgabe 1 importierten Impfungen-Tabelle:</p>
+        <h1>Aufgabe 2: SQL-Anfragen, Materialisierte Sichten</h1>
       <ol>
-        <li>Wie viele Corona-Impfungen gab es insgesamt im Mai 2022? (Tipp: Verwenden Sie BETWEEN).</li>
-        <li>Geben Sie für jedes Land die Gesamtanzahl an Impfungen aus; jedoch nur für Länder mit mind. 100.000 Impfungen. Die Ausgabe soll absteigend sortiert sein nach der Anzahl an Impfungen.</li>
-        <!--<li>Geben Sie für jeden Kontinent den Namen desjenigen Landes in diesem Kontinent aus, in welchem es bisher die meisten gemeldeten Corona-Fälle gibt.</li>-->
-        <li>In welchen Ländern gibt es über alle Zeit gesehen mehr Impfungen als in Deutschland?</li>
-        <li>Lagern Sie Länder-Infos aus der Impfungen-Tabelle aus: Erstellen Sie eine neue Tabelle "Laender" mit den Spalten Land und Kontinent mit den entsprechenden Daten. Tipp: Verwenden Sie <code>CREATE TABLE ... AS SELECT ...</code></li>
+        <li>Erstellen Sie eine weitere View: &quot;grosser_hbf&quot;, die auf der Sicht &quot;hbf&quot; basiert, aber nur die Bahnhöfe der Kategorie 1 enthält. Schreiben Sie am Ende des <code>CREATE VIEW</code>-Kommandos: <code>WITH LOCAL CHECK OPTION</code>. Dadurch wird beim Einfügen in die View das WHERE-Prädikat überprüft.</li>
+          <li>Formulieren Sie nun folgende Anfragen auf den Views:
+                  <ol type="a">
+                      <li>Finden Sie den Regensburger Hauptbahnhof</li>
+                      <li>Fügen Sie in die hbf-Sicht einen neuen Bahnhof ein: &quot;Teststadt Nord&quot; in Hessen mit der ID 9999 und Kategorie 5.</li>
+                      <li>Finden Sie mit einer SELECT-Anfrage auf der hbf-Sicht den neu eingefügten Bahnhof?</li>
+                      <li>Löschen Sie den Bahnhof 9999 wieder aus der bahnhoefe-Tabelle</li>
+                      <li>Versuchen Sie das INSERT aus b) nun auf der grosser_hbf-Sicht</li>
+                      <li>Passen Sie in dem INSERT-Kommando die Bahnhofskategorie so an, dass es auf der grosser_hbf-Sicht funktioniert.</li>
+                      <li>Finden Sie mit einer SELECT-Abfrage auf der grosser_hbf-Sicht den neu eingefügten Bahnhof?</li>
+                      <li>Droppen Sie die grosser_hbf-Sicht und erstellen Sie sie erneut, jedoch so, dass wirklich nur Bahnhöfe in diese Sicht eingefügt werden können, die auch in der View sichtbar sind: <code>WITH CASCADED CHECK OPTION</code></li>
+                  </ol>
+          </li>
+          <li>Erstellen Sie eine materialisierte Sicht &quot;Bahnhof_Statistik&quot;, die zu jedem Bundesland die Anzahl der Bahnhöfe zeigt. Wie viele Bahnhöfe zeigt diese Sicht in Hessen an? Löschen Sie Ihren Bahnhof 9999 und schauen Sie wieder in die materialiserte Sicht. Führen Sie ein <code>REFRESH</code> aus.</li>
+          <li>Stellen Sie abschließend noch folgende Anfragen auf der Tabelle &quot;bahnhoefe&quot;: (siehe nächste Seite)</li>
+                  <ol type="a" style="padding-top: 4.5cm">
+                      <li>Geben Sie alle Bundesländer aus (keine Duplikate).</li>
+                      <li>In welchen Städten gibt es mehr als 10 Bahnhöfe?</li>
+                      <li>Welche Bahnhöfe haben die gleiche Kategorie (Kat. Vst.) wie &quot;Ulm Hbf&quot;?</li>
+                      <li>Geben Sie zu jedem Bundesland aus, wie viele Bahnhöfe die dort befindlichen Städte im Durchschnitt besitzen.</li>
+                  </ol>
+              </li>
       </ol>
+      
     </section>
 
 <script src="../lib/jquery.js"></script>

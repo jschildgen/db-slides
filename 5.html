@@ -995,7 +995,7 @@ COMMIT;
                               <aside class="notes">Bei einem Systemfehler ist immer die Frage, welche Transaktionen sind Gewinner (haben committed) und welche sind Verlierer (waren noch aktiv). Da das System zu Zeitpunkt 5 zuletzt einen Flush gemacht hat, um DB-Seiten auf die Festplatte zu persistieren, müssen alle davor durchgeführten Aktionen von Verlierern rückgängig gemacht und noch nicht eingebrachte Änderungen von Gewinnern nachgeholt werden.</aside>
                             </section>
   
-
+<!--
                             <section data-hide-from="2V">
                               <h2>Checkpoints</h2>
                               <p class="small">Regelmäßig legt die Datenbank Sicherungspunkte (Checkpoints) an.</p>
@@ -1232,7 +1232,7 @@ COMMIT;
                             </div>
                               <aside class="notes">Unscharfe Checkpoints können sehr schnell angelegt werden, da hier kein tatsächliches Persistieren der Seiten im DB-Puffer erfolgt. Dieses kann immer mal wieder nebenbei und unabhängig von der Checkpoint-Erstellung passieren. Der Checkpoint speichert zu jeder Seite im DB-Puffer die LSN, seit wann diese Seite dirty ist, also seit wann ihr Status nicht mehr dem auf der Festplatte entspricht. Der Recovery-Prozess startet dann bei der kleinsten solchen LSN, zu der es eine Dirty Page gibt.</aside>
                             </section>
-
+-->
                             <section>
                               <h2>Kapitelzusammenfassung</h2>
                                   <ul class="small">
@@ -1248,7 +1248,6 @@ COMMIT;
                                     <li>Isolationslevels</li>
                                     <li>MVCC</li>
                                     <li>Recovery / Transaktions-Log</li>
-                                    <li data-hide-from="2V">Checkpoint-Recovery</li>
                                   </ul>
                             </section>
 

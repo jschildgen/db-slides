@@ -17,7 +17,7 @@
  * By Johannes Schildgen, 2019
  */
 
-var useExternalDatabase = true;
+var useExternalDatabase = false;
 
 function dbquery (query, tx, success, error) {
         $.post({ url: "sqlproxy.php",

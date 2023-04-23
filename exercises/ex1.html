@@ -14,10 +14,10 @@
     <header>
         <div>
         <div>
-            <b>Datenbanken - WS 2022/23</b><br>
-            Prof. Dr.-Ing. Johannes Schildgen<br>
-            johannes.schildgen@oth-regensburg.de<br>
-            <b>Übungsblatt 1 vom 13/14.10.2022</b>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
         <div><img src="../img/oth.png" style="border:0; height:50px"></div>
     </div>
@@ -26,12 +26,12 @@
 
     <section style="padding-top: 2.5cm">
         <h1>Aufgabe 0: MonstER-Park (Bonusaufgabe; 10P)</h1>
-        <p>Abgabe-Deadline: 13.10.2022 9:00 im ELO</p>
+        <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
         <p>Spielen Sie das Spiel MonstER-Park (<a href="http://www.monst-er.de" target="_blank">http://www.monst-er.de)</a> und lassen Sie sich zum Ende des Spiels ein Zertifikat generieren. Tragen Sie die darauf befindliche Zertifikat-ID im Moodle ein, um die 10 Bonuspunkte zu bekommen. Achtung: Hier ist keine Gruppenarbeit möglich. Jeder muss eine eigene Zertifikat-ID abgeben.</p>
     </section>
     <section>
     <h1>Aufgabe 1: ER-Diagramme (10P)</h1>
-    <p>Abgabe-Deadline: 13.10.2022 9:00 im ELO</p>
+    <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
     <p>Betrachten Sie dieses sinnlose ER-Diagramm:</p>
     <div style="height: 9.5cm; overflow: hidden; margin-left: -2.5cm">
     <div class="erd">
@@ -146,6 +146,9 @@ Reveal.addEventListener = function(event, f) {
     }
 }
 </script>
+
+<script src="./js/exercises.js"></script>
+
 <script type="text/javascript" src="../src/erd.js"></script>
 
 </body>

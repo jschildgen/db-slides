@@ -14,10 +14,10 @@
         <header>
             <div>
             <div>
-                <b>Datenbanken - WS 2022/23</b><br>
-                Prof. Dr.-Ing. Johannes Schildgen<br>
-                johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 2 vom 20./21.10.2022</b>
+                <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -26,7 +26,7 @@
 
         <section style="padding-top: 2.5cm">
             <h1>Aufgabe 1: Relationenmodell (10P)</h1>
-            <p>Abgabe-Deadline: 20.10.2022 9:00 im ELO</p>
+            <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
             <p>Betrachten Sie das folgende Relationenschema eines Friseursalons:</p>
             
             <p>PERSONAL (<u>Vorname</u>, Tarifstufe)<br>
@@ -210,6 +210,8 @@ Reveal.addEventListener = function(event, f) {
 }
 </script>
 <script type="text/javascript" src="../src/erd.js"></script>
+<script src="./js/exercises.js"></script>
+
 
 </body>
 </html>

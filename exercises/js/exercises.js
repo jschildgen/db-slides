@@ -11,15 +11,15 @@ data = {
   "1": { "EX_DATES": mult_days(START_DATE,2), "DEADLINE": START_DATE+" 12:00" },
   "2": { "EX_DATES": mult_days(add_weeks(START_DATE, 2), -5), "DEADLINE": "2023-04-12 8:00" },
   "3": { "EX_DATES": mult_days(add_weeks(START_DATE, 3), 2), "DEADLINE": add_weeks(START_DATE, 3)+" 12:00" },
-  "4": { "EX_DATES": mult_days(add_weeks(START_DATE, 4), 2), "DEADLINE": add_weeks(START_DATE, 4)+" 12:00" },
+  "4": { "EX_DATES": mult_days(add_weeks(START_DATE, 4), 2), "DEADLINE": add_days(add_weeks(START_DATE, 4),1)+" 8:00" },
   "5": { "EX_DATES": mult_days(add_weeks(START_DATE, 5), 2), "DEADLINE": add_weeks(START_DATE, 5)+" 12:00" },
   "6": { "EX_DATES": mult_days(add_weeks(START_DATE, 6), 2), "DEADLINE": add_weeks(START_DATE, 6)+" 12:00" },
   "7": { "EX_DATES": mult_days(add_weeks(START_DATE, 7), 2), "DEADLINE": add_weeks(START_DATE, 7)+" 12:00" },
-  "8": { "EX_DATES": mult_days(add_weeks(START_DATE, 8), 2), "DEADLINE": add_weeks(START_DATE, 8)+" 12:00" },
-  "9": { "EX_DATES": mult_days(add_weeks(START_DATE, 9), 2), "DEADLINE": add_weeks(START_DATE, 9)+" 12:00" },
-  "10": { "EX_DATES": mult_days(add_weeks(START_DATE, 10), 2), "DEADLINE": add_weeks(START_DATE, 10)+" 12:00" },
-  "11": { "EX_DATES": mult_days(add_weeks(START_DATE, 11), 2), "DEADLINE": add_weeks(START_DATE, 11)+" 12:00" },
-  "12": { "EX_DATES": mult_days(add_weeks(START_DATE, 12), 2), "DEADLINE": add_weeks(START_DATE, 12)+" 12:00" },
+  "8": { "EX_DATES": mult_days(add_weeks(START_DATE, 8), 2, 7), "DEADLINE": add_weeks(START_DATE, 8)+" 12:00" },
+  "9": { "EX_DATES": mult_days(add_weeks(START_DATE, 10), 2), "DEADLINE": add_weeks(START_DATE, 10)+" 12:00" },
+  "10": { "EX_DATES": mult_days(add_weeks(START_DATE, 11), 2), "DEADLINE": add_weeks(START_DATE, 11)+" 12:00" },
+  "11": { "EX_DATES": mult_days(add_weeks(START_DATE, 12), 2), "DEADLINE": add_weeks(START_DATE, 12)+" 12:00" },
+  "12": { "EX_DATES": mult_days(add_weeks(START_DATE, 13), 2), "DEADLINE": add_weeks(START_DATE, 13)+" 12:00" },
 };
 
 function mult_days(dateStr, ...days) {
@@ -87,8 +87,12 @@ function is_holiday(dateString) {
 
 
 function add_weeks(dateStr, weeks) {
+  return add_days(dateStr, weeks * 7);
+}
+
+function add_days(dateStr, days) {
   let date = new Date(dateStr);
-  date.setDate(date.getDate() + 7*weeks);
+  date.setDate(date.getDate() + days);
   return date.toISOString().split("T")[0];
 }
 

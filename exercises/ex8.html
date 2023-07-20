@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Datenbanken - Übungsblatt 8</title>
+        <title>Datenbanken - Übungsblatt %%%EX_NO%%%</title>
         <link rel="stylesheet" href="../exercises/exercises.css">
         <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
         <link href="../src/erd.css" rel="stylesheet">
@@ -16,22 +16,22 @@
         </style>
     </head>
     <body>
-        <header>
-            <div>
-                <div>
-                    <b>Datenbanken - WS 2022/23</b><br>
-                    Prof. Dr.-Ing. Johannes Schildgen<br>
-                    johannes.schildgen@oth-regensburg.de<br>
-                    <b>Übungsblatt 8 vom 01./02.12.2022</b>
-                </div>
-            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+      <header>
+        <div>
+        <div>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
-        <hr>
-        </header>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
 
     <section style="padding-top: 2.5cm">
       <h1>Aufgabe 1: Datenimport aus einer CSV-Datei (10P)</h1>
-      <p>Abgabe-Deadline: 01.12.2022 9:00 im Moodle</p>
+      <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
         <p>In diesem Übungsblatt geht es darum, die aktuellen Corona-Impfzahlen als CSV-Datei herunterzuladen, diese in eine PostgreSQL-Datenbank zu importieren und Analysen mit SQL darauf auszuführen.</p>
         
         <ol>
@@ -40,18 +40,17 @@
           <li>Verbinden Sie sich mit der PostgreSQL-Datenbank der Hochschule (oder Ihrer eigenen PostgreSQL-Installation) und erstellen Sie die folgende Tabelle:<br>
             <pre><code>create table impfungen
 (datum date, land varchar(50), kontinent varchar(50),
-impfungen decimal(10,1), primary key(datum, land));</code></pre>
+impfungen decimal(18,1), primary key(datum, land));</code></pre>
           </li>
           <li>Klicken Sie im DBeaver mit einem Rechtsklick auf die neue Impfungen-Tabelle (vorher: Rechtsklick - Aktualisieren) und dann auf Daten importieren und wählen als Datentyp <code>CSV</code>, dann Ihre Quelldatei. Überprüfen Sie die Import-Einstellungen und achten Sie darauf, dass das Spaltenkennzeichen, Datumsformat etc. richtig eingestellt ist. Wichtig ist jedoch noch im vorletzten Schritt das Column-Mapping. Wählen Sie dort aus, welche Spalten aus der CSV-Datei mit welchen Spalten aus der soeben erstellten Tabelle korrespondieren. (6P)</li>
           <li>Schauen Sie sich nach erfolgreichem Import die Tabelle an.</li>
           <li>Es gibt jede Menge Zeilen, bei denen das Land gar kein Land ist, sondern &quot;World&quot;, &quot;Europe&quot; o.ä.. Sie erkennen dies daran, dass in der Kontinent-Spalte ein leerer String steht (oder NULL, falls Sie in den Import-Einstellungen eingestellt haben, dass leere Strings in NULL-Werte konvertiert werden sollen). Löschen Sie diese Zeilen. Zur Überprüfung: Das sind ca. 5% der Zeilen.</li>
-          <li>Überprüfen Sie, ob Sie die Daten korrekt importiert haben, indem Sie die unten abgebildete Zeile in Ihrer Tabelle wiederfinden. Wie lautet der fehlende Wert in der Impfungen-Spalte? (2P)</li>
-          <li>Wie Wie viele Corona-Impfungen fanden am 01.10.2022 in Germany statt? (2P)</li>
+          <li>Wie viele Corona-Impfungen fanden am 01.10.2022 in Germany statt? (2P)</li>
           <li>Wie viele verschiedene Länder tauchen in der Tabelle auf? (2P)</li>
         </ol>
 
 <table><tr><th>datum</th><th>land</th><th>kontinent</th><th>impfungen</th></tr>
-    <tr><td>2022-05-01</td><td>Germany</td><td>Europe</td><td><!--1063287-->???</td></tr>
+    <tr><td>2022-10-01</td><td>Germany</td><td>Europe</td><td><!--?-->???</td></tr>
 </table>
 
         <p>Hinweise sind auf der nächsten Seite.</p>
@@ -98,6 +97,7 @@ Reveal.addEventListener = function(event, f) {
 }
 </script>
 <script type="text/javascript" src="../src/erd.js"></script>
+<script src="./js/exercises.js"></script>
 
 </body>
 </html>

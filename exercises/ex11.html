@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Datenbanken - Übungsblatt 11</title>
+        <title>Datenbanken - Übungsblatt %%%EX_NO%%%</title>
         <link rel="stylesheet" href="../exercises/exercises.css">
         <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
         <link href="../src/erd.css" rel="stylesheet">
@@ -16,28 +16,28 @@
         </style>
     </head>
     <body>
-        <header>
-            <div>
-              <div>
-                <b>Datenbanken - WS 2022/23</b><br>
-                Prof. Dr.-Ing. Johannes Schildgen<br>
-                johannes.schildgen@oth-regensburg.de<br>
-                <b>Übungsblatt 11 vom 12./13.01.2023</b>
-            </div>
-            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+      <header>
+        <div>
+        <div>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
-        <hr>
-        </header>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
 
         <section style="padding-top: 2.5cm">
           <h1>Aufgabe 0: SQL-Insekten (Bonusaufgabe, 10P)</h1>
-          <p>Abgabe-Deadline: 12.01.2023 9:00 im Moodle</p>
+          <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
           <p>Spielen Sie das Spiel SQL-Insekten (<a href="http://www.sql-insekten.de" target="_blank">http://www.sql-insekten.de)</a>. In dem Spiel werden Sie das Gehalt der Mitarbeiterin Greta Maria herausfinden. Tragen Sie dies im ELO ein und erhalten Sie 10 Bonuspunkte. Hinweis: Bitte verwenden Sie als Browser Google Chrome oder Chromium! Firefox und ein Paar andere Browser werden nicht unterstützt!</p>
   </section>
 
         <section>
           <h1>Aufgabe 1: Anwendungsentwicklung mit JDBC (10P)</h1>
-          <p>Abgabe-Deadline: 12.01.2023 9:00 im Moodle</p>
+          <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
           <p><em>Da Sie für diese Aufgabe Ihr Datenbank-Passwort im Klartext in Ihren Quellcode schreiben müssen, empfiehlt es sich, dies vorher auf ein zufälliges Passwort zu ändern. Verwenden Sie dazu</em> <code>ALTER USER ihr_benutzername PASSWORD 'neues_passwort';</code> <em>Tragen Sie dieses neue Passwort dann auch in Ihren DBeaver-Verbindungseinstellungen ein.</em></p>
           <ol>
             <li>Erstellen Sie im DBeaver eine Tabelle &quot;kontakte&quot; mit den Spalten Name (<code>VARCHAR(200) PRIMARY KEY</code>), handynummer (<code>VARCHAR(20)</code>) und gesucht (<code>INT NOT NULL DEFAULT 0</code>).</li>
@@ -63,8 +63,8 @@
             <li>Immer wenn nach einem bestimmten Kontakt gesucht wird, soll in der Datenbank die &quot;gesucht&quot;-Zahl für diesen Kontakt um eins erhöht werden.</li>
           </ol>
         </section>
-
-        <section style="padding-top: 2.5cm; page-break-inside: avoid;">
+      
+      <!--  <section style="padding-top: 2.5cm; page-break-inside: avoid;">
           <h1>Aufgabe 3: Stored Procedures</h1>
           <p>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine Prozedur namens <code>kontakte_vorbereiten(anzahl INT)</code>, die eine Tabelle erstellt und diese mit Testdaten füllt.</p>
           <ol>
@@ -75,7 +75,7 @@
             <li>Rufen Sie die Prozedur auf, um hunderttausend Kontakte zu generieren.</li>
           </ol>
           <p>Hinweis: Die in einer For-Schleife <code>FOR _variablenname IN _von .. _bis LOOP ... END LOOP;</code> verwendeten Variablen müssen Sie in der <code>DECLARE</code>-Section definieren (oder sie sind Parameter).</p>
-        </section>
+        </section>-->
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>
@@ -93,6 +93,7 @@ Reveal.addEventListener = function(event, f) {
 }
 </script>
 <script type="text/javascript" src="../src/erd.js"></script>
+<script src="./js/exercises.js"></script>
 
 </body>
 </html>

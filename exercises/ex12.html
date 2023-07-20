@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Datenbanken - Übungsblatt 12</title>
+        <title>Datenbanken - Übungsblatt %%%EX_NO%%%</title>
         <link rel="stylesheet" href="../exercises/exercises.css">
         <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
         <link href="../src/erd.css" rel="stylesheet">
@@ -16,23 +16,39 @@
         </style>
     </head>
     <body>
-        <header>
-            <div>
-            <div>
-              <b>Datenbanken - SS 2022</b><br>
-              Prof. Dr.-Ing. Johannes Schildgen<br>
-              johannes.schildgen@oth-regensburg.de<br>
-              <b>Übungsblatt 12 vom 19./20.01.2023</b>
-            </div>
-            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+      <header>
+        <div>
+        <div>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
         </div>
-        <hr>
-        </header>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
 
+    <section style="padding-top: 2.5cm">
+      <h1>Aufgabe 1: User-Defined Functions (10P)</h1>
+      <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
+      <ol>
+        <li>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine UDF namens <code>fakultaet(INT)</code>, die eine Integer-Zahl entgegennimmt und einen Integer ausgibt: die Fakultät der übergebenen Zahl.</li>
+        <li>Was ist die größte Zahl, deren Fakultät Sie mit Ihrer Funktion berechnen können?</li>
+    </section>
 
-        <section style="padding-top: 2.5cm">
-          <h1>Aufgabe 1: B+-Bäume (10P)</h1>
-          <p>Abgabe-Deadline: 19.01.2023 9:00 im Moodle</p>
+    <section>
+      <h1>Aufgabe 2: Trig&#8203;ger</h1>
+      <ol>
+        <li>Erstellen Sie für ein soziales Netzwerk eine Tabelle <code>freundschaften</code> mit den Spalten <code>person1</code> und <code>person2</code>.</li>
+        <li>Erstellen Sie eine Triggerfunktion und einen Trigger, der bewirkt, dass beim Einfügen einer Freundschaft (A, B) auch eine Freundschaft in die umgekehrte Richtung (B, A) eingefügt wird.</li>
+        <li>Testen Sie Ihren Trigger.</li>
+      </ol>
+    </section>
+
+        <section>
+          <h1>Aufgabe 3: B+-Bäume<!-- (10P)--></h1>
+          <!--<p>Abgabe-Deadline: 19.01.2023 9:00 im Moodle</p>-->
           <p>Betrachten Sie folgenden B+-Baum der Klasse (k=1, k*=1):</p>
           <img src="img/ex6_tree.png" alt="B+-Baum" style="height:3cm">
           <ol>
@@ -41,12 +57,7 @@
           </ol>
       </section>
 
-        <section>
-          <h1>Aufgabe 2: User-Defined Functions</h1>
-          <ol>
-            <li>Entwickeln Sie in Ihrer PostgreSQL-Datenbank eine UDF namens <code>fakultaet(INT)</code>, die eine Integer-Zahl entgegennimmt und einen Integer ausgibt: die Fakultät der übergebenen Zahl.</li>
-            <li>Was ist die größte Zahl, deren Fakultät Sie mit Ihrer Funktion berechnen können?</li>
-        </section>
+        
 
 
         <!--<section>
@@ -62,14 +73,7 @@
           <p>Hinweis: Die in einer For-Schleife <code>FOR _variablenname IN _von .. _bis LOOP ... END LOOP;</code> verwendeten Variablen müssen Sie in der <code>DECLARE</code>-Section definieren (oder sie sind Parameter).</p>
         </section>-->
 
-          <section>
-          <h1>Aufgabe 3: Trigger</h1>
-          <ol>
-            <li>Erstellen Sie für ein soziales Netzwerk eine Tabelle <code>freundschaften</code> mit den Spalten <code>person1</code> und <code>person2</code>.</li>
-            <li>Erstellen Sie eine Triggerfunktion und einen Trigger, der bewirkt, dass beim Einfügen einer Freundschaft (A, B) auch eine Freundschaft in die umgekehrte Richtung (B, A) eingefügt wird.</li>
-            <li>Testen Sie Ihren Trigger.</li>
-          </ol>
-        </section>
+          
 
         
 
@@ -89,6 +93,7 @@ Reveal.addEventListener = function(event, f) {
 }
 </script>
 <script type="text/javascript" src="../src/erd.js"></script>
+<script src="./js/exercises.js"></script>
 
 </body>
 </html>

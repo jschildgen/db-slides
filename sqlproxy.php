@@ -1,15 +1,18 @@
 <?php
 header("Content-type: text/plain");
 
-$engine = $_REQUEST['engine'];
+$engine = @$_REQUEST['engine'];
 
 switch ($engine) {
 	case "mysql":
 		$dbh = new PDO("mysql:host=localhost;dbname=oth", "oth", "password");
 		break;
 	case "pgsql":
-	default:
 		$dbh = new PDO("pgsql:dbname=oth", "oth", "password");
+		break;
+	case "sqlite":
+	default:
+		$dbh = new PDO("sqlite:webshop.db");
 		break;
 }
 

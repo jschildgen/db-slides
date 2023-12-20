@@ -400,18 +400,18 @@ SELECT * FROM klinik.raeume WHERE gebaeude IN (10,12,13,15);
                       <section data-hide-from="2V">
                         <h3>GRANT OPTION</h3>
                         <p>Das Privileg, ein Privileg weiterzugeben.</p>
-                        <pre><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss
+                        <pre style="width:100%"><code class="sql" data-trim>GRANT SELECT ON ALL TABLES IN SCHEMA klinik TO big_boss
 WITH GRANT OPTION;</code></pre>
 
-                        <pre class="fragment"><code class="sql" data-trim>REVOKE GRANT OPTION FOR SELECT ON ALL TABLES IN SCHEMA klinik 
+                        <pre style="width:100%" class="fragment"><code class="sql" data-trim>REVOKE GRANT OPTION FOR SELECT ON ALL TABLES IN SCHEMA klinik 
 FROM big_boss; -- nur GRANT OPTION entziehen, nicht das Recht</code></pre>
 
-<h4 class="fragment">REVOKE ... RESTRICT | CASCADE</h4>
-<pre class="fragment"><code class="sql" data-trim>REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss 
-RESTRICT; -- nur, wenn es nicht weitergegeben wurde</code></pre>
+<h4 class="fragment">REVOKE ... CASCADE</h4>
+<pre style="width:100%" class="fragment"><code class="sql" data-trim>-- Funktioniert nur, wenn das Recht nicht weitergegeben wurde
+REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss;</code></pre>
 
-<pre class="fragment"><code class="sql" data-trim>REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss
-CASCADE; -- auch allen, denen es weitergegeben wurde</code></pre>
+<pre style="width:100%" class="fragment"><code class="sql" data-trim>-- CASCADE: Entzieht das Recht auch allen, denen es weitergegeben wurde
+REVOKE SELECT ON ALL TABLES IN SCHEMA klinik FROM big_boss CASCADE;</code></pre>
                         <aside class="notes">Der Benutzer big_boss hat das Recht, SELECT-Anfragen auf allen Tabellen und Views im Klinik-Schema auszuführen. Außerdem hat er das Recht, dieses Recht auch anderen Benutzern und Rollen zu geben. Intern wird gespeichert, wer wann wem welches Recht gegeben hat. Mit diesen Infos können dann z.&nbsp;B. Rechte wieder kaskadiert entzogen werden.</aside>
                       </section>
 
@@ -546,21 +546,25 @@ COMMIT;
                                 <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte 
 WHERE produktnr = 17; -- 0.89 EUR
 
-</code><code class="fragment sql" data-fragment-index="1">UPDATE produkte
+</code></pre>
+<pre style="width: 12cm;" class="fragment" data-fragment-index="1"><code class="sql">UPDATE produkte
 SET preis = preis + 0.1
 WHERE produktnr = 17; -- 0.99 EUR
   
-</code><code class="fragment sql" data-fragment-index="3">COMMIT;</code></pre>
+</code></pre>
+<pre style="width: 12cm;" class="fragment" data-fragment-index="3"><code class="sql">COMMIT;</code></pre>
                             </div>
                             <div>TA<sub>2</sub>
                                 <pre style="width: 12cm;"><code class="sql">SELECT preis FROM produkte
 WHERE produktnr = 17; -- 0.89 EUR
 
-</code><code class="fragment sql" data-fragment-index="2">UPDATE produkte
+</code></pre>
+<pre style="width: 12cm;" class="fragment" data-fragment-index="2"><code class="sql">UPDATE produkte
 SET preis = preis + 0.1
 WHERE produktnr = 17; -- 0.99 EUR
 
-</code><code class="fragment sql" data-fragment-index="4">COMMIT;</code></pre>
+</code></pre>
+<pre style="width: 12cm;" class="fragment" data-fragment-index="4"><code class="sql">COMMIT;</code></pre>
                             </div>
                           </div>
                           <aside class="notes">Zwei Transkationen möchten den Preis eines Produktes um 10 Cent erhöhen. Als Endresultat sollte das Produkte also 0.89+0.1+0.1 = 1.09 EUR kosten. Da im gezeigten Szenario die Änderungen gleichzeitig und unisoliert passierten, trat ein Lost Update aus. Eine der beiden Änderungsoperationen ist verloren gegangen. Das Transaktions-Management-System muss solche Lost Updates verhindern, sodass der Endzustand der Datenbank äquivalent ist zu dem Endzustand, den die DB hätte, wenn die Transaktionen nicht gleichzeitig, sondern seriell hintereinander gelaufen wären.</aside>

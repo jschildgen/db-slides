@@ -2,25 +2,33 @@ config = {
   "LECTURE": "Datenbanken",
   "LECTURER": "Prof. Dr. Johannes Schildgen",
   "LECTURER_EMAIL": "johannes.schildgen@oth-regensburg.de",
-  "SEMESTER": "SS 2023"
+  "SEMESTER": "WS 2023/24"
 };
 
-START_DATE = "2023-04-03";
+START_DATE = "2023-10-17";
 
-data = {
-  "1": { "EX_DATES": mult_days(START_DATE,2), "DEADLINE": START_DATE+" 12:00" },
-  "2": { "EX_DATES": mult_days(add_weeks(START_DATE, 2), -5), "DEADLINE": "2023-04-12 8:00" },
-  "3": { "EX_DATES": mult_days(add_weeks(START_DATE, 3), 2), "DEADLINE": add_weeks(START_DATE, 3)+" 12:00" },
-  "4": { "EX_DATES": mult_days(add_weeks(START_DATE, 4), 2), "DEADLINE": add_days(add_weeks(START_DATE, 4),1)+" 8:00" },
-  "5": { "EX_DATES": mult_days(add_weeks(START_DATE, 5), 2), "DEADLINE": add_weeks(START_DATE, 5)+" 12:00" },
-  "6": { "EX_DATES": mult_days(add_weeks(START_DATE, 6), 2), "DEADLINE": add_weeks(START_DATE, 6)+" 12:00" },
-  "7": { "EX_DATES": mult_days(add_weeks(START_DATE, 7), 2), "DEADLINE": add_weeks(START_DATE, 7)+" 12:00" },
-  "8": { "EX_DATES": mult_days(add_weeks(START_DATE, 8), 2, 7), "DEADLINE": add_weeks(START_DATE, 8)+" 12:00" },
-  "9": { "EX_DATES": mult_days(add_weeks(START_DATE, 10), 2), "DEADLINE": add_weeks(START_DATE, 10)+" 12:00" },
-  "10": { "EX_DATES": mult_days(add_weeks(START_DATE, 11), 2), "DEADLINE": add_weeks(START_DATE, 11)+" 12:00" },
-  "11": { "EX_DATES": mult_days(add_weeks(START_DATE, 12), 2), "DEADLINE": add_weeks(START_DATE, 12)+" 12:00" },
-  "12": { "EX_DATES": mult_days(add_weeks(START_DATE, 13), 2), "DEADLINE": add_weeks(START_DATE, 13)+" 12:00" },
-};
+COURSE = {
+  "deadline_time": "8:00",
+  "exercise_days": ["2023-10-17",  
+                    "2023-10-24",
+                    "2023-10-31", 
+                    "2023-11-07",
+                    "2023-11-14",
+                    "2023-11-21",
+                    "2023-11-28",
+                    "2023-12-05",
+                    "2023-12-12", 
+                    "2023-12-19",
+                    "2024-01-09",
+                    "2024-01-16"] 
+}
+
+data = {};
+for (let i = 0; i < COURSE.exercise_days.length; i++) {
+  let date = COURSE.exercise_days[i];
+  let ex_no = i + 1;
+  data[ex_no] = { "EX_DATES": mult_days(date, 1,2), "DEADLINE": date+" "+COURSE.deadline_time };
+}
 
 function mult_days(dateStr, ...days) {
   let date = new Date(dateStr);
@@ -73,6 +81,7 @@ function is_holiday(dateString) {
     { name: "Pfingstmontag", date: new Date(easter.getTime() + 50 * 24 * 60 * 60 * 1000).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }).replace(/\//g, "-") },
     { name: "Tag nach Pfingstmontag", date: new Date(easter.getTime() + 51 * 24 * 60 * 60 * 1000).toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }).replace(/\//g, "-") },
     { name: "Tag der Deutschen Einheit", date: "10-03" },
+    { name: "Allerheiligen", date: "11-01" },
     { name: "Erster Weihnachtsfeiertag", date: "12-25" },
     { name: "Zweiter Weihnachtsfeiertag", date: "12-26" }
   ];

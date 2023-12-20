@@ -32,23 +32,37 @@
         <section style="padding-top: 2.5cm">
           <h1>Aufgabe 0: SQL-Insekten (Bonusaufgabe, 10P)</h1>
           <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
-          <p>Spielen Sie das Spiel SQL-Insekten (<a href="http://www.sql-insekten.de" target="_blank">http://www.sql-insekten.de)</a>. In dem Spiel werden Sie das Gehalt der Mitarbeiterin Greta Maria herausfinden. Tragen Sie dies im ELO ein und erhalten Sie 10 Bonuspunkte.</p>
+          <p>Spielen Sie das Spiel SQL-Insekten (<a href="http://www.sql-insekten.de" target="_blank">http://www.sql-insekten.de)</a>. In dem Spiel werden Sie das Gehalt der Mitarbeiterin Greta Maria herausfinden. Tragen Sie dies im ELO ein und erhalten Sie 10 Bonuspunkte. Hinweis: Bitte verwenden Sie als Browser Google Chrome oder Chromium! Firefox und ein Paar andere Browser werden nicht unterstützt!</p>
   </section>
 
         <section>
           <h1>Aufgabe 1: Anwendungsentwicklung mit JDBC (10P)</h1>
           <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
           <p><em>Da Sie für diese Aufgabe Ihr Datenbank-Passwort im Klartext in Ihren Quellcode schreiben müssen, empfiehlt es sich, dies vorher auf ein zufälliges Passwort zu ändern. Verwenden Sie dazu</em> <code>ALTER USER ihr_benutzername PASSWORD 'neues_passwort';</code> <em>Tragen Sie dieses neue Passwort dann auch in Ihren DBeaver-Verbindungseinstellungen ein.</em></p>
-          <p>In dieser Aufgabe geht es darum, dass Sie sich eine Datenbankanwendung überlegen und diese mittels Java und JDBC programmieren. Denken Sie aber nicht zu kompliziert, entwickeln Sie eine coole App, aber ohne viel Schnickschnack. Keine GUI, keine Web-App, eine einfache Java-Konsolenanwendung, die nur aus einer Klasse besteht und mit der PostgreSQL-Datenbank kommuniziert.<br>Beispiel-Ideen: ToDo-App (Einträge hinzufügen, anzeigen, abhaken), Einkaufsliste, Klausurnoten-Verwaltung, Terminkalender, Adressbuch, Film-Verwaltung, Vokabellernprogramm, Haushaltsbuch, Arbeitszeiterfassung, Fitness-Aktivitäten-Verwaltung, Geschenkideen-Verwaltung, Kaffeesorten-Bewertungsapp, ...</p>
           <ol>
-            <li>Erstellen Sie im DBeaver die mit <code>CREATE TABLE</code>-Kommandos Ihre Tabelle(n). Evtl. müssen Sie sie mit <code>INSERT</code> auch schon erste Daten einfügen. Diese SQL-Befehle geben Sie im ELO mit ab.</li>
+            <li>Erstellen Sie im DBeaver eine Tabelle &quot;kontakte&quot; mit den Spalten Name (<code>VARCHAR(200) PRIMARY KEY</code>), handynummer (<code>VARCHAR(20)</code>) und gesucht (<code>INT NOT NULL DEFAULT 0</code>).</li>
+            <li>Fügen Sie im DBeaver einen neuen Kontakt ein: Peter hat die handynummer 0151-555</li>
             <li>Schreiben Sie ein Konsolenprogramm in Java und binden Sie den PostgreSQL-JDBC-Treiber ein; entweder indem Sie die Jar-Datei von <a href="https://jdbc.postgresql.org/" target="_blank">https://jdbc.postgresql.org/</a> herunterladen oder mittels Maven.</li>
             <li>Bauen Sie in Ihrem Java-Programm eine Verbindung zu Ihrer Datenbank auf.</li>
-            <li>Entwickeln Sie Ihre Anwendung zu Ende. Beschränken Sie sich dabei aber auf eine einzige Klasse, entwickeln Sie also keine Anwendung, die aus mehreren Klassen besteht. Geben Sie den Programmcode Ihrer Anwendung zusammen mit den SQL-Statements aus 1. im ELO ab.</li>
+            <li>Geben Sie alle Kontakte (Name und Handynummer) sortiert nach ihrem Namen aus.</li>
           </ol>
-          <p class="small">Achten Sie darauf, dass keine SQL-Injections möglich sind!</p>
         </section>
 
+        <section>
+          <h1>Aufgabe 2: Anwendungsentwicklung mit JDBC (Fortsetzung)</h1>
+          <ol start="6">
+            <li>Implementieren Sie eine Suchfunktion für ihr Programm aus Aufgabe 1:
+                <ol>
+                    <li>Der Benutzer gibt auf der Konsole einen Namen ein</li>
+                    <li>Wird ein leerer Name eingegeben, sollen wie gehabt alle Kontakte ausgegeben werden.</li>
+                    <li>Andernfalls wird nur der Kontakt mit dem eingegebenen Namen ausgegeben.</li>
+                    <li>Gibt es keinen Kontakt mit dem eingegebenen Namen, soll eine Meldung &quot;Kein Kontakt gefunden&quot; angezeigt werden.</li>
+                    <li>Verhindern Sie SQL-Injections!</li>
+                </ol></li>
+            <li>Hinter dem Kontakt soll in Klammern die Anzahl stehen, wie oft nach ihr oder ihm gesucht wurde (&quot;gesucht&quot;-Spalte).</code></li>
+            <li>Immer wenn nach einem bestimmten Kontakt gesucht wird, soll in der Datenbank die &quot;gesucht&quot;-Zahl für diesen Kontakt um eins erhöht werden.</li>
+          </ol>
+        </section>
       
       <!--  <section style="padding-top: 2.5cm; page-break-inside: avoid;">
           <h1>Aufgabe 3: Stored Procedures</h1>

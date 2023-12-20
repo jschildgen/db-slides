@@ -24,50 +24,87 @@
         <hr>
         </header>
 
-        
-        
         <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Kardinalitätsschätzung (10P)</h1>
+            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
             <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
-            <p>Gegeben sind die Tabellen eines Videoportals:<br>
-                Videos(<u>vnr</u>, titel, genre, sprache)<br>
-                Schlagworte(<u>vnr, schlagwort</u>)</p>
-                <p>Schlagworte.vnr ist ein Fremdschlüssel Videos.vnr</p>
-            <p>Die Kardinalitäten der Tabellen bzw. Spalten sind wie folgt:<br>
-            |Videos| = 100.000.000, |Schlagworte| = 400.000.000<br>
-            |Videos.vnr| = 100.000.000, |Videos.titel| = 50.000.000<br>
-            |Videos.genre| = 20, |Videos.sprache| = 25<br>
-            |Schlagworte.vnr| = 50.000.000, |Schlagworte.schlagwort| = 400</p>
-        
 
-            <p>Führen Sie eine Schätzung durch, wie viele Zeilen die folgenden Ausdrücke liefern (je 2P). Gehen Sie von Gleichverteilung und Werteunabhängigkeit zwischen den Attributen aus.</p>
+            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
+            <p>Wir verwenden folgende Relationen:</p>
+            <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+               Studenten(<u>MatrNr</u>, Name, Semester)<br>
+               Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+               hoeren(<u>MatrNr, VorlNr</u>)</p>
+            <p>Vorlesungen.gelesenVon ist Fremdschlüssel auf Professoren.PersNr<br>
+               hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+               hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
+            <p>Formulieren Sie die folgenden Anfragen mittels Ausdrücken der relationalen Algebra.</p>
             
             <table border="0" style="width: 100%; margin-top: -3mm;">
-                <tr><td>1.</td><td>&pi;<sub>vnr</sub>(Schlagworte)</td></tr>
-                <tr><td>2.</td><td>&sigma;<sub>genre='Musik' &vee; genre = 'Musikvideo'</sub>(Videos)</td></tr>
-                <tr><td>3.</td><td>&sigma;<sub>genre='Musik' &wedge; sprache = 'Deutsch'</sub>(Videos)</td></tr>
-                <tr><td>4.</td><td>Videos &bowtie;<sub>Videos.vnr = Schlagworte.vnr</sub> Schlagworte</td></tr>
-                <tr><td>5.</td><td>&pi;<sub>vnr, titel</sub> &sigma;<sub>Schlagworte.schlagwort='lustig'</sub>(Videos &bowtie;<sub>Videos.vnr = Schlagworte.vnr</sub> Schlagworte)</td></tr>
+                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830? (3P)</td></tr>
+                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen? (4P)</td></tr>
+            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält? (3P)</td></tr>
             </table>
         </section>
-
         
         <section>
-            <h1>Aufgabe 2: Anfrageoptimierung</h1>
-            <p>Überführen Sie diese Anfrage in eine äquivalente Anfrage gemäß den Heuristiken zur Anfrageoptimierung aus der Vorlesung:</p>
-            <p>&pi;<sub>schlagwort</sub> &sigma;<sub>genre = 'Musik'</sub> &sigma; <sub>Videos.vnr = schlagworte.vnr</sub> (Videos &times; Schlagworte)<br>
-            &Union;
-            &pi;<sub>schlagwort</sub> &sigma;<sub>genre = 'Musikvideo'</sub> &sigma; <sub>Videos.vnr = schlagworte.vnr</sub> (Videos &times; Schlagworte)</p>
-        </section>
-        
-        <section>
-            <h1>Aufgabe 3: Relationale Algebra</h1>
+            <h1>Aufgabe 2: Relationale Algebra</h1>
+            <p>Formulieren Sie Ausdrücke der relationalen Algebra für die folgenden Aufgabenstellungen ebenfalls auf dem Relationenschema von Aufgabe 1:</p>
             <table border="0" style="width: 100%">
-                <tr><td>1.</td><td>Formulieren Sie in Ihren eigenen Worten, was die Anfrage 5 aus Ausgabe 1 liefert.</td></tr>
-                <tr><td>2.</td><td>Formulieren Sie in Ihren eigenen Worten, was die Anfrage aus Aufgabe 2 liefert.</td></tr>
-                <tr><td style="vertical-align: top;">3.</td><td>Formulieren Sie auf dem Relationenschema von Aufgabe 1 einen Ausdruck der relationalen Algebra, der Ihnen die Titel von derjenigen Videos ausgibt, die mindestens ein Schlagwort haben, welches auch das Video mit der VNR 3517 besitzt.</td></tr>
+                
+                <tr><td>4.</td><td>Welche Studierenden (Namen) heißen genau gleich wie ein Professor?</td></tr>
+                <tr><td>5.</td><td>Welche Vorlesungen (VorlNr, Titel) werden von Studierenden gehört, die im zweiten Semester sind?</td></tr>
+                <tr><td>6.</td><td>Welche Professoren (PersNr, Name) haben den gleichen Rang wie der Professor mit PersNr 2137? Geben Sie aber nicht den Professor 2137 aus!</td></tr>
             </table>
         </section>
+        
+
+    <section style="page-break-inside:avoid; padding-top: 2.5cm">
+        <h1>Aufgabe 3: ER-Diagramm &rightarrow; Relationenschema</h1>
+        <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema. Dabei geht es um eine App, um sich mit dem Handy Essen an die aktuelle Position liefern zu lassen. Verwenden Sie zur Umsetzung der Generalisierung das Konzept der vertikalen Partitionierung.</p>
+        <div style="height: 9cm; overflow: hidden; margin-left: -2.5cm">
+                <div class="erd">
+                        [[
+                         { _e: "Bestellung", pos: [150, 100],
+                          attributes: [
+                           { _a:"Bestellnr", options:["primary"], pos: [89, 13] },
+                           { _a:"Uhrzeit", pos: [245, 13] },
+                           { _a:"Koordinaten", pos: [150, 190], attributes: [
+                                {_a: "Lon", pos: [89, 270]},
+                                {_a: "Lat", pos: [245, 270]}
+                                ]
+                            }
+                            ]
+                         },
+                         { _e: "Gericht", pos: [430, 100],
+                           attributes: [
+                            { _a:"Nr", pos: [385, 25], options:["primary"] },
+                            { _a:"Bezeichnung", pos: [510, 25]},
+                            { _a:"Preis", pos: [610, 75] },
+                            { _a:"Zutaten", options:["multi"], pos: [610, 150] }
+                           ]
+                         },
+                         { _e: "Pizza", pos: [430, 277], isa:{_e:"Gericht"},
+                           attributes: [
+                            { _a:"Durchmesser", pos: [610, 274] }
+                           ]
+                         }
+                        ],
+                        [
+                         { _r: "besteht aus", 
+                           _e: ["Gericht", "Bestellung"],
+                           card: ["N", "M"],
+                           attributes: [{_a:"Anzahl", pos: [330, 190]}]
+                         }
+                        ]]
+                                    </div></div>
+    </section>  
+
+
+    <section>
+        <h1>Aufgabe 4: Relationenschema &rightarrow; ER-Diagramm</h1>
+        <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
+    </section>
+
         
         <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
             <h1>Aufgabe 3: Normalisierung</h1>
@@ -107,6 +144,7 @@ Reveal.addEventListener = function(event, f) {
     }
 }
 </script>
+
 <script src="./js/exercises.js"></script>
 
 <script type="text/javascript" src="../src/erd.js"></script>

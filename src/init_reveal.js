@@ -27,7 +27,7 @@ Reveal.initialize({
     { src: 'plugins/plantuml.js' },
     { src: 'plugins/jump.js', async: true },
     { src: 'plugins/badges.js' },
-    { src: 'plugins/sampler.js' },
+    { src: 'plugins/sampler.js', async: true },
     { src: 'poll/poll.js', async: true }
 ]
 });

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt %%%EX_NO%%%</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+        <style type="text/css">
+          li {
+            margin-left: -5mm;
+          }
+        </style>
+    </head>
+    <body>
+      <header>
+        <div>
+        <div>
+            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
+        </div>
+        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
+    </div>
+    <hr>
+    </header>
+
+    <section style="padding-top: 2.5cm">
+      <h1>Aufgabe 1: Datenimport aus einer CSV-Datei (10P)</h1>
+      <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
+        <p>In diesem Übungsblatt geht es darum, die aktuellen Corona-Impfzahlen als CSV-Datei herunterzuladen, diese in eine PostgreSQL-Datenbank zu importieren und Analysen mit SQL darauf auszuführen.</p>
+        
+        <ol>
+          <li>Laden Sie die Datei &quot;owid-covid-data.csv&quot; von  <a href="https://github.com/owid/covid-19-data/tree/master/public/data/" target="_blank">https://github.com/owid/covid-19-data/tree/master/public/data/</a> herunter.</li>
+          <li>Betrachten Sie die Datei direkt im Browser oder in einem Texteditor (nicht mit Excel o. ä.). Schauen Sie sich an, welche Spalten es gibt, was das Spaltentrennzeichen ist, in welchem Format Datumswerte gespeichert werden, etc.</li>
+          <li>Verbinden Sie sich mit der PostgreSQL-Datenbank der Hochschule (oder Ihrer eigenen PostgreSQL-Installation) und erstellen Sie die folgende Tabelle:<br>
+            <pre><code>create table impfungen
+(datum date, land varchar(50), kontinent varchar(50),
+impfungen decimal(18,1), primary key(datum, land));</code></pre>
+          </li>
+          <li>Klicken Sie im DBeaver mit einem Rechtsklick auf die neue Impfungen-Tabelle (vorher: Rechtsklick - Aktualisieren) und dann auf Daten importieren und wählen als Datentyp <code>CSV</code>, dann Ihre Quelldatei. Überprüfen Sie die Import-Einstellungen und achten Sie darauf, dass das Spaltenkennzeichen, Datumsformat etc. richtig eingestellt ist. Wichtig ist jedoch noch im vorletzten Schritt das Column-Mapping. Wählen Sie dort aus, welche Spalten aus der CSV-Datei mit welchen Spalten aus der soeben erstellten Tabelle korrespondieren. (6P)</li>
+          <li>Schauen Sie sich nach erfolgreichem Import die Tabelle an.</li>
+          <li>Es gibt jede Menge Zeilen, bei denen das Land gar kein Land ist, sondern &quot;World&quot;, &quot;Europe&quot; o.ä.. Sie erkennen dies daran, dass in der Kontinent-Spalte ein leerer String steht (oder NULL, falls Sie in den Import-Einstellungen eingestellt haben, dass leere Strings in NULL-Werte konvertiert werden sollen). Löschen Sie diese Zeilen. Zur Überprüfung: Das sind ca. 5% der Zeilen.</li>
+          <li>Wie viele Corona-Impfungen fanden am 01.10.2022 in Germany statt? (2P)</li>
+          <li>Wie viele verschiedene Länder tauchen in der Tabelle auf? (2P)</li>
+        </ol>
+
+<table><tr><th>datum</th><th>land</th><th>kontinent</th><th>impfungen</th></tr>
+    <tr><td>2022-10-01</td><td>Germany</td><td>Europe</td><td><!--?-->???</td></tr>
+</table>
+
+        <p>Hinweise sind auf der nächsten Seite.</p>
+
+        <div style="page-break-inside:avoid; padding-top: 2.5cm">
+        <p>Hinweise:</p>
+        <ul>
+            <li>Setzen Sie beim Spalten-Mapping zuerst alle Spalten der CSV-Datei auf Skip (ansonsten werden neue Spalten an Ihre Tabelle angefügt) und danach wählen Sie bei den entsprechenden Spalten der CSV-Datei als Ziel die jeweilige Spalte in Ihrer Tabelle aus:
+                <br><img src="img/ex7_import_corona.png" alt="Import" style="width: 80%;"> </li>
+            <li>Viele Spalten in der CSV beinhalten bereits voraggregierte Werte. total_vaccinations ist beispielsweise die Summe aller Corona-Impfungen bis zu diesem Tag innerhalb eines Landes. Diese Zahlen wollen wir nicht importieren, sondern nur die Rohdaten, also die neu hinzugekommen Fälle von dem einen Tag.</li>
+            <li>Falls Sie sich über den Datentyp DECIMAL(18,1) wundern: Die Anzahl der Impfungen haben in der CSV immer eine .0-Nachkommastelle. DBeaver macht leider Blödsinn, wenn Dezimalzahlen in INT-Spalten importiert werden. Dann erscheint eine 123.0 als 1230.</li>
+            <li>Wenn Sie aus irgendeinem Grund die Daten neu importieren müssen, droppen Sie am besten vorher die Tabelle und erstellen Sie neu.</li>
+        </ul>
+        </div>
+
+            
+    </section>
+
+    <section>
+      <h1>Aufgabe 2: SQL-Anfragen</h1>
+      <p>Formulieren Sie SQL-Anfragen für die die folgenden Fragestellungen auf der in Aufgabe 1 importierten Impfungen-Tabelle:</p>
+      <ol>
+        <li>Wie viele Corona-Impfungen gab es insgesamt im Oktober 2022? (Tipp: Verwenden Sie BETWEEN).</li>
+        <li>Geben Sie für jedes Land die Gesamtanzahl an Impfungen aus; jedoch nur für Länder mit mind. 100.000 Impfungen. Die Ausgabe soll absteigend sortiert sein nach der Anzahl an Impfungen.</li>
+        <!--<li>Geben Sie für jeden Kontinent den Namen desjenigen Landes in diesem Kontinent aus, in welchem es bisher die meisten gemeldeten Corona-Fälle gibt.</li>-->
+        <li>In welchen Ländern gibt es über alle Zeit gesehen mehr Impfungen als in Deutschland?</li>
+        <li>Lagern Sie Länder-Infos aus der Impfungen-Tabelle aus: Erstellen Sie eine neue Tabelle "Laender" mit den Spalten Land und Kontinent mit den entsprechenden Daten. Tipp: Verwenden Sie <code>CREATE TABLE ... AS SELECT ...</code></li>
+      </ol>
+    </section>
+
+<script src="../lib/jquery.js"></script>
+<script src="../lib/lodash.js"></script>
+<script src="../lib/backbone.js"></script>
+<script src="../lib/joint.min.js"></script>
+<script type="text/javascript">
+Reveal = document;
+Reveal.registerPlugin = function(pluginname, plugin) {
+    plugin.init()
+};
+Reveal.addEventListener = function(event, f) {
+    if(event == 'ready') {
+        f();
+    }
+}
+</script>
+<script type="text/javascript" src="../src/erd.js"></script>
+<script src="./js/exercises.js"></script>
+
+</body>
+</html>

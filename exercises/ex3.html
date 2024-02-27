@@ -15,9 +15,9 @@
             <div>
             <div>
                 <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
-                %%%LECTURER%%%<br>
-                %%%LECTURER_EMAIL%%%<br>
-                <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
+            %%%LECTURER%%%<br>
+            %%%LECTURER_EMAIL%%%<br>
+            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
             </div>
             <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
@@ -25,8 +25,116 @@
         </header>
 
         <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
+            <h1>Aufgabe 1: Relationenmodell (10P)</h1>
             <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
+            <p>Betrachten Sie das folgende Relationenschema eines Friseursalons:</p>
+            
+            <p>PERSONAL (<u>Vorname</u>, Tarifstufe)<br>
+               KUNDEN (<u>Kundennr</u>, Name, Telefon)<br>
+               TERMIN (<u>Datum, Uhrzeit, Personal</u>, Kunde)</p>
+        
+               <p>TERMIN.Personal ist Fremdschlüssel auf PERSONAL.Vorname<br>
+            TERMIN.Kunde ist Fremdschlüssel auf KUNDEN.Kundennr</p>
+        
+                <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort bei Fragen 1 bis 5 gibt es 1 Punkt, falsche Antworten geben keine Punktabzüge. Frage 6 gibt bis zu 5 Punkte.</p>
+            
+                    <table border="0" style="width: 100%">
+            <tr>
+                <td style="width:10mm">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td style="text-align: center; width:15mm">Richtig</td>
+                <td style="text-align: center; width:15mm">Falsch</td>
+            </tr>
+            <tr>
+                <td>1.</td><td>Es darf nur eine Mitarbeiterin mit dem Vornamen Ute geben.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>2.</td><td>Es ist möglich, dass die Kundin 5 einen Termin bucht, obwohl es gar keine Kundin mit der Kundennummer 5 gibt.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>3.</td><td>Es ist möglich, dass ein Mitarbeiter überhaupt keine Termine hat.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>4.</td><td>Es ist möglich, dass ein Kunde am gleichen Tag zur gleichen Uhrzeit mehrere Termine hat.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>5.</td><td>In dem Tabellenschema gibt es einen zusammengesetzten Fremdschlüssel.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+
+            <tr>
+                <td>6.</td>
+                <td colspan="3">Überführen Sie das Relationenschema zurück in ein ER-Diagramm. Verwenden Sie die Chen-Notation.</td>
+            </tr>
+            
+            </table>
+              </section>
+
+    
+
+              <section style="page-break-inside:avoid; padding-top: 2.5cm">
+        <h1>Aufgabe 2: Transformation ER ins Relationenmodell</h1>
+        <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema:</p>
+        <div style="height: 9.5cm; overflow: hidden; margin-left: -2.5cm">
+                <div class="erd">
+                        [[
+                         { _e: "Personen", pos: [150, 100],
+                          attributes: [
+                           { _a:"PersNr", options:["primary"], pos: [89, 13] },
+                           { _a:"Name", pos: [245, 13] }
+                          ]
+                         },
+                         { _e: "Theaterstück", pos: [530, 100],
+                           attributes: [
+                            { _a:"Bezeichnung", pos: [485, 25], options:["primary"] },
+                            { _a:"Genres", pos: [610, 25], options:["multi"]}
+                           ]
+                         },
+                         { _e: "Rollen", pos: [334, 277],
+                           attributes: [
+                            { _a:"Vorname", pos: [205, 212], options:["primary"] },
+                            { _a:"Nachname", pos: [205, 275], options:["primary"] },
+                            { _a:"Beschreibung", pos: [510, 274] }
+                           ]
+                         }
+                        ],
+                        [
+                         { _r: "spielt mit", pos: [350, 180],
+                           _e: ["Personen", "Theaterstück", "Rollen"],
+                           card: ["1", "N", "M"],
+                           attributes: [{_a:"Jahr", pos: [450, 200]}]
+                         },
+                         { _r: "Regisseur",
+                           _e: ["Personen", "Theaterstück"],
+                           card: ["1", "N"]
+                         }
+                        ]]
+                                    </div></div>
+    </section>
+
+    <section style="page-break-inside:avoid; padding-top: 1.0cm">
+    <h1>Aufgabe 3: ER-Diagramm eines Autovermieters</h1>
+    <p>Erstellen Sie ein ER-Diagramm für den Autovermieter Entenpreis.</p>
+<p>Ein Kunde registriert sich bei Entenpreis mit seiner E-Mail-Adresse und einem Passwort, außerdem erhält er eine automatisch generierte Kundennummer.</p>
+<p>Wenn ein Kunde eine Buchung aufgibt, wird eine global eindeutige Buchungsnummer generiert und zusätzlich das Buchungsdatum und das Datum der Ausleihe und Rückgabe gespeichert.</p>
+<p>Eine Buchung umfasst immer nur ein einziges Fahrzeug. Fahrzeuge sind von einem bestimmten Modell. Modelle haben eine Marke, eine Modellbezeichnung und einen Preis. Beispielsweise gibt des den "Citroen 2CV" für 100 EUR pro Tag. Von diesem Modell existieren ein Dutzend buchbare Fahrzeuge, jedes hat eine für das jeweilige Modell eindeutige laufende Nummer (von 1 bis 12) und eine Farbe.</p>
+<p>Modelle teilen sich auf in PKWs, Transporter und LKWs. Bei LKWs wird die zulässige Gesamtmasse gespeichert.</p>
+<p>Kunden können beliebig viele PKWs als Favoriten markieren. Für Transporter und LKWs ist das nicht möglich.</p>
+</section>
+        
+        <!--
+        <section style="padding-top: 2.5cm">
+            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
+            <p>Abgabe-Deadline: 29.10.2021 9:00 im Moodle</p>
 
             <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
             <p>Wir verwenden folgende Relationen:</p>
@@ -57,54 +165,11 @@
             </table>
         </section>
         
-
-    <section style="page-break-inside:avoid; padding-top: 2.5cm">
-        <h1>Aufgabe 3: ER-Diagramm &rightarrow; Relationenschema</h1>
-        <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema. Dabei geht es um eine App, um sich mit dem Handy Essen an die aktuelle Position liefern zu lassen. Verwenden Sie zur Umsetzung der Generalisierung das Konzept der vertikalen Partitionierung.</p>
-        <div style="height: 9cm; overflow: hidden; margin-left: -2.5cm">
-                <div class="erd">
-                        [[
-                         { _e: "Bestellung", pos: [150, 100],
-                          attributes: [
-                           { _a:"Bestellnr", options:["primary"], pos: [89, 13] },
-                           { _a:"Uhrzeit", pos: [245, 13] },
-                           { _a:"Koordinaten", pos: [150, 190], attributes: [
-                                {_a: "Lon", pos: [89, 270]},
-                                {_a: "Lat", pos: [245, 270]}
-                                ]
-                            }
-                            ]
-                         },
-                         { _e: "Gericht", pos: [430, 100],
-                           attributes: [
-                            { _a:"Nr", pos: [385, 25], options:["primary"] },
-                            { _a:"Bezeichnung", pos: [510, 25]},
-                            { _a:"Preis", pos: [610, 75] },
-                            { _a:"Zutaten", options:["multi"], pos: [610, 150] }
-                           ]
-                         },
-                         { _e: "Pizza", pos: [430, 277], isa:{_e:"Gericht"},
-                           attributes: [
-                            { _a:"Durchmesser", pos: [610, 274] }
-                           ]
-                         }
-                        ],
-                        [
-                         { _r: "besteht aus", 
-                           _e: ["Gericht", "Bestellung"],
-                           card: ["N", "M"],
-                           attributes: [{_a:"Anzahl", pos: [330, 190]}]
-                         }
-                        ]]
-                                    </div></div>
-    </section>  
-
-
-    <section>
-        <h1>Aufgabe 4: Relationenschema &rightarrow; ER-Diagramm</h1>
-        <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
-    </section>
-
+        <section>
+            <h1>Aufgabe 3: Relationenschema &rightarrow; ER-Diagramm</h1>
+            <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
+        </section>
+    -->
         
         <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
             <h1>Aufgabe 3: Normalisierung</h1>
@@ -144,10 +209,9 @@ Reveal.addEventListener = function(event, f) {
     }
 }
 </script>
-
+<script type="text/javascript" src="../src/erd.js"></script>
 <script src="./js/exercises.js"></script>
 
-<script type="text/javascript" src="../src/erd.js"></script>
 
 </body>
 </html>

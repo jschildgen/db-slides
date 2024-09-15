@@ -5,8 +5,11 @@ function txt(v) {
   lang["de"]["Max"] = "Max";
   lang["de"]["P"] = "P";
   lang["de"]["Points"] = "Punkte";
-  lang["de"]["Total"] = "Gesamt";
+  lang["de"]["Total"] = "&Sigma;";
   lang["de"]["Grade"] = "Note";
+  lang["de"]["Signatures"] = "Unterschr.";
+  lang["de"]["1st Reviewer"] = "Erstgutachter";
+  lang["de"]["2nd Reviewer"] = "Zweitgutachter";
   
   var code = document.getElementsByTagName('html')[0].attributes["lang"].value;
   if(lang[code] == undefined || lang[code][v] == undefined) {
@@ -19,7 +22,7 @@ function txt(v) {
 
   var points_tbl_head = '<thead><tr><th>'+txt('Exercise')+':</th>'; //<th style="width: 15mm;">1</th><th style="width: 15mm;">2</th><th style="width: 15mm;">3</th><th style="width: 15mm;">4</th><th style="width: 15mm;">5</th><th style="width: 15mm;">6</th><th style="width: 15mm;">7</th><th style="width: 25mm;">Gesamt</th><th style="width: 25mm;">Note</th></tr></thead>
   var points_tbl_body1 = '<tbody><tr><th>'+txt('Max')+':</th>'; //<td>15</td><td>10</td><td>16</td><td>8</td><td>8</td><td>18</td><td>5</td><td>90</td><td></td></tr>
-  var points_tbl_body2 = '<tr><th>'+txt('Points')+':</th>'; //<td><td></td><td></td><td></td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  var points_tbl_body2 = '<tr style="background-color:white"><th>'+txt('Points')+':</th>'; //<td><td></td><td></td><td></td></td><td></td><td></td><td></td><td></td><td></td></tr>
         //</tbody>
 
   var exercise_no = 0;
@@ -41,9 +44,9 @@ function txt(v) {
       points_tbl_body2 += '<td></td>';
     });
 
-    points_tbl_head += '<th style="width: 25mm;">'+txt('Total')+'</th><th style="width: 25mm;">'+txt('Grade')+'</th></tr></thead>';
-    points_tbl_body1 += '<td>'+total_points+'</td><td></td></tr>';
-    points_tbl_body2 += '<td></td><td></td></tr></tbody>';
+    points_tbl_head += '<th style="width: 15mm;">'+txt('Total')+'</th><th style="width: 20mm;">'+txt('Grade')+'</th><th style="width: 35mm;">'+txt('Signatures')+'</th></tr></thead>';
+    points_tbl_body1 += '<td>'+total_points+'</td><td></td><td style="font-size:9pt; text-align: right; vertical-align: bottom;">'+txt('1st Reviewer')+'</td></tr>';
+    points_tbl_body2 += '<td></td><td></td><td style="font-size:9pt; text-align: right; vertical-align: bottom;">'+txt('2nd Reviewer')+'</td></tr></tbody>';
 
     document.querySelector("table.points").innerHTML = points_tbl_head+points_tbl_body1+points_tbl_body2;
 

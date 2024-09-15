@@ -1287,15 +1287,14 @@
                                             <section data-hide-from="2V">
                                                     <h2>Heuristiken</h2>
                                                     <h4>Join-Reihenfolge so wählen,<br>dass Zwischenergebnisse klein sind</h4>
-                                                    <p class="small">Vorher: $(kunden \bowtie bewertungen) \bowtie \sigma_{hersteller='Monsterfood'}(produkte)$<br>
+                                                    <p class="small" style="font-size: 67%;">Vorher: $(kunden \bowtie bewertungen) \bowtie \sigma_{hersteller='Monsterfood'}(produkte)$<br>
                                                         Nachher: $(bewertungen \bowtie \sigma_{hersteller='Monsterfood'}(produkte)) \bowtie kunden$</p>
                                                     <h4 class="fragment" data-fragment-index="1">Folgen von Sel. und Proj. zusammenfassen</h4>
-                                                    <p class="fragment small" data-fragment-index="1">Vorher: $\pi_{bezeichnung}\pi_{produktnr,bezeichnung}\sigma_{preis \le 5}\sigma_{hersteller='Monsterfood'}produkte$<br>
+                                                    <p class="fragment small" style="font-size: 67%;" data-fragment-index="1">Vorher: $\pi_{bezeichnung}\pi_{produktnr,bezeichnung}\sigma_{preis \le 5}\sigma_{hersteller='Monsterfood'}produkte$<br>
                                                         Nachher: $\pi_{bezeichnung}\sigma_{preis \le 5 \wedge hersteller='Monsterfood'}produkte$</p>
                                                     <h4 class="fragment" data-fragment-index="2">Selektionen statt Mengenoperationen</h4>
-                                                    <p class="fragment small" data-fragment-index="2">Vorher: $\sigma_{hersteller='Monsterfood'}(produkte) \cup \sigma_{hersteller='Calgonte'}(produkte)$<br>
+                                                    <p class="fragment small" style="font-size: 67%;" data-fragment-index="2">Vorher: $\sigma_{hersteller='Monsterfood'}(produkte) \cup \sigma_{hersteller='Calgonte'}(produkte)$<br>
                                                         Nachher: $\sigma_{hersteller='Monsterfood' \vee hersteller='Calgonte'}(produkte)$</p>
-                                                    <aside class="notes">Bei der frühestmöglichen Projektion ist darauf zu achten, dass keine Spalten frühzeitig eliminiert werden, die noch für Joins, Selektionen, etc. benötigt werden. Außerdem darf bei der Projektion noch keine Duplikateliminierung erfolgen, da sonst das Ergebnis evtl. nicht mehr äquivalent ist.</aside>
                                                 </section>
 
                                             <section data-hide-from="2V">

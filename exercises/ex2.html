@@ -1,130 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Datenbanken - Übungsblatt %%%EX_NO%%%</title>
-    <link rel="stylesheet" href="../exercises/exercises.css">
-    <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
-    <link href="../src/erd.css" rel="stylesheet">
-    <link rel="stylesheet" href="../lib/joint.min.css" />
-</head>
-<body>
-    <header>
-        <div>
-        <div>
-            <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Datenbanken - Übungsblatt %%%EX_NO%%%</title>
+        <link rel="stylesheet" href="../exercises/exercises.css">
+        <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
+        <link href="../src/erd.css" rel="stylesheet">
+        <link rel="stylesheet" href="../lib/joint.min.css" />
+    </head>
+    <body>
+        <header>
+            <div>
+            <div>
+                <b>%%%LECTURE%%% - %%%SEMESTER%%%</b><br>
             %%%LECTURER%%%<br>
             %%%LECTURER_EMAIL%%%<br>
-            <b>Übungsblatt %%%EX_NO%%% (%%%EX_DATES%%%)</b>
+            <b>Übungsblatt %%%EX_NO%%%<br>%%%EX_DATES%%%</b>
+            </div>
+            <div><img src="../img/oth.png" style="border:0; height:50px"></div>
         </div>
-        <div><img src="../img/oth.png" style="border:0; height:50px"></div>
-    </div>
-    <hr>
-    </header>
+        <hr>
+        </header>
 
-    <section style="padding-top: 2.5cm">
-    <h1>Aufgabe 1: ER-Diagramme (10P)</h1>
-    <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
-    <p>Betrachten Sie dieses sinnlose ER-Diagramm:</p>
-    <div style="height: 9.5cm; overflow: hidden; margin-left: -2.5cm">
-    <div class="erd">
-            [[
-             { _e: "Dings", pos: [150, 100],
-              attributes: [
-               { _a:"Baum", options:["primary"], pos: [89, 13] },
-               { _a:"Nummer", pos: [245, 13] }
-              ]
-             },
-             { _e: "Foo", pos: [530, 100],
-               attributes: [
-                { _a:"Bazinga", pos: [485, 25], options:["primary"] },
-                { _a:"Bratpfanne", pos: [610, 25]}
-               ]
-             },
-             { _e: "Bar", pos: [334, 277],
-               attributes: [
-                { _a:"Dies", pos: [205, 212], options:["primary"] },
-                { _a:"Das", pos: [205, 275], options:["primary"] },
-                { _a:"Dem", pos: [510, 274], options: ["multi"] }
-               ]
-             }
-            ],
-            [
-             { _r: "wird gebaut", pos: [350, 180],
-               _e: ["Dings", "Foo", "Bar"],
-               card: ["1", "1", "N"],
-             },
-             { _r: "hat",
-               _e: ["Dings", "Foo"],
-               card: ["1", "N"],
-               attributes: [{_a:"Buh", pos: [365, 13]}]
-             }
-            ]]
-                        </div></div>
-        <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 2 Punkte, falsche Antworten geben keine Punktabzüge.</p>
-    
+        <section style="padding-top: 3cm">
+            <h1>Aufgabe 1: Datenbanken-Grundbegriffe (10P)</h1>
+            <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
+            <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt.</p>
             <table border="0" style="width: 100%">
-    <tr>
-        <td style="width:10mm">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td style="text-align: center; width:15mm">Richtig</td>
-        <td style="text-align: center; width:15mm">Falsch</td>
-    </tr>
-    <tr>
-        <td>1.</td><td>Ein Dings hat immer nur ein Foo.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>2.</td><td>Es kann Dings geben, die kein Foo haben.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>3.</td><td>Ein und dasselbe Dings kann von einem Foo in mehreren verschiedenen Bars gebaut werden.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>4.</td><td>Es kann nur eine Bar geben, in der Dies 'hallo' ist.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <tr>
-        <td>5.</td><td>Eine Bar kann viele Dem haben.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>
-    <!--<tr>
-        <td>6.</td><td>Die Nummer eines Dings ist eindeutig.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>-->
-    </table>
-    <!--<p>b) Erstellen Sie ein ER-Diagramm für die News-Seite &quot;Igel Online&quot;. Dafür gibt es bis zu 5 Punkte:<br>
-        Auf der Plattform Igel Online gibt es Beiträge, die eine eindeutige Beitrags-ID haben, sowie aus einem Titel, Datum, Uhrzeit und Text bestehen. Benutzer können sich mit ihrer E-Mail-Adresse registrieren und einen Namen und ein Passwort wählen. Ein Kommentar kann gepostet werden unter einen Beiträg. Er hat eine Kommentarnummer, Datum, Uhrzeit und einen Text. Der Autor des Kommentars ist stets ein registrierter Benutzer. Des Weiteren können Benutzer bei Beiträgen auf &quot;gefällt mir&quot; klicken.</p>-->
-</section>
+            <tr>
+                <td style="width:10mm">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td style="text-align: center; width:15mm">Richtig</td>
+                <td style="text-align: center; width:15mm">Falsch</td>
+            </tr>
+            <tr>
+                <td>1.</td><td>In OLTP-Systemen sind Transaktionen oft komplex und langdauernd.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>2.</td><td>Ein Data-Warehouse ist eine separate DB, die parallel zur operationalen DB zum Einsatz kommt.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>3.</td><td>Das I in ACID steht für Integrität.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>4.</td><td>MySQL ist ein Datenbankmanagementsystem.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>5.</td><td>Ein Befehl einer Anfragesprache, mit dem man eine neue Spalte in eine existierende Tabelle hinzufügen kann, fällt in die Kategorie DDL.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>6.</td><td>In den DB-Metadaten wird beschreiben, dass Peter die Telefonnummer 0151-12345 hat.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>7.</td><td>Daten belegen in der Regel mehr Platz als Metadaten.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>8.</td><td>Ein Data-Warehouse wird oft für komplexe OLAP-Anfragen eingesetzt.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>9.</td><td>Isolation bedeutet, dass immer nur eine Transaktion gleichzeitig laufen darf.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>10.</td><td>Eine SQL-Anfrage beschreibt WAS getan oder gesucht werden soll, nicht WIE.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <!--<tr>
+                <td>8.</td><td>Das logische Datenmodell legt fest, wie Datensätze intern auf die Festplatte gespeichert werden.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>9.</td><td>Eine View ist eine Sicht auf die in der Datenbank gespeicherten Daten und kann zum externen Zugriff für Anwendungen dienen.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>
+            <tr>
+                <td>10.</td><td>Wenn ich bei meinem DBS die Storage-Engine umstelle, muss ich mein Tabellenschema komplett neu anpassen.</td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+                <td style="text-align: center"><i class="far fa-square"></i></td>
+            </tr>-->
+            </table>
+        </section>
 
-<section style="page-break-inside:avoid; padding-top: 2.5cm">
-    <h1>Aufgabe 2: ER-Diagramm einer Mitfahrbörse</h1>
-    <p>Erstellen Sie ein ER-Diagramm für die Mitfahrbörse Blablabla.</p>
-<p>Benutzer registrieren sich bei Blablabla mit ihrer Handynummer und geben ihren Namen an. Außerdem beschreiben sie ihr Auto: Farbe und Modell.</p>
-<p>Wenn ein Benutzer eine Fahrt erstellt, erhält diese eine automatisch generierte Fahrtnummer. Es müssen Start- und Zielort eingegeben werden, sowie eine beliebige Anzahl von Zwischenstopps. Bei Blablabla geht es nicht ums Geld, daher sind alle Fahrten kostenlos.</p>
-<p>Benutzer können sich für Fahrten eines anderen Benutzers eintragen, wenn sie mitfahren möchten. Dazu wird lediglich ein Status notiert, damit klar ist, ob die Meldung noch unbestätigt oder bereits bestätigt ist.</p>
-<p>Die Kommunikation erfolgt über SMS, daher braucht Blablabla kein eigenes Nachrichtensystem.</p>
-</section>
 
-    <!--<section style="page-break-inside:avoid; padding-top: 1.0cm">
-    <h1>Aufgabe 3: ER-Diagramm eines Autovermieters</h1>
+    <section style="page-break-inside:avoid; padding-top: 3cm">
+    <h1>Aufgabe 2: ER-Diagramm eines Autovermieters</h1>
     <p>Erstellen Sie ein ER-Diagramm für den Autovermieter Entenpreis.</p>
 <p>Ein Kunde registriert sich bei Entenpreis mit seiner E-Mail-Adresse und einem Passwort, außerdem erhält er eine automatisch generierte Kundennummer.</p>
 <p>Wenn ein Kunde eine Buchung aufgibt, wird eine global eindeutige Buchungsnummer generiert und zusätzlich das Buchungsdatum und das Datum der Ausleihe und Rückgabe gespeichert.</p>
 <p>Eine Buchung umfasst immer nur ein einziges Fahrzeug. Fahrzeuge sind von einem bestimmten Modell. Modelle haben eine Marke, eine Modellbezeichnung und einen Preis. Beispielsweise gibt des den "Citroen 2CV" für 100 EUR pro Tag. Von diesem Modell existieren ein Dutzend buchbare Fahrzeuge, jedes hat eine für das jeweilige Modell eindeutige laufende Nummer (von 1 bis 12) und eine Farbe.</p>
 <p>Modelle teilen sich auf in PKWs, Transporter und LKWs. Bei LKWs wird die zulässige Gesamtmasse gespeichert.</p>
 <p>Kunden können beliebig viele PKWs als Favoriten markieren. Für Transporter und LKWs ist das nicht möglich.</p>
-</section>-->
+</section>
+        
+        <!--
+        <section style="padding-top: 2.5cm">
+            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
+            <p>Abgabe-Deadline: 29.10.2021 9:00 im Moodle</p>
+
+            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
+            <p>Wir verwenden folgende Relationen:</p>
+            <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
+               Studenten(<u>MatrNr</u>, Name, Semester)<br>
+               Vorlesungen(<u>VorlNr</u>, Titel, SWS, gelesenVon)<br>
+               hoeren(<u>MatrNr, VorlNr</u>)</p>
+            <p>Vorlesungen.gelesenVon ist Fremdschlüssel auf Professoren.PersNr<br>
+               hoeren.MatrNr ist Fremdschlüssel auf Studenten.MatrNr<br>
+               hoeren.VorlNr ist Fremdschlüssel auf Vorlesungen.VorlNr</p>
+            <p>Formulieren Sie die folgenden Anfragen mittels Ausdrücken der relationalen Algebra.</p>
+            
+            <table border="0" style="width: 100%; margin-top: -3mm;">
+                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830? (3P)</td></tr>
+                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen? (4P)</td></tr>
+            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält? (3P)</td></tr>
+            </table>
+        </section>
+        
+        <section>
+            <h1>Aufgabe 2: Relationale Algebra</h1>
+            <p>Formulieren Sie Ausdrücke der relationalen Algebra für die folgenden Aufgabenstellungen ebenfalls auf dem Relationenschema von Aufgabe 1:</p>
+            <table border="0" style="width: 100%">
+                
+                <tr><td>4.</td><td>Welche Studierenden (Namen) heißen genau gleich wie ein Professor?</td></tr>
+                <tr><td>5.</td><td>Welche Vorlesungen (VorlNr, Titel) werden von Studierenden gehört, die im zweiten Semester sind?</td></tr>
+                <tr><td>6.</td><td>Welche Professoren (PersNr, Name) haben den gleichen Rang wie der Professor mit PersNr 2137? Geben Sie aber nicht den Professor 2137 aus!</td></tr>
+            </table>
+        </section>
+        
+        <section>
+            <h1>Aufgabe 3: Relationenschema &rightarrow; ER-Diagramm</h1>
+            <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
+        </section>
+    -->
+        
+        <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 3: Normalisierung</h1>
+            <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
+            <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
+            <p>schauspieler ist ein mengenwertiges Attribut.</p>
+            <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
+            <ul>
+                <li>serie &rightarrow; produzent</li>
+                <li>serie, staffel &rightarrow; regisseur</li>
+                <li>serie, staffel, folge &rightarrow; titel</li>
+                <li>produzent &rightarrow; sprache</li>
+            </ul>
+        </section>
+        <section  style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 4: Relationale Algebra</h1>
+            <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
+            <table border="0" style="width: 100%">
+                <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
+                <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
+            </table>
+        </section>-->
+
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>
@@ -141,10 +192,9 @@ Reveal.addEventListener = function(event, f) {
     }
 }
 </script>
-
+<script type="text/javascript" src="../src/erd.js"></script>
 <script src="./js/exercises.js"></script>
 
-<script type="text/javascript" src="../src/erd.js"></script>
 
 </body>
 </html>

@@ -31,3 +31,8 @@ Reveal.initialize({
     { src: 'poll/poll.js', async: true }
 ]
 });
+
+hljs = null;
+Reveal.on( 'ready', event => {
+   hljs = Reveal.getPlugin( 'highlight' ).hljs;
+} );

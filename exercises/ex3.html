@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Datenbanken - Übungsblatt %%%EX_NO%%%</title>
+        <title>Datenbanken - Übungsblatt 3</title>
         <link rel="stylesheet" href="../exercises/exercises.css">
         <link href="../lib/fontawesome.all.min.css" rel="stylesheet">
         <link href="../src/erd.css" rel="stylesheet">
@@ -25,118 +25,89 @@
         </header>
 
         <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Relationenmodell (10P)</h1>
+            <h1>Aufgabe 1: Relationale Algebra: Ergebnisse (10P)</h1>
             <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
-            <p>Betrachten Sie das folgende Relationenschema eines Friseursalons:</p>
             
-            <p>PERSONAL (<u>Vorname</u>, Tarifstufe)<br>
-               KUNDEN (<u>Kundennr</u>, Name, Telefon)<br>
-               TERMIN (<u>Datum, Uhrzeit, Personal</u>, Kunde)</p>
-        
-               <p>TERMIN.Personal ist Fremdschlüssel auf PERSONAL.Vorname<br>
-            TERMIN.Kunde ist Fremdschlüssel auf KUNDEN.Kundennr</p>
-        
-                <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort bei Fragen 1 bis 5 gibt es 1 Punkt, falsche Antworten geben keine Punktabzüge. Frage 6 gibt bis zu 5 Punkte.</p>
+            <p>Gegeben sind die folgenden mit Daten gefüllten Tabellen.</p>
             
-                    <table border="0" style="width: 100%">
-            <tr>
-                <td style="width:10mm">&nbsp;</td>
-                <td>&nbsp;</td>
-                <td style="text-align: center; width:15mm">Richtig</td>
-                <td style="text-align: center; width:15mm">Falsch</td>
-            </tr>
-            <tr>
-                <td>1.</td><td>Es darf nur eine Mitarbeiterin mit dem Vornamen Ute geben.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>2.</td><td>Es ist möglich, dass die Kundin 5 einen Termin bucht, obwohl es gar keine Kundin mit der Kundennummer 5 gibt.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>3.</td><td>Es ist möglich, dass ein Mitarbeiter überhaupt keine Termine hat.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>4.</td><td>Es ist möglich, dass ein Kunde am gleichen Tag zur gleichen Uhrzeit mehrere Termine hat.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
-            <tr>
-                <td>5.</td><td>In dem Tabellenschema gibt es einen zusammengesetzten Fremdschlüssel.</td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-                <td style="text-align: center"><i class="far fa-square"></i></td>
-            </tr>
+            <div style="display: flex; gap: 40px;">
 
-            <tr>
-                <td>6.</td>
-                <td colspan="3">Überführen Sie das Relationenschema zurück in ein ER-Diagramm. Verwenden Sie die Chen-Notation.</td>
-            </tr>
-            
+                <div>
+                  <h3>BAUTEILE</h3>
+                  <table border="1" style="border-collapse: collapse; width: 250px; ">
+                    <thead>
+                      <tr>
+                        <th>BNR</th>
+                        <th>NAME</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>B001</td><td>Fahrradrahmen</td></tr>
+                      <tr><td>B002</td><td>Vorderrad</td></tr>
+                      <tr><td>B003</td><td>Hinterrad</td></tr>
+                      <tr><td>B004</td><td>Speiche</td></tr>
+                      <tr><td>B005</td><td>Nabe</td></tr>
+                      <tr><td>B006</td><td>Reifen</td></tr>
+                      <tr><td>B007</td><td>Sattel</td></tr>
+                      <tr><td>B008</td><td>Fahrrad</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              
+                <div>
+                  <h3>BESTEHT_AUS</h3>
+                  <table border="1" style="border-collapse: collapse; width: 250px; ">
+                    <thead>
+                      <tr>
+                        <th>OBER_BNR</th>
+                        <th>UNTER_BNR</th>
+                        <th>MENGE</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>B008</td><td>B001</td><td>1</td></tr>
+                      <tr><td>B008</td><td>B002</td><td>1</td></tr>
+                      <tr><td>B008</td><td>B003</td><td>1</td></tr>
+                      <tr><td>B008</td><td>B007</td><td>1</td></tr>
+                      <tr><td>B002</td><td>B004</td><td>36</td></tr>
+                      <tr><td>B002</td><td>B005</td><td>1</td></tr>
+                      <tr><td>B002</td><td>B006</td><td>1</td></tr>
+                      <tr><td>B003</td><td>B004</td><td>36</td></tr>
+                      <tr><td>B003</td><td>B005</td><td>1</td></tr>
+                      <tr><td>B003</td><td>B006</td><td>1</td></tr>
+                    </tbody>
+                  </table>
+                </div>              
+              </div>
+              <p>BESTEHT_AUS.OBER_BNR und BESTEHT_AUS.UNTER_BNR sind jeweils ein Fremdschlüssel auf BAUTEILE.BNR</p>
+              
+              <p>Die folgenden Ausdrücke der relationalen Algebra liefern jeweils eine Relation zurück mit nur einer Zeile und einer Spalte. Geben Sie jeweils den Ergebnis-Wert in dieser Zelle an. Jede richtige Antwort gibt 2 Punkte.</p>
+
+              <table border="0" style="width:100%; margin-top: 3mm;">
+                <tr><td>1.</td><td>&pi;<sub>NAME</sub>(&sigma;<sub>BNR='B007'</sub>(BAUTEILE))</td></tr>
+                <tr><td>2.</td><td>&pi;<sub>BESTEHT_AUS.MENGE</sub>(&sigma;<sub>BAUTEILE.NAME='Fahrrad'</sub>(BAUTEILE &bowtie;<sub>BAUTEILE.BNR = BESTEHT_AUS.OBER_BNR</sub> BESTEHT_AUS))</td></tr>
+                <tr><td>3.</td><td>&pi;<sub>o.NAME</sub>(&sigma;<sub>u.NAME = 'Sattel'</sub>(&rho;<sub>o</sub>(BAUTEILE) &bowtie;<sub>o.BNR = BESTEHT_AUS.OBER_BNR</sub> BESTEHT_AUS &bowtie;<sub>BESTEHT_AUS.UNTER_BNR = u.BNR</sub> &rho;<sub>u</sub>(BAUTEILE)))</td></tr>     
+                <tr><td>4.</td><td>&pi;<sub>b1.OBER_BNR</sub>&sigma;<sub>b2.UNTER_BNR='B006'</sub>(&rho;<sub>b1</sub>(BESTEHT_AUS) &bowtie;<sub>b1.UNTER_BNR=b2.OBER_BNR</sub> &rho;<sub>b2</sub>(BESTEHT_AUS))</td></tr>
+                <tr><td>5.</td><td>&pi;<sub>BESTEHT_AUS.OBER_BNR</sub> &sigma;<sub>BAUTEILE.NAME='Fahrrad'</sub> (BAUTEILE &#x27D5;<sub>BAUTEILE.BNR = BESTEHT_AUS.UNTER_BNR</sub> BESTEHT_AUS)</td></tr>
             </table>
-              </section>
 
-    
+            <p>Beschreiben Sie zu jedem Ausdruck (1-5) einem Satz in natürlicher Sprache, was der Ausdruck liefert (z. B. "Wie heißen die Bauteile, die ...")</p>
+              
+        </section>
 
-              <section style="page-break-inside:avoid; padding-top: 2.5cm">
-        <h1>Aufgabe 2: Transformation ER ins Relationenmodell</h1>
-        <p>Überführen Sie das folgende ER-Diagramm in ein Relationenschema:</p>
-        <div style="height: 9.5cm; overflow: hidden; margin-left: -2.5cm">
-                <div class="erd">
-                        [[
-                         { _e: "Personen", pos: [150, 100],
-                          attributes: [
-                           { _a:"PersNr", options:["primary"], pos: [89, 13] },
-                           { _a:"Name", pos: [245, 13] }
-                          ]
-                         },
-                         { _e: "Theaterstück", pos: [530, 100],
-                           attributes: [
-                            { _a:"Bezeichnung", pos: [485, 25], options:["primary"] },
-                            { _a:"Genres", pos: [610, 25], options:["multi"]}
-                           ]
-                         },
-                         { _e: "Rollen", pos: [334, 277],
-                           attributes: [
-                            { _a:"Vorname", pos: [205, 212], options:["primary"] },
-                            { _a:"Nachname", pos: [205, 275], options:["primary"] },
-                            { _a:"Beschreibung", pos: [510, 274] }
-                           ]
-                         }
-                        ],
-                        [
-                         { _r: "spielt mit", pos: [350, 180],
-                           _e: ["Personen", "Theaterstück", "Rollen"],
-                           card: ["1", "N", "M"],
-                           attributes: [{_a:"Jahr", pos: [450, 200]}]
-                         },
-                         { _r: "Regisseur",
-                           _e: ["Personen", "Theaterstück"],
-                           card: ["1", "N"]
-                         }
-                        ]]
-                                    </div></div>
-    </section>
+        <section style="page-break-inside:avoid; padding-top: 2.5cm">
+            <h1>Aufgabe 2: Relationale Algebra: Fahrradbauteile</h1>
+            <p>Formulieren Sie auf dem Schema von Aufgabe 1 Ausdrücke der relationalen Algebra für folgende Anfragen.</p>
+            <table border="0" style="width:100%; margin-top: 3mm;">
+                <tr><td>1.</td><td>Wie sind die Namen der Bauteile, die ein direktes Unterbauteil vom Fahrrad sind?</td></tr>
+                <tr><td>2.</td><td>Welche BNRs sind Unterbauteile von B003, aber nicht Unterbauteil von B002?</td></tr>
+            </table>
+        </section>
 
-    <!--<section style="page-break-inside:avoid; padding-top: 1.0cm">
-    <h1>Aufgabe 3: ER-Diagramm eines Autovermieters</h1>
-    <p>Erstellen Sie ein ER-Diagramm für den Autovermieter Entenpreis.</p>
-<p>Ein Kunde registriert sich bei Entenpreis mit seiner E-Mail-Adresse und einem Passwort, außerdem erhält er eine automatisch generierte Kundennummer.</p>
-<p>Wenn ein Kunde eine Buchung aufgibt, wird eine global eindeutige Buchungsnummer generiert und zusätzlich das Buchungsdatum und das Datum der Ausleihe und Rückgabe gespeichert.</p>
-<p>Eine Buchung umfasst immer nur ein einziges Fahrzeug. Fahrzeuge sind von einem bestimmten Modell. Modelle haben eine Marke, eine Modellbezeichnung und einen Preis. Beispielsweise gibt des den "Citroen 2CV" für 100 EUR pro Tag. Von diesem Modell existieren ein Dutzend buchbare Fahrzeuge, jedes hat eine für das jeweilige Modell eindeutige laufende Nummer (von 1 bis 12) und eine Farbe.</p>
-<p>Modelle teilen sich auf in PKWs, Transporter und LKWs. Bei LKWs wird die zulässige Gesamtmasse gespeichert.</p>
-<p>Kunden können beliebig viele PKWs als Favoriten markieren. Für Transporter und LKWs ist das nicht möglich.</p>
-</section>-->
-        
-        <!--
-        <section style="padding-top: 2.5cm">
-            <h1>Aufgabe 1: Relationale Algebra (10P)</h1>
-            <p>Abgabe-Deadline: 29.10.2021 9:00 im Moodle</p>
+        <section>
+            <h1>Aufgabe 3: Relationale Algebra: Hochschule</h1>
 
-            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;get started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
+            <p>Für die Bearbeitung dieses Übungsblattes können Sie das Tool RelaX verwenden: <a href="https://dbis-uibk.github.io/relax" target="_blank">https://dbis-uibk.github.io/relax</a>. Klicken Sie auf &quot;Get Started&quot; und wählen Sie links den Datensatz &quot;Kemper Datenbanksysteme&quot; aus. Achten Sie im RelaX-Tool auf Groß-Kleinschreibung der Tabellen- und Spaltennamen.</p>
             <p>Wir verwenden folgende Relationen:</p>
             <p>Professoren(<u>PersNr</u>, Name, Rang, Raum)<br>
                Studenten(<u>MatrNr</u>, Name, Semester)<br>
@@ -148,51 +119,16 @@
             <p>Formulieren Sie die folgenden Anfragen mittels Ausdrücken der relationalen Algebra.</p>
             
             <table border="0" style="width: 100%; margin-top: -3mm;">
-                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830? (3P)</td></tr>
-                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen? (4P)</td></tr>
-            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält? (3P)</td></tr>
-            </table>
-        </section>
-        
-        <section>
-            <h1>Aufgabe 2: Relationale Algebra</h1>
-            <p>Formulieren Sie Ausdrücke der relationalen Algebra für die folgenden Aufgabenstellungen ebenfalls auf dem Relationenschema von Aufgabe 1:</p>
-            <table border="0" style="width: 100%">
-                
+                <tr><td>1.</td><td>Wie heißt der Studierende mit der MatrNr 26830?</td></tr>
+                <tr><td>2.</td><td>Welche Professoren (PersNr) halten keine Vorlesungen?</td></tr>
+            <tr><td>3.</td><td>Wie ist der Name des Professors, der die Vorlesung &quot;Logik&quot; hält?</td></tr>
+                        
                 <tr><td>4.</td><td>Welche Studierenden (Namen) heißen genau gleich wie ein Professor?</td></tr>
                 <tr><td>5.</td><td>Welche Vorlesungen (VorlNr, Titel) werden von Studierenden gehört, die im zweiten Semester sind?</td></tr>
                 <tr><td>6.</td><td>Welche Professoren (PersNr, Name) haben den gleichen Rang wie der Professor mit PersNr 2137? Geben Sie aber nicht den Professor 2137 aus!</td></tr>
             </table>
         </section>
         
-        <section>
-            <h1>Aufgabe 3: Relationenschema &rightarrow; ER-Diagramm</h1>
-            <p>Überführen Sie das Relationenschema aus Aufgabe 1 (Professoren, Studenten, Vorlesungen, hoeren) zurück in ein ER-Diagramm. Verwenden Sie die Krähenfuß-Notation oder die Chen-Notation.</p>
-        </section>
-    -->
-        
-        <!--<section  style="page-break-inside:avoid; padding-top: 2.5cm">
-            <h1>Aufgabe 3: Normalisierung</h1>
-            <p>Bringen Sie die folgende Relation &quot;serien_folgen&quot; zuerst in 1NF, dann 2NF, dann 3NF. Kennzeichnen Sie Primärschlüssel und Fremdschlüssel.</p>
-            <p>serien_folgen(<u>serie</u>, <u>staffel</u>, <u>folge</u>, titel, produzent, regisseur, sprache, {schauspieler})</p>
-            <p>schauspieler ist ein mengenwertiges Attribut.</p>
-            <p>Es gelten folgende funktionalen Abhängigkeiten:</p>
-            <ul>
-                <li>serie &rightarrow; produzent</li>
-                <li>serie, staffel &rightarrow; regisseur</li>
-                <li>serie, staffel, folge &rightarrow; titel</li>
-                <li>produzent &rightarrow; sprache</li>
-            </ul>
-        </section>
-        <section  style="page-break-inside:avoid; padding-top: 2.5cm">
-            <h1>Aufgabe 4: Relationale Algebra</h1>
-            <p>Erstellen Sie Ausdrücke der relationalen Algebra für folgende Fragestellungen auf dem 3NF-Schema, welches Sie in Aufgabe 3 erstellt haben:</p>
-            <table border="0" style="width: 100%">
-                <tr><td>1.</td><td>In welchen Folgen (Staffel, Folge) der Serie &quot;Die Hochschule&quot; hat die Schauspielerin &quot;Julia Robbe&quot; mitgespielt?</td></tr>
-                <tr><td>2.</td><td>Wer war Regisseur der Serie &quot;Die Hochschule&quot; in der Staffel, die nach der Staffel folgte, als noch &quot;Petra von Parkplatz&quot; die Regie geführt hat.</td></tr>
-            </table>
-        </section>-->
-
 
 <script src="../lib/jquery.js"></script>
 <script src="../lib/lodash.js"></script>
@@ -211,7 +147,6 @@ Reveal.addEventListener = function(event, f) {
 </script>
 <script type="text/javascript" src="../src/erd.js"></script>
 <script src="./js/exercises.js"></script>
-
 
 </body>
 </html>

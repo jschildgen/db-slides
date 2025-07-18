@@ -25,11 +25,123 @@
     </header>
 
     <section style="padding-top: 2.5cm">
-        <h1>Aufgabe 0: MonstER-Park (Bonusaufgabe; 10P)</h1>
+        <h1>Aufgabe 0: MonstER-Park (Bonusaufgabe; 5P)</h1>
         <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
         <p>Spielen Sie das Spiel MonstER-Park (<a href="http://www.monst-er.de" target="_blank">http://www.monst-er.de)</a> und lassen Sie sich zum Ende des Spiels ein Zertifikat generieren. Tragen Sie die darauf befindliche Zertifikat-ID im Moodle ein, um die 10 Bonuspunkte zu bekommen. Achtung: Hier ist keine Gruppenarbeit möglich. Jeder muss eine eigene Zertifikat-ID abgeben.</p>
     </section>
 
+
+    <section>
+        <h1>Aufgabe 1: ER-Diagramme (10P)</h1>
+        <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
+        <p>Betrachten Sie das folgende ER-Diagramm.</p>
+        <div style="height: 7.5cm; overflow: hidden; margin-left: -2.5cm">
+        <div class="erd">
+                [[
+                 { _e: "Maschine", pos: [150, 100],
+                  attributes: [
+                   { _a:"Hersteller", options:["primary"], pos: [89, 13] },
+                   { _a:"Nummer", options:["primary"], pos: [245, 13] }
+                  ]
+                 },
+                 { _e: "Material", pos: [530, 100],
+                   attributes: [
+                    { _a:"Material", pos: [485, 25], options:["primary"] },
+                    { _a:"Gewicht", pos: [610, 25]}
+                   ]
+                 },
+                 { _e: "Datum", pos: [530, 200],
+                   attributes: [
+                    { _a:"Datum", pos: [405, 212], options:["primary"] },
+                   ]
+                 }
+                ],
+                [
+                { _r: "benötigt", pos: [(150+530+75)/2, 20],
+                  _e: ["Maschine", "Material"],
+                  card: ["N", "1"],
+                  //attributes: [{_a:"Buh", pos: [365, 13]}]
+                },
+                 { _r: "produziert", pos: [(150+530+75)/2, 120],
+                   _e: ["Maschine", "Material", "Datum"],
+                   card: ["N", "1", "M"],
+                   attributes: [{_a:"Menge", pos: [265, 200]}]
+                 }
+                ]
+                ]
+                            </div></div>
+            <p>Welche der folgenden Aussagen sind wahr? Jede richtige Antwort gibt 1 Punkt, falsche Antworten geben keine Punktabzüge.</p>
+        
+                <table border="0" style="width: 100%">
+        <tr>
+            <td style="width:10mm">&nbsp;</td>
+            <td>&nbsp;</td>
+            <td style="text-align: center; width:15mm">Richtig</td>
+            <td style="text-align: center; width:15mm">Falsch</td>
+        </tr>
+        <tr>
+            <td>1.</td><td>Die Nummer einer Maschine ist eindeutig.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>2.</td><td>Es ist möglich, dass manche Maschinen mehrere verschiedene Materialien benötigen.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>3.</td><td>Es ist möglich, dass manche Maschinen gar keine Materialien benötigen.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>4.</td><td>Es ist möglich, dass eine Maschine bisher noch nie etwas produziert hat.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>5.</td><td>Eine Maschine kann an ein und demselben Tag mehrere verschiedene Materialien produzieren.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        </table>
+        <p>Weiter geht's auf der nächsten Seite.</p>
+        <table border="0" style="width: 100%; page-break-inside:avoid; padding-top: 2.5cm">
+            <tr>
+                <td style="width:10mm">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td style="text-align: center; width:15mm">Richtig</td>
+                <td style="text-align: center; width:15mm">Falsch</td>
+            </tr>
+        <tr>
+            <td>6.</td><td>Mehrere verschiedene Maschinen können an ein und demselben Tag das gleiche Material produzieren.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>7.</td><td>Morgen kann eine Maschine dasselbe Material wie heute produzieren.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>8.</td><td>Wenn eine Maschine zum Betrieb ein bestimmtes Material benötigt, kann das gleiche Material nicht auch noch von einer anderen Maschine benötigt werden.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>9.</td><td>Es ist möglich, dass eine Maschine das gleiche Material benötigt wie sie produziert.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        <tr>
+            <td>10.</td><td>Die "produziert"-Beziehung hat den Grad 2.</td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+            <td style="text-align: center"><i class="far fa-square"></i></td>
+        </tr>
+        </table>
+    </section>
+
+    <!--
     <section>
     <h1>Aufgabe 1: ER-Diagramme (10P)</h1>
     <p>Abgabe-Deadline: %%%DEADLINE%%% im ELO</p>
@@ -103,17 +215,13 @@
         <td style="text-align: center"><i class="far fa-square"></i></td>
         <td style="text-align: center"><i class="far fa-square"></i></td>
     </tr>
-    <!--<tr>
-        <td>6.</td><td>Die Nummer eines Dings ist eindeutig.</td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-        <td style="text-align: center"><i class="far fa-square"></i></td>
-    </tr>-->
     </table>
-    <!--<p>b) Erstellen Sie ein ER-Diagramm für die News-Seite &quot;Igel Online&quot;. Dafür gibt es bis zu 5 Punkte:<br>
-        Auf der Plattform Igel Online gibt es Beiträge, die eine eindeutige Beitrags-ID haben, sowie aus einem Titel, Datum, Uhrzeit und Text bestehen. Benutzer können sich mit ihrer E-Mail-Adresse registrieren und einen Namen und ein Passwort wählen. Ein Kommentar kann gepostet werden unter einen Beiträg. Er hat eine Kommentarnummer, Datum, Uhrzeit und einen Text. Der Autor des Kommentars ist stets ein registrierter Benutzer. Des Weiteren können Benutzer bei Beiträgen auf &quot;gefällt mir&quot; klicken.</p>-->
+    <p>b) Erstellen Sie ein ER-Diagramm für die News-Seite &quot;Igel Online&quot;. Dafür gibt es bis zu 5 Punkte:<br>
+        Auf der Plattform Igel Online gibt es Beiträge, die eine eindeutige Beitrags-ID haben, sowie aus einem Titel, Datum, Uhrzeit und Text bestehen. Benutzer können sich mit ihrer E-Mail-Adresse registrieren und einen Namen und ein Passwort wählen. Ein Kommentar kann gepostet werden unter einen Beiträg. Er hat eine Kommentarnummer, Datum, Uhrzeit und einen Text. Der Autor des Kommentars ist stets ein registrierter Benutzer. Des Weiteren können Benutzer bei Beiträgen auf &quot;gefällt mir&quot; klicken.</p>
 </section>
+-->
 
-<section style="page-break-inside:avoid; padding-top: 2.5cm">
+<section>
     <h1>Aufgabe 2: ER-Diagramm einer Mitfahrbörse</h1>
     <p>Erstellen Sie ein ER-Diagramm für die Mitfahrbörse Blablabla.</p>
 <p>Benutzer registrieren sich bei Blablabla mit ihrer Handynummer und geben ihren Namen an. Außerdem beschreiben sie ihr Auto: Farbe und Modell.</p>

@@ -546,7 +546,7 @@ $$ LANGUAGE sql;
         <h4>Trigger</h4>
         <ul class="small">
             <li>Definiert den eigentlichen Trigger (die Wenn-Falls-Dann-Bedingung)</li>
-            <li><code>CREATE TRIGGER ... {BEFORE | AFTER | INSTEAD OF}<br>{INSERT | UPDATE | DELETE} ON ...<br>FOR EACH {ROW | STATEMENT} [WHEN (...)]<br> EXECUTE PROCEDURE ...();</code></li>
+            <li><code>CREATE TRIGGER ... {BEFORE | AFTER | INSTEAD OF}<br>{INSERT | UPDATE | DELETE} ON ...<br>FOR EACH {ROW | STATEMENT} [WHEN (...)]<br> EXECUTE FUNCTION ...();</code></li>
         </ul>
         <aside class="notes">In PostgreSQL wird zunächst eine Triggerfunktion definiert. Diese ist ähnlich zu einer Funktion mit dem Returns-Type <code>void</code>. In dieser Triggerfunktion hat man jedoch Zugriff auf die eingefügte, geänderte, bzw. gelöschte Zeile und man kann diese sogar noch modifizieren oder die Operation noch aufhalten.<br>
         Trigger können auch sogenannte ECA-Regel implementieren. ECA steht für Event, Condition, Action. Wenn also ein Ereignis eintritt, soll - falls die Bedingung erfüllt ist - das Ereignis ausgeführt werden. Die Bedingung lässt sich in PostgreSQL mittels einer optionalen <code>WHEN</code>-Bedingung festlegen.</aside>
@@ -570,7 +570,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 
     <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE TRIGGER produkte_trigger AFTER INSERT ON produkte
-FOR EACH ROW EXECUTE PROCEDURE produkte_trigger();</code></pre> 
+FOR EACH ROW EXECUTE FUNCTION produkte_trigger();</code></pre> 
 
 <aside class="notes">Immer wenn ein INSERT auf die Produkttabelle gemacht wird, feuert der Trigger. Er sorgt dafür, dass der Hersteller in die Herstellertabelle eingefügt, wenn er noch nicht drin ist. Über das Objekt <code>NEW</code> hat man innerhalb des Triggers Zugriff auf die Attributwerte der neu eingefügten Zeile.</aside>
 </section>
@@ -618,7 +618,7 @@ END; $$ LANGUAGE plpgsql;</code></pre>
 
 <pre><code class="sql dont_execute_sql" contenteditable data-trim>
 CREATE TRIGGER preis_trigger BEFORE INSERT OR UPDATE ON produkte
-FOR EACH ROW EXECUTE PROCEDURE preis_trigger();</code></pre>
+FOR EACH ROW EXECUTE FUNCTION preis_trigger();</code></pre>
 
 <div class="poll fragment fade-in-then-out" style="bottom:-50px">
     <h1>Könnte ein AFTER INSERT Trigger das INSERT auch noch ablehnen?</h1>

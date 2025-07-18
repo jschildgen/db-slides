@@ -1268,7 +1268,7 @@
                                                 <p class="fragment small" data-fragment-index="1">Vorher: $\sigma_{produkte.produktnr=bewertungen.produktnr}(produkte \times bewertungen)$<br>
                                                     Nachher: $produkte \bowtie_{produkte.produktnr=bewertungen.produktnr} (bewertungen)$</p>
                                                 <h4 class="fragment" data-fragment-index="2">Frühstmögliche Projektion <small>(ohne Duplikateliminierung)</small></h4>
-                                                <p class="fragment small" data-fragment-index="2">Vorher: $\pi_{bezeichnung}(produkte \bowtie bewertungen)$<br>
+                                                <p class="fragment small" data-fragment-index="2" style="width: 30cm;">Vorher: $\pi_{bezeichnung}(produkte \bowtie bewertungen)$<br>
                                                     Nachher: $\pi_{bezeichnung}(\pi_{produktnr, bezeichnung}(produkte) \bowtie \pi_{produktnr}(bewertungen))$</p>
                                                 
                                                     <div class="poll fragment fade-in-then-out" style="bottom:200px">
@@ -1576,6 +1576,7 @@
                                                 <p class="fragment small">Überprüfe für Nicht-Schlüsselattribut &quot;bezeichnung&quot;: $pizza\_id, zutat \Rightarrow bezeichnung$ ?</p>
                                                 <p class="fragment small">Nicht der Fall, weil bereits $pizza\_id \rightarrow bezeichnung$</p>
                                                 <p class="fragment small">Damit ist die Relation nicht in 2NF.</p>
+                                                <aside class="notes">Ein Nicht-Schlüsselattribut ist ein Attribut, was nicht Teil eines Schlüsselkandidaten ist. Es trägt zusätzliche Informationen über die Entität, ohne jedoch zur eindeutigen Identifikation von Datensätzen beizutragen.</aside>
                                             </section>
                                             <section data-hide-from="2V">
                                                 <h3>Überführung in 2NF</h3>

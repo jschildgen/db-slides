@@ -501,7 +501,7 @@ VALUES (4.99, 'Katzenfutter')</code></pre>
                                 <p class="small">Spaltennamen weglassen:</p>
                                 <pre style="width: 95%;"><code class="sql" data-trim contenteditable>INSERT INTO produkte VALUES (88, 'Katzenfutter', 4.99, NULL)</code></pre>
                                 </div>
-                                <p class="fragment small">Nachteile: Schwerer verständlich zu lesen, man muss auf die korrekte Reihenfolge achten, man darf keine Spalte vergessen, in der Zukunft könnten sich die Spalten ändern.</p>
+                                <p class="fragment small">Nachteile: Schwerer verständlich zu lesen, man muss auf die korrekte Reihenfolge achten, man darf keine Spalte weglassen, in der Zukunft könnten sich die Spalten ändern.</p>
                                 
                                 <aside class="notes">Wenn nur ein Teil der Tabellenspalten gesetzt werden, werden die anderen Spalten auf ihre DEFAULT-Werte, den nächsten AUTO_INCREMENT / SERIAL-Wert oder auf NULL gesetzt. Lässt man die Spaltennamen vor dem Stichwort <code>VALUES</code> weg, müssen alle Spalten der Tabelle in der richtigen Reihenfolge gesetzt werden. Wenn in der Zukunft eine neue Spalte in die Produkttabelle hinzugefügt wird, würde das untere Kommando nicht mehr funktionieren.</aside>
                             </section>
@@ -1020,19 +1020,19 @@ ORDER BY COUNT(*)
                                 <section>
                                         <h2>SELECT mit OUTER JOIN</h2>
                                         <div class="trackinfo"><i class="fas fa-headphones"></i> 73</div>
-                                        <pre style="width: 93%"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+                                        <pre style="width: 100%"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
 FROM hersteller H LEFT JOIN produkte P ON p.hersteller = H.firma
 WHERE P.preis > 3
 GROUP BY h.land HAVING COUNT(*) < 5 ORDER BY COUNT(*)
                                         </code></pre>
                                         <p class="small">Problem: WHERE-Prädikat <code>preis > 3</code> wird nach dem äußeren Verbund ausgeführt, schmeißt also die gewünschten Zeilen mit NULL-Werten wieder raus.</p>
-                                        <pre class="fragment"><code class="sql" data-trim contenteditable>SELECT /****/ 
+                                        <pre class="fragment" style="width: 100%;"><code class="sql" data-trim contenteditable>SELECT /****/
 WHERE P.preis > 3 OR P.produktnr IS NULL</code></pre>
-<pre class="fragment"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(*) AS anzahl, AVG(P.preis) AS avg_preis
+<pre class="fragment" style="width: 100%;"><code class="sql" data-trim contenteditable>SELECT H.land, COUNT(produktnr) AS anzahl, AVG(P.preis) AS avg_preis 
 FROM hersteller H
  LEFT JOIN (SELECT * FROM produkte WHERE preis > 3) P 
  ON p.hersteller = H.firma
-GROUP BY h.land HAVING COUNT(*) < 5 ORDER BY COUNT(*)</code></pre>
+GROUP BY h.land HAVING COUNT(produktnr) < 5 ORDER BY COUNT(produktnr)</code></pre>
 
                                 <aside class="notes">Ein LEFT JOIN alleine löst das Problem nicht, dass Länder ohne teure Produkte im Ergebnis nicht auftauchen. Hier sind zwei Lösungen. Die erste liefert die Zeilen, die beim Left Join keinen Joinpartner gefunden haben, die zweite erzwingt ein frühzeitiges Filtern vor der Ausführung des Joins.</aside>
                                     </section>

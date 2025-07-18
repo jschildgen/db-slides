@@ -228,10 +228,8 @@
                 element.setAttribute('class', classString + ' language-' + extension);
             }
             if (typeof hljs !== 'undefined') {
-                hljs.highlightBlock(element);
-            }
-            if (typeof RevealHighlight !== 'undefined') {
-                RevealHighlight().highlightBlock(element);
+                delete element.dataset.highlighted;
+                hljs.highlightElement(element);
             }
         });
     });

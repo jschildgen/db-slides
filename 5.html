@@ -355,7 +355,7 @@ GRANT finanzen TO big_boss;
                         <p class="small">GRANT &lt;Recht&gt; ON &lt;Objekt&gt; TO &lt;Benutzer oder Rolle&gt;</p>
 
                         <pre class="fragment"><code class="sql" data-trim contenteditable>--Mitarbeiter dürfen sich mit der Datenbank verbinden
-GRANT CONNECT ON klinik_db TO mitarbeiter;</code></pre>
+GRANT CONNECT ON DATABASE klinik_db TO mitarbeiter;</code></pre>
 
                         <pre class="fragment"><code class="sql" data-trim contenteditable>--Die Finanzabteilung darf die Tabelle Reisekosten lesen
 GRANT SELECT ON klinik.reisekosten TO finanzen;</code></pre>
@@ -653,6 +653,41 @@ COMMIT;
                             <aside class="notes">Das Phantomproblem ist ähnlich zum Non-repeatable Read, bezieht sich jedoch auf während einer laufenden Transaktion neu hinzugefügte oder gelöschte Zeilen. TA<sub>1</sub> möchte alle Monsterfood-Produkte anzeigen und zusätzlich deren Anzahl (oder Preis-Summe, o.ä.) berechnen. Das Ergebnis ist inkonsistent, weil zwischenzeitlich TA<sub>2</sub> ein neues Produkt hinzugefügt hat.</aside>
                         </section>
 
+                        <section>
+                          <h2>SQL-Isolationslevels</h2>
+                          <div class="columns">
+                            <div style="width: 12cm;"><p class="small">
+                              <ul class="small">
+                                <li>Read Uncommitted</li>
+                                <li>Read Committed</li>
+                                <li>Repeatable Read</li>
+                                <li>Serializable</li>
+                              </ul>
+                            </div>
+
+                            <div style="width: 18cm;" class="small">Im DBeaver: Datenbank &rightarrow; Transaktionsmodus<img src="img/5/autocommit.png" alt="DBeaver Autocommit" style="width:8cm; margin-top: 0mm;" class="noborder"></div>
+                          </div>
+                          <table class="small" style="margin-top: -3mm;">
+                              <tr><td></td><td><b>Dirty Read</b></td><td><b>Non&#8209;Repeatable&nbsp;Read</b></td><td><b>Phantomproblem</b></td></tr>
+                              <tr><td><b>Read&nbsp;Uncommitted</b></td><td>möglich</td><td>möglich</td><td>möglich</td></tr>
+                              <tr><td><b>Read Committed</b> </td><td>nicht&nbsp;mögl.</td><td>möglich</td><td>möglich</td></tr>
+                              <tr><td><b>Repeatable Read</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>möglich</td></tr>
+                              <tr><td><b>Serializable</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>nicht mögl.</td></tr>
+                          </table>
+                          <p class="small">Lost Updates werden stets verhindert, sie sind in allen Iso'levels nicht möglich.</p>
+                          <div class="poll fragment" style="bottom:-40px">
+                            <h1>Was ist der Grund, warum man mal ein lockereres Isolationslevel als Serializable wählen könnte?</h1>
+                                <ul>
+                                    <li>Sicherheit</li>
+                                    <li data-poll="correct">Performanz</li>
+                                    <li>Bessere Erfüllung von ACID</li>
+                                    <li>Man will alte Werte lesen</li>
+                                </ul>
+                            <h2>https://fraage.de</h2>
+                        </div>
+                          <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regel eine bessere Performance möglich.</aside>
+                        </section>
+
                        <section>
                          <h2>Serialisierbarkeit</h2>
                          <div style="position: absolute; top: 10px; right:3px; font-size:120px"><i class="fas fa-random green"></i></div>
@@ -885,41 +920,6 @@ COMMIT;
                               <p class="fragment small">TA<sub>2</sub> wartet auf TA<sub>1</sub> und umgekehrt &Rightarrow; Deadlock</p>
                               <p class="fragment small">Lösung: Eine der TAs muss vom TMS zurückgesetzt werden.</p>
                               <aside class="notes">Ein Transaktions-Management-System muss in der Lage sein, Deadlocks zu erkennen (z. B. durch Erkennung zyklischer Wartebedingungen oder mittels Timeouts) und sie aufzulösen, damit Transaktionen nicht unendlich lange warten. In der Regel wird ein Deadlock aufgelöst, indem eine der TAs zurückgesetzt wird und somit die andere fortfahren kann.</aside>
-                          </section>
-
-                          <section>
-                            <h2>SQL-Isolationslevels</h2>
-                            <div class="columns">
-                              <div style="width: 12cm;"><p class="small">
-                                <ul class="small">
-                                  <li>Read Committed</li>
-                                  <li>Read Uncommitted</li>
-                                  <li>Repeatable Read</li>
-                                  <li>Serializable</li>
-                                </ul>
-                              </div>
-
-                              <div style="width: 12cm;"><img src="img/5/autocommit.png" alt="DBeaver Autocommit" style="width:12cm" class="noborder"></div>
-                            </div>
-                            <table class="fragment small" style="margin-top: -3mm;">
-                                <tr><td></td><td><b>Dirty Read</b></td><td><b>Non&#8209;Repeatable&nbsp;Read</b></td><td><b>Phantomproblem</b></td></tr>
-                                <tr><td><b>Read&nbsp;Uncommitted</b></td><td>möglich</td><td>möglich</td><td>möglich</td></tr>
-                                <tr><td><b>Read Committed</b> </td><td>nicht&nbsp;mögl.</td><td>möglich</td><td>möglich</td></tr>
-                                <tr><td><b>Repeatable Read</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>möglich</td></tr>
-                                <tr><td><b>Serializable</b> </td><td>nicht&nbsp;mögl.</td><td>nicht mögl.</td><td>nicht mögl.</td></tr>
-                            </table>
-                            <p class="fragment small">Lost Updates werden stets verhindert, sie sind in allen Iso'levels nicht möglich.</p>
-                            <div class="poll fragment" style="bottom:-40px">
-                              <h1>Was ist der Grund, warum man mal ein lockereres Isolationslevel als Serializable wählen könnte?</h1>
-                                  <ul>
-                                      <li>Sicherheit</li>
-                                      <li data-poll="correct">Performanz</li>
-                                      <li>Bessere Erfüllung von ACID</li>
-                                      <li>Man will alte Werte lesen</li>
-                                  </ul>
-                              <h2>https://fraage.de</h2>
-                          </div>
-                            <aside class="notes">Während einer Transaktion kann eine Anwendung ein Isolationslevel setzen, um dem TMS mitzuteilen, welche Anomalien innerhalb dieser TA verhindert werden müssen. Werden weniger strikte Levels gewählt, ist in der Regel eine bessere Performance möglich.</aside>
                           </section>
 
                           <section>

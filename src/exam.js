@@ -63,7 +63,7 @@ function show_only_exercises(only_exercises) {
     var last_exercise = only_exercises[only_exercises.length-1]+1;
     var last_exercise_title = document.querySelector("section.exercise:nth-of-type("+last_exercise+") h1").innerHTML;
     document.getElementById("edition").innerHTML += "<u>"+last_exercise_title+"</u>";
-  } else {
+  } else if (document.getElementById("edition")) {
     document.getElementById("edition").innerHTML = "";
   }
 

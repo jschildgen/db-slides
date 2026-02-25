@@ -25,6 +25,7 @@ Reveal.initialize({
     { src: 'src/erd.js' },
     { src: 'src/hide-from.js' },
     { src: 'plugins/plantuml.js' },
+    { src: 'src/videokeys.js', async: true },
     { src: 'plugins/jump.js', async: true },
     { src: 'plugins/badges.js' },
     { src: 'plugins/sampler.js', async: true },

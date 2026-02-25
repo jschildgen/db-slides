@@ -29,14 +29,19 @@ hr { height: 1px;
     margin: 0.5em 0; padding: 0; }
 
 header>div>div:first-child {
-    width:50%;
+    width:60%;
     text-align: left;
 }
 
 header>div>div:last-child {
-    width:50%;
+    width:40%;
     text-align: right;
     right:0px;
+}
+
+header>div>div>img {
+    border:0; 
+    height:40px;
 }
 
 h1 {

@@ -2,26 +2,26 @@ config = {
   "LECTURE": "Datenbanken",
   "LECTURER": "Prof. Dr. Johannes Schildgen",
   "LECTURER_EMAIL": "johannes.schildgen@oth-regensburg.de",
-  "SEMESTER": "SS 2025"
+  "SEMESTER": "WS 2025/26"
 };
 
 START_DATE = "2025-03-31";
 
 COURSE = {
-  "deadline_time": "9:30",
+  "deadline_time": "13:45",
                   "exercise_days": [
-                    "2025-03-31",
-                    "2025-04-07",
-                    "2025-04-14",
-                    "2025-04-28",
-                    "2025-05-05",
-                    "2025-05-19",
-                    "2025-05-26",
-                    "2025-06-02",
-                    "2025-06-09",
-                    "2025-06-16",
-                    "2025-06-23",
-                    "2025-06-30",
+                    "2025-10-16",
+                    "2025-10-23",
+                    "2025-10-30",
+                    "2025-11-06",
+                    "2025-11-13",
+                    "2025-11-20",
+                    "2025-11-27",
+                    "2025-12-04",
+                    "2025-12-11",
+                    "2025-12-18",
+                    "2025-01-08",
+                    "2025-01-15",
                   ] 
 }
 
@@ -29,7 +29,7 @@ data = {};
 for (let i = 0; i < COURSE.exercise_days.length; i++) {
   let date = COURSE.exercise_days[i];
   let ex_no = i + 1;
-  data[ex_no] = { "EX_DATES": mult_days(date, 2), "DEADLINE": date+" "+COURSE.deadline_time };
+  data[ex_no] = { "EX_DATES": mult_days(date, 1, 4), "DEADLINE": date+" "+COURSE.deadline_time };
 }
 
 function mult_days(dateStr, ...days) {

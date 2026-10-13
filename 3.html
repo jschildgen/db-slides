@@ -175,7 +175,7 @@
                                 
                             </div>
                             </div>
-                            <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
+                            <p style="font-size:70%">produkte(hersteller) ist Fremdschlüssel auf hersteller(firma)</p>
                         </section>
                         <section>
                                 <h3>Zusammengesetzte Schlüssel</h3>
@@ -220,7 +220,7 @@
                                     
                                 </div>
                         </div>
-                                       <p style="font-size:70%">nehmen_teil.persnr ist Fremdschlüssel auf personen.persnr</p>
+                                       <p style="font-size:70%">nehmen_teil(persnr) ist Fremdschlüssel auf personen(persnr)</p>
                                        <p style="font-size:70%; margin-right: -10mm;">nehmen_teil(datum,uhrzeit,raum) ist Fremdschl. auf termine(datum,uhrzeit,raum)</p>
                             <aside class="notes">Hier wird eine N:M-Beziehung &quot;Personen nehmen an Terminen teil&quot; mittels einer nehmen_teil-Relation modelliert. Peter nimmt an der Vorlesung und am Praktikum teil. </aside>
                         </section>
@@ -343,7 +343,7 @@
                                             <tr><td>5</td><td>0151-3</td></tr>
                                         </tbody>
                                     </table>
-                                    <p class="small">telefonnummern.persnr ist Fremdschlüssel auf personen.persnr</p>
+                                    <p class="small">telefonnummern(persnr) ist Fremdschlüssel auf personen(persnr)</p>
                                 </div>
                                 </div>
 
@@ -383,7 +383,7 @@
                                                             
                                                                 <span data-sql-query="SELECT * FROM hersteller WHERE firma IN ('Monsterfood', 'Holzkopf')" data-sql-pk="firma" data-sql-tablename="hersteller"></span>
 
-                                                                <p style="font-size:70%">produkte.hersteller ist Fremdschlüssel auf hersteller.firma</p>
+                                                                <p style="font-size:70%">produkte(hersteller) ist Fremdschlüssel auf hersteller(firma)</p>
                                                             </div>
                                                     </div>
                                         <aside class="notes">An die Relation, die im ER-Diagramm an der gegenüberliegenden Seite von der 1 steht, wird ein Fremdschlüssel hinzugefügt. Und zwar hat dieser die gleichen Spaltentypen wie der referenzierte Primärschlüssel. Der Fremdschlüssel-Spaltenname ist hier der Name der referenzierten Tabelle, man kann aber auch den Namen der referenzierten Spalte (Firma) oder den Beziehungsnamen (sind_von) nehmen.</aside>
@@ -396,7 +396,7 @@
                                 <div class="fragment">
                                             <span data-sql-query="SELECT kundennr as PersNr, name as Name, geworben_von AS Chef FROM kunden" data-sql-pk="PersNr" data-sql-tablename="personen"></span>
 
-                                            <p style="font-size:70%">personen.chef ist Fremdschlüssel auf personen.persnr</p>
+                                            <p style="font-size:70%">personen(chef) ist Fremdschlüssel auf personen(persnr)</p>
                                     </div>
                             </div>
                             <div class="poll fragment" style="bottom:-240px">
@@ -445,8 +445,8 @@
                                                                     <span data-sql-query="SELECT kundennr, produktnr, sterne, substr(bewertungstext, 0,19) as text FROM bewertungen WHERE produktnr IN (17,18,88) " data-sql-pk="kundennr,produktnr" data-sql-tablename="kunden_bewerten_produkte"></span>
                                                                 
                                                                     
-                                                                    <p style="font-size:70%">kunden_bewerten_produkte.kundennr<br>ist Fremdschlüssel auf kunden.kundennr</p>
-                                                                    <p style="font-size:70%">kunden_bewerten_produkte.produktnr<br>ist Fremdschlüssel auf produkte.produktnr</p>
+                                                                    <p style="font-size:70%">kunden_bewerten_produkte(kundennr)<br>ist Fremdschlüssel auf kunden(kundennr)</p>
+                                                                    <p style="font-size:70%">kunden_bewerten_produkte(produktnr)<br>ist Fremdschlüssel auf produkte(produktnr)</p>
                                                                 </div>
                                                         </div>
                                             <aside class="notes">Aus einer N:M-Beziehung wird eine eigene Relation. Diese trägt als Namen z. B. den Beziehungsnamen (bewerten) oder etwas anderes, was verständlich ist (kunden_bewerten_produkte, bewertungen, ...). Die neue Relation besitzt Fremdschlüsselspalten, welche die Primärschlüssel der an der Beziehung teilnehmenden Entities referenzieren. Die Kombination all dieser Fremdschlüsselspalten bilden den Primärschlüssel der Beziehungstabelle. Als weitere Nicht-Schlüssel-Attribute werden die Beziehungsattribute - sofern vorhanden - hinzugefügt. </aside>
@@ -481,7 +481,7 @@
                                                             <div class="fragment" style="margin-top: -1mm;">
                                                                 <p style="font-size: 70%;">Anbieter(<br>&nbsp;<u>Anbieternr</u>,<br>&nbsp;Anbietername<br>)</p>
                                                                 <p style="font-size: 70%;">Handytarife(<br>&nbsp;<u>Anbieternr</u>,<br>&nbsp;<u>Tarifbezeichnung</u>,<br>&nbsp;Datenvolumen,<br>&nbsp;Preis<br>)</p>
-                                                                <p style="font-size:70%">handytarife.anbieternr ist<br>Fremdschlüssel auf anbieter.anbieternr</p>
+                                                                <p style="font-size:70%">handytarife(anbieternr) ist<br>Fremdschlüssel auf anbieter(anbieternr)</p>
                                                             </div>
                                             </div>
                                             <aside class="notes">Der schwache Entitätstyp erbt den Primärschlüssel von anderen Entitätstypen. Hier erbt Handytarife den Primärschlüssel von Anbieter, zusätzlich wird er erweitert um die Tarifbezeichnung.
@@ -525,8 +525,8 @@
                                                 <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, ...)<br>
                                                                            Produkte(<u>Produktnr</u>, ...)<br>
                                                                            Bewertungen(<u>Kundennr, Produktnummer</u>, Sterne, Text)</p>
-                                                <p style="font-size: 70%;">bewertungen.kundennr ist Fremdschlüssel auf kunden.kundennr<br>
-                                                                           bewertungen.produktnr ist Fremdschlüssel auf produkte.produktnr</p>
+                                                <p style="font-size: 70%;">bewertungen(kundennr) ist Fremdschlüssel auf kunden(kundennr)<br>
+                                                                           bewertungen(produktnr) ist Fremdschlüssel auf produkte(produktnr)</p>
                                         </div>
                                         <div class="poll fragment" style="bottom:-150px">
                                             <h1>Dieses Relationenschema ist das gleiche wie...</h1>
@@ -578,8 +578,8 @@
 
                                 <div class="fragment">
                                         <p style="font-size: 70%;">Buchung(<u>Kundennr, Studio_Str, Studio_Hausnr</u>, Tarif_Bezeichnung, Datum)</p>
-                                        <p style="font-size: 70%; margin-right: -5mm;">buchung.kundennr ist Fremdschlüssel auf kunden.kundennr<br>
-                                                                    buchung.tarif_bezeichnung ist Fremdschlüssel auf tarife.bezeichnung<br>
+                                        <p style="font-size: 70%; margin-right: -5mm;">buchung(kundennr) ist Fremdschlüssel auf kunden(kundennr)<br>
+                                                                    buchung(tarif_bezeichnung) ist Fremdschlüssel auf tarife(bezeichnung)<br>
                                                                     buchung(studio_str, studio_hausnr) ist FK auf fitnessstudios(strasse, hausnummer)</p>
                                         <aside class="notes">Genau wie bei einer binären N:M-Beziehung, wird auch bei einer höhergradigen Beziehung eine separate Relation erstellt. Der Primärschlüssel wird nur aus den Entitätstypen gebildet, an denen keine 1 steht. </aside>
                                 </div>
@@ -704,7 +704,7 @@
                                     <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
                                                                Privatkunden(<u>Kundennr</u>, Name, E-Mail, Bonuspunkte)<br>
                                                                Geschäftskunden(<u>Kundennr</u>, Name, E-Mail, USt-ID)<br></p>
-                                    <p style="font-size: 70%;">Privatkunden.Kundennr und<br>Geschäftskunden.Kundennr sind Fremdschlüssel<br>auf Kunden.Kundennr.</p>
+                                    <p style="font-size: 70%;">Privatkunden.Kundennr und<br>Geschäftskunden(Kundennr) sind Fremdschlüssel<br>auf Kunden(Kundennr).</p>
                                     <div data-clone="er_generalization"></div>
                                     <aside class="notes">Durch die Fremdschlüsselbeziehungen wird garantiert, dass die Zeile auch in der Über-Relation existiert.</aside>
                                 </section>
@@ -771,7 +771,7 @@
                                                 <p style="font-size: 70%;">Kunden(<u>Kundennr</u>, Name, E-Mail)<br>
                                                                            Privatkunden(<u>Kundennr</u>, Bonuspunkte)<br>
                                                                            Geschäftskunden(<u>Kundennr</u>, USt-ID)<br></p>
-                                                                           <p style="font-size: 70%;">Privatkunden.Kundennr und<br>Geschäftskunden.Kundennr sind Fremdschlüssel<br>auf Kunden.Kundennr.</p>
+                                                                           <p style="font-size: 70%;">Privatkunden(Kundennr) und<br>Geschäftskunden(Kundennr) sind Fremdschlüssel<br>auf Kunden(Kundennr).</p>
                                                 <div data-clone="er_generalization"></div>
                                                 <aside class="notes">Lediglich die Primärschlüsselwerte sind in dieser Variante redundant. Alles andere wird in den speziellen Relationen gespeichert. Zur Suche sind oft Verbundoperationen nötig, da Daten ein und derselben Entität über mehrere Relationen verteilt (partitioniert) gespeichert werden.</aside>
                                         </section>
@@ -1584,7 +1584,7 @@
                                                 <p class="fragment small">Gegeben: Pizza1(<u>pizza_id</u>, bezeichnung, <u>zutat</u>)<br>
                                                     $pizza\_id \rightarrow bezeichnung$</p>
                                                 <p class="fragment small"><b>Resultat in 2NF:</b><br>Pizza1a(<u>pizza_id</u>, <u>zutat</u>) und Pizza1b(<u>pizza_id</u>, bezeichnung)<br>
-                                                Pizza1a.pizza_id ist Fremdschlüssel auf Pizza1b.pizza_id</p>
+                                                Pizza1a(pizza_id) ist Fremdschlüssel auf Pizza1b(pizza_id)</p>
                                                 <p class="fragment small">Wichtig bei Zerlegungen: Zerlegung muss verlustfrei erfolgen und ein Join der neuen Tabellen muss wieder die ursprüngliche Tabelle ergeben.</p>
                                             </section>
                                             <section data-hide-from="2V">
@@ -1623,7 +1623,7 @@
                                                     <li>Tracks(<u>cd_id</u>,<u>tracknr</u>, song)</li>
                                                     <li>Alben(<u>cd_id</u>, album, band, land)</li>
                                                 </ul>
-                                                <p class="small">Tracks.cd_id ist Fremdschlüssel auf Alben.cd_id</p>
+                                                <p class="small">Tracks(cd_id) ist Fremdschlüssel auf Alben(cd_id)</p>
                                                 </div>
                                                 <aside class="notes">Bei der Überführung der CD-Track-Tabelle in 2NF wurde diese Tabelle in zwei Tabellen zerlegt. Wir geben ihnen sinnvolle Namen: Alben und Tracks. Lediglich die Spalte &quot;song&quot; ist vom ganzen Schlüssel voll funktional abhängig. Die anderen Nicht-Schlüsselattribute hängen nur von der CD_ID ab und werden daher in die neue Alben-Relation ausgelagert.</aside>
                                             </section>
@@ -1660,7 +1660,7 @@
                                                     <li>Alben(<u>cd_id</u>, album, band)</li>
                                                     <li>Bands(<u>band</u>, land)</li>
                                                 </ul>
-                                                <p class="fragment small" data-fragment-index="2">Alben.band ist Fremdschlüssel auf Bands.band</p>
+                                                <p class="fragment small" data-fragment-index="2">Alben(band) ist Fremdschlüssel auf Bands(band)</p>
                                             </section>
 
                                             
@@ -1684,17 +1684,17 @@
                     </div>
             
                     <script src="reveal.js/dist/reveal.js"></script>
-		<script src="reveal.js/plugin/markdown/markdown.js"></script>
-		<script src="reveal.js/plugin/highlight/highlight.js"></script>
-		<script src="reveal.js/plugin/zoom/zoom.js"></script>
-		<script src="reveal.js/plugin/math/math.js"></script>
-		<script src="reveal.js/plugin/notes/notes.js"></script>
-		<script src="reveal.js/plugin/search/search.js"></script>
+		<script src="reveal.js/dist/plugin/markdown.js"></script>
+		<script src="reveal.js/dist/plugin/highlight.js"></script>
+		<script src="reveal.js/dist/plugin/zoom.js"></script>
+		<script src="reveal.js/dist/plugin/math.js"></script>
+		<script src="reveal.js/dist/plugin/notes.js"></script>
+		<script src="reveal.js/dist/plugin/search.js"></script>
         <script src="lib/jquery.js"></script>
         <script src="lib/lodash.js"></script>
         <script src="lib/backbone.js"></script>
         <script src="lib/joint.min.js"></script>
-        <script src="lib/deflate.js"></script>
+				<script src="lib/deflate.js"></script>
 
 		<script src="src/init_reveal.js"></script>
 
